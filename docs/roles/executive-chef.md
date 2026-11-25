@@ -41,6 +41,7 @@ Includes everything in the [Every Staff Member (base role)](staff-base.md) role,
 | [Training & Certificates](../modules/34-training.md) | view | Own department |
 | [Daily Reports](../modules/38-daily-reports.md) | view, create, approve, comment | Own department |
 | [Reports & Analytics](../modules/81-reports-analytics.md) | view | Own department |
+| [Stock & Inventory](../modules/84-stock-inventory.md) | view, create | Own department |
 
 ## Approval limits
 

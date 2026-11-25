@@ -6,7 +6,7 @@
 
 ## Purpose
 
-Keeps the stores: issues assets, uniforms and linen, and signs keys and equipment in and out. Full stock management is outside this project's scope.
+Keeps the stores: receives deliveries, issues stock against approved requisitions, runs counts, and signs assets, uniforms, linen and keys in and out.
 
 **Reports to:** [Finance & Accounts Manager](finance-manager.md)
 
@@ -14,10 +14,14 @@ Keeps the stores: issues assets, uniforms and linen, and signs keys and equipmen
 
 ## Home screen tiles
 
+- Requisitions to issue
+- Deliveries expected today
+- Low stock
+- Expiring soon
+- Count due
 - Asset issue and return
-- Uniform issue
+- Uniform and linen issue
 - Keys out
-- Asset count
 
 ## Modules, screens and default permissions
 
@@ -25,6 +29,7 @@ Includes everything in the [Every Staff Member (base role)](staff-base.md) role,
 
 | Module | Actions | Data scope |
 | --- | --- | --- |
+| [Stock & Inventory](../modules/84-stock-inventory.md) | view, create, edit, export | Assigned to them |
 | [Asset Register](../modules/41-asset-register.md) | view, create, edit | Everything |
 | [Key Control](../modules/21-key-control.md) | view, edit | Everything |
 | [Staff Requests & Welfare](../modules/36-staff-welfare.md) | view, edit | Everything |
@@ -36,4 +41,6 @@ Includes everything in the [Every Staff Member (base role)](staff-base.md) role,
 
 ## Extra rules
 
+- Works only in the stores assigned to them.
+- Cannot approve their own adjustments.
 - Can switch to the client view at any time to see the app exactly as a guest sees it.

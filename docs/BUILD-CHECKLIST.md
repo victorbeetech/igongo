@@ -7,7 +7,7 @@ Every phase follows the [code standards](architecture/code-standards.md): clean 
 ## Phase 0: Scope and plan
 
 - [x] Agree the deliverables: one Igongo app for everyone, the web portal and the public website.
-- [x] Write the [modules spec](modules/README.md): 83 independent modules.
+- [x] Write the [modules spec](modules/README.md): 84 independent modules.
 - [x] Write the [roles spec](roles/README.md): 72 pre-made roles, all editable by the super admin.
 - [x] Review the [tech stack](architecture/stack.md) against the requirements.
 - [x] Write the [code standards](architecture/code-standards.md).

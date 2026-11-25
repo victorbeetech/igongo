@@ -32,7 +32,7 @@ There is **one Flutter app**, the Igongo app, for everyone: the board, the CEO, 
 
 ## Modules
 
-The system is built from **83 fully independent modules**. No module is a sub-module of another: Payroll is separate from HR records, the Notice Board is separate from Chat, and Receipts are separate from Payments. Modules talk only through APIs and events, so a problem in one never breaks the rest, and the super admin can switch each one off. Everything is configured by the super admin, with no code changes.
+The system is built from **84 fully independent modules**. No module is a sub-module of another: Payroll is separate from HR records, the Notice Board is separate from Chat, and Receipts are separate from Payments. Modules talk only through APIs and events, so a problem in one never breaks the rest, and the super admin can switch each one off. Everything is configured by the super admin, with no code changes.
 
 Each module has its own file in [docs/modules](docs/modules/README.md), with its features, super admin options, dependencies, events, and what happens when it is switched off.
 
@@ -103,6 +103,7 @@ Each module has its own file in [docs/modules](docs/modules/README.md), with its
 | 46 | [Lost & Found](docs/modules/46-lost-found.md) | Records items found and claimed, for guests and staff. |
 | 47 | [Fleet & Transport](docs/modules/47-fleet-transport.md) | Hotel vehicles, drivers, trips and guest transfers, such as airport or town pickups. |
 | 48 | [SOPs & Knowledge Base](docs/modules/48-knowledge-base.md) | The hotel's standard operating procedures, policies, manuals and how-to guides, in one searchable place. |
+| 84 | [Stock & Inventory](docs/modules/84-stock-inventory.md) | Tracks everything the hotel buys, stores and uses, with every store, item, unit, rule and approval set by the super admin. |
 
 ### Communication
 
@@ -163,7 +164,7 @@ Each module has its own file in [docs/modules](docs/modules/README.md), with its
 The hotel already uses APEX for rooms. This system **complements APEX and does not replace it**: room availability and bookings sync with APEX through the APEX Integration module.
 
 ### Out of scope
-Stock management and bar management are not part of this system. Drinks can still be sold as menu items. Event wristbands are **in scope**.
+Bar management is not part of this system: drinks are sold as menu items, and bar stores are run as stores in Stock & Inventory. **Stock & Inventory** and **event wristbands** were put back in scope on 25 Nov 2026.
 
 ## Tech stack
 

@@ -45,6 +45,7 @@ Includes everything in the [Every Staff Member (base role)](staff-base.md) role,
 | [Cash-up & Reconciliation](../modules/79-cash-up.md) | view, approve | Own department |
 | [Reports & Analytics](../modules/81-reports-analytics.md) | view, export | Own department |
 | [Bonuses & Rewards](../modules/31-bonuses-rewards.md) | view, create | Own department |
+| [Stock & Inventory](../modules/84-stock-inventory.md) | view, create, approve | Own department |
 
 ## Approval limits
 

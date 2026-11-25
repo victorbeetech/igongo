@@ -147,7 +147,7 @@ Amounts are not written into the code. The super admin sets the amount behind ea
 | [Museum Guide](museum-guide.md) | Leads tours of the museum, cultural village and monuments, and checks tickets. |
 | [Cultural Performer](cultural-performer.md) | Performs dance, music and cultural experiences for guests and events. |
 | [Shop Attendant](shop-attendant.md) | Sells crafts, books and souvenirs and packs online orders. |
-| [Store Keeper](store-keeper.md) | Keeps the stores: issues assets, uniforms and linen, and signs keys and equipment in and out. |
+| [Store Keeper](store-keeper.md) | Keeps the stores: receives deliveries, issues stock against approved requisitions, runs counts, and signs assets, uniforms, linen and keys in and out. |
 | [Casual Worker](casual-worker.md) | A short-term or daily worker, such as extra event staff. |
 | [Intern / Trainee](intern.md) | A learner placed in a department, with view access to their department's work and their training plan. |
 
