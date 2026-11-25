@@ -5,6 +5,11 @@
   "description": "Each module's public API types and event names, one folder per module. Modules only talk to each other through these.",
   "type": "module",
   "exports": {
-    "./notifications": "./notifications/index.ts"
+    "./notifications": "./notifications/index.ts",
+    "./audit-trail": "./audit-trail/index.ts",
+    "./roles-permissions": "./roles-permissions/index.ts",
+    "./users-login": "./users-login/index.ts",
+    "./super-admin": "./super-admin/index.ts",
+    "./catalog/modules.json": "./catalog/modules.json"
   }
 }

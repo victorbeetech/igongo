@@ -1,0 +1,506 @@
+[
+  {
+    "number": 1,
+    "key": "super-admin",
+    "name": "Super Admin Console",
+    "group": "Core platform"
+  },
+  {
+    "number": 2,
+    "key": "roles-permissions",
+    "name": "Roles & Permissions",
+    "group": "Core platform"
+  },
+  {
+    "number": 3,
+    "key": "app-builder",
+    "name": "App Layout & Navigation",
+    "group": "Core platform"
+  },
+  {
+    "number": 4,
+    "key": "users-login",
+    "name": "Users, Accounts & Login",
+    "group": "Core platform"
+  },
+  {
+    "number": 5,
+    "key": "audit-trail",
+    "name": "Audit Trail",
+    "group": "Core platform"
+  },
+  {
+    "number": 6,
+    "key": "records-search",
+    "name": "Records Archive & Search",
+    "group": "Core platform"
+  },
+  {
+    "number": 7,
+    "key": "custom-fields",
+    "name": "Custom Fields",
+    "group": "Core platform"
+  },
+  {
+    "number": 8,
+    "key": "forms-builder",
+    "name": "Forms & Templates Builder",
+    "group": "Core platform"
+  },
+  {
+    "number": 9,
+    "key": "workflow-approvals",
+    "name": "Workflow & Approvals",
+    "group": "Core platform"
+  },
+  {
+    "number": 10,
+    "key": "notifications",
+    "name": "Notifications Engine",
+    "group": "Core platform"
+  },
+  {
+    "number": 11,
+    "key": "files-media",
+    "name": "Files & Media",
+    "group": "Core platform"
+  },
+  {
+    "number": 12,
+    "key": "languages-wording",
+    "name": "Languages, Wording & Branding",
+    "group": "Core platform"
+  },
+  {
+    "number": 13,
+    "key": "data-import-export",
+    "name": "Data Import, Export & Backup",
+    "group": "Core platform"
+  },
+  {
+    "number": 14,
+    "key": "integrations-hub",
+    "name": "Integrations Hub & Webhooks",
+    "group": "Core platform"
+  },
+  {
+    "number": 15,
+    "key": "locations-departments",
+    "name": "Locations & Departments",
+    "group": "Core platform"
+  },
+  {
+    "number": 16,
+    "key": "staff-cards",
+    "name": "NFC & QR Staff Cards",
+    "group": "Identity and access hardware"
+  },
+  {
+    "number": 17,
+    "key": "wristbands",
+    "name": "Event Wristbands",
+    "group": "Identity and access hardware"
+  },
+  {
+    "number": 18,
+    "key": "devices-stations",
+    "name": "Devices & Stations",
+    "group": "Identity and access hardware"
+  },
+  {
+    "number": 19,
+    "key": "access-zones",
+    "name": "Access Control & Zones",
+    "group": "Identity and access hardware"
+  },
+  {
+    "number": 20,
+    "key": "visitor-management",
+    "name": "Visitors & Contractors",
+    "group": "Identity and access hardware"
+  },
+  {
+    "number": 21,
+    "key": "key-control",
+    "name": "Key Control",
+    "group": "Identity and access hardware"
+  },
+  {
+    "number": 22,
+    "key": "hr-records",
+    "name": "HR Staff Records",
+    "group": "Staff"
+  },
+  {
+    "number": 23,
+    "key": "recruitment",
+    "name": "Recruitment",
+    "group": "Staff"
+  },
+  {
+    "number": 24,
+    "key": "onboarding-exit",
+    "name": "Onboarding & Exit",
+    "group": "Staff"
+  },
+  {
+    "number": 25,
+    "key": "attendance",
+    "name": "Attendance",
+    "group": "Staff"
+  },
+  {
+    "number": 26,
+    "key": "shifts-rosters",
+    "name": "Shifts & Rosters",
+    "group": "Staff"
+  },
+  {
+    "number": 27,
+    "key": "leave",
+    "name": "Leave Management",
+    "group": "Staff"
+  },
+  {
+    "number": 28,
+    "key": "payroll",
+    "name": "Payroll",
+    "group": "Staff"
+  },
+  {
+    "number": 29,
+    "key": "earnings-statements",
+    "name": "Payslips & Lifetime Earnings",
+    "group": "Staff"
+  },
+  {
+    "number": 30,
+    "key": "advances-loans",
+    "name": "Advances & Loans",
+    "group": "Staff"
+  },
+  {
+    "number": 31,
+    "key": "bonuses-rewards",
+    "name": "Bonuses & Rewards",
+    "group": "Staff"
+  },
+  {
+    "number": 32,
+    "key": "staff-meals",
+    "name": "Staff Meals",
+    "group": "Staff"
+  },
+  {
+    "number": 33,
+    "key": "performance",
+    "name": "Performance & Appraisals",
+    "group": "Staff"
+  },
+  {
+    "number": 34,
+    "key": "training",
+    "name": "Training & Certificates",
+    "group": "Staff"
+  },
+  {
+    "number": 35,
+    "key": "discipline",
+    "name": "Discipline & Cases",
+    "group": "Staff"
+  },
+  {
+    "number": 36,
+    "key": "staff-welfare",
+    "name": "Staff Requests & Welfare",
+    "group": "Staff"
+  },
+  {
+    "number": 37,
+    "key": "petty-cash",
+    "name": "Petty Cash & Expense Claims",
+    "group": "Staff"
+  },
+  {
+    "number": 38,
+    "key": "daily-reports",
+    "name": "Daily Reports",
+    "group": "Operations"
+  },
+  {
+    "number": 39,
+    "key": "inspections",
+    "name": "Inspections & Checklists",
+    "group": "Operations"
+  },
+  {
+    "number": 40,
+    "key": "faults-maintenance",
+    "name": "Faults & Maintenance",
+    "group": "Operations"
+  },
+  {
+    "number": 41,
+    "key": "asset-register",
+    "name": "Asset Register",
+    "group": "Operations"
+  },
+  {
+    "number": 42,
+    "key": "tasks",
+    "name": "Tasks",
+    "group": "Operations"
+  },
+  {
+    "number": 43,
+    "key": "housekeeping",
+    "name": "Housekeeping & Room Status",
+    "group": "Operations"
+  },
+  {
+    "number": 44,
+    "key": "laundry",
+    "name": "Laundry",
+    "group": "Operations"
+  },
+  {
+    "number": 45,
+    "key": "security-incidents",
+    "name": "Security, Patrols & Incidents",
+    "group": "Operations"
+  },
+  {
+    "number": 46,
+    "key": "lost-found",
+    "name": "Lost & Found",
+    "group": "Operations"
+  },
+  {
+    "number": 47,
+    "key": "fleet-transport",
+    "name": "Fleet & Transport",
+    "group": "Operations"
+  },
+  {
+    "number": 48,
+    "key": "knowledge-base",
+    "name": "SOPs & Knowledge Base",
+    "group": "Operations"
+  },
+  {
+    "number": 49,
+    "key": "notice-board",
+    "name": "Notice Board",
+    "group": "Communication"
+  },
+  {
+    "number": 50,
+    "key": "chat",
+    "name": "Chat",
+    "group": "Communication"
+  },
+  {
+    "number": 51,
+    "key": "meetings",
+    "name": "Meetings & Minutes",
+    "group": "Communication"
+  },
+  {
+    "number": 52,
+    "key": "surveys-polls",
+    "name": "Surveys & Polls",
+    "group": "Communication"
+  },
+  {
+    "number": 53,
+    "key": "company-calendar",
+    "name": "Company Calendar",
+    "group": "Communication"
+  },
+  {
+    "number": 54,
+    "key": "crm-guests",
+    "name": "CRM: Guest & Client Profiles",
+    "group": "Guests and sales"
+  },
+  {
+    "number": 55,
+    "key": "corporate-accounts",
+    "name": "Corporate Accounts",
+    "group": "Guests and sales"
+  },
+  {
+    "number": 56,
+    "key": "guest-feedback",
+    "name": "Feedback, Complaints & Reviews",
+    "group": "Guests and sales"
+  },
+  {
+    "number": 57,
+    "key": "loyalty",
+    "name": "Loyalty & Membership",
+    "group": "Guests and sales"
+  },
+  {
+    "number": 58,
+    "key": "campaigns",
+    "name": "Marketing Campaigns",
+    "group": "Guests and sales"
+  },
+  {
+    "number": 59,
+    "key": "promotions-vouchers",
+    "name": "Promotions, Vouchers & Gift Cards",
+    "group": "Guests and sales"
+  },
+  {
+    "number": 60,
+    "key": "guest-requests",
+    "name": "Guest Requests & Help Desk",
+    "group": "Guests and sales"
+  },
+  {
+    "number": 61,
+    "key": "menu-catalogue",
+    "name": "Menus & Catalogue",
+    "group": "Guests and sales"
+  },
+  {
+    "number": 62,
+    "key": "food-ordering",
+    "name": "Food Ordering",
+    "group": "Guests and sales"
+  },
+  {
+    "number": 63,
+    "key": "kitchen-display",
+    "name": "Kitchen Display & Production",
+    "group": "Guests and sales"
+  },
+  {
+    "number": 64,
+    "key": "tables-dinein",
+    "name": "Tables & Dine-in",
+    "group": "Guests and sales"
+  },
+  {
+    "number": 65,
+    "key": "buffet",
+    "name": "Buffet Service",
+    "group": "Guests and sales"
+  },
+  {
+    "number": 66,
+    "key": "delivery-riders",
+    "name": "Delivery & Riders",
+    "group": "Guests and sales"
+  },
+  {
+    "number": 67,
+    "key": "room-bookings",
+    "name": "Room Bookings",
+    "group": "Guests and sales"
+  },
+  {
+    "number": 68,
+    "key": "museum",
+    "name": "Museum & Cultural Visits",
+    "group": "Guests and sales"
+  },
+  {
+    "number": 69,
+    "key": "events-conferences",
+    "name": "Events & Conferences",
+    "group": "Guests and sales"
+  },
+  {
+    "number": 70,
+    "key": "venues-equipment",
+    "name": "Venues & Equipment Hire",
+    "group": "Guests and sales"
+  },
+  {
+    "number": 71,
+    "key": "pool",
+    "name": "Swimming Pool",
+    "group": "Guests and sales"
+  },
+  {
+    "number": 72,
+    "key": "spa",
+    "name": "Spa / Humura",
+    "group": "Guests and sales"
+  },
+  {
+    "number": 73,
+    "key": "crafts-bookshop",
+    "name": "Crafts & Bookshop",
+    "group": "Guests and sales"
+  },
+  {
+    "number": 74,
+    "key": "whatsapp-concierge",
+    "name": "WhatsApp Concierge",
+    "group": "Guests and sales"
+  },
+  {
+    "number": 75,
+    "key": "public-website",
+    "name": "Public Website & Online Booking",
+    "group": "Guests and sales"
+  },
+  {
+    "number": 76,
+    "key": "pricing-tax",
+    "name": "Prices, Taxes & Discounts",
+    "group": "Money and insight"
+  },
+  {
+    "number": 77,
+    "key": "payments",
+    "name": "Payments",
+    "group": "Money and insight"
+  },
+  {
+    "number": 78,
+    "key": "receipts-invoicing",
+    "name": "Receipts & Invoicing",
+    "group": "Money and insight"
+  },
+  {
+    "number": 79,
+    "key": "cash-up",
+    "name": "Cash-up & Reconciliation",
+    "group": "Money and insight"
+  },
+  {
+    "number": 80,
+    "key": "accounting-export",
+    "name": "Accounting Export",
+    "group": "Money and insight"
+  },
+  {
+    "number": 81,
+    "key": "reports-analytics",
+    "name": "Reports & Analytics",
+    "group": "Money and insight"
+  },
+  {
+    "number": 82,
+    "key": "apex-integration",
+    "name": "APEX Integration",
+    "group": "Money and insight"
+  },
+  {
+    "number": 83,
+    "key": "seo-online-presence",
+    "name": "SEO & Online Presence",
+    "group": "Marketing and growth"
+  },
+  {
+    "number": 84,
+    "key": "stock-inventory",
+    "name": "Stock & Inventory",
+    "group": "Operations"
+  }
+]

@@ -11,3 +11,7 @@ __pycache__/
 # Dependencies and builds
 node_modules/
 .DS_Store
+
+# Built Workers (the deploy bridge stages a copy under tools/cf-deploy-bridge/staging only while deploying)
+apps/api/dist/
+apps/api/.wrangler/
