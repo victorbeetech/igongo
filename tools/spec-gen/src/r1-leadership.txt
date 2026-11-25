@@ -1,0 +1,62 @@
+@@ super-admin | Super Admin | System
+PURPOSE: Controls and configures the whole system: modules, roles, permissions, screens, forms, workflows, prices, wording and integrations. Does not run daily hotel work.
+APP: Web portal for setup, and the Igongo app for testing roles and the client view
+HOME: Module health; Pending change sets; Role builder; Recent audit alerts; Integrations status; Devices offline
+PERMS: 01 VCEADX all; 02 VCEADX all; 03 VCEADX all; 04 VCEADX all; 05 VX all; 06 VX all; 07 VCED all; 08 VCED all; 09 VCED all; 10 VCED all; 11 VCED all; 12 VCED all; 13 VCEX all; 14 VCED all; 15 VCED all; 16 VCEA all; 18 VCED all
+SCREENS: Super Admin Console, Role builder, App layout editor, Form and workflow builders, Notification rules, Integrations, Audit search
+LIMITS: Approves system changes only. Risky changes (payroll rules, deleting a role) need a second super admin when dual control is on.
+RULES: 2FA required on every login; Access only from registered devices; Cannot see salary amounts or approve payments unless also given a finance role; Every action is logged and can be undone
+
+@@ system-auditor | Internal Auditor | System
+PURPOSE: Reviews records, the audit trail and money flows across all modules without being able to change anything.
+REPORTS: board-of-directors
+APP: Web portal
+HOME: Audit alerts; Voids and refunds this week; Cash-up variances; Payroll changes; Role changes
+PERMS: 05 VX all; 06 VX all; 28 VX all; 30 VX all; 37 VX all; 77 VX all; 78 VX all; 79 VX all; 81 VX all; 02 V all
+LIMITS: None. Read-only role.
+RULES: 2FA required; Cannot edit, approve or delete anything
+
+@@ board-of-directors | Board of Directors | Leadership
+PURPOSE: Oversees the hotel at the highest level with summary reports, board papers and big decisions, including members who represent the shareholders.
+APP: Igongo app and web portal
+HOME: Board dashboard (revenue, occupancy, guest rating, staff count); Board meeting papers; Decisions awaiting the board; Monthly report from the CEO; Notice board
+PERMS: 81 VX all; 51 VCM dept; 49 VML all; 09 VA all; 06 V all
+SCREENS: Board dashboard, Board meetings and minutes, Approvals awaiting the board
+LIMITS: Approves Tier 3 and unlimited items that the workflow sends to the board, such as large capital spending
+RULES: 2FA required; Sees summary figures, not individual staff or guest records, unless given access
+
+@@ ceo | Chief Executive Officer | Leadership
+PURPOSE: Leads the whole business, sets direction, and approves the largest decisions below the board.
+REPORTS: board-of-directors
+APP: Igongo app and web portal
+HOME: Business dashboard; Approvals waiting for me; Department daily digest; Guest satisfaction; Cash position; Notice board
+PERMS: 81 VX all; 09 VA all; 22 V all; 25 V all; 28 VA all; 30 VA all; 31 VCA all; 38 VM all; 40 VM all; 49 VCEML all; 51 VC all; 54 V all; 56 V all; 69 VA all; 77 V all; 05 V all
+LIMITS: Up to Tier 3 for spending, advances, bonuses and discounts; Approves senior hires and exits
+RULES: 2FA required
+
+@@ senior-manager | Senior Manager | Leadership
+PURPOSE: Runs a group of departments for the CEO, such as all guest services or all support services, and steps in for the GM when needed.
+REPORTS: ceo
+APP: Igongo app and web portal
+HOME: My departments dashboard; Approvals waiting for me; Daily reports to sign; Open faults; Staff on duty now
+PERMS: 81 VX all; 09 VA all; 22 V all; 25 VX all; 26 V all; 27 VA all; 30 VA all; 31 VCA all; 38 VAM all; 39 V all; 40 VM all; 42 VC all; 49 VCML all; 51 VC all; 56 V all; 69 VA all
+LIMITS: Up to Tier 2 for spending, advances, bonuses and discounts; Approves leave for department managers
+RULES: 2FA required; Can be made acting GM with a temporary role
+
+@@ general-manager | General Manager (GM) | Leadership
+PURPOSE: Runs the hotel every day: staff, guests, operations and money. Sees everything, including payroll.
+REPORTS: ceo
+APP: Igongo app and web portal
+HOME: GM daily dashboard; Approvals waiting for me; Staff on duty and late today; Today's sales by outlet; Today's arrivals, events and pre-orders; Open complaints; Open faults; Department reports
+PERMS: 81 VX all; 09 VA all; 05 V all; 06 VX all; 22 VE all; 25 VAX all; 26 VA all; 27 VA all; 28 VAX all; 29 V all; 30 VA all; 31 VCA all; 33 V all; 35 V all; 37 VA all; 38 VAM all; 39 V all; 40 VMA all; 42 VC all; 49 VCEDML all; 50 VC all; 51 VC all; 54 V all; 56 VE all; 62 V all; 67 V all; 69 VA all; 76 VA all; 77 VA all; 78 V all; 79 VA all; 84 VA all
+LIMITS: Up to Tier 3 for spending, advances, bonuses, refunds and discounts; Approves payroll runs; Approves price changes
+RULES: 2FA required; Viewing payroll is logged
+
+@@ assistant-gm | Assistant General Manager | Leadership
+PURPOSE: Supports the GM and runs the hotel when the GM is away.
+REPORTS: general-manager
+APP: Igongo app and web portal
+HOME: Operations dashboard; Approvals waiting for me; Staff on duty; Today's events and pre-orders; Open faults; Complaints
+PERMS: 81 VX all; 09 VA all; 25 VX all; 26 VA all; 27 VA all; 30 VA all; 38 VAM all; 40 VM all; 42 VC all; 49 VCML all; 56 VE all; 69 V all; 79 VA all
+LIMITS: Up to Tier 2; Payroll access only when made acting GM
+RULES: 2FA required

@@ -1,0 +1,135 @@
+@@ fnb-manager | Restaurant & F&B Manager | Department managers
+PURPOSE: Runs the restaurants, bars, coffee shops, room service and buffets: menus, service quality, staff and sales.
+REPORTS: general-manager
+APP: Igongo app and web portal
+HOME: Sales today by outlet; Orders and pre-orders now; Table reservations today; Late orders; Staff on duty (F&B); Guest ratings (food); Daily report to sign
+PERMS: 61 VCE dept; 62 VEAX dept; 63 V dept; 64 VCE dept; 65 VCE dept; 66 V dept; 59 VC dept; 56 VEM dept; 25 VX dept; 26 VCEA dept; 27 VA dept; 32 V dept; 38 VAM dept; 39 VC dept; 79 VA dept; 81 VX dept; 31 VC dept; 84 VCA dept
+LIMITS: Voids and discounts up to Tier 2; Leave and shift swaps for F&B staff; Rewards up to Tier 1
+RULES: Menu price changes go to the GM for approval
+
+@@ executive-chef | Executive Chef (Kitchen Head) | Department managers
+PURPOSE: Leads the kitchen: menus, food quality, hygiene, prep planning, kitchen staff and food waste.
+REPORTS: fnb-manager
+APP: Igongo app and the kitchen display
+HOME: Kitchen tickets now; Pre-orders due in the next 2 hours; Buffet and event production today; Staff meals forecast; Items out today; Waste today; Kitchen inspection
+PERMS: 61 VCE dept; 62 V dept; 63 VCE dept; 65 VE dept; 32 V dept; 39 VC dept; 40 VC dept; 25 V dept; 26 VCEA dept; 27 VA dept; 34 V dept; 38 VCAM dept; 81 V dept; 84 VC dept
+LIMITS: Leave and shift swaps for kitchen staff
+RULES: Can mark any item out of stock for today
+
+@@ events-manager | Events & Conferences Manager | Department managers
+PURPOSE: Sells and runs weddings, conferences, parties and retreats, from enquiry to post-event report, including wristbands.
+REPORTS: general-manager
+APP: Igongo app and web portal
+HOME: Enquiries to answer; Events this week; Venue calendar; Deposits due; Wristbands assigned; Event tasks overdue
+PERMS: 69 VCEAX dept; 70 VCE dept; 17 VCE dept; 65 VC dept; 55 V dept; 54 VC dept; 78 VC dept; 42 VC dept; 26 V dept; 38 VAM dept; 81 VX dept
+LIMITS: Event discounts up to Tier 2; Can assign and reset wristband ranges
+RULES: Confirming an event above Tier 3 value goes to the GM
+
+@@ museum-manager | Museum & Cultural Centre Manager | Department managers
+PURPOSE: Runs the Eriijukiro Museum, the cultural village, tours, performances and school visits.
+REPORTS: general-manager
+APP: Igongo app and web portal
+HOME: Visitors today; Tours booked; Group and school bookings; Guides on duty; Exhibit content; Ratings
+PERMS: 68 VCEAX dept; 54 V dept; 25 V dept; 26 VCEA dept; 27 VA dept; 38 VAM dept; 39 VC dept; 81 VX dept
+LIMITS: Group discounts up to Tier 1; Leave and shifts for museum staff
+
+@@ front-office-manager | Front Office Manager | Department managers
+PURPOSE: Runs reception, reservations, guest relations, concierge and porters, working alongside APEX.
+REPORTS: general-manager
+APP: Igongo app and web portal
+HOME: Arrivals and departures today; App bookings waiting for APEX; Guest requests open; WhatsApp chats waiting; Complaints; Lost and found
+PERMS: 67 VEA dept; 54 VCE all; 55 V all; 56 VEM all; 60 VEA all; 74 VE all; 46 VCE all; 20 V all; 82 V all; 25 V dept; 26 VCEA dept; 27 VA dept; 38 VAM dept; 81 VX dept
+LIMITS: Room booking changes and refunds up to Tier 2; Complaint vouchers up to Tier 1
+
+@@ housekeeping-manager | Executive Housekeeper | Department managers
+PURPOSE: Keeps every room and public area clean, inspected and ready, and runs laundry.
+REPORTS: general-manager
+APP: Igongo app
+HOME: Room board; Rooms to inspect; Attendant assignments; Guest requests (housekeeping); Laundry today; Lost and found
+PERMS: 43 VCEA dept; 44 VCE dept; 46 VCE dept; 60 VE dept; 39 VC dept; 40 VC dept; 25 V dept; 26 VCEA dept; 27 VA dept; 38 VAM dept; 81 V dept; 84 VC dept
+LIMITS: Leave and shifts for housekeeping and laundry staff
+
+@@ pool-manager | Pool Supervisor | Department managers
+PURPOSE: Runs the pools safely: passes, memberships, lifeguards, water quality and lessons.
+REPORTS: general-manager
+APP: Igongo app
+HOME: Swimmers now and capacity; Passes sold today; Lifeguards on duty; Water tests due; Incidents
+PERMS: 71 VCEAX dept; 57 V dept; 45 VC dept; 25 V dept; 26 VCEA dept; 38 VAM dept; 39 VC dept
+LIMITS: Can close the pool; Pass refunds up to Tier 1
+
+@@ spa-manager | Spa Manager (Humura) | Department managers
+PURPOSE: Runs the Humura spa: treatments, therapists, bookings and memberships.
+REPORTS: general-manager
+APP: Igongo app
+HOME: Appointments today; Therapist schedule; No-shows; Ratings; Sales today
+PERMS: 72 VCEAX dept; 57 V dept; 25 V dept; 26 VCEA dept; 27 VA dept; 38 VAM dept; 81 V dept
+LIMITS: Discounts up to Tier 1
+
+@@ crafts-manager | Crafts & Bookshop Manager | Department managers
+PURPOSE: Runs the craft shop and bookshop: products, artisans, sales and online orders.
+REPORTS: general-manager
+APP: Igongo app
+HOME: Sales today; Online orders; Items running low; Artisan balances
+PERMS: 73 VCEAX dept; 79 VA dept; 25 V dept; 26 VCEA dept; 38 VAM dept; 81 V dept
+LIMITS: Discounts up to Tier 1
+
+@@ security-manager | Security Manager | Department managers
+PURPOSE: Keeps people and property safe: gates, guards, patrols, zones, visitors, keys and incidents.
+REPORTS: general-manager
+APP: Igongo app and web portal
+HOME: Who is on site now; Visitors inside; Patrols today; Incidents open; Refused entries; Keys out; Panic alerts
+PERMS: 45 VCEA all; 19 VCE all; 20 VCE all; 21 VCEA all; 16 VD all; 17 V all; 25 V all; 26 VCEA dept; 27 VA dept; 38 VAM dept; 06 V all
+LIMITS: Can block any staff card or wristband; Can lock down a zone
+RULES: Sees the live headcount of everyone on site
+
+@@ maintenance-manager | Maintenance Manager (Chief Engineer) | Department managers
+PURPOSE: Keeps the buildings, power, water, plumbing, equipment and vehicles working, and plans preventive maintenance.
+REPORTS: general-manager
+APP: Igongo app and web portal
+HOME: Open faults by urgency; Faults overdue; Jobs today; Planned maintenance due; Technicians on duty; Repair costs this month
+PERMS: 40 VCEAMLX all; 41 VCEX all; 39 VC all; 42 VC dept; 47 V all; 25 V dept; 26 VCEA dept; 27 VA dept; 38 VAM dept; 81 VX dept; 84 VC dept
+LIMITS: Repair spending up to Tier 2; Can close faults
+
+@@ hr-manager | HR Manager | Department managers
+PURPOSE: Runs everything about people: enrolment, contracts, attendance rules, leave, training, discipline, welfare and exits.
+REPORTS: general-manager
+APP: Web portal and Igongo app
+HOME: Staff count and changes; Contracts expiring; Leave today; Attendance exceptions; Recruitment pipeline; Open cases; Probation reviews due
+PERMS: 22 VCEX all; 23 VCEA all; 24 VCEA all; 25 VEAX all; 26 V all; 27 VEA all; 29 V all; 30 VA all; 31 VCA all; 33 VCE all; 34 VCE all; 35 VCEA all; 36 VEA all; 16 VCE all; 48 VCE all; 49 VCEML all; 81 VX dept
+LIMITS: Advances up to Tier 1; Leave for any staff; Hires below manager level
+RULES: 2FA required; Sees salaries only if also given the payroll officer role
+
+@@ finance-manager | Finance & Accounts Manager | Department managers
+PURPOSE: Controls money: payments, receipts, cash-ups, petty cash, payroll review, accounting exports and credit accounts.
+REPORTS: general-manager
+APP: Web portal and Igongo app
+HOME: Takings today by method; Cash-up variances; Refunds to approve; Overdue invoices; Petty cash floats; Payroll run status
+PERMS: 77 VAX all; 78 VCEAX all; 79 VAX all; 80 VCX all; 37 VAX all; 28 VAX all; 30 VA all; 55 VE all; 76 V all; 81 VX all; 84 VAX all
+LIMITS: Refunds and voids up to Tier 2; Petty cash up to Tier 2; Reviews payroll before the GM approves
+RULES: 2FA required; Cannot create a payment and approve it too
+
+@@ it-manager | IT Manager | Department managers
+PURPOSE: Looks after devices, networks, cards and printers, and supports the super admin.
+REPORTS: general-manager
+APP: Web portal and Igongo app
+HOME: Devices offline; Integration status; Card printing queue; IT faults; Backups
+PERMS: 18 VCED all; 16 VCE all; 14 V all; 13 V all; 40 VCE dept; 04 VE all
+LIMITS: None by default
+RULES: 2FA required; Can reset logins and sign out sessions, but cannot change roles unless also a super admin
+
+@@ sales-marketing-manager | Sales & Marketing Manager | Department managers
+PURPOSE: Brings in business: corporate clients, packages, campaigns, promotions, website content and reviews.
+REPORTS: general-manager
+APP: Web portal and Igongo app
+HOME: Leads and enquiries; Corporate accounts; Campaign results; Active promotions; Review scores
+PERMS: 54 VEX all; 55 VCE all; 58 VCEA all; 59 VCEA all; 57 VE all; 56 V all; 75 VCE all; 69 VC all; 81 VX dept
+LIMITS: Promotions up to Tier 2
+RULES: Campaigns go only to guests who agreed to receive them
+
+@@ logistics-manager | Delivery & Transport Manager | Department managers
+PURPOSE: Runs food delivery, riders, dispatch, hotel vehicles and guest transfers.
+REPORTS: general-manager
+APP: Igongo app and web portal
+HOME: Live rider map; Deliveries now and late; Riders online; Trips today; Vehicle service due; Rider cash to hand in
+PERMS: 66 VCEAX all; 47 VCEAX all; 79 VA dept; 25 V dept; 26 VCEA dept; 27 VA dept; 38 VAM dept; 81 VX dept
+LIMITS: Delivery fee waivers up to Tier 1; Trip approvals

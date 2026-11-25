@@ -1,10 +1,49 @@
 [
   {
+    "id": "portrait-black",
+    "name": "Black",
+    "orientation": "portrait",
+    "default": true,
+    "card_type": "cr80-ntag213",
+    "suits": "The default card for every role, until the super admin picks another design for a role.",
+    "print": {
+      "width_mm": 54.0,
+      "height_mm": 85.6,
+      "dpi": 300,
+      "margins_mm": 0,
+      "duplex": true,
+      "scale": "actual size"
+    },
+    "files": {
+      "front": {
+        "svg": "portrait-black/portrait-black-front.svg",
+        "pdf": "portrait-black/portrait-black-front-print.pdf"
+      },
+      "back": {
+        "svg": "portrait-black/portrait-black-back.svg",
+        "pdf": "portrait-black/portrait-black-back-print.pdf"
+      }
+    },
+    "fields": [
+      "card_label",
+      "card_no",
+      "expiry_date",
+      "full_name",
+      "hotel_phone",
+      "issue_date",
+      "photo",
+      "qr",
+      "role",
+      "staff_no"
+    ]
+  },
+  {
     "id": "portrait-wave",
     "name": "Wave",
     "orientation": "portrait",
+    "default": false,
     "card_type": "cr80-ntag213",
-    "suits": "Default for all staff.",
+    "suits": "Light alternative for all staff.",
     "print": {
       "width_mm": 54.0,
       "height_mm": 85.6,
@@ -41,6 +80,7 @@
     "id": "portrait-diagonal",
     "name": "Diagonal",
     "orientation": "portrait",
+    "default": false,
     "card_type": "cr80-ntag213",
     "suits": "Guest-facing staff: front office, restaurant, events, sales.",
     "print": {
@@ -78,6 +118,7 @@
     "id": "portrait-sidebar",
     "name": "Sidebar",
     "orientation": "portrait",
+    "default": false,
     "card_type": "cr80-ntag213",
     "suits": "Operations: maintenance, housekeeping, security, grounds. The bar label can show the department.",
     "print": {
@@ -117,6 +158,7 @@
     "id": "portrait-minimal",
     "name": "Minimal",
     "orientation": "portrait",
+    "default": false,
     "card_type": "cr80-ntag213",
     "suits": "Museum, cultural centre and spa staff.",
     "print": {
@@ -151,46 +193,10 @@
     ]
   },
   {
-    "id": "portrait-executive",
-    "name": "Executive",
-    "orientation": "portrait",
-    "card_type": "cr80-ntag213",
-    "suits": "Board members, CEO, GM and senior managers.",
-    "print": {
-      "width_mm": 54.0,
-      "height_mm": 85.6,
-      "dpi": 300,
-      "margins_mm": 0,
-      "duplex": true,
-      "scale": "actual size"
-    },
-    "files": {
-      "front": {
-        "svg": "portrait-executive/portrait-executive-front.svg",
-        "pdf": "portrait-executive/portrait-executive-front-print.pdf"
-      },
-      "back": {
-        "svg": "portrait-executive/portrait-executive-back.svg",
-        "pdf": "portrait-executive/portrait-executive-back-print.pdf"
-      }
-    },
-    "fields": [
-      "card_label",
-      "card_no",
-      "expiry_date",
-      "full_name",
-      "hotel_phone",
-      "issue_date",
-      "photo",
-      "qr",
-      "role",
-      "staff_no"
-    ]
-  },
-  {
     "id": "portrait-visitor",
     "name": "Visitor",
     "orientation": "portrait",
+    "default": false,
     "card_type": "cr80-ntag213",
     "suits": "Visitors, suppliers and day passes, with no photo.",
     "print": {
@@ -226,6 +232,7 @@
     "id": "landscape-classic",
     "name": "Classic",
     "orientation": "landscape",
+    "default": false,
     "card_type": "cr80-ntag213",
     "suits": "Default landscape card for all staff.",
     "print": {
@@ -265,6 +272,7 @@
     "id": "landscape-curves",
     "name": "Curves",
     "orientation": "landscape",
+    "default": false,
     "card_type": "cr80-ntag213",
     "suits": "Front office, sales and guest relations.",
     "print": {
@@ -304,6 +312,7 @@
     "id": "landscape-split",
     "name": "Split",
     "orientation": "landscape",
+    "default": false,
     "card_type": "cr80-ntag213",
     "suits": "Kitchen, restaurant, bars and coffee shops.",
     "print": {
@@ -342,6 +351,7 @@
     "id": "landscape-banner",
     "name": "Banner",
     "orientation": "landscape",
+    "default": false,
     "card_type": "cr80-ntag213",
     "suits": "Casual workers, contractors and interns. The label shows the card type.",
     "print": {

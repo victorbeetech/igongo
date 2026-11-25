@@ -1,0 +1,222 @@
+@@ 76 | pricing-tax | Prices, Taxes & Discounts | Money and insight
+The single source of every price, tax and discount rule, so a price changes in one place and every outlet uses it.
+
+## Features
+- Price lists per outlet, season, client type (resident, non-resident, corporate, staff) and time of day.
+- Price change scheduling with start and end dates.
+- Taxes: VAT and any other levy, inclusive or exclusive, per item type.
+- Service charge rules.
+- Discount rules: percentage, fixed, buy X get Y, staff discount.
+- Rounding rules for cash.
+- Price history for every item.
+
+## Super admin options
+- Who can change prices, and whether changes need approval.
+- Tax rates and which items they apply to.
+- Staff discount rules.
+
+DEPENDS: 15 09
+EVENTS: price.changed, tax.changed, discount_rule.changed
+
+@@ 77 | payments | Payments | Money and insight
+Takes and records every payment, by MTN MoMo, Airtel Money, card, bank and cash, for any module.
+
+## Features
+- Mobile money prompts to the payer's phone, and payment links.
+- Card payments through Flutterwave.
+- Cash and bank transfer recorded by staff.
+- Deposits, part payments and balances.
+- Split payment across methods or people.
+- Refunds, full or partial, with approval.
+- Payment callbacks checked with signatures before anything is marked paid.
+- Charge to room (sent to APEX) or to a corporate account.
+- Failed and pending payment follow-up.
+- Daily settlement report per provider.
+
+## Super admin options
+- Every payment method is built and ready: MTN MoMo, Airtel Money, card through Flutterwave, bank transfer, cash, charge to room and corporate account. Each one has its own on and off switch for the whole system, then per outlet and module, so the hotel turns methods on as it agrees them with each provider.
+- Provider keys and settings are entered in [Integrations & API](14-integrations.md), never in code.
+- Refund approval tiers.
+- Whether staff can mark a payment as received manually.
+
+DEPENDS: 14 09
+EVENTS: payment.initiated, payment.succeeded, payment.failed, payment.refunded, settlement.received
+
+@@ 78 | receipts-invoicing | Receipts & Invoicing | Money and insight
+Produces every receipt, invoice, quote, credit note and statement, in the hotel's brand, numbered correctly and checkable by QR code.
+
+## Features
+
+### Documents
+- Receipts, tax invoices, pro-forma invoices, quotes, credit notes, debit notes and statements.
+- Templates per document type and outlet, designed in a drag-and-drop editor, with logo, footer and terms.
+- Paper sizes: thermal 58 mm and 80 mm, A4 and A5.
+
+### Numbering
+- Separate number series per document type and outlet, with prefixes and year resets, such as `RST-2026-000123`.
+- No gaps and no duplicates, even when devices are offline.
+
+### Taxes
+- Tax lines from [Prices, Taxes & Discounts](76-pricing-tax.md).
+- Ready for URA electronic invoicing (EFRIS) if the hotel needs it.
+
+### Delivery
+- Print on a station printer.
+- Send by SMS, WhatsApp or email, or show in the guest's app.
+- Download as PDF.
+
+### Control
+- QR code on every document that anyone can scan to confirm it is genuine.
+- Reprints marked "COPY", with who reprinted and why.
+- Void with reason and approval.
+- Credit notes linked to the original invoice.
+- Invoice due dates, reminders and overdue lists for credit clients.
+- Search any document years back.
+
+## Super admin options
+- Templates, number series and prefixes.
+- Default delivery channel per module.
+- Who can reprint, void and issue credit notes.
+- Invoice terms and reminder schedule.
+
+DEPENDS: 76 77 11
+EVENTS: receipt.issued, invoice.issued, invoice.overdue, creditnote.issued, document.voided, document.reprinted, document.verified
+
+@@ 79 | cash-up | Cash-up & Reconciliation | Money and insight
+End-of-shift cash-up for every cashier, rider and outlet, with variances flagged.
+
+## Features
+- Shift open with a starting float.
+- Expected takings per method calculated from payments.
+- Cashier counts cash by denomination and enters mobile money and card totals.
+- Variance shown and explained, with supervisor sign-off.
+- Rider cash hand-in.
+- Safe drops and bank deposits.
+- Daily outlet summary to accounts.
+- Variance trends per cashier.
+
+## Super admin options
+- Allowed variance before an alert.
+- Who signs off cash-ups.
+- Whether a cashier can see expected totals before counting (blind cash-up).
+
+DEPENDS: 77 15
+EVENTS: shift.opened, cashup.submitted, cashup.approved, cashup.variance
+
+@@ 80 | accounting-export | Accounting Export | Money and insight
+Sends sales, payroll, expenses and payments to the hotel's accounting system in the format it needs.
+
+## Features
+- Map outlets, items, taxes and expenses to account codes.
+- Daily or monthly journals for sales, payments, payroll and petty cash.
+- Export to spreadsheet or the accounting system's import format.
+- Push to APEX where APEX handles accounts.
+- Export log and re-export after corrections.
+
+## Super admin options
+- Account code mapping.
+- Export schedule and format.
+
+DEPENDS:
+EVENTS: accounting.exported, accounting.export_failed
+
+@@ 81 | reports-analytics | Reports & Analytics | Money and insight
+Dashboards and reports for every module and every level, from a supervisor's shift to the board's quarter.
+
+## Features
+- Ready-made dashboards: GM daily, board monthly, each department, attendance, payroll, food sales, bookings, guest satisfaction.
+- Custom report builder: pick a module, fields, filters, groups and chart type.
+- Compare periods, outlets and departments.
+- Drill down from a total to the records behind it.
+- Scheduled reports by email or WhatsApp, such as the GM's 7 AM summary.
+- Export to PDF and Excel.
+- Targets and alerts, such as "food sales below target by 2 PM".
+- Reports respect each person's permissions and data scope.
+
+## Super admin options
+- Which dashboards each role sees.
+- Who can build and share reports.
+- Schedules and recipients.
+
+DEPENDS: 02
+EVENTS: report.scheduled_sent, kpi.alert
+
+@@ 82 | apex-integration | APEX Integration | Money and insight
+Connects the new system to APEX, the hotel's existing system, so the two work together and never conflict. APEX is not replaced.
+
+## Features
+- Read rooms, room types, rates and availability from APEX.
+- Send bookings made in the app to APEX.
+- Read in-house guests, so room service and charge-to-room work.
+- Send charges to a guest's room folio.
+- Match guests between APEX and the CRM.
+- Sync log with errors, retries and manual fix screen.
+- Works through whatever APEX offers (API, database link or file exchange), to be confirmed with the hotel and the vendor.
+
+## Super admin options
+- What syncs, in which direction, and how often.
+- What to do when APEX is offline.
+- Who is alerted on sync errors.
+
+DEPENDS: 14
+EVENTS: apex.sync_completed, apex.sync_failed, apex.booking_sent, apex.charge_posted
+OFF: Room bookings switch to request mode and charge-to-room is hidden. Everything else keeps working.
+
+@@ 83 | seo-online-presence | SEO & Online Presence | Marketing and growth
+Everything that helps people find Igongo online and measures what works: search engines, Google Maps, app stores, social media, booking sites and tracking. Victor Bee Technologies runs marketing for the hotel, so every setup step is part of this system.
+
+## Features
+
+### Search engines (SEO)
+- Editable page titles, descriptions, keywords and clean addresses for every website page, room, event, menu item, tour and shop product.
+- Structured data so Google shows rich results: Hotel, Restaurant, Menu, Event, Museum (TouristAttraction), Product, Review ratings, FAQ and breadcrumbs.
+- Automatic sitemap and robots file, updated when content changes.
+- Canonical links, redirects manager and broken link report.
+- Fast pages: image compression, modern formats, caching, and Core Web Vitals reports.
+- Search Console and Bing Webmaster connected, with indexing and keyword reports.
+- Pages in more than one language, with the right language tags.
+- Local SEO: name, address and phone kept the same everywhere.
+
+### Google Business Profile and maps
+- Profile for the hotel, and separate ones for the museum, restaurant and spa if wanted.
+- Photos, opening hours, booking and menu links kept in sync from the system.
+- Reviews from Google shown in [Feedback, Complaints & Reviews](56-guest-feedback.md), with replies.
+- Listings on Apple Maps, Bing Places and TripAdvisor.
+
+### App stores (ASO)
+- App name, subtitle, keywords, descriptions, screenshots and preview video for the Play Store and the App Store.
+- Store listings in each language.
+- Ratings prompt in the app after a good experience.
+- Deep links and smart app banners, so a website visitor can open the same page in the app.
+
+### Social media
+- Open Graph and social cards for every shareable page.
+- Share buttons on events, offers, menu items and tours.
+- Links to and from Facebook, Instagram, TikTok, X, YouTube and LinkedIn.
+- Social posting calendar for offers and events.
+
+### Tracking and analytics
+- Google Analytics 4 and Google Tag Manager, with consent banner.
+- Meta Pixel, TikTok Pixel and Google Ads conversion tracking.
+- Campaign links (UTM) on every marketing message.
+- Bookings and orders tracked from first visit to payment, by channel.
+- Monthly marketing report: traffic, sources, conversions and revenue by channel.
+
+### Booking channels
+- Links and content kept consistent on Booking.com, Expedia, Hotels.com and TripAdvisor.
+- Direct booking offers to win guests from the booking sites.
+
+### Content
+- Blog and news with categories, authors and scheduling.
+- Landing pages for campaigns, such as weddings, school trips or Christmas.
+- Email newsletter sign-up, sent to [Marketing Campaigns](58-campaigns.md).
+
+## Super admin options
+- Titles, descriptions and structured data per page.
+- Which tracking tools are switched on, and the consent wording.
+- Redirects and sitemap rules.
+- Who can edit SEO, store listings and social settings.
+
+DEPENDS: 75 12 11
+EVENTS: seo.page_updated, sitemap.rebuilt, review.imported, conversion.tracked
+OFF: The website and app keep working. Search data, tracking and listing sync pause.

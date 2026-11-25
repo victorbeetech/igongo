@@ -1,0 +1,408 @@
+@@ 01 | super-admin | Super Admin Console | Core platform
+The control room for the whole system. Everything the hotel will ever want to change, from a module being on or off to the wording of a button, is changed here by the super admin, with no code changes and no app update.
+
+## Features
+
+### Module control
+- Turn any module on or off for the whole hotel, one location, one department or one role.
+- Maintenance mode for a single module, with a message shown to users while it is down.
+- Health page for every module: status, last error, response time and queued jobs.
+- Feature flags inside each module, so a single feature can be tried by a pilot group first.
+
+### Hotel settings
+- Hotel profile: name, logo, addresses, contact numbers, TIN and registration details.
+- Working week, business day cut-off time and time zone.
+- Currency, number and date formats.
+- Financial year start and payroll period.
+
+### Safety for the super admin
+- Every change shows a preview and asks for confirmation before it goes live.
+- Every change is written to the [Audit Trail](05-audit-trail.md) with old and new values, and can be undone in one click.
+- Change sets: group several changes, schedule them for a date and time, and roll the whole set back together.
+- Two super admins can be required to approve risky changes (dual control), such as payroll rules or deleting a role.
+- Break-glass account that is sealed, alarmed and used only when every other super admin is locked out.
+
+### System tools
+- Global announcement banner across all apps.
+- Force an app update when a minimum version is required.
+- Background job monitor with retry and cancel.
+- Sandbox copy of settings to try changes before applying them to the live system.
+
+## Super admin options
+- Who else can open the console, and which sections each of them sees.
+- Which changes need dual approval.
+- How long undo history is kept (default: forever).
+- Whether scheduled change sets are allowed.
+- Maintenance message wording for each module.
+
+DEPENDS: 02 05 10
+EVENTS: module.enabled, module.disabled, module.maintenance_started, module.maintenance_ended, settings.changed, changeset.applied, changeset.rolled_back
+OFF: This module cannot be switched off. If it fails, every other module keeps running on its last saved settings.
+
+@@ 02 | roles-permissions | Roles & Permissions | Core platform
+The role builder. Roles such as Chef, Lifeguard or Board Member are data that the super admin creates, never code. Each role says what a person can do in every module, which records they can see, and what their app looks like.
+
+## Features
+
+### Role builder
+- Create a role with a name, colour, icon, description and the department it belongs to.
+- Start from a blank role, from a pre-made role in [the roles spec](../roles/README.md), or by cloning any existing role.
+- Give one person several roles at once. Their permissions are combined.
+- Temporary roles with a start and end date, such as "Acting GM for two weeks".
+- Role hierarchy, so a manager role can automatically see what the roles under it see.
+
+### Permissions
+- For every feature in every module: view, create, edit, approve, delete, export, comment and like, each on or off.
+- Field-level control: hide or make read-only any single field, such as salary or a guest's phone number.
+- Data scope for each permission: everything, own location, own department, own team, assigned to me or own records only.
+- Approval limits on amounts and counts, using tiers (Tier 1, 2, 3 or unlimited) whose amounts the super admin sets.
+
+### Conditions
+- Time windows, such as "can sell pool passes only 8 AM to 7 PM".
+- Device and station limits, such as "can only clock others in from the gate handheld".
+- Location limits, using GPS or the network the device is on.
+- Require 2FA, a card tap or a PIN before a sensitive action.
+
+### Testing and safety
+- "View as" a role or a person, to see exactly what their app shows before saving.
+- Compare two roles side by side.
+- A permission report: who can do X, and why (which role gave it).
+- Separation of duties rules, such as "the person who creates a payment cannot approve it".
+
+## Super admin options
+- Create, edit, clone, archive and delete roles.
+- Default role given to every new staff account, and to every new client account.
+- Which roles may be assigned by department managers, and which only by the super admin.
+- The amounts behind approval tiers 1, 2 and 3.
+- Whether a person with several roles sees one combined home screen or switches between roles.
+
+DEPENDS: 04 05
+EVENTS: role.created, role.updated, role.archived, role.assigned, role.unassigned, permission.denied
+OFF: Cannot be switched off. If it fails, the apps keep the last permissions they downloaded and refuse new sensitive actions until it is back.
+
+@@ 03 | app-builder | App Layout & Navigation | Core platform
+Builds every screen of the single Igongo app at runtime from the person's roles. A new role gets a working app the moment it is saved, with no app store update.
+
+## Features
+
+### Menus and home screens
+- Drag-and-drop editor for each role's bottom menu, side menu and home screen.
+- Home tiles: shortcuts, counters (such as "3 orders waiting"), charts, lists and quick actions.
+- Tile visibility rules, such as "show the late arrivals tile only before 10 AM".
+- Different layouts for phone, tablet, kiosk and web.
+
+### Client view switch
+- Every staff role has a "Switch to client view" button that shows the app exactly as a guest sees it.
+- A clear coloured banner shows while in client view, with one tap to return.
+- Orders and bookings made in client view are marked as staff test or staff personal, as the super admin chooses.
+
+### One entry point
+- The same app and the same login screen for staff, riders, managers and clients.
+- After login the app reads the person's roles and builds their interface.
+- Guests who have not logged in see the public client screens (menu, rooms, events, museum).
+
+### Look and feel
+- Theme colours, fonts, light and dark mode, and splash screen for each app surface.
+- Screen templates (list, detail, form, board, map, calendar) that any module can use.
+- Offline cache of the layout so the app opens with no network.
+
+## Super admin options
+- Edit any role's menus, tiles and screen order.
+- Which roles can use client view, and how client-view orders are treated.
+- Default layout for new roles.
+- Which public screens a guest sees before logging in.
+- Publish a layout now or schedule it.
+
+DEPENDS: 02 12
+EVENTS: layout.published, layout.rolled_back, clientview.entered, clientview.exited
+OFF: Cannot be switched off. If it fails, the app uses the last layout cached on the device.
+
+@@ 04 | users-login | Users, Accounts & Login | Core platform
+One account system for everyone: staff, riders, managers, board members and clients. Every account is created or approved through the super admin's rules, and everyone uses the same login screen.
+
+## Features
+
+### Accounts
+- Staff accounts created from [HR Staff Records](22-hr-records.md) or by an admin.
+- Client accounts created by self sign-up, by front desk, from a booking, or from WhatsApp, under rules the super admin sets.
+- Approval queue for new accounts when self sign-up needs approval.
+- Merge duplicate accounts, and link one person who is both staff and a client.
+
+### Login methods
+Every method below is built and ready. Each one has its own on and off switch, so the hotel can turn methods on as it agrees them, with no code change or app update.
+
+| Method | Default at launch |
+| --- | --- |
+| Email and password, with email verification | On |
+| Sign in with Google | On |
+| Sign in with Apple (required by the App Store when Google is offered) | On |
+| Phone number with a one-time code by SMS | Off until the hotel agrees the SMS provider and cost |
+| Phone number with a one-time code by WhatsApp | Off until the hotel agrees the WhatsApp provider and cost |
+| Email magic link or email one-time code | Off |
+| PIN on a trusted phone or shared device | On |
+| Fingerprint or face unlock on a trusted phone | On |
+| Tap an NFC staff card on a shared device or kiosk | On |
+| Scan a staff card QR code on a shared device or kiosk | On |
+
+- One person can link several methods to the same account, such as email and Google, and still has one account and one history.
+- When a method is switched off, its button disappears from the login screen at once. People who used only that method are asked to add another method the next time they sign in, so nobody is locked out.
+- Provider keys (Google, Apple, SMS, WhatsApp) are entered in [Integrations & API](14-integrations.md), never in code.
+
+### Security
+- Two-factor authentication, required per role.
+- List of active sessions and devices, with remote sign-out.
+- Lock, unlock, suspend and expire accounts.
+- Password and PIN rules, failed-login lockout and alerts on a new device.
+- Forced logout of everyone in an emergency.
+
+### Self-service
+- Forgot password and forgot PIN.
+- Update phone, email and photo, with re-verification.
+- Download my data and request deletion (clients), as the Data Protection and Privacy Act requires.
+
+## Super admin options
+- Each login method on or off for the whole system, and then allowed or not for each role (for example, card tap only for kitchen staff, Google and Apple only for clients).
+- Which method the login screen shows first.
+- Whether a new Google or Apple sign-in creates a client account straight away or waits for approval.
+- Whether clients can self-register, and whether they need approval.
+- Session length per role, idle timeout and the number of devices allowed.
+- OTP channel order (SMS first or WhatsApp first), code length, expiry, resend wait and a daily limit per phone number to control cost.
+- Lockout thresholds and new-device alert rules.
+
+DEPENDS: 02 05 10 14
+EVENTS: login_method.enabled, login_method.disabled, account.created, account.approved, account.locked, account.unlocked, login.succeeded, login.failed, session.revoked
+OFF: Cannot be switched off.
+
+@@ 05 | audit-trail | Audit Trail | Core platform
+A permanent, tamper-proof record of every action in every module: who did it, what changed, when, where and from which device. This is how the hotel answers "who did this two years ago".
+
+## Features
+- Records create, edit, delete, approve, view-of-sensitive-data, login, export and print actions.
+- Stores old and new values for every changed field.
+- Stores the person, role used, device, station, IP address, GPS (if allowed) and app version.
+- Append-only storage with a hash chain, so any tampering is detectable.
+- Search by person, module, record, date range, action type or value.
+- Timeline view of one record's full life, such as one staff member or one booking.
+- Undo a change where the module supports it, which itself is logged.
+- Alerts on suspicious patterns, such as mass deletes, exports at night, or many failed approvals.
+- Export to PDF or spreadsheet, with the export itself logged.
+
+## Super admin options
+- Which actions trigger an alert, and who receives it.
+- Whether "viewed" events are logged for sensitive screens such as payroll.
+- Which roles can search the audit trail, and in which modules.
+- Retention: forever by default, with legal holds.
+
+DEPENDS:
+EVENTS: audit.alert_raised, audit.exported
+OFF: Cannot be switched off. If writing fails, the action is refused rather than done without a record.
+
+@@ 06 | records-search | Records Archive & Search | Core platform
+One search box over every module, years back. Finds people, bookings, orders, reports, faults, posts and files, while respecting each person's permissions.
+
+## Features
+- Global search across all modules, with filters for module, date, department and person.
+- Saved searches and alerts when new matching records appear.
+- "Everything about" view: all records linked to one staff member, guest, room, asset or event.
+- Archive policy: old records move to cheaper storage but remain searchable.
+- Legal hold: freeze records so they cannot be archived or deleted.
+- Search inside photos' text and PDFs (OCR).
+- Results show only what the person is allowed to see.
+
+## Super admin options
+- Which modules are included in global search.
+- When records are archived for each module.
+- Which roles can use "Everything about".
+- Search result limits and export rights.
+
+DEPENDS: 02 05 11
+EVENTS: search.saved_alert_triggered, record.archived, legal_hold.placed, legal_hold.released
+
+@@ 07 | custom-fields | Custom Fields | Core platform
+Lets the super admin add new fields to any record in any module, such as "Shoe size" on staff, "Dietary needs" on guests or "Allergy note" on orders, with no code.
+
+## Features
+- Field types: text, number, money, date, time, yes/no, list, multi-select, phone, email, photo, file, signature, GPS location and link to another record.
+- Required, optional or conditional fields ("show only if department is Kitchen").
+- Validation rules, default values and help text.
+- Field groups and sections on screens.
+- Field-level permissions through [Roles & Permissions](02-roles-permissions.md).
+- Fields are searchable, reportable and exportable like built-in fields.
+- Field history kept in the audit trail.
+
+## Super admin options
+- Add, edit, reorder, retire or delete fields on any record type.
+- Which roles see or edit each field.
+- Whether a field appears in the client view.
+
+DEPENDS: 02 05
+EVENTS: customfield.created, customfield.updated, customfield.retired
+
+@@ 08 | forms-builder | Forms & Templates Builder | Core platform
+A drag-and-drop builder for every form, checklist and report template in the hotel: daily reports, inspections, fault reports, applications, feedback forms and more.
+
+## Features
+- Drag-and-drop form designer with sections, pages and repeatable groups.
+- Field types as in [Custom Fields](07-custom-fields.md), plus rating stars, scoring, photo with annotation, video, voice note, barcode/QR scan and NFC tap.
+- Conditional logic: show, hide, require or score questions based on answers.
+- Scoring with pass marks for checklists and inspections.
+- Versions: changing a form never changes the answers already submitted.
+- Templates library, cloning, and import/export of form designs.
+- Offline filling with sync later.
+- Print layouts and PDF output for any form.
+- Public forms for clients, such as an event enquiry or feedback form, with spam protection.
+
+## Super admin options
+- Who can design forms, and who can publish them.
+- Which module each form is attached to.
+- Who can fill each form, and how often (daily, per shift, per event).
+- Deadlines and reminders for recurring forms.
+
+DEPENDS: 02 11
+EVENTS: form.published, form.submitted, form.overdue
+
+@@ 09 | workflow-approvals | Workflow & Approvals | Core platform
+A builder for every approval chain and process in the hotel: who approves what, in what order, and what happens next. Any module can hand a request to this module.
+
+## Features
+- Visual workflow builder with steps, conditions, parallel approvals and loops back for changes.
+- Approver by role, by person, by the requester's manager or by department head.
+- Conditions on amount, department, type, time or any field.
+- Escalation when a step waits too long, with reminders first.
+- Delegation when an approver is away, with start and end dates.
+- Approve or reject from a notification, the app, WhatsApp or the web, with a reason.
+- Bulk approval for managers with many requests.
+- Full history of every decision, kept for ever.
+- SLA reports: how long approvals take, per step and per person.
+
+## Super admin options
+- Create and edit workflows for any request type in any module.
+- Escalation times and who is escalated to.
+- Whether an approver can approve their own request (default: never).
+- Whether rejected requests can be resubmitted.
+
+DEPENDS: 02 10
+EVENTS: approval.requested, approval.approved, approval.rejected, approval.escalated, approval.delegated
+
+@@ 10 | notifications | Notifications Engine | Core platform
+Delivers every message the system sends, by app push, SMS, WhatsApp, email or in-app inbox, under rules the super admin controls.
+
+## Features
+- Rules: when event X happens in module Y, tell these roles or people, by these channels.
+- Message templates with placeholders, in each language.
+- Channel fallback, such as push first, then SMS if not read in 10 minutes.
+- Quiet hours per role, with urgent messages allowed through.
+- Digest mode: bundle low-priority messages into one daily summary.
+- In-app inbox with read and unread.
+- Delivery log: sent, delivered, read and failed, with cost per channel.
+- Personal preferences, within the limits the super admin allows.
+- Broadcasts to a role, department or list of clients.
+
+## Super admin options
+- Create, edit and switch off any notification rule.
+- Which channels each role may receive and which ones a person can mute.
+- Sender names and WhatsApp templates.
+- Monthly limit on SMS and WhatsApp spend, with an alert near the limit.
+
+DEPENDS: 02 14
+EVENTS: notification.sent, notification.delivered, notification.failed, notification.read
+OFF: Other modules keep working and their messages are queued until it is back.
+
+@@ 11 | files-media | Files & Media | Core platform
+Stores every photo, document, video and voice note in the system on Cloudflare R2, with access control and links to the records they belong to.
+
+## Features
+- Upload from camera, gallery or computer, with automatic image compression.
+- Photo annotation: draw circles and arrows on a fault photo.
+- Folders per module and record, and shared folders for departments.
+- Access follows the record's permissions; private files use short-lived links.
+- Version history for documents.
+- Expiry dates on documents, with reminders (for example a staff medical certificate).
+- Virus scan on upload.
+- Watermark sensitive documents with the viewer's name.
+
+## Super admin options
+- Maximum file size and allowed file types per module.
+- Storage quota per module and alerts when near.
+- How long files are kept, per module.
+- Whether downloads are allowed or view-only, per role.
+
+DEPENDS: 02
+EVENTS: file.uploaded, file.deleted, file.expiring
+
+@@ 12 | languages-wording | Languages, Wording & Branding | Core platform
+Controls every word, label and brand element in every app, so the super admin can rename "Leave" to "Time off" or add Runyankore without a developer.
+
+## Features
+- Edit any text in any screen, button, message or receipt.
+- Languages: English first, with Runyankore, Luganda, Swahili or French addable.
+- Each person picks their language; the super admin picks the default per role.
+- Brand kit: logos, colours, fonts and photos for apps, receipts, cards and emails.
+- Different brand looks for the hotel, the museum, the spa and events if wanted.
+- Missing-translation report.
+
+## Super admin options
+- Edit wording and translations.
+- Add or hide languages.
+- Upload brand assets and pick where each is used.
+
+DEPENDS: 11
+EVENTS: wording.published, brand.updated
+
+@@ 13 | data-import-export | Data Import, Export & Backup | Core platform
+Moves data in and out of the system safely: importing existing staff lists and spreadsheets, exporting reports, and keeping backups.
+
+## Features
+- Import from spreadsheet with column mapping, preview and a dry run that shows errors first.
+- Import templates for staff, guests, menus, assets, wristbands and opening balances.
+- Bulk update by spreadsheet, logged in the audit trail.
+- Export any list the person can see, as PDF, Excel or CSV.
+- Scheduled exports sent to chosen people.
+- Daily automatic backups, with point-in-time restore.
+- Restore a single deleted record without restoring the whole database.
+
+## Super admin options
+- Which roles may import and export, per module.
+- Whether exports are watermarked or need approval.
+- Backup schedule and how long backups are kept.
+
+DEPENDS: 02 05
+EVENTS: import.completed, import.failed, export.created, backup.completed, backup.failed
+
+@@ 14 | integrations-hub | Integrations Hub & Webhooks | Core platform
+One place to connect outside services, such as SMS, WhatsApp, payments, maps and APEX, so no module holds its own keys.
+
+## Features
+- Connection settings for Africa's Talking, Meta WhatsApp, FCM, MTN MoMo, Airtel Money, Flutterwave, Google Maps and email.
+- Keys are stored as encrypted secrets and are never shown again after saving.
+- Health check and test button for every connection.
+- Outgoing webhooks: send any system event to an outside address.
+- API keys for future partners, with limits and expiry.
+- Usage and error log per connection.
+
+## Super admin options
+- Turn each integration on or off.
+- Switch providers (for example a second SMS provider) without code.
+- Who receives alerts when a connection fails.
+
+DEPENDS: 05
+EVENTS: integration.connected, integration.failed, integration.restored, webhook.failed
+
+@@ 15 | locations-departments | Locations & Departments | Core platform
+The hotel's structure: sites, buildings, departments, teams, cost centres, rooms, outlets and tables. Every other module picks from this list instead of keeping its own.
+
+## Features
+- Sites and areas: hotel block, restaurants, bars, coffee shops, museum, cultural village, pool, spa, grounds, gates.
+- Departments and teams, with a head for each.
+- Organisation chart built automatically from departments and reporting lines.
+- Cost centres for reporting.
+- Sales outlets (each restaurant, coffee shop, shop, pool kiosk), with their own opening hours.
+- Map and GPS boundary for each area.
+
+## Super admin options
+- Add, rename, merge or retire any location or department.
+- Opening hours and holidays per outlet.
+- Which departments appear in the client view (for example as dining outlets).
+
+DEPENDS:
+EVENTS: department.created, department.updated, location.created, location.updated

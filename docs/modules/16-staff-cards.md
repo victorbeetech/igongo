@@ -13,7 +13,7 @@ Designs, prints and controls every ID card: staff, casual, intern, contractor, v
 - Building blocks: logo, photo (round or square), name, role, department, staff number, any field from [HR Staff Records](22-hr-records.md) or [Custom Fields](07-custom-fields.md), QR code, barcode, NFC symbol, issue and expiry dates, signature, terms text, shapes, bands, patterns and background images.
 - Only the brand colours, fonts and logos from the [brand kit](../../packages/brand/README.md) are offered, so every design stays on brand.
 - Live preview with a real staff member's data, and a check that the text fits for long names.
-- A library of ready-made templates (portrait and landscape) to start from, which the super admin can clone and change.
+- A library of ready-made templates (portrait and landscape) to start from, which the super admin can clone and change. The black portrait template is the default for every role until the super admin assigns another.
 - Versions: changing a template never changes cards already printed, unless they are reprinted.
 
 ### Templates per role

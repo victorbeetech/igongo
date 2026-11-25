@@ -10,8 +10,9 @@ The values live in one file, [`packages/design-tokens/tokens.json`](../../packag
 
 | Token | Light | Dark | From the logo | Used for |
 | --- | --- | --- | --- | --- |
-| Primary (Igongo red) | `#B8292F` | `#E07A72` | The spiral and the IGONGO name | App bar, main buttons, active tabs, links |
-| Primary dark | `#8F292A` | `#C4645A` | The horizontal logo's name | Pressed buttons, status bar |
+| Primary (Igongo red) | `#B8292F` | `#B8292F` | The spiral and the IGONGO name | App bar, main buttons, active tabs, badges, the logo |
+| Primary text | `#B8292F` | `#F6F1EC` | | Links and highlighted words. In dark mode these are cream with a red underline or icon, so the red itself never changes |
+| Primary dark | `#8F292A` | `#8F292A` | The horizontal logo's name | Pressed buttons, status bar |
 | Primary container | `#F7E1DF` | `#5A1616` | | Selected chips, highlighted cards |
 | Secondary (charcoal) | `#222323` | `#F6F1EC` | The subtitle | Second buttons, icons |
 | Brand ink | `#000000` | `#F6F1EC` | The horns and cup | Logo use only |
@@ -25,7 +26,7 @@ The values live in one file, [`packages/design-tokens/tokens.json`](../../packag
 | Error | `#C62828` | `#FF8A80` | | Failed, refused, overdue |
 | Info | `#2F6690` | `#8DB9DE` | | Tips, and the client view banner |
 
-**Contrast checks (WCAG AA):** white on Igongo red is 6.2:1, Igongo red on cream is 5.5:1, text on cream is 15.2:1, and muted, success, warning, error and info text on cream are all 5:1 or more. In dark mode, the lighter red on the dark background is 6.3:1.
+**Contrast checks (WCAG AA):** white on Igongo red is 6.2:1, Igongo red on cream is 5.5:1, text on cream is 15.2:1, and muted, success, warning, error and info text on cream are all 5:1 or more. In dark mode, white on Igongo red stays 6.2:1 and cream text on the dark background is 15.7:1. Igongo red on the dark background is only 3:1, so in dark mode red is used for filled shapes (buttons, bars, badges, the logo) and never for small text.
 
 Because the brand is red, errors are never shown by colour alone. They always carry an icon and a message.
 
@@ -65,7 +66,11 @@ Small by default, as you asked, but sized for each part of the screen and adjust
 
 ## Light and dark mode
 
-Both are included. The app follows the phone's setting, and each person can override it. Dark mode uses the reversed logo, with cream horns and cup.
+Both are included. The app follows the phone's setting, and each person can switch it in Settings (light, dark or follow the phone).
+
+**The theme switch never changes the brand colours.** Igongo red `#B8292F`, deep red `#8F292A` and the logo's spiral are exactly the same in light and dark mode. Only the background, surfaces, text, borders and status colours change. Dark mode uses the reversed logo, with cream horns and cup, and a red spiral as always.
+
+If the super admin changes the brand colours in the [Languages & Wording](../modules/12-languages-wording.md) brand kit settings, the new colours are used in both modes in the same way.
 
 ## To approve
 

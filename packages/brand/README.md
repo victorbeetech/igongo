@@ -142,18 +142,18 @@ Copy the files in `web/` to the site root and paste `web/head-tags.html` into th
 
 | Template | Orientation | Suits |
 | --- | --- | --- |
-| `portrait-wave` | Portrait | Default for all staff |
+| `portrait-black` | Portrait | **The default card for every role**, until the super admin picks another design for a role |
+| `portrait-wave` | Portrait | Light alternative for all staff |
 | `portrait-diagonal` | Portrait | Guest-facing staff: front office, restaurant, events, sales |
 | `portrait-sidebar` | Portrait | Operations: maintenance, housekeeping, security, grounds |
 | `portrait-minimal` | Portrait | Museum, cultural centre and spa staff |
-| `portrait-executive` | Portrait | Board, CEO, GM and senior managers |
 | `portrait-visitor` | Portrait | Visitors, suppliers and day passes (no photo) |
 | `landscape-classic` | Landscape | Default landscape card |
 | `landscape-curves` | Landscape | Front office, sales and guest relations |
 | `landscape-split` | Landscape | Kitchen, restaurant, bars and coffee shops |
 | `landscape-banner` | Landscape | Casual workers, contractors and interns |
 
-Each template folder has the front and back as SVG, a PNG preview, and a **print-ready PDF at exact CR80 size** (85.6 × 54 mm), so a card prints at actual size with no editing. `cards/templates.json` lists every template with its print preset (size, 300 dpi, no margins, duplex) and its fields. `cards/card-types.json` holds the card types as data: today's CR80 cards with the **NXP NTAG213** chip, and NTAG 424 DNA ready to switch on later.
+Each template folder has the front and back as SVG, a PNG preview, and a **print-ready PDF at exact CR80 size** (85.6 × 54 mm), so a card prints at actual size with no editing. `cards/templates.json` lists every template, marks the default (`portrait-black`), with its print preset (size, 300 dpi, no margins, duplex) and its fields. `cards/card-types.json` holds the card types as data: today's CR80 cards with the **NXP NTAG213** chip, and NTAG 424 DNA ready to switch on later.
 
 ### Live fields
 

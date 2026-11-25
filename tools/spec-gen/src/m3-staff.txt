@@ -1,0 +1,385 @@
+@@ 22 | hr-records | HR Staff Records | Staff
+The master record for every staff member, from enrolment to exit. Other staff modules read the person from here but keep their own data, so HR records stay safe if payroll or attendance has a problem.
+
+## Features
+
+### Enrolment
+- Personal details, photo, national ID, NSSF and TIN numbers, bank and mobile money details.
+- Next of kin, emergency contacts, address and home district.
+- Education, previous employers and references.
+- Medical fitness certificate, especially for food handlers.
+
+### Employment
+- Staff number, job title, department, grade, employment type (permanent, contract, casual, intern) and start date.
+- Contract documents, with renewal and expiry reminders.
+- Reporting line (manager), feeding the organisation chart.
+- Transfers, promotions, acting appointments and grade changes, each with an effective date.
+
+### Documents
+- Store ID copies, certificates, contracts and letters, with expiry alerts.
+- Generate letters from templates: appointment, confirmation, transfer, introduction and certificate of service.
+
+### History
+- A timeline of every change to the person's employment.
+- Years of service and long service milestones.
+
+## Super admin options
+- Required fields per employment type, and extra fields through [Custom Fields](07-custom-fields.md).
+- Staff number format.
+- Which fields staff can update themselves and which need HR approval.
+- Who can see sensitive fields such as ID, bank details and medical records.
+- Letter templates.
+
+DEPENDS: 15 11 09
+EVENTS: staff.enrolled, staff.updated, staff.transferred, staff.promoted, staff.contract_expiring, staff.exited
+
+@@ 23 | recruitment | Recruitment | Staff
+Runs hiring, from a department's request for a new person to an accepted offer.
+
+## Features
+- Staffing requests from department heads, sent for approval.
+- Job posts with description, requirements and closing date, published in the app, on the website and by WhatsApp.
+- Online application form with CV upload.
+- Applicant pipeline board: applied, shortlisted, interview, offer, hired, rejected.
+- Interview scheduling with panel members, scorecards and notes.
+- Offer letters from templates.
+- Talent pool of past applicants.
+- Hand-off to [Onboarding & Exit](24-onboarding-exit.md) and [HR Staff Records](22-hr-records.md) when hired.
+
+## Super admin options
+- Pipeline stages and scorecard questions.
+- Who approves staffing requests and offers.
+- Application form fields.
+- Whether rejected applicants get an automatic message.
+
+DEPENDS: 09 08
+EVENTS: vacancy.requested, vacancy.approved, application.received, applicant.stage_changed, applicant.hired
+
+@@ 24 | onboarding-exit | Onboarding & Exit | Staff
+Makes sure every new staff member is set up properly, and every leaver hands back everything and is paid correctly.
+
+## Features
+
+### Onboarding
+- Checklists per role: documents collected, card issued, uniform issued, account created, training booked, policy sign-off.
+- Tasks assigned to HR, IT, the store and the department head.
+- Probation tracking with review reminders and confirm, extend or end decisions.
+- Welcome message and first-day guide in the app.
+
+### Exit
+- Resignation, end of contract, retirement, dismissal and death, each with its own checklist.
+- Clearance: card, keys, uniform, assets and advances, each signed off by the right department.
+- Exit interview form.
+- Final pay handed to [Payroll](28-payroll.md).
+- Account switched to former staff, keeping access to their own payslips and earnings statement if allowed.
+
+## Super admin options
+- Checklist items per role and exit type.
+- Probation length per employment type.
+- What former staff can still see.
+
+DEPENDS: 22 09
+EVENTS: onboarding.started, onboarding.completed, probation.due, exit.started, exit.cleared
+
+@@ 25 | attendance | Attendance | Staff
+Strong, hard-to-cheat attendance. Staff tap their NFC card or scan their QR code at the gate and stations, and the system works out lateness, absence and overtime automatically.
+
+## Features
+
+### Clocking
+- Tap card or scan QR at the gate, reception or any station set up in [Devices & Stations](18-devices-stations.md).
+- Photo taken on each tap, to stop one person clocking for another.
+- Optional face match against the profile photo.
+- GPS and network check for mobile clock-in by roles that work away from stations, such as riders and drivers.
+- Break out and break in.
+- Works offline and syncs later, with the original tap time kept.
+
+### Rules
+- Expected times come from [Shifts & Rosters](26-shifts-rosters.md).
+- Grace period, late, very late, early leave, absent and overtime, all automatic.
+- Missed tap alerts to the person and their supervisor.
+- Correction requests with a reason, sent for approval.
+- Holidays and approved leave are respected automatically.
+
+### Live board
+- Who is on duty now, by department, with photos.
+- Who is late or absent today.
+- Headcount for emergencies and fire roll call.
+
+### Records
+- Daily, weekly and monthly attendance sheets.
+- Hours worked and overtime, sent to payroll after supervisor approval.
+- Attendance score per person over time.
+
+## Super admin options
+- Grace periods, lateness thresholds and overtime rules, per department or role.
+- Which clock-in methods each role may use.
+- Whether a photo or face match is required.
+- GPS zones for mobile clock-in.
+- Who can approve corrections, and the deadline for them.
+
+DEPENDS: 16 18 22 26
+EVENTS: attendance.clocked_in, attendance.clocked_out, attendance.late, attendance.absent, attendance.missed_tap, attendance.corrected, attendance.period_approved
+
+@@ 26 | shifts-rosters | Shifts & Rosters | Staff
+Plans who works when. Rosters set the expected times that attendance is measured against.
+
+## Features
+- Shift types (morning, evening, night, split, on call) with times and breaks.
+- Roster planner by department: drag people into shifts, or copy last week.
+- Rotating patterns, such as four days on, two off.
+- Minimum staffing rules, with warnings when a shift is short.
+- Shift swap and cover requests between staff, approved by the supervisor.
+- Open shifts that eligible staff can claim.
+- Public holidays calendar for Uganda, editable.
+- Roster published to staff phones, with changes notified.
+- Extra staff for big events, linked to [Events & Conferences](69-events-conferences.md).
+
+## Super admin options
+- Shift types and patterns.
+- Who can build and publish rosters.
+- How far ahead rosters must be published.
+- Whether staff can swap without approval.
+
+DEPENDS: 15 22
+EVENTS: roster.published, shift.changed, shift.swap_requested, shift.swap_approved, shift.understaffed
+
+@@ 27 | leave | Leave Management | Staff
+Leave requests, balances and approvals, for every leave type the hotel uses.
+
+## Features
+- Leave types: annual, sick, maternity, paternity, compassionate, study, unpaid and any custom type.
+- Balances that build up monthly, with carry-forward and expiry rules.
+- Request from the app with dates, reason and attachment (such as a sick note).
+- Approval through [Workflow & Approvals](09-workflow-approvals.md).
+- Team leave calendar, with clashes highlighted.
+- Handover note and acting person during leave.
+- Return to work confirmation.
+- Leave history kept for ever.
+
+## Super admin options
+- Leave types, entitlement per grade, accrual and carry-forward rules.
+- Blackout dates when leave is not allowed, such as big events.
+- How many people in a team can be away at once.
+- Approval chains per leave type.
+
+DEPENDS: 22 09
+EVENTS: leave.requested, leave.approved, leave.rejected, leave.started, leave.ended
+
+@@ 28 | payroll | Payroll | Staff
+Calculates and runs pay each period. It reads approved hours from attendance and deductions from advances, but keeps its own records, so a payroll problem never affects HR or attendance.
+
+## Features
+
+### Pay setup
+- Pay structures: monthly, daily, hourly and piece rate for casuals.
+- Allowances (transport, housing, night, acting) and deductions, fixed or calculated.
+- Statutory deductions: PAYE, NSSF (employee and employer) and LST, with editable rates.
+- Bank and mobile money payment details from HR records.
+
+### Pay run
+- Draft run built from approved attendance, overtime, advances, loans and bonuses.
+- Variance check against last period, with warnings for big changes.
+- Review and approval through a workflow.
+- Lock the period once approved.
+- Bulk payment file for the bank, or bulk mobile money payment.
+- Off-cycle runs for final pay and corrections.
+
+### Outputs
+- Payslips sent to [Payslips & Lifetime Earnings](29-earnings-statements.md).
+- Statutory reports: NSSF schedule, PAYE return and LST.
+- Payroll journal for [Accounting Export](80-accounting-export.md).
+
+### Confidentiality
+- Payroll is visible only to roles the super admin allows (by default the GM and payroll staff).
+- Every view of salary data is logged.
+
+## Super admin options
+- Pay elements, formulas and statutory rates.
+- Pay periods and cut-off dates.
+- Who can prepare, review, approve and release a pay run.
+- Which roles may see salaries, and at what scope.
+
+DEPENDS: 22 09
+EVENTS: payroll.run_created, payroll.run_approved, payroll.run_paid, payroll.period_locked
+
+@@ 29 | earnings-statements | Payslips & Lifetime Earnings | Staff
+Gives every staff member their payslips and a lifetime earnings statement: everything they have earned from Igongo since they joined, even five or ten years back.
+
+## Features
+- Payslips in the app, as PDF, by period.
+- Lifetime earnings statement: total pay, allowances, bonuses, deductions, advances and net pay, by year and in total.
+- Statement for any date range, such as for a bank loan application.
+- Verified statements with a QR code that a bank can check.
+- Tax and NSSF summaries per year.
+- Former staff can still get their statements, if allowed.
+- PIN or fingerprint needed to open payslips.
+
+## Super admin options
+- What a payslip shows, and the template.
+- Whether staff can download PDFs, or only view.
+- Whether former staff keep access, and for how long.
+- Who can produce statements for other staff.
+
+DEPENDS: 28 22
+EVENTS: payslip.published, statement.generated, statement.verified
+OFF: Payroll still runs. Payslips are generated when this module comes back.
+
+@@ 30 | advances-loans | Advances & Loans | Staff
+Salary advances and staff loans, from request to the last deduction.
+
+## Features
+- Request an advance from the app, with the amount available shown first.
+- Limits by grade, by percentage of salary or by number of requests per period.
+- Approval through a workflow, with approval tiers.
+- Payout by mobile money, bank or cash, recorded.
+- Loans with repayment schedules, interest (if any) and guarantors.
+- Automatic deduction from payroll each period.
+- Statement of each advance and loan, with balance.
+- Pause or reschedule repayments with approval.
+
+## Super admin options
+- Limits and eligibility rules (for example, not during probation).
+- Approval tiers and workflow.
+- Repayment rules and maximum terms.
+- Cut-off day for advances each month.
+
+DEPENDS: 22 09 28
+EVENTS: advance.requested, advance.approved, advance.paid, loan.created, repayment.deducted, loan.cleared
+
+@@ 31 | bonuses-rewards | Bonuses & Rewards | Staff
+Rewards for staff: cash bonuses, buffet access, vouchers and recognition, each with the reason recorded.
+
+## Features
+- Cash bonus to one person, a team or a department, paid through payroll or separately.
+- Buffet bonus: a one-time or repeated buffet access that the person redeems with one card tap at the buffet.
+- Other rewards: day off, pool or spa pass, shop voucher.
+- Employee of the month, with nomination and voting if wanted.
+- Reason and approver recorded for every reward.
+- Reward history on each staff profile.
+- Recognition posts to the [Notice Board](49-notice-board.md) if the person agrees.
+
+## Super admin options
+- Reward types and their rules (such as expiry date for a buffet bonus).
+- Who can give rewards and with what approval tier.
+- Whether rewards are announced publicly.
+
+DEPENDS: 22 16 09
+EVENTS: bonus.awarded, bonus.redeemed, bonus.expired, award.announced
+
+@@ 32 | staff-meals | Staff Meals | Staff
+Daily staff meals claimed with a card tap, with counts for the kitchen and no double claims.
+
+## Features
+- Meal entitlement per role and shift (such as lunch for day shift, supper for night shift).
+- Claim by tapping a card at the staff canteen station.
+- Blocks a second claim for the same meal.
+- Guests of staff and special diets, if allowed.
+- Daily menu for the staff canteen in the app.
+- Forecast for the kitchen from the roster: how many staff meals today.
+- Report of meals served per day, department and person.
+
+## Super admin options
+- Meal times, entitlements and who qualifies.
+- Whether staff on leave or off duty can claim.
+- Whether a missed meal can be taken later.
+
+DEPENDS: 16 26
+EVENTS: meal.claimed, meal.claim_denied, meal.forecast_ready
+
+@@ 33 | performance | Performance & Appraisals | Staff
+Sets goals and measures how staff are doing, with regular reviews.
+
+## Features
+- KPIs per role, such as room cleaning time or orders served.
+- Goals per person, with progress updates.
+- Appraisal cycles: self review, manager review and meeting.
+- 360 feedback from colleagues, if switched on.
+- Ratings and comments, with history across years.
+- Improvement plans with check-in dates.
+- Links to training needs.
+
+## Super admin options
+- Review cycles, forms and rating scales.
+- KPIs per role, and where each KPI's data comes from.
+- Who can see whose reviews.
+
+DEPENDS: 22 08
+EVENTS: appraisal.started, appraisal.completed, goal.updated, improvement_plan.created
+
+@@ 34 | training | Training & Certificates | Staff
+Tracks training, skills and certificates, including food hygiene, first aid, lifeguard and fire safety.
+
+## Features
+- Training calendar with sessions, trainers and attendance by card tap.
+- Short lessons and quizzes inside the app.
+- Certificates with expiry dates and renewal reminders.
+- Skills matrix per department.
+- Mandatory training per role, with alerts if missing.
+- Training records kept for inspections.
+
+## Super admin options
+- Training courses and which roles must take them.
+- Certificate types and expiry rules.
+- Who can schedule training.
+
+DEPENDS: 22
+EVENTS: training.scheduled, training.attended, certificate.issued, certificate.expiring
+
+@@ 35 | discipline | Discipline & Cases | Staff
+A confidential file of incidents, warnings, hearings and outcomes, handled fairly and kept permanently.
+
+## Features
+- Record an incident with date, people involved, witnesses and evidence (photos, files).
+- Case steps: investigation, show-cause letter, hearing, decision and appeal.
+- Warning letters from templates, with expiry of warnings.
+- Staff member can see and acknowledge their own case documents.
+- Access limited to HR and named people only.
+- Case history kept for ever.
+
+## Super admin options
+- Offence categories and suggested actions.
+- Case steps and letter templates.
+- Who can open, see and close cases.
+- Warning expiry periods.
+
+DEPENDS: 22 11 09
+EVENTS: case.opened, case.hearing_scheduled, case.closed, warning.issued, warning.expired
+
+@@ 36 | staff-welfare | Staff Requests & Welfare | Staff
+Everyday requests and welfare: uniforms, letters, grievances, welfare contributions and staff support.
+
+## Features
+- Requests from the app: introduction letter, salary confirmation, uniform, ID replacement and any custom request type.
+- Uniform issue records with sizes, dates and returns.
+- Grievance reporting, with an anonymous option.
+- Welfare fund contributions and support payouts, if the hotel runs one.
+- Birthdays, work anniversaries and condolence messages.
+- Staff suggestion box.
+
+## Super admin options
+- Request types and who handles each.
+- Whether anonymous grievances are allowed.
+- Welfare fund rules.
+
+DEPENDS: 22 09
+EVENTS: staffrequest.created, staffrequest.completed, grievance.reported, uniform.issued
+
+@@ 37 | petty-cash | Petty Cash & Expense Claims | Staff
+Controls small cash spending and staff expense claims, with receipts and approvals.
+
+## Features
+- Petty cash floats per department, with a balance.
+- Spend records with a photo of the receipt.
+- Expense claims by staff, with approval and refund.
+- Top-up requests when a float runs low.
+- Monthly petty cash reconciliation.
+- Categories mapped to accounting codes.
+
+## Super admin options
+- Floats and spending limits per department.
+- Approval tiers.
+- Expense categories.
+
+DEPENDS: 09 15
+EVENTS: expense.submitted, expense.approved, expense.paid, float.low, float.reconciled

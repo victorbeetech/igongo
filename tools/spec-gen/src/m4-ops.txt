@@ -1,0 +1,304 @@
+@@ 38 | daily-reports | Daily Reports | Operations
+Each department and staff member files a daily report from a template, and the supervisor signs it off. Reports build a searchable history of how the hotel runs day by day.
+
+## Features
+- Report templates per department and role, built in [Forms & Templates Builder](08-forms-builder.md).
+- Personal daily report (what I did today) and department daily report (HOD summary).
+- Numbers that fill themselves where possible, such as covers served from food ordering or rooms cleaned from housekeeping.
+- Photos, voice notes and attachments.
+- Submit by a deadline, with reminders and late flags.
+- Supervisor sign-off, return for changes, or comments.
+- GM daily digest: all department reports in one summary.
+- Trends over time and missing report alerts.
+
+## Super admin options
+- Which roles and departments file which reports, and how often.
+- Deadlines and reminder times.
+- Who signs off each report.
+- Whether staff can see each other's reports.
+
+DEPENDS: 08 15
+EVENTS: dailyreport.submitted, dailyreport.signed_off, dailyreport.returned, dailyreport.missing
+
+@@ 39 | inspections | Inspections & Checklists | Operations
+Daily checkups and audits of rooms, kitchen, pool, grounds, museum, vehicles and safety equipment, with scores and photos.
+
+## Features
+- Checklist templates with scoring and pass marks.
+- Scheduled rounds: daily, weekly, monthly or per shift.
+- Assign an inspector, or let anyone with the role pick the round.
+- Scan the area or asset QR code to start the right checklist.
+- Photo proof for each failed item.
+- A failed item can raise a fault in [Faults & Maintenance](40-faults-maintenance.md) or a task in [Tasks](42-tasks.md) in one tap.
+- Score trends by area and inspector.
+- Food safety and health inspection records ready for official visits.
+
+## Super admin options
+- Checklist templates, schedules and scoring.
+- What happens on a failed item (fault, task, alert).
+- Who can inspect which areas.
+
+DEPENDS: 08 15
+EVENTS: inspection.due, inspection.completed, inspection.failed_item, inspection.missed
+
+@@ 40 | faults-maintenance | Faults & Maintenance | Operations
+Anyone can report a fault with a photo, such as "the slasher's stone cracked the door glass". The right people see it, like and comment on it, and it is tracked until fixed.
+
+## Features
+
+### Report
+- Report from the app with photo or video, location, asset (by QR scan) and urgency.
+- Categories: electrical, water, plumbing, carpentry, building, grounds, kitchen equipment, IT, vehicles and any custom type.
+- Report on behalf of a guest.
+
+### The fault feed
+- Each fault appears in a feed for the people concerned (the category's team, the area's manager).
+- Likes, comments and "I've seen this too", so repeat reports join the first one instead of making duplicates.
+- Who saw it and when.
+
+### Work orders
+- Assign to a technician or team, with a due time based on urgency.
+- Status: reported, assigned, in progress, waiting for parts, fixed, verified, closed.
+- Before and after photos.
+- Parts and labour cost, and outside contractor details.
+- The reporter is told when it is fixed and can confirm.
+
+### Planned maintenance
+- Schedules per asset: generator service, pool pump, fire extinguishers, AC cleaning.
+- Calendar of upcoming jobs.
+
+### Insight
+- Time to fix, cost per area, repeat faults and technician workload.
+
+## Super admin options
+- Fault categories, urgency levels and target fix times.
+- Who sees each category's feed, and who can comment or like.
+- Who assigns and who closes.
+- Whether the reporter must verify the fix.
+
+DEPENDS: 41 11 15
+EVENTS: fault.reported, fault.assigned, fault.commented, fault.fixed, fault.closed, fault.overdue, maintenance.due
+
+@@ 41 | asset-register | Asset Register | Operations
+A list of the hotel's equipment and property, each with a QR tag, so anyone can scan it to see its details or report a fault on it.
+
+## Features
+- Assets with name, category, location, serial, supplier, purchase date, warranty and photo.
+- QR tag printing for every asset.
+- Assign assets to a person or department, with card-tap sign-off.
+- Move assets between locations, with history.
+- Warranty and service reminders.
+- Maintenance history from [Faults & Maintenance](40-faults-maintenance.md).
+- Asset counts and audits by scanning.
+- Disposal and write-off with approval.
+
+## Super admin options
+- Asset categories and required fields.
+- Who can add, move and dispose of assets.
+- Audit schedule.
+
+DEPENDS: 15 11
+EVENTS: asset.added, asset.moved, asset.assigned, asset.disposed, asset.warranty_expiring
+
+@@ 42 | tasks | Tasks | Operations
+Assign and track work of any kind, one-off or repeating, between any staff.
+
+## Features
+- Create a task with title, details, assignee, due date, priority and checklist.
+- Recurring tasks (daily, weekly, monthly).
+- Board, list and calendar views.
+- Comments, photos and mentions.
+- Reminders and overdue alerts.
+- Tasks created by other modules, such as a failed inspection item.
+- Workload view per person.
+
+## Super admin options
+- Who can assign tasks to whom (for example, only within the department).
+- Priority levels and default reminders.
+
+DEPENDS: 15
+EVENTS: task.created, task.assigned, task.completed, task.overdue
+
+@@ 43 | housekeeping | Housekeeping & Room Status | Operations
+Keeps rooms clean and ready: room status, cleaning assignments, minibar and amenity checks. Room bookings stay in APEX; this module only handles the work on the rooms.
+
+## Features
+- Room board: clean, dirty, in progress, inspected, out of order and do not disturb.
+- Daily cleaning assignments for room attendants, from check-outs and stay-overs.
+- Attendants update status from the app as they work.
+- Supervisor inspection before a room is released.
+- Amenity and linen checklists.
+- Guest requests (towels, extra pillow) routed from [Guest Requests & Help Desk](60-guest-requests.md).
+- Public area cleaning schedules.
+- Lost items found in rooms passed to [Lost & Found](46-lost-found.md).
+
+## Super admin options
+- Room statuses and their colours.
+- Cleaning standards and time per room type.
+- Whether inspection is required before release.
+
+DEPENDS: 15 44
+EVENTS: room.status_changed, room.cleaned, room.inspected, room.out_of_order
+
+@@ 44 | laundry | Laundry | Operations
+Tracks hotel linen, staff uniforms and guest laundry orders.
+
+## Features
+- Linen counts: issued, in wash, returned and damaged.
+- Guest laundry orders from the app with pickup, items and ready time.
+- Staff uniform washing.
+- Damage and loss records.
+- Daily laundry report.
+
+## Super admin options
+- Item list and turnaround times.
+- Whether guests can order laundry in the app.
+
+DEPENDS: 15
+EVENTS: laundry.order_created, laundry.order_ready, linen.count_updated
+
+@@ 45 | security-incidents | Security, Patrols & Incidents | Operations
+Guard patrols, incident reports and emergencies across the hotel and cultural centre.
+
+## Features
+- Guard tours: scan QR checkpoints on a route, with times and missed checkpoints flagged.
+- Incident reports with photos, people involved and witnesses: theft, fight, injury, fire, trespass.
+- Panic button in the app that alerts security and managers with the person's location.
+- Emergency broadcast to all staff on site.
+- Roll call using the live attendance board.
+- Gate log of vehicles in and out.
+- Police case numbers and follow-up.
+
+## Super admin options
+- Patrol routes and checkpoints.
+- Incident types and who is alerted for each.
+- Who can use the panic button.
+
+DEPENDS: 15 18 11
+EVENTS: patrol.completed, patrol.checkpoint_missed, incident.reported, panic.triggered, emergency.broadcast
+
+@@ 46 | lost-found | Lost & Found | Operations
+Records items found and claimed, for guests and staff.
+
+## Features
+- Log a found item with photo, place found and who found it.
+- Storage location and tag number.
+- Guests report a lost item in the app; possible matches are suggested.
+- Hand over with ID check and signature.
+- Disposal or donation after the holding period.
+
+## Super admin options
+- Holding periods per item type.
+- Who can hand over items.
+
+DEPENDS: 11
+EVENTS: item.found, item.claimed, item.disposed
+
+@@ 47 | fleet-transport | Fleet & Transport | Operations
+Hotel vehicles, drivers, trips and guest transfers, such as airport or town pickups.
+
+## Features
+- Vehicle register: plate, type, insurance, service dates and fuel records.
+- Trip requests from staff or guests, with approval.
+- Driver assignment, trip start and end with mileage and GPS.
+- Guest pickup and drop-off bookings, linked to the guest's booking.
+- Fuel and repair costs per vehicle.
+- Insurance and licence expiry reminders.
+
+## Super admin options
+- Vehicles and who can drive each.
+- Trip approval rules.
+- Whether guests can book transfers in the app.
+
+DEPENDS: 15 09
+EVENTS: trip.requested, trip.started, trip.completed, vehicle.service_due
+
+@@ 48 | knowledge-base | SOPs & Knowledge Base | Operations
+The hotel's standard operating procedures, policies, manuals and how-to guides, in one searchable place.
+
+## Features
+- Articles with text, photos and videos.
+- Categories per department.
+- Read and acknowledge: staff confirm they have read a policy, with a record kept.
+- Versions, with who changed what.
+- Quick help links from inside other modules.
+
+## Super admin options
+- Who can write and publish articles.
+- Which articles each role must acknowledge.
+
+DEPENDS: 11
+EVENTS: article.published, article.acknowledged
+
+@@ 84 | stock-inventory | Stock & Inventory | Operations
+Tracks everything the hotel buys, stores and uses: food, drinks, cleaning supplies, linen, amenities, stationery, craft and shop items, fuel and spare parts. Every store, item, unit, rule and approval is set by the super admin with no code, so the module fits how each store works today and can change at any time. It complements APEX and does not replace it.
+
+## Features
+
+### Stores and items (no code)
+- Any number of stores and sub-stores, such as main store, kitchen store, bar store, housekeeping store, maintenance store, shop and fuel tank, each with its own keeper and location.
+- Item categories and sub-categories, created by the super admin.
+- Items with photo, code, barcode or QR, category, units, storage conditions, shelf location and suppliers.
+- Units and conversions as data, such as 1 crate = 24 bottles, 1 sack = 50 kg, 1 kg = 1,000 g, so items are bought in one unit and issued in another.
+- Custom fields on any item or movement through [Custom Fields](07-custom-fields.md), such as batch number, colour or size.
+- Tracking per item: plain count, batch and expiry date, or serial number.
+- Minimum, reorder and maximum levels per item per store.
+
+### Receiving
+- Goods received notes: from a supplier delivery or a purchase order, counted against what was ordered.
+- Short, damaged or rejected items recorded with photos and a reason.
+- Delivery note and invoice photo attached.
+- Batch and expiry captured at receiving where the item needs it.
+- Optional quality check form from the [Forms Builder](08-forms-builder.md), such as checking the temperature of meat on delivery.
+
+### Requisitions and issues
+- Any department asks for items from a store in the app, such as the kitchen asking for 20 kg of rice for tomorrow.
+- Approval path per store, department, item category or value, set in [Workflow & Approvals](09-workflow-approvals.md).
+- The store keeper issues full or part quantities, and the receiver confirms with a card tap or signature.
+- Issue by scanning item QR or barcode.
+- Transfers between stores, with sender and receiver confirmation.
+
+### Purchasing (can be switched off)
+- Purchase requests raised from low stock or by hand, with approval.
+- Purchase orders to suppliers, sent by email or WhatsApp, with expected delivery date.
+- Supplier list with contacts, items supplied, lead times and performance (late, short, rejected).
+- Compare up to three supplier quotes before ordering.
+- Prices are entered and kept in the system, never in code.
+
+### Counts and control
+- Stock counts: full, by store, by category or spot checks on random items, done on a phone with a scanner.
+- Blind counts, where the counter does not see the expected quantity.
+- Variance report after each count, with approval of adjustments and a reason for every one.
+- Wastage, breakage, spoilage and expiry recorded with photo and reason.
+- Expiry alerts and first-expiry, first-out picking suggestions.
+- Movement history for every item: who received, issued, moved, counted or adjusted it, and when.
+
+### Recipes and usage (optional)
+- Link a menu item to its ingredients and quantities, so each sale from [Food Ordering](62-food-ordering.md) reduces the kitchen store in theory, and the count shows the real usage.
+- Usage versus sales report per outlet and per day.
+- Room amenity and minibar refills from [Housekeeping](43-housekeeping.md) deduct from the housekeeping store.
+
+### Reports
+- Stock on hand and stock value per store, category and item.
+- Low stock, overstock, slow-moving and dead stock.
+- Consumption per department, cost centre and period.
+- Receiving and supplier reports.
+- Variance and wastage trends.
+
+## Super admin options
+- Create, rename, merge and close stores, categories, units and conversions.
+- Which fields each item and movement needs, and which are hidden.
+- Tracking type per category: count, batch and expiry, or serial.
+- Valuation method per store: average cost, first in first out, or last price.
+- Approval rules for requisitions, transfers, purchases, adjustments and write-offs, by value, item category, store and department.
+- Who can view stock values and prices, and who sees only quantities.
+- Reorder rules: alert only, raise a purchase request, or both, and who is told.
+- Count schedules and whether counts are blind.
+- Whether purchasing, recipes and supplier quotes are switched on.
+- Which stores each role can see and work in.
+- Notification rules for low stock, expiry, large variances and unapproved issues.
+- Import items, opening stock and suppliers from a spreadsheet through [Import & Export](13-import-export.md).
+
+DEPENDS: 15 09 07 08 11 18
+EVENTS: stock.received, stock.requested, stock.issued, stock.transferred, stock.counted, stock.adjusted, stock.wasted, stock.low, stock.expiring, purchase.requested, purchase.ordered, purchase.received
+OFF: Stores keep working on paper. Menus, food ordering, housekeeping and every other module keep working and simply stop sending usage. Movements entered offline in the app sync when the module is back.

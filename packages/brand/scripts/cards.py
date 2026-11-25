@@ -62,7 +62,7 @@ def _rows(x_label: float, x_value: float, y: float, rows: list[tuple[str, str]],
 
 def _name_role(cx: float, y: float, dark: bool = False, anchor: str = "middle", width: float = 470) -> str:
     """The holder's name and role, the two biggest lines on every card."""
-    name_colour, role_colour = (CREAM, "#E07A72") if dark else (INK, RED)
+    name_colour, role_colour = (CREAM, RED) if dark else (INK, RED)
     return (field(cx, y, 40, "full_name", SAMPLE["full_name"], name_colour, 900, anchor, max_width=width)
             + field(cx, y + 44, 25, "role", SAMPLE["role"], role_colour, 700, anchor, max_width=width))
 
@@ -153,15 +153,16 @@ def front_minimal() -> str:
     return _card(body, W, H, CREAM)
 
 
-def front_executive() -> str:
-    """Dark and formal, for the board and management."""
+def front_black() -> str:
+    """The default card: dark and formal, with a red label that shows the
+    department or card type (such as STAFF, MANAGEMENT or KITCHEN)."""
     W, H = SHORT, LONG
     logo, _ = logo_at("horizontal", COLOURWAY["reversed"], 60, 40, 420)
     body = (f"{logo}<rect x=\"60\" y=\"172\" width=\"{W - 120}\" height=\"2\" fill=\"{RED}\"/>"
             + photo(150, 205, 240, 240, "circle", RED, 6)
             + _name_role(W / 2, 515, dark=True)
             + f'<rect x="160" y="585" width="220" height="42" rx="21" fill="{RED}"/>'
-            + field(W / 2, 614, 19, "card_label", "MANAGEMENT", WHITE, 900, "middle", spacing=3)
+            + field(W / 2, 614, 19, "card_label", SAMPLE["card_label"], WHITE, 900, "middle", spacing=3)
             + field(W / 2, 672, 22, "staff_no", SAMPLE["staff_no"], CREAM, 700, "middle")
             + qr(210, 700, 120, SAMPLE["qr"])
             + nfc_symbol(455, 780, 36, CREAM))
@@ -310,18 +311,26 @@ class Template:
     back: Callable[[], str]
     suits: str
 
+    @property
+    def default(self) -> bool:
+        """True for the design every role gets until the super admin picks one."""
+        return self.id == DEFAULT_TEMPLATE
+
+
+# The template every role uses until the super admin assigns another one.
+DEFAULT_TEMPLATE = "portrait-black"
 
 TEMPLATES = [
+    Template("portrait-black", "Black", "portrait", front_black, lambda: back_portrait(dark=True),
+             "The default card for every role, until the super admin picks another design for a role."),
     Template("portrait-wave", "Wave", "portrait", front_wave, back_portrait,
-             "Default for all staff."),
+             "Light alternative for all staff."),
     Template("portrait-diagonal", "Diagonal", "portrait", front_diagonal, back_portrait,
              "Guest-facing staff: front office, restaurant, events, sales."),
     Template("portrait-sidebar", "Sidebar", "portrait", front_sidebar, back_portrait,
              "Operations: maintenance, housekeeping, security, grounds. The bar label can show the department."),
     Template("portrait-minimal", "Minimal", "portrait", front_minimal, back_portrait,
              "Museum, cultural centre and spa staff."),
-    Template("portrait-executive", "Executive", "portrait", front_executive, lambda: back_portrait(dark=True),
-             "Board members, CEO, GM and senior managers."),
     Template("portrait-visitor", "Visitor", "portrait", front_visitor, back_portrait,
              "Visitors, suppliers and day passes, with no photo."),
     Template("landscape-classic", "Classic", "landscape", front_classic, back_landscape,
@@ -370,7 +379,7 @@ def build_cards() -> None:
     previews = []
     for tpl in TEMPLATES:
         folder = out / tpl.id
-        entry = {"id": tpl.id, "name": tpl.name, "orientation": tpl.orientation,
+        entry = {"id": tpl.id, "name": tpl.name, "orientation": tpl.orientation, "default": tpl.default,
                  "card_type": "cr80-ntag213", "suits": tpl.suits,
                  "print": {"width_mm": 85.6 if tpl.orientation == "landscape" else 54.0,
                            "height_mm": 54.0 if tpl.orientation == "landscape" else 85.6,

@@ -1,0 +1,105 @@
+@@ 49 | notice-board | Notice Board | Communication
+Company posts and announcements for all staff or chosen groups. The super admin decides, for the whole board or a single post, who can post, comment, like or only read.
+
+## Features
+
+### Posts
+- Text, photos, videos, files, links and polls.
+- Audience: everyone, a department, a role, a location or named people.
+- Pinned posts, scheduled posts and expiry dates.
+- Urgent posts that need acknowledgement ("I have read this").
+- Read receipts, with a list of who has not read.
+
+### Interaction
+- Likes and reactions, comments and replies, and mentions.
+- Per post settings: comments on or off, likes only, or read only.
+
+### Moderation
+- Approval queue for posts from people who need approval.
+- Report a post or comment, hide, and remove.
+- Word filters.
+
+### Channels
+- Separate boards, such as "Management news", "Kitchen", "Staff of the month".
+
+## Super admin options
+- Which roles can post, comment, like, or only read, per board.
+- Whether posts need approval before they show.
+- Default post settings (for example, everyone can post but no one can comment, only likes).
+- Whether staff can create their own boards.
+
+DEPENDS: 11 10
+EVENTS: post.published, post.liked, post.commented, post.acknowledged, post.reported
+
+@@ 50 | chat | Chat | Communication
+Secure messaging between staff: one-to-one, groups and department channels.
+
+## Features
+- Direct messages, groups and department channels created automatically from departments.
+- Text, photos, voice notes, files and location.
+- Read receipts and typing status.
+- Message search and pinned messages.
+- Broadcast-only channels for announcements.
+- Staff-to-guest chat for front desk and concierge, kept separate from staff chat.
+- Messages kept on the server for records, not just on phones.
+
+## Super admin options
+- Who can message whom (for example, staff to managers only).
+- Whether groups can be created by anyone.
+- Whether staff can delete their messages.
+- Message retention.
+
+DEPENDS: 11 10
+EVENTS: chat.message_sent, chat.group_created
+
+@@ 51 | meetings | Meetings & Minutes | Communication
+Plans meetings, records minutes and follows up action items.
+
+## Features
+- Schedule a meeting with agenda, room and invitees, with calendar invites.
+- Attendance by card tap or tick.
+- Minutes typed in the app, with decisions and action items.
+- Action items become tasks with owners and due dates.
+- Board meetings with confidential papers.
+- Search past minutes.
+
+## Super admin options
+- Meeting types and minute templates.
+- Who can call meetings and see minutes.
+
+DEPENDS: 42 11
+EVENTS: meeting.scheduled, meeting.held, minutes.published, actionitem.created
+
+@@ 52 | surveys-polls | Surveys & Polls | Communication
+Quick polls and full surveys for staff or guests, such as staff satisfaction or menu ideas.
+
+## Features
+- Polls with single or multiple choice.
+- Surveys built with [Forms & Templates Builder](08-forms-builder.md).
+- Anonymous option.
+- Audience targeting and reminders.
+- Live results and charts, with export.
+
+## Super admin options
+- Who can create surveys, and for which audiences.
+- Whether anonymous surveys are allowed.
+
+DEPENDS: 08 10
+EVENTS: survey.published, survey.responded, survey.closed
+
+@@ 53 | company-calendar | Company Calendar | Communication
+One calendar of hotel life: public holidays, events, meetings, training, birthdays and closures.
+
+## Features
+- Calendar layers that people can turn on and off, from events, training, meetings, leave and holidays.
+- Company events and staff functions.
+- Personal calendar with own shifts, leave and tasks.
+- Reminders.
+- Sync to Google or phone calendars.
+
+## Super admin options
+- Which layers each role can see.
+- Who can add company events.
+
+DEPENDS: 15
+EVENTS: calendar.event_created
