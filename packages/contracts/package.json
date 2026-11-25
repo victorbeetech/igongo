@@ -10,6 +10,8 @@
     "./roles-permissions": "./roles-permissions/index.ts",
     "./users-login": "./users-login/index.ts",
     "./super-admin": "./super-admin/index.ts",
+    "./hr-records": "./hr-records/index.ts",
+    "./staff-cards": "./staff-cards/index.ts",
     "./catalog/modules.json": "./catalog/modules.json"
   }
 }

@@ -22,6 +22,8 @@ import {
 import type { Env } from "../shell/env";
 import { readConfig } from "../shell/env";
 import { authConfigFrom } from "./auth-config";
+import { noticeAnnouncer } from "./staff/notice-announcer";
+import { StaffServices } from "./staff/staff-services";
 
 /** Remembers the first result of [make]. */
 function once<T>(make: () => T): () => T {
@@ -79,6 +81,9 @@ export class RequestServices {
         audit: this.audit(),
       }),
   );
+
+  // --- Staff modules (HR, cards, wristbands, attendance, reports, meals, notices) ---
+  readonly staffModules = once(() => new StaffServices(this.db, noticeAnnouncer(this.db, this.env, (roles) => this.access().holdersOf(roles))));
 
   /** The change context for the signed-in caller, for audited use cases. */
   changeContext(actor: { userId: string; name: string } | undefined): ChangeContext {

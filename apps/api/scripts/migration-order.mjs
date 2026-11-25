@@ -6,7 +6,22 @@ import { readdirSync } from "node:fs";
 import { join } from "node:path";
 
 /** Modules with a database schema, in apply order. */
-export const MODULES = ["audit-trail", "roles-permissions", "users-login", "super-admin", "notifications"];
+export const MODULES = [
+  // Core platform.
+  "audit-trail",
+  "roles-permissions",
+  "users-login",
+  "super-admin",
+  "notifications",
+  // Staff (build step 2): each has its own schema and never reads another's tables.
+  "hr-records",
+  "staff-cards",
+  "wristbands",
+  "attendance",
+  "daily-reports",
+  "staff-meals",
+  "notice-board",
+];
 
 /** Every migration file as { module, name, path }, in apply order. */
 export function migrationFiles(repoRoot) {
