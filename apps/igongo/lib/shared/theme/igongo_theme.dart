@@ -34,7 +34,8 @@ abstract final class IgongoTheme {
       surfaceContainerHigh: p.surfaceAlt,
       surfaceContainer: p.surface,
       surfaceContainerLow: p.surface,
-      outline: p.border,
+      outline: p.outline, // Strong edges: switch tracks, field outlines (3:1).
+      // Soft edges stay soft: dividers and card edges.
       outlineVariant: p.border,
     );
     final text = igongoTextTheme(p.text, p.textMuted);
@@ -92,6 +93,8 @@ abstract final class IgongoTheme {
         filled: true,
         fillColor: p.surfaceAlt,
         isDense: true,
+        // Dense to keep forms compact, but never under the 48 tap target (accessibility test).
+        constraints: const BoxConstraints(minHeight: IgongoTouch.preferred),
         labelStyle: text.labelLarge?.copyWith(color: p.textMuted),
         hintStyle: text.bodyMedium?.copyWith(color: p.textMuted),
         // Field outlines use the strong outline token (3:1), so every field can be found.

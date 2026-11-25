@@ -29,11 +29,17 @@ class KpiCard extends StatelessWidget {
         spacing: IgongoSpace.xs,
         children: [
           Text(label, style: context.text.bodySmall, maxLines: 2, overflow: TextOverflow.ellipsis),
-          // Big numbers use the brand font (a brand moment) with lining figures.
+          // Big numbers: the brand font at the headline size, as on the web.
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
-            child: Text(value, style: context.text.displaySmall?.copyWith(fontSize: 22, color: context.palette.text)),
+            child: Text(
+              value,
+              style: context.text.displaySmall?.copyWith(
+                fontSize: IgongoType.headline.size,
+                color: context.palette.text,
+              ),
+            ),
           ),
         ],
       ),

@@ -11,7 +11,7 @@ export type ButtonVariant = "primary" | "secondary" | "danger" | "text";
 const VARIANTS: Record<ButtonVariant, string> = {
   primary: "bg-primary text-on-primary hover:bg-primary-dark",
   secondary: "border border-line text-ink hover:bg-surface-alt",
-  // Danger text uses the page colour: white on light-mode red, night on the lighter dark-mode red, so it always reads.
+  // Danger text uses on-error: white on light-mode red, night on the lighter dark-mode red (both checked 4.5:1).
   danger: "bg-error text-on-error hover:opacity-90",
   text: "text-primary-text underline-offset-4 hover:underline",
 };

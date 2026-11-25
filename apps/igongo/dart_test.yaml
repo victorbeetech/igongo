@@ -1,0 +1,4 @@
+# Test tags. `golden` marks the screenshot tests (test/golden), which compare
+# screens with saved images; update them with --update-goldens on Linux only.
+tags:
+  golden:

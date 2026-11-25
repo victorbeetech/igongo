@@ -2,6 +2,7 @@
 // state, the theme and the text size. It goes away when real data arrives.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../shared/preferences/preferences.dart';
@@ -40,6 +41,15 @@ class _PreviewPanel extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
           child: Text('Preview', style: context.text.titleMedium),
+        ),
+        // Step 0: the design system showcase, every token and component on one screen.
+        ListTile(
+          leading: const Icon(Icons.palette_outlined),
+          title: const Text('Open the design system'),
+          onTap: () {
+            Navigator.of(context).pop();
+            GoRouter.of(context).push('/design-system');
+          },
         ),
         // Step 1: the state every screen shows.
         const SectionHeader('Screen state'),

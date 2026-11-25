@@ -141,6 +141,30 @@ class IgongoPalette extends ThemeExtension<IgongoPalette> {
   /// The brand cream, for text on dark brand surfaces such as the staff card.
   final Color brandCream;
 
+  /// Every colour by its token name, for the design system showcase.
+  Map<String, Color> get named => {
+    'primary': primary,
+    'onPrimary': onPrimary,
+    'primaryDark': primaryDark,
+    'primaryContainer': primaryContainer,
+    'onPrimaryContainer': onPrimaryContainer,
+    'primaryText': primaryText,
+    'secondary': secondary,
+    'background': background,
+    'surface': surface,
+    'surfaceAlt': surfaceAlt,
+    'text': text,
+    'textMuted': textMuted,
+    'border': border,
+    'outline': outline,
+    'success': success,
+    'warning': warning,
+    'error': error,
+    'onError': onError,
+    'info': info,
+    'brandCream': brandCream,
+  };
+
   @override
   IgongoPalette copyWith() => this;
 

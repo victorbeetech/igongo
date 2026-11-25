@@ -13,7 +13,7 @@ export function OptionSwitch({ label, hint, initial }: { label: string; hint: st
         <span className="block text-caption text-muted">{hint}</span>
       </span>
       {/* A real switch for screen readers, drawn in brand red when on. */}
-      <button type="button" role="switch" aria-checked={on} aria-label={label} onClick={() => setOn(!on)} className={`relative h-7 w-12 rounded-full transition-colors ${on ? "bg-primary" : "bg-line"}`}>
+      <button type="button" role="switch" aria-checked={on} aria-label={label} onClick={() => setOn(!on)} className={`relative h-7 w-12 rounded-full transition-colors ${on ? "bg-primary" : "bg-outline"}`}>
         <span className={`absolute top-1 size-5 rounded-full bg-surface shadow transition-all ${on ? "left-6" : "left-1"}`} />
       </button>
     </div>

@@ -25,6 +25,7 @@ WCAG 2.2 AA: 4.5:1 for text, 3:1 for icons, field outlines, focus rings and char
 | Danger button text on the error colour | `onError` on `error` | 6.54 pass | 8.08 pass | 4.5:1 |
 | Field outlines on cards | `outline` on `surface` | 4.18 pass | 3.90 pass | 3:1 |
 | Field outlines on the page | `outline` on `background` | 3.72 pass | 4.24 pass | 3:1 |
+| Switch track when off, and other strong edges | `outline` on `surface` | 4.18 pass | 3.90 pass | 3:1 |
 | Field outline against its own fill | `outline` on `surfaceAlt` | 3.44 pass | 3.50 pass | 3:1 |
 | Success text on the page | `success` on `background` | 5.73 pass | 8.41 pass | 4.5:1 |
 | Warning text on the page | `warning` on `background` | 5.62 pass | 9.39 pass | 4.5:1 |
@@ -40,7 +41,7 @@ WCAG 2.2 AA: 4.5:1 for text, 3:1 for icons, field outlines, focus rings and char
 | Info chip on the page | `info` on `info` 12% over `background` | 4.63 pass | 7.24 pass | 4.5:1 |
 | Neutral chip on a card | `textMuted` on `textMuted` 12% over `surface` | 5.47 pass | 5.81 pass | 4.5:1 |
 | Neutral chip on the page | `textMuted` on `textMuted` 12% over `background` | 4.92 pass | 6.42 pass | 4.5:1 |
-| Red message icon in its tinted circle | `primaryText` on `primary` 12% over `background` | 4.58 pass | 15.23 pass | 3:1 |
+| Red message icon in its tinted circle (red in light, cream in dark) | `primaryText` on `primaryText` 12% over `background` | 4.58 pass | 12.03 pass | 3:1 |
 | Offline banner text | `text` on `warning` 14% over `background` | 12.46 pass | 12.68 pass | 4.5:1 |
 | Offline banner icon | `warning` on `warning` 14% over `background` | 4.61 pass | 7.24 pass | 3:1 |
 | Client view and tip banner text | `text` on `info` 14% over `background` | 12.57 pass | 12.87 pass | 4.5:1 |
@@ -53,4 +54,4 @@ WCAG 2.2 AA: 4.5:1 for text, 3:1 for icons, field outlines, focus rings and char
 | Dividers and card edges (decorative; cards are also set apart by their surface) | `border` on `background` | 1.24 | 1.46 |
 | Igongo red filled shapes (buttons, app bar, badges, the logo) on the dark page. Each carries its own label in onPrimary, so the shape edge is not needed to read it | `primary` on `background` | 5.51 | 2.98 |
 
-**Result:** 78 of 78 checks pass.
+**Result:** 80 of 80 checks pass.

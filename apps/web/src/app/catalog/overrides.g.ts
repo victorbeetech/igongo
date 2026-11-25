@@ -3,6 +3,8 @@
 
 import type { ScreenOverrides } from "@/shared/catalog/types";
 import { m00Overrides } from "@/modules/m00-app-shell/overrides";
+import { m14Overrides } from "@/modules/m14-integrations-hub/overrides";
+import { m77Overrides } from "@/modules/m77-payments/overrides";
 
 /** Hand-made screens by screen number. Every other screen uses a shared layout. */
-export const allOverrides: ScreenOverrides = {...m00Overrides};
+export const allOverrides: ScreenOverrides = {...m00Overrides, ...m14Overrides, ...m77Overrides};

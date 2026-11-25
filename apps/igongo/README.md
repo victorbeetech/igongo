@@ -32,5 +32,12 @@ The logo, card and fonts come from `packages/brand` (as the `igongo_brand` packa
 
 ```bash
 flutter analyze   # zero issues, strict mode
-flutter test      # opens every screen in light, dark, and dark at Extra large text
+flutter test      # every screen in light, dark, Compact and Extra large text, plus component tests
+flutter test --tags golden                   # key screens and the design system in light and dark
+flutter test --tags golden --update-goldens  # redraw them after an approved design change
 ```
+
+- `test/golden/` compares key screens (one per layout, the six screen states and the design system) with the pictures in `test/golden/goldens/`.
+- `test/store/` draws the Play Store and App Store screenshots into `packages/brand/store/screenshots/`.
+- `test/accessibility/` checks tap targets (48 px) and labels on every screen in both modes.
+- The design system screen opens from the preview panel ("Open the design system") or at `/design-system`.

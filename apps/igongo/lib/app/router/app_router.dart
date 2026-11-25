@@ -5,6 +5,7 @@
 import 'package:go_router/go_router.dart';
 
 import '../catalog/catalog_index.dart';
+import '../showcase/design_system_screen.dart';
 import 'screen_page.dart';
 
 /// Builds the router with a route for every screen of every module.
@@ -21,6 +22,8 @@ GoRouter buildAppRouter({String initialLocation = '/'}) {
       path: '/home',
       builder: (_, _) => ScreenPage(spec: index.screens['S00-21']!),
     ),
+    // The design system showcase, for review; it is not a screen of the inventory.
+    GoRoute(path: '/design-system', builder: (_, _) => const DesignSystemScreen()),
   ];
   // Step 2: one route per screen; `:id` addresses take any record number.
   for (final screen in index.screens.values) {
@@ -33,6 +36,7 @@ GoRouter buildAppRouter({String initialLocation = '/'}) {
   }
   // Step 3: an unknown address shows the Not found screen.
   return GoRouter(
+    initialLocation: initialLocation,
     routes: routes,
     errorBuilder: (_, _) => ScreenPage(spec: index.screens['S00-44']!),
   );

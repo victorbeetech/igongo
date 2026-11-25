@@ -46,7 +46,7 @@ def ratio(a: str, b: str) -> float:
 
 def blend(fg: str, bg: str, alpha: float) -> str:
     """The colour seen when fg is painted at opacity alpha over bg (chips, banners)."""
-    mixed = [round(f * alpha + b * (1 - alpha)) for f, b in zip(channels(fg), channels(bg))]
+    mixed = [round(f * alpha + b * (1 - alpha)) for f, b in zip(channels(fg), channels(bg), strict=True)]
     return "#" + "".join(f"{v:02X}" for v in mixed)
 
 
