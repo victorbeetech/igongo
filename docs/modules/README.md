@@ -29,7 +29,7 @@ Every feature in every module uses the same permission actions, so the role buil
 
 Stock management and bar management were removed from the signed scope. Drinks can still be sold as menu items through [Menus & Catalogue](61-menu-catalogue.md) and [Food Ordering](62-food-ordering.md), and the Crafts & Bookshop keeps simple item counts for the shop only. A full stock module can be added later as a separate module without changing any other module.
 
-## The 82 modules
+## The 83 modules
 
 ### Core platform
 
@@ -147,4 +147,10 @@ Stock management and bar management were removed from the signed scope. Drinks c
 | 80 | [Accounting Export](80-accounting-export.md) | Sends sales, payroll, expenses and payments to the hotel's accounting system in the format it needs. |
 | 81 | [Reports & Analytics](81-reports-analytics.md) | Dashboards and reports for every module and every level, from a supervisor's shift to the board's quarter. |
 | 82 | [APEX Integration](82-apex-integration.md) | Connects the new system to APEX, the hotel's existing system, so the two work together and never conflict. |
+
+### Marketing and growth
+
+| # | Module | What it does |
+| --- | --- | --- |
+| 83 | [SEO & Online Presence](83-seo-online-presence.md) | Everything that helps people find Igongo online and measures what works: search engines, Google Maps, app stores, social media, booking sites and tracking. |
 

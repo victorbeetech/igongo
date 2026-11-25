@@ -7,7 +7,7 @@ Every phase follows the [code standards](architecture/code-standards.md): clean 
 ## Phase 0: Scope and plan
 
 - [x] Agree the deliverables: one Igongo app for everyone, the web portal and the public website.
-- [x] Write the [modules spec](modules/README.md): 82 independent modules.
+- [x] Write the [modules spec](modules/README.md): 83 independent modules.
 - [x] Write the [roles spec](roles/README.md): 72 pre-made roles, all editable by the super admin.
 - [x] Review the [tech stack](architecture/stack.md) against the requirements.
 - [x] Write the [code standards](architecture/code-standards.md).
@@ -126,7 +126,47 @@ Every phase follows the [code standards](architecture/code-standards.md): clean 
 - [ ] Fix every bug and warning found.
 - [ ] Sign-off by the GM.
 
-## Phase 12: Training and launch
+## Phase 12: Marketing, SEO and online presence
+
+Victor Bee Technologies runs marketing for the hotel, so none of this is skipped. See [SEO & Online Presence](modules/83-seo-online-presence.md).
+
+### Website SEO
+- [ ] Keyword research for Igongo, Mbarara hotels, the museum, weddings, conferences and the pool.
+- [ ] Page titles, descriptions and clean addresses for every page.
+- [ ] Structured data: Hotel, Restaurant, Menu, Event, TouristAttraction, Product, Review, FAQ and breadcrumbs, checked with Google's Rich Results Test.
+- [ ] Sitemap, robots file, canonical links and redirects from the old website's addresses.
+- [ ] Core Web Vitals in the green on mobile.
+- [ ] Image alt text on every image.
+- [ ] Google Search Console and Bing Webmaster Tools verified, and the sitemap submitted.
+- [ ] Clean up the old website, including removing the spam links in its footer, before the switch.
+
+### Tracking
+- [ ] Google Analytics 4 and Google Tag Manager, with a consent banner.
+- [ ] Conversions tracked: bookings, orders, enquiries, ticket sales and app installs.
+- [ ] Meta Pixel, TikTok Pixel and Google Ads conversion tags.
+- [ ] UTM campaign links on every marketing message.
+- [ ] Monthly marketing report set up.
+
+### Local listings
+- [ ] Google Business Profile for the hotel (and the museum, restaurant and spa if separate), with photos, hours, menu and booking links.
+- [ ] Apple Business Connect, Bing Places and TripAdvisor.
+- [ ] The same name, address and phone everywhere.
+- [ ] Review replies set up.
+
+### App stores
+- [ ] Play Store and App Store listings: name, subtitle, keywords, descriptions, screenshots and preview video.
+- [ ] Privacy policy, terms and data safety forms.
+- [ ] Ratings prompt in the app.
+- [ ] Deep links and smart app banners from the website to the app.
+
+### Social and content
+- [ ] Social media profiles linked and branded.
+- [ ] Open Graph images for every shareable page.
+- [ ] Launch content: blog posts, landing pages for weddings, conferences, school trips and the museum.
+- [ ] Newsletter sign-up and first campaigns.
+- [ ] Booking.com, Expedia and Hotels.com listings checked for matching content and photos.
+
+## Phase 13: Training and launch
 
 - [ ] Train the super admin, managers and staff, by role.
 - [ ] User guides per role.

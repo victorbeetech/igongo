@@ -32,7 +32,7 @@ There is **one Flutter app**, the Igongo app, for everyone: the board, the CEO, 
 
 ## Modules
 
-The system is built from **82 fully independent modules**. No module is a sub-module of another: Payroll is separate from HR records, the Notice Board is separate from Chat, and Receipts are separate from Payments. Modules talk only through APIs and events, so a problem in one never breaks the rest, and the super admin can switch each one off. Everything is configured by the super admin, with no code changes.
+The system is built from **83 fully independent modules**. No module is a sub-module of another: Payroll is separate from HR records, the Notice Board is separate from Chat, and Receipts are separate from Payments. Modules talk only through APIs and events, so a problem in one never breaks the rest, and the super admin can switch each one off. Everything is configured by the super admin, with no code changes.
 
 Each module has its own file in [docs/modules](docs/modules/README.md), with its features, super admin options, dependencies, events, and what happens when it is switched off.
 
@@ -153,6 +153,12 @@ Each module has its own file in [docs/modules](docs/modules/README.md), with its
 | 81 | [Reports & Analytics](docs/modules/81-reports-analytics.md) | Dashboards and reports for every module and every level, from a supervisor's shift to the board's quarter. |
 | 82 | [APEX Integration](docs/modules/82-apex-integration.md) | Connects the new system to APEX, the hotel's existing system, so the two work together and never conflict. |
 
+### Marketing and growth
+
+| # | Module | What it does |
+| --- | --- | --- |
+| 83 | [SEO & Online Presence](docs/modules/83-seo-online-presence.md) | Everything that helps people find Igongo online and measures what works: search engines, Google Maps, app stores, social media, booking sites and tracking. |
+
 ### Working with APEX
 The hotel already uses APEX for rooms. This system **complements APEX and does not replace it**: room availability and bookings sync with APEX through the APEX Integration module.
 
@@ -184,6 +190,7 @@ The stack was reviewed against the requirements, and the changes are explained i
 | Payments | MTN MoMo, Airtel Money and Flutterwave |
 | Maps | Google Maps Platform |
 | Errors | Sentry |
+| SEO, tracking and marketing | Structured data, sitemaps, Google Search Console, Google Analytics 4, Tag Manager, Meta and TikTok Pixels, Google Business Profile |
 | Tooling | pnpm, Turborepo, Melos, GitHub Actions with warnings as errors |
 
 ## Repository layout
@@ -384,7 +391,8 @@ The work follows the [build checklist](docs/BUILD-CHECKLIST.md), in order, with 
 9. Hardware
 10. Data and setup
 11. Testing
-12. Training and launch
+12. Marketing, SEO and online presence
+13. Training and launch
 
 ## Getting started
 

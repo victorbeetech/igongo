@@ -1,6 +1,6 @@
 # Tech stack
 
-This is the stack, reviewed against the requirements: one app for every role, a super admin who configures everything without code, 82 independent modules, permanent searchable records, strong offline attendance, NFC and QR cards, and reusable wristbands.
+This is the stack, reviewed against the requirements: one app for every role, a super admin who configures everything without code, 83 independent modules, permanent searchable records, strong offline attendance, NFC and QR cards, and reusable wristbands.
 
 [Back to README](../../README.md)
 
@@ -11,7 +11,7 @@ This is the stack, reviewed against the requirements: one app for every role, a 
 | **One Flutter app** instead of a guest app and a staff app | Everyone uses one entry point, and the interface is built from the person's roles. |
 | **Server-driven UI**: the app downloads each role's menus, tiles and screen layout as JSON | A new role, such as Chef, works the moment the super admin saves it, with no app store update. |
 | **A permission engine in the database**, cached in Workers KV | Roles and permissions are data, so they can't be hard-coded. Every API call and screen is checked against them. |
-| **One code folder and one Postgres schema per module**, with an API gateway in front | Keeps the 82 modules truly independent. A broken module can be switched off without touching the others. |
+| **One code folder and one Postgres schema per module**, with an API gateway in front | Keeps the 83 modules truly independent. A broken module can be switched off without touching the others. |
 | **Cloudflare Queues as the event bus**, with an outbox table in each module | Modules talk by events (such as `order.placed`), never by reading each other's tables. If one is down, its events wait in the queue. |
 | **Cloudflare Workflows and Cron Triggers** | For long processes such as approval escalation, pre-order timers, payroll runs, reminders and scheduled reports. |
 | **Offline-first app storage with Drift (SQLite)** | Gate clock-in, wristband scans, meal claims and inspections must work with no network and sync later. |
@@ -20,8 +20,9 @@ This is the stack, reviewed against the requirements: one app for every role, a 
 | **NTAG 424 DNA chips for staff cards**, NTAG 215/216 for wristbands | 424 DNA cards produce a new signed code on every tap, so a card can't be copied. Wristbands only need a cheap, rewritable chip, as they are reset and reused. |
 | **PDF generation with Cloudflare Browser Rendering** | Receipts, invoices, payslips, earnings statements and reports, all from editable HTML templates. |
 | **Sentry** for crash and error tracking in the app, web and API | You asked that no warning or error be ignored. Sentry shows every one, with the screen and the user's role. |
-| **OpenAPI generated from the API**, with the Dart and TypeScript clients generated from it | The app, web and API can't drift apart across 82 modules. |
+| **OpenAPI generated from the API**, with the Dart and TypeScript clients generated from it | The app, web and API can't drift apart across 83 modules. |
 | **Remote wording and translations**, stored in the database | The super admin can change any word or add Runyankore without an app update. |
+| **SEO built into the public website**: server-rendered pages, structured data, sitemaps and analytics | Victor Bee runs the hotel's marketing, so search, tracking and listings are part of the build, not an add-on. |
 | **Design tokens** shared by the app and the web | One theme, one logo and one set of text sizes used everywhere, so the brand stays the same across every screen. |
 
 ## Full stack
@@ -83,6 +84,9 @@ This is the stack, reviewed against the requirements: one app for every role, a 
 | Mobile money and cards | MTN MoMo, Airtel Money and Flutterwave |
 | Maps | Google Maps Platform |
 | Tax invoices, if needed | URA EFRIS |
+| Search engines | Google Search Console and Bing Webmaster Tools |
+| Analytics and ads tracking | Google Analytics 4, Google Tag Manager, Meta Pixel, TikTok Pixel and Google Ads conversions, behind a consent banner |
+| Local listings | Google Business Profile, Apple Business Connect, Bing Places and TripAdvisor |
 | Existing hotel system | APEX, through whatever link the vendor offers (API, database or file exchange) |
 
 ### Tooling
