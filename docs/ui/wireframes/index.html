@@ -1,0 +1,411 @@
+<meta charset="utf-8">
+<title>Igongo Wireframes</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Lato:wght@400;700;900&display=swap">
+<style>
+/* Layout: a review desk. Left: who and which module. Centre: the screen in its
+   device frame, drawn as a grey low-detail sketch. Right: the screen's card,
+   with its number, route and every connection in and out. */
+:root {
+  --bg: #F3EFEA;        /* desk */
+  --panel: #FFFFFF;
+  --ink: #1C1C1C;
+  --muted: #6A615B;
+  --line: #DDD4CC;
+  --sketch: #E6E0DA;    /* grey blocks inside the wireframe */
+  --sketch-2: #CFC7C0;
+  --red: #B8292F;       /* Igongo red, used only for links and the active item */
+  --red-soft: #F7E1DF;
+  --frame: #2B2523;
+  --font-brand: "Cinzel", Georgia, serif;
+  --font: "Lato", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #15100E; --panel: #211916; --ink: #F3EFEA; --muted: #B3A69F; --line: #3A2E2A;
+  --sketch: #342925; --sketch-2: #4A3C37; --red: #B8292F; --red-soft: #4A1A1C; --frame: #0B0807; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #15100E; --panel: #211916; --ink: #F3EFEA; --muted: #B3A69F; --line: #3A2E2A;
+  --sketch: #342925; --sketch-2: #4A3C37; --red: #B8292F; --red-soft: #4A1A1C; --frame: #0B0807; color-scheme: dark }
+
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font: 14px/1.45 var(--font); margin: 0 }
+button, select, input { font: inherit; color: inherit }
+a { color: var(--red) }
+:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
+
+.top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding-block: 12px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  border-bottom: 1px solid var(--line); background: var(--panel) }
+.brand { font-family: var(--font-brand); font-size: 20px; letter-spacing: .04em; color: var(--red) }
+.brand small { font-family: var(--font); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-left: 8px }
+.stats { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums }
+.top .grow { flex: 1 }
+
+.desk { display: grid; grid-template-columns: 260px minmax(0, 1fr) 320px; gap: 16px; align-items: start;
+  padding-block: 16px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)) }
+@media (max-width: 1100px) { .desk { grid-template-columns: 220px minmax(0, 1fr) } .card { grid-column: 1 / -1 } }
+@media (max-width: 720px) { .desk { grid-template-columns: minmax(0, 1fr) } }
+
+.side { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px; display: grid; gap: 10px;
+  max-height: calc(100vh - 110px); overflow: auto; position: sticky; top: 12px }
+@media (max-width: 720px) { .side { position: static; max-height: 320px } }
+.side label { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .08em; color: var(--muted) }
+.side select, .side input { width: 100%; padding: 7px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg) }
+.mods { display: grid; gap: 1px }
+.mods button { text-align: left; background: none; border: 0; padding: 5px 6px; border-radius: 5px; cursor: pointer; display: flex; gap: 8px }
+.mods button span { color: var(--muted); font-variant-numeric: tabular-nums; min-width: 22px }
+.mods button:hover, .mods button[aria-current="true"] { background: var(--red-soft) }
+.mods .sub { padding-left: 30px; font-size: 13px }
+
+.stage { display: grid; justify-items: center; gap: 10px; min-width: 0 }
+.crumbs { justify-self: stretch; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 13px; color: var(--muted) }
+.crumbs button { background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; cursor: pointer }
+.surface-tabs { display: flex; gap: 6px }
+.surface-tabs button { border: 1px solid var(--line); background: var(--panel); border-radius: 6px; padding: 4px 10px; cursor: pointer; font-size: 12px }
+.surface-tabs button[aria-pressed="true"] { border-color: var(--red); color: var(--red); font-weight: 700 }
+
+/* Device frames */
+.phone { width: 360px; max-width: 100%; height: 720px; border: 10px solid var(--frame); border-radius: 34px; background: var(--panel);
+  display: flex; flex-direction: column; overflow: hidden; position: relative }
+.browser { width: 100%; max-width: 980px; height: 640px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel);
+  display: flex; flex-direction: column; overflow: hidden; position: relative }
+.browser .chrome { height: 34px; display: flex; align-items: center; gap: 6px; padding: 0 12px; border-bottom: 1px solid var(--line); background: var(--bg) }
+.browser .chrome i { width: 10px; height: 10px; border-radius: 50%; background: var(--sketch-2) }
+.browser .chrome .url { flex: 1; margin-left: 10px; background: var(--panel); border-radius: 5px; padding: 3px 10px; font-size: 12px; color: var(--muted);
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis }
+.web-body { flex: 1; display: grid; grid-template-columns: 180px 1fr; min-height: 0 }
+.web-nav { border-right: 1px solid var(--line); padding: 10px; display: grid; align-content: start; gap: 6px; overflow: auto }
+.web-nav b { font-family: var(--font-brand); color: var(--red); font-size: 14px; margin-bottom: 6px }
+.web-nav span { height: 10px; border-radius: 3px; background: var(--sketch) }
+@media (max-width: 720px) { .web-body { grid-template-columns: 1fr } .web-nav { display: none } }
+
+.bar { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--line) }
+.bar .t { font-weight: 900; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.ico { width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--sketch-2); display: grid; place-items: center; font-size: 13px;
+  color: var(--muted); background: none; cursor: pointer; flex: none }
+.scr { flex: 1; overflow: auto; padding: 12px; display: grid; align-content: start; gap: 10px; min-height: 0 }
+.nav { display: flex; justify-content: space-around; border-top: 1px solid var(--line); padding: 8px 0 10px }
+.nav button { background: none; border: 0; display: grid; justify-items: center; gap: 3px; font-size: 10px; color: var(--muted); cursor: pointer }
+.nav button i { width: 18px; height: 18px; border-radius: 5px; background: var(--sketch-2) }
+
+/* Sketch pieces */
+.blk { background: var(--sketch); border-radius: 6px }
+.ln { height: 9px; border-radius: 3px; background: var(--sketch) }
+.ln.s { width: 40% } .ln.m { width: 65% }
+.hint { font-size: 12px; color: var(--muted) }
+.search { height: 32px; border: 1.5px solid var(--sketch-2); border-radius: 8px; display: flex; align-items: center; padding: 0 10px; color: var(--muted); font-size: 12px }
+.chips { display: flex; gap: 6px; flex-wrap: wrap }
+.chips span { height: 22px; width: 64px; border-radius: 999px; border: 1.5px solid var(--sketch-2) }
+.row { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border: 1.5px solid var(--sketch); border-radius: 8px; background: none;
+  text-align: left; width: 100% }
+.row .av { width: 30px; height: 30px; border-radius: 50%; background: var(--sketch-2); flex: none }
+.row .tx { flex: 1; display: grid; gap: 5px; min-width: 0 }
+.go { cursor: pointer; border-color: var(--red) !important; position: relative }
+.go:hover { background: var(--red-soft) }
+.go .lbl { font-size: 12px; font-weight: 700; color: var(--red) }
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px }
+.tile { min-height: 76px; border: 1.5px solid var(--sketch-2); border-radius: 10px; padding: 9px; display: grid; align-content: space-between; gap: 6px;
+  background: none; text-align: left; font-size: 12.5px; font-weight: 700 }
+.tile .num { height: 14px; width: 36px; border-radius: 3px; background: var(--sketch-2) }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 8px }
+.kpi { border: 1.5px solid var(--sketch); border-radius: 8px; padding: 8px; display: grid; gap: 6px }
+.chart { height: 120px; border: 1.5px solid var(--sketch); border-radius: 8px; display: flex; align-items: end; gap: 6px; padding: 10px }
+.chart i { flex: 1; background: var(--sketch-2); border-radius: 3px 3px 0 0 }
+.field { display: grid; gap: 4px }
+.field .in { height: 34px; border: 1.5px solid var(--sketch-2); border-radius: 7px }
+.btn { height: 40px; border-radius: 8px; border: 1.5px solid var(--sketch-2); display: grid; place-items: center; font-weight: 700; font-size: 13px;
+  background: none; padding: 0 12px; width: 100% }
+.btn.primary { background: var(--sketch-2) }
+.scan { aspect-ratio: 1; max-width: 100%; border: 2px dashed var(--sketch-2); border-radius: 16px; display: grid; place-items: center; text-align: center;
+  color: var(--muted); font-size: 12px; padding: 20px }
+.scan b { display: block; width: 70px; height: 70px; margin: 0 auto 10px; border-radius: 50%; border: 3px solid var(--sketch-2) }
+.toggle { display: flex; justify-content: space-between; align-items: center; gap: 10px }
+.toggle i { width: 34px; height: 20px; border-radius: 999px; background: var(--sketch-2); flex: none }
+.map { height: 220px; border-radius: 8px; background:
+  repeating-linear-gradient(45deg, var(--sketch) 0 12px, transparent 12px 24px), var(--bg); border: 1.5px solid var(--sketch) }
+.sec { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .08em; color: var(--muted) }
+.purpose { font-size: 12px; color: var(--muted); border-left: 3px solid var(--sketch-2); padding-left: 8px }
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 8px }
+.cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px }
+
+/* Dialog overlay */
+.veil { position: absolute; inset: 0; background: rgb(0 0 0 / .45); display: grid; align-items: end; z-index: 5 }
+.browser .veil { align-items: center; justify-items: center }
+.sheet { background: var(--panel); border-radius: 16px 16px 0 0; padding: 16px; display: grid; gap: 10px }
+.browser .sheet { border-radius: 12px; width: min(420px, 90%) }
+.sheet h3 { margin: 0; font-size: 16px }
+
+/* Screen card */
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px; display: grid; gap: 12px; min-width: 0 }
+.card h2 { margin: 0; font-size: 18px; text-wrap: balance }
+.card .id { font-variant-numeric: tabular-nums; color: var(--red); font-weight: 900; font-size: 13px }
+.card code { font-size: 12px; background: var(--bg); padding: 2px 6px; border-radius: 4px; overflow-wrap: anywhere }
+.links { display: grid; gap: 4px }
+.links button { text-align: left; background: none; border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; cursor: pointer; font-size: 13px }
+.links button:hover { border-color: var(--red) }
+.links button b { color: var(--red); font-variant-numeric: tabular-nums; margin-right: 6px }
+.pills { display: flex; gap: 6px; flex-wrap: wrap }
+.pill { font-size: 11px; font-weight: 700; border-radius: 999px; padding: 2px 8px; background: var(--red-soft); color: var(--ink) }
+.states { display: flex; flex-wrap: wrap; gap: 4px }
+.states button { font-size: 11px; border: 1px solid var(--line); border-radius: 999px; padding: 2px 8px; background: none; cursor: pointer }
+.states button[aria-pressed="true"] { border-color: var(--red); color: var(--red) }
+.empty { text-align: center; color: var(--muted); padding: 30px 10px; display: grid; gap: 8px; justify-items: center }
+.empty b { width: 60px; height: 60px; border-radius: 50%; background: var(--sketch) }
+@media (prefers-reduced-motion: no-preference) { .tile, .row, .links button { transition: background .12s, border-color .12s } }
+</style>
+
+<header class="top">
+  <div class="brand">IGONGO <small>Clickable wireframes</small></div>
+  <div class="stats" id="stats">Loading screens…</div>
+  <div class="grow"></div>
+  <div class="hint">Red outlines are links. Every screen opens the screens listed on its card.</div>
+</header>
+
+<main class="desk">
+  <nav class="side" aria-label="Choose what to view">
+    <div><label for="role">View the app as</label>
+      <select id="role"></select></div>
+    <button class="btn" id="go-home">Open this person's home</button>
+    <div><label for="find">Find a screen</label>
+      <input id="find" placeholder="Name, number or route, e.g. S62-04"></div>
+    <label>Modules</label>
+    <div class="mods" id="mods"></div>
+  </nav>
+
+  <section class="stage" aria-label="Wireframe">
+    <div class="crumbs" id="crumbs"></div>
+    <div class="surface-tabs" id="tabs"></div>
+    <div id="device"></div>
+  </section>
+
+  <aside class="card" id="card" aria-live="polite"></aside>
+</main>
+
+<script>
+/* The wireframes are drawn from screens.json, which the screen generator
+   writes from the screen inventory. Nothing here is typed by hand per
+   screen: each screen is drawn from its kind (list, form, scanner and so
+   on), and every link comes from the inventory's connections. */
+"use strict";
+let DATA = null, BY_ID = {}, MODS = {};
+const state = { role: "super-admin", trail: [], surface: null, uiState: "Normal", filter: "" };
+
+/* ---------- Step 1: work out what kind of screen each one is ---------- */
+const KINDS = [
+  ["home", /(home$|^role home|console home|client view home|explore as guest)/i],
+  ["dashboard", /(dashboard|live$|board$|reports?$|results$|summary|status$|usage|spend|sla|health|position)/i],
+  ["scanner", /(scan|tap card|clock in|claim meal|encode|test card|entry$|check$|zone check|who owns|band scanner|redeem voucher|sign out key|return key|event check-in|ticket scanner|panic)/i],
+  ["map", /(map|navigate|zones$|floor plan|locations)/i],
+  ["settings", /(settings|rules|types|policies|methods|limits|preferences|matrix|permissions|conditions|mapping|series|amounts|duties|templates$|cycles)/i],
+  ["builder", /(builder|designer|editor|logic|layout|wizard)/i],
+  ["form", /^(new|add|create|request|report|register|book|fill|edit|apply|pre-|walk-in|give|log|issue|assign|schedule|take|buy|pick|enter|forgot|verify|phone|otp|password|pin|two-factor|sign in|claim|open till|cash count|cash-up|record|run|start|answer|clean|proof|checkout|cart|order type|delivery address|digital check-in|health|pay$|mobile money|payment link|till|change|import)/i],
+  ["detail", /(detail|profile|view$|payslip$|article$|card$|pass$|player|room$|entry$|contract$|post$|trip$|my event$|my account|everything about|timeline|about$|item detail|product detail|treatment detail)/i],
+  ["result", /(result|confirmed|placed|pending approval|locked|denied|not found|went wrong|force update|maintenance|warning|unassigned|sent$)/i],
+];
+function kindOf(s) {
+  if (s.id.startsWith("D")) return "dialog";
+  for (const [k, re] of KINDS) if (re.test(s.name)) return k;
+  return "list";
+}
+
+/* ---------- Step 2: small sketch helpers ---------- */
+const h = (tag, cls, html) => `<${tag}${cls ? ` class="${cls}"` : ""}>${html ?? ""}</${tag}>`;
+const lines = (n, cls = "") => Array.from({ length: n }, (_, i) => `<div class="ln ${i % 2 ? "m" : ""} ${cls}"></div>`).join("");
+const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+function goRow(id, label) {
+  const t = BY_ID[id];
+  const name = label || (t ? t.name : "Home");
+  return `<button class="row go" data-go="${id}"><span class="av"></span><span class="tx"><span class="lbl">${esc(name)}</span><span class="ln m"></span></span>›</button>`;
+}
+function goBtn(id, primary) {
+  const t = BY_ID[id];
+  return `<button class="btn go ${primary ? "primary" : ""}" data-go="${id}"><span class="lbl">${esc(t ? t.name : "Home")}</span></button>`;
+}
+
+/* ---------- Step 3: draw a screen body by kind ---------- */
+function body(s) {
+  const screensOut = s.opens.filter(i => i !== "home" && i.startsWith("S"));
+  const dialogsOut = s.opens.filter(i => i.startsWith("D"));
+  const links = screensOut.map(i => goRow(i)).join("");
+  const actions = dialogsOut.map(i => goBtn(i)).join("");
+  const purpose = `<div class="purpose">${esc(s.purpose)}</div>`;
+  if (state.uiState !== "Normal") return stateBody(s);
+
+  switch (kindOf(s)) {
+    case "home": {
+      const role = DATA.roles.find(r => r.key === state.role);
+      const tiles = s.name === "Role home" && role ? role.tiles.map(([t, id]) =>
+        `<button class="tile go" data-go="${id}"><span class="lbl">${esc(t)}</span><span class="num"></span></button>`).join("") : "";
+      return purpose + (tiles ? h("div", "tiles", tiles) : "") + h("div", "tiles", screensOut.map(i =>
+        `<button class="tile go" data-go="${i}"><span class="lbl">${esc(BY_ID[i].name)}</span><span class="num"></span></button>`).join("")) + actions;
+    }
+    case "dashboard":
+      return purpose + h("div", "kpis", Array.from({ length: 4 }, () => h("div", "kpi", `<div class="ln s"></div><div class="blk" style="height:20px;width:60%"></div>`)).join(""))
+        + h("div", "chart", [40, 70, 55, 90, 65, 80, 50].map(v => `<i style="height:${v}%"></i>`).join("")) + links + actions + lines(3);
+    case "scanner":
+      return purpose + h("div", "scan", `<b></b>Hold the card, wristband or QR code here<br>NFC or camera`) + links + actions
+        + `<button class="btn">Enter number by hand</button>`;
+    case "map":
+      return purpose + h("div", "map", "") + links + actions + lines(2);
+    case "settings":
+      return purpose + Array.from({ length: 5 }, () => h("div", "toggle", `<div class="tx" style="flex:1;display:grid;gap:5px"><div class="ln m"></div><div class="ln s"></div></div><i></i>`)).join("")
+        + links + actions + `<button class="btn primary">Save changes</button>`;
+    case "builder":
+      return purpose + h("div", "split", h("div", "blk", "") .replace('class="blk"', 'class="blk" style="height:200px"') + h("div", "", lines(6)))
+        + links + actions + `<button class="btn primary">Preview</button>`;
+    case "form":
+      return purpose + Array.from({ length: 4 }, (_, i) => h("div", "field", `<div class="ln s"></div><div class="in"></div>`)).join("")
+        + links + actions + (screensOut.length ? "" : `<button class="btn primary">Continue</button>`);
+    case "detail":
+      return purpose + h("div", "split", `<div class="blk" style="height:90px"></div>` + h("div", "", lines(4)))
+        + h("div", "sec", "Details") + lines(4) + h("div", "sec", "History") + lines(2) + links + actions;
+    case "result":
+      return h("div", "empty", `<b></b><strong>${esc(s.name)}</strong>${purpose}`) + links + actions
+        + (links || actions ? "" : `<button class="btn primary">Done</button>`);
+    default:
+      return purpose + `<div class="search">Search ${esc(s.name.toLowerCase())}</div>` + h("div", "chips", "<span></span><span></span><span></span>")
+        + (links || Array.from({ length: 3 }, () => `<div class="row"><span class="av"></span><span class="tx"><span class="ln m"></span><span class="ln s"></span></span></div>`).join(""))
+        + Array.from({ length: 3 }, () => `<div class="row"><span class="av"></span><span class="tx"><span class="ln m"></span><span class="ln s"></span></span></div>`).join("")
+        + actions;
+  }
+}
+
+/* Every screen has these states to design; the card lets you flip through them. */
+const STATES = ["Normal", "Loading", "Empty", "Error", "Offline", "Permission denied", "Success"];
+function stateBody(s) {
+  const text = {
+    Loading: "Loading… the brand spiral turns while the screen fills in.",
+    Empty: `Nothing here yet. A short line says what will appear and how to add the first one.`,
+    Error: "Something went wrong. Says what failed, with Try again and Report.",
+    Offline: "You're offline. Saved items show, new ones are queued and sync later.",
+    "Permission denied": "Your role can't open this. Shows who to ask.",
+    Success: "Done. A short message confirms what happened, with the next step.",
+  }[state.uiState];
+  if (state.uiState === "Loading") return Array.from({ length: 5 }, () => `<div class="row"><span class="av"></span><span class="tx"><span class="ln m"></span><span class="ln s"></span></span></div>`).join("");
+  return h("div", "empty", `<b></b><strong>${esc(state.uiState)}</strong><span class="hint">${text}</span><button class="btn">${state.uiState === "Empty" ? "Add the first one" : "Back"}</button>`);
+}
+
+/* ---------- Step 4: draw the device around the screen ---------- */
+function surfacesOf(s) {
+  if (s.id.startsWith("D")) { const opener = BY_ID[s.from.find(f => f !== "home")] ; return opener ? surfacesOf(opener) : ["A"]; }
+  return s.where.split("");
+}
+function frame(s) {
+  const surf = state.surface;
+  const isDialog = s.id.startsWith("D");
+  const base = isDialog ? (BY_ID[s.from.find(f => f !== "home" && BY_ID[f])] || null) : s;
+  const under = base && isDialog ? base : s;
+  const title = esc(under.name);
+  const back = state.trail.length > 1 ? `<button class="ico" data-back aria-label="Back">‹</button>` : `<span class="ico" aria-hidden="true">≡</span>`;
+  const content = h("div", "scr", isDialog && base ? body(base) : body(s));
+  const veil = isDialog ? `<div class="veil"><div class="sheet"><h3>${esc(s.name)}</h3><div class="purpose">${esc(s.purpose)}</div>${lines(2)}
+      <div class="split"><button class="btn" data-back>Cancel</button><button class="btn primary" data-back>Confirm</button></div></div></div>` : "";
+  if (surf === "A" || surf === "K") {
+    const nav = surf === "A" ? `<div class="nav">${["Home", "Search", "Alerts", "Me"].map((t, i) =>
+      `<button data-go="${["home", "S00-25", "S00-28", "S00-31"][i]}"><i></i>${t}</button>`).join("")}</div>` : "";
+    return `<div class="phone">${h("div", "bar", `${back}<span class="t">${title}</span><button class="ico" data-go="S00-25" aria-label="Search">⌕</button>`)}${content}${nav}${veil}</div>`;
+  }
+  const url = (surf === "P" ? "igongo.co.ug" : "portal.igongo.co.ug") + (under.route || "/home").replace("?dialog=", "#");
+  const nav = surf === "W" ? `<div class="web-nav"><b>IGONGO</b>${Array.from({ length: 12 }, () => "<span></span>").join("")}</div>` : "";
+  return `<div class="browser"><div class="chrome"><i></i><i></i><i></i><span class="url">${esc(url)}</span></div>
+    ${h("div", "bar", `${back}<span class="t">${title}</span>`)}<div class="web-body" ${surf === "P" ? 'style="grid-template-columns:1fr"' : ""}>${nav}${content}</div>${veil}</div>`;
+}
+
+/* ---------- Step 5: the screen card with every connection ---------- */
+function card(s) {
+  const link = id => id === "home" ? `<button data-go="home"><b>Home</b>Role home</button>`
+    : BY_ID[id] ? `<button data-go="${id}"><b>${id}</b>${esc(BY_ID[id].name)}</button>` : "";
+  const where = { A: "App", W: "Web", K: "Kiosk", P: "Public" };
+  const surf = s.id.startsWith("D") ? "Dialog" : s.where.split("").map(c => where[c]).join(", ");
+  return `<div class="id">${s.id} · ${esc(MODS[s.module])}</div><h2>${esc(s.name)}</h2>
+    <div class="pills"><span class="pill">${surf}</span><span class="pill">${kindOf(s)}</span></div>
+    <div>${esc(s.purpose)}</div>
+    <div><div class="sec">Route</div><code>${esc(s.route)}</code></div>
+    <div><div class="sec">States to design</div><div class="states">${STATES.map(t => `<button data-state="${t}" aria-pressed="${state.uiState === t}">${t}</button>`).join("")}</div></div>
+    <div><div class="sec">Opened from (${s.from.length})</div><div class="links">${s.from.map(link).join("") || '<span class="hint">An entry point</span>'}</div></div>
+    <div><div class="sec">Opens (${s.opens.length})</div><div class="links">${s.opens.map(link).join("") || '<span class="hint">Back only</span>'}</div></div>`;
+}
+
+/* ---------- Step 6: navigation, history and the hash ---------- */
+function current() { return state.trail[state.trail.length - 1] || "home"; }
+function open(id, push = true) {
+  if (id === "home") id = "S00-21";
+  if (!BY_ID[id]) id = "S00-44";
+  if (push) state.trail.push(id); else state.trail = [id];
+  const s = BY_ID[id];
+  const surf = surfacesOf(s);
+  if (!surf.includes(state.surface)) state.surface = surf[0];
+  state.uiState = "Normal";
+  try { history.replaceState(null, "", "#" + id.toLowerCase()); } catch (e) { /* the hash is a convenience only */ }
+  render();
+}
+function render() {
+  const s = BY_ID[current()];
+  document.getElementById("device").innerHTML = frame(s);
+  document.getElementById("card").innerHTML = card(s);
+  const surf = surfacesOf(s);
+  const names = { A: "App", W: "Web", K: "Kiosk", P: "Public" };
+  document.getElementById("tabs").innerHTML = surf.length > 1 ? surf.map(c =>
+    `<button data-surface="${c}" aria-pressed="${state.surface === c}">${names[c]}</button>`).join("") : "";
+  document.getElementById("crumbs").innerHTML = state.trail.slice(-5).map((id, i, a) =>
+    i === a.length - 1 ? `<strong>${esc(BY_ID[id].name)}</strong>` : `<button data-crumb="${state.trail.length - a.length + i}">${esc(BY_ID[id].name)}</button>`).join(" › ");
+  document.querySelectorAll(".mods button").forEach(b => b.setAttribute("aria-current", String(b.dataset.mod === s.module && !b.dataset.go || b.dataset.go === s.id)));
+}
+document.addEventListener("click", e => {
+  const t = e.target.closest("[data-go],[data-back],[data-state],[data-surface],[data-crumb],[data-mod]");
+  if (!t) return;
+  if (t.dataset.go) open(t.dataset.go);
+  else if (t.hasAttribute("data-back")) { if (state.trail.length > 1) state.trail.pop(); state.uiState = "Normal"; render(); }
+  else if (t.dataset.state) { state.uiState = t.dataset.state; render(); }
+  else if (t.dataset.surface) { state.surface = t.dataset.surface; render(); }
+  else if (t.dataset.crumb) { state.trail = state.trail.slice(0, +t.dataset.crumb + 1); render(); }
+  else if (t.dataset.mod) toggleModule(t.dataset.mod);
+});
+
+/* ---------- Step 7: the side panel: roles, modules and search ---------- */
+function fillSide() {
+  const sel = document.getElementById("role");
+  const levels = [...new Set(DATA.roles.map(r => r.level))];
+  sel.innerHTML = levels.map(l => `<optgroup label="${esc(l)}">${DATA.roles.filter(r => r.level === l)
+    .map(r => `<option value="${r.key}">${esc(r.name)}</option>`).join("")}</optgroup>`).join("");
+  sel.value = state.role;
+  sel.addEventListener("change", () => { state.role = sel.value; try { localStorage.setItem("igongo-wf-role", sel.value); } catch (e) {} open("home", false); });
+  document.getElementById("go-home").addEventListener("click", () => open("home", false));
+  listModules();
+  document.getElementById("find").addEventListener("input", e => { state.filter = e.target.value.trim().toLowerCase(); listModules(); });
+}
+const openMods = new Set();
+function toggleModule(m) { openMods.has(m) ? openMods.delete(m) : openMods.add(m); listModules(); }
+function listModules() {
+  const f = state.filter;
+  const match = s => !f || (s.id + " " + s.name + " " + s.route).toLowerCase().includes(f);
+  document.getElementById("mods").innerHTML = Object.keys(MODS).sort((a, b) => a - b).map(m => {
+    const items = DATA.screens.filter(s => s.module === m && match(s));
+    if (f && !items.length) return "";
+    const show = f || openMods.has(m);
+    return `<button data-mod="${m}"><span>${m}</span>${esc(MODS[m])}</button>`
+      + (show ? items.map(s => `<button class="sub" data-go="${s.id}"><span>${s.id.slice(4)}</span>${esc(s.name)}</button>`).join("") : "");
+  }).join("");
+}
+
+/* ---------- Step 8: load the inventory and start ---------- */
+fetch("screens.json").then(r => r.json()).then(d => {
+  DATA = d; MODS = d.modules;
+  d.screens.forEach(s => BY_ID[s.id] = s);
+  const nS = d.screens.filter(s => s.id[0] === "S").length;
+  document.getElementById("stats").textContent =
+    `${nS} screens · ${d.screens.length - nS} dialogs · ${d.roles.length} roles · ${d.flows.length} flows · every one connected`;
+  try { state.role = localStorage.getItem("igongo-wf-role") || state.role; } catch (e) {}
+  if (!d.roles.some(r => r.key === state.role)) state.role = "super-admin";
+  fillSide();
+  const start = (location.hash || "").slice(1).toUpperCase();
+  open(BY_ID[start] ? start : "home", false);
+}).catch(() => {
+  document.getElementById("stats").textContent = "The screen list could not load. Reload the page to try again.";
+});
+window.addEventListener("hashchange", () => {
+  const id = location.hash.slice(1).toUpperCase();
+  if (BY_ID[id] && id !== current()) open(id);
+});
+</script>
