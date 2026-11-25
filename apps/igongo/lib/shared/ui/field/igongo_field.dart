@@ -9,7 +9,17 @@ import '../../theme/theme.dart';
 /// A labelled text field.
 class IgongoField extends StatelessWidget {
   /// Creates a field with its [label]. [obscure] hides the text, for passwords.
-  const IgongoField({super.key, required this.label, this.hint, this.icon, this.obscure = false, this.lines = 1});
+  const IgongoField({
+    super.key,
+    required this.label,
+    this.hint,
+    this.icon,
+    this.obscure = false,
+    this.lines = 1,
+    this.controller,
+    this.keyboardType,
+    this.onSubmitted,
+  });
 
   /// The label above the box.
   final String label;
@@ -26,6 +36,15 @@ class IgongoField extends StatelessWidget {
   /// How many lines the box shows.
   final int lines;
 
+  /// Holds what is typed, for live forms.
+  final TextEditingController? controller;
+
+  /// The keyboard to show, such as email.
+  final TextInputType? keyboardType;
+
+  /// Called when the person presses Done.
+  final ValueChanged<String>? onSubmitted;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -34,6 +53,9 @@ class IgongoField extends StatelessWidget {
       children: [
         Text(label, style: context.text.labelLarge?.copyWith(fontWeight: FontWeight.w700)),
         TextField(
+          controller: controller,
+          keyboardType: keyboardType,
+          onSubmitted: onSubmitted,
           obscureText: obscure,
           maxLines: obscure ? 1 : lines,
           decoration: InputDecoration(hintText: hint ?? label, prefixIcon: icon == null ? null : Icon(icon, size: 18)),

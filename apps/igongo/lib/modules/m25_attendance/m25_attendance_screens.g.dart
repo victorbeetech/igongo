@@ -2,13 +2,14 @@
 // Module 25: Attendance. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm25_attendance_overrides.dart';
 
 /// Module 25, Attendance: every screen and dialog, with its sample data.
-const m25AttendanceModule = ModuleSpec(
+final m25AttendanceModule = ModuleSpec(
   code: '25',
   name: 'Attendance',
   slug: 'attendance',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S25-01',
       name: 'Clock in',
@@ -131,7 +132,8 @@ const m25AttendanceModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m25Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D25-01',
       name: 'Forgot to clock out',
@@ -165,7 +167,7 @@ const m25AttendanceModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Atuhaire Grace · 07:52 in',
       'Mugisha Brian · 06:58 in',

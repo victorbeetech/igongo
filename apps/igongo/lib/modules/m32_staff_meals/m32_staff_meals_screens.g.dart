@@ -2,13 +2,14 @@
 // Module 32: Staff Meals. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm32_staff_meals_overrides.dart';
 
 /// Module 32, Staff Meals: every screen and dialog, with its sample data.
-const m32StaffMealsModule = ModuleSpec(
+final m32StaffMealsModule = ModuleSpec(
   code: '32',
   name: 'Staff Meals',
   slug: 'staff-meals',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S32-01',
       name: 'Meal today',
@@ -87,7 +88,8 @@ const m32StaffMealsModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m32Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D32-01',
       name: 'Already claimed',
@@ -105,7 +107,7 @@ const m32StaffMealsModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Breakfast · 142 served',
       'Lunch · 118 served',

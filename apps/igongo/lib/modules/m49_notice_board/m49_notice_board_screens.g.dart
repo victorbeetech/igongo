@@ -2,13 +2,14 @@
 // Module 49: Notice Board. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm49_notice_board_overrides.dart';
 
 /// Module 49, Notice Board: every screen and dialog, with its sample data.
-const m49NoticeBoardModule = ModuleSpec(
+final m49NoticeBoardModule = ModuleSpec(
   code: '49',
   name: 'Notice Board',
   slug: 'notice-board',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S49-01',
       name: 'Notice board',
@@ -65,7 +66,8 @@ const m49NoticeBoardModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m49Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D49-01',
       name: 'Acknowledge post',
@@ -91,7 +93,7 @@ const m49NoticeBoardModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Christmas party 19 Dec',
       'New uniform rules',
