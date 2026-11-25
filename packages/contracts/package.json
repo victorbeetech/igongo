@@ -1,0 +1,10 @@
+{
+  "name": "@igongo/contracts",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Each module's public API types and event names, one folder per module. Modules only talk to each other through these.",
+  "type": "module",
+  "exports": {
+    "./notifications": "./notifications/index.ts"
+  }
+}

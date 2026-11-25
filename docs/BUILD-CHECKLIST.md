@@ -132,6 +132,12 @@ The whole app and web portal are built as a clickable product first, with sample
 - [ ] SMS (Africa's Talking) and WhatsApp (Meta).
 - [ ] Payments: MTN MoMo, Airtel Money and Flutterwave, with signed callbacks.
 - [ ] Push notifications (FCM) and email.
+  - [x] Push code, built ahead (25 Nov 2026) and tested with fakes: the app side in `apps/igongo/lib/modules/m10_notifications/` (permission explainer, token, topics, foreground, background and tap handling, Android channels) and the API side in `modules/notifications/` (device tokens table and migration, register and remove routes, test push and broadcast routes, FCM HTTP v1 sender with a mock, and the notification rules hook).
+  - [ ] Firebase apps, APNs key and service-account key: waiting on the steps in [NEEDS-YOU](NEEDS-YOU.md).
+  - [ ] Call `PushModule.start` after sign-in and `stop` at sign-out (Users & Login, Phase 7), mount the router in the gateway, and connect the rule editor and the Firebase "Send test" button.
+  - [ ] Test on a real Android phone and iPhone.
+  - [ ] Later: move to Firebase's newer installation-ID "direct send" on both sides once it is documented for the HTTP v1 send API (the app uses the token calls marked deprecated in firebase_messaging 17).
+  - [ ] Email.
 - [ ] Google Maps for delivery and riders.
 - [ ] APEX link, once the vendor confirms how.
 - [ ] URA EFRIS, if the hotel needs it.
