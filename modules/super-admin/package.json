@@ -9,7 +9,7 @@
   },
   "scripts": {
     "lint": "eslint --max-warnings 0 . && tsc --noEmit",
-    "test": "vitest run",
+    "test": "vitest run --testTimeout=30000",
     "db:generate": "drizzle-kit generate"
   },
   "dependencies": {

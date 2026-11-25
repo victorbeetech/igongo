@@ -1,8 +1,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Talking to the Igongo API (release builds need this; debug adds it anyway). -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <!-- Push notifications (module 10): Android 13+ asks the person first. -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <!-- NFC staff cards and event wristbands. Not required, so phones without
+         NFC can still install the app (they use the QR code instead). -->
+    <uses-permission android:name="android.permission.NFC"/>
+    <uses-feature android:name="android.hardware.nfc" android:required="false"/>
+    <!-- QR codes on cards and wristbands, and photos for fault reports. -->
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
     <application
-        android:label="igongo"
+        android:label="Igongo"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

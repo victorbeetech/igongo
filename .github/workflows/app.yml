@@ -1,0 +1,79 @@
+# Checks and builds for the Igongo app (apps/igongo, Flutter) on every pull
+# request and push to main that touches the app or the packages it uses:
+#   1. app-check: flutter analyze (strict) and every test, goldens included
+#   2. android: a debug APK, saved as a download on the run's page
+#   3. ios:     a release build without signing, to prove it compiles on a Mac
+# Signing and store uploads happen on the owner's Mac (docs/MAC-STEPS.md).
+# No secrets are used here.
+name: App
+
+on:
+  pull_request:
+    paths:
+      - apps/igongo/**
+      - packages/brand/**
+      - packages/design-tokens/**
+      - .github/workflows/app.yml
+  push:
+    branches: [main]
+    paths:
+      - apps/igongo/**
+      - packages/brand/**
+      - packages/design-tokens/**
+      - .github/workflows/app.yml
+  workflow_dispatch:
+
+# A newer push to the same branch cancels the older run.
+concurrency:
+  group: app-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Pinned so the golden pictures match. Change it with the goldens.
+  FLUTTER_VERSION: 3.50.1
+
+defaults:
+  run:
+    working-directory: apps/igongo
+
+jobs:
+  app-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
+
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+      - run: flutter build apk --debug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: igongo-debug-apk
+          path: apps/igongo/build/app/outputs/flutter-apk/app-debug.apk
+          retention-days: 14
+
+  ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+      - run: flutter build ios --release --no-codesign

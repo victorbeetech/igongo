@@ -12,3 +12,7 @@ GeneratedPluginRegistrant.java
 key.properties
 **/*.keystore
 **/*.jks
+
+# Firebase native config (not used by this app, which reads
+# config/firebase-app.json; ignored in case someone downloads it).
+app/google-services.json

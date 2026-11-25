@@ -32,3 +32,6 @@ Runner/GeneratedPluginRegistrant.*
 !default.mode2v3
 !default.pbxuser
 !default.perspectivev3
+
+# Firebase native config (not used; see config/firebase-app.json)
+Runner/GoogleService-Info.plist
