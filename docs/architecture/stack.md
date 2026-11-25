@@ -32,7 +32,7 @@ This is the stack, reviewed against the requirements: one app for every role, a 
 | Need | Choice |
 | --- | --- |
 | Framework | Flutter (Dart), Material 3, with the Igongo theme from design tokens |
-| State and data | Riverpod |
+| State and data | Riverpod 2 with code generation: an `AsyncNotifier` per feature for server data (with loading, error and data states built in), plain providers for settings such as theme and text size, and Drift streams for offline data. No global mutable state |
 | Navigation | go_router, with routes built from the server-driven layout |
 | Offline storage | Drift (SQLite), plus a sync queue |
 | Secure storage | flutter_secure_storage for tokens and PINs |
@@ -52,6 +52,7 @@ This is the stack, reviewed against the requirements: one app for every role, a 
 | --- | --- |
 | Framework | Next.js, TypeScript and Tailwind CSS, deployed to Cloudflare with the OpenNext adapter |
 | Components | shadcn/ui, styled with the same design tokens as the app |
+| State and data | TanStack Query for everything that comes from the API (caching, loading and error states, retries), React Hook Form with Zod for forms, and Zustand only for small screen state such as an open panel. The same rule as the app: server data is never copied into global state |
 | Charts | Apache ECharts |
 | Builders (forms, workflows, layouts) | React Flow and dnd-kit for drag and drop |
 | Tests | Vitest and Playwright |

@@ -11,7 +11,21 @@ Every phase follows the [code standards](architecture/code-standards.md): clean 
 - [x] Write the [roles spec](roles/README.md): 72 pre-made roles, all editable by the super admin.
 - [x] Review the [tech stack](architecture/stack.md) against the requirements.
 - [x] Write the [code standards](architecture/code-standards.md).
+- [x] Choose state management: Riverpod in the app, TanStack Query and Zustand on the web (see the [stack](architecture/stack.md)).
+- [ ] Decide what is built first: web portal or app, and which users first (super admin, staff, riders, guests). Proposed order below.
 - [ ] Agree the build order of modules (which are in the first release and which follow), and the timeline that matches it.
+
+### Proposed build order (waiting for approval)
+
+Both the app and the web portal use the same API, so the back end for each module is built once. The order is by who uses it:
+
+1. **Foundation and super admin (web portal first).** Login, roles and permissions, app layout, audit trail and the super admin console. The super admin sets up roles, menus and settings on the web, and the app builds its screens from them, so this must exist before anything else.
+2. **Staff (the app).** Staff cards with NFC and QR, gate and reception clock-in, attendance, daily reports, staff meals and notice board. These are the SOW's first items and the hotel sees value on day one.
+3. **Guests and riders (the same app, client view).** Guest sign-up, food ordering, pre-orders with arrival time, delivery and the rider screens, room and venue bookings, and payments.
+4. **Managers and money (web and app).** Payroll, advances, bonuses, lifetime earnings, HR records, CRM, reports and dashboards for managers, the GM and the board.
+5. **Everything else**, module by module in the agreed order: events and wristbands, stock, museum, pool, spa, shop, maintenance, inspections, chat and the rest.
+
+Each step goes through sketches, branded designs, code, tests and approval before the next one starts. The public website and SEO run alongside from step 3.
 - [ ] Confirm open questions with the hotel: Humura (spa), staff headcount, APEX vendor contact and link type, card and wristband quantities, card printer model.
 
 ## Phase 1: Theme
