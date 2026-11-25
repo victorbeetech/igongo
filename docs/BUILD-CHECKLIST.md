@@ -12,10 +12,10 @@ Every phase follows the [code standards](architecture/code-standards.md): clean 
 - [x] Review the [tech stack](architecture/stack.md) against the requirements.
 - [x] Write the [code standards](architecture/code-standards.md).
 - [x] Choose state management: Riverpod in the app, TanStack Query and Zustand on the web (see the [stack](architecture/stack.md)).
-- [ ] Decide what is built first: web portal or app, and which users first (super admin, staff, riders, guests). Proposed order below.
+- [x] Decide what is built first: super admin on the web, then the staff app, then guests and riders (approved 25 Nov 2026). Order below.
 - [ ] Agree the build order of modules (which are in the first release and which follow), and the timeline that matches it.
 
-### Proposed build order (waiting for approval)
+### Build order (approved 25 Nov 2026)
 
 Both the app and the web portal use the same API, so the back end for each module is built once. The order is by who uses it:
 
