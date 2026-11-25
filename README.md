@@ -14,62 +14,43 @@ The system replaces paper registers and scattered spreadsheets with one connecte
 - **Guests** book rooms, dining and events, pay by mobile money or card, order food to their room, and chat with the concierge on WhatsApp.
 - **Management** sees attendance, reports, payroll and bookings in real time, from anywhere.
 
-## Apps
+## One app for everyone
 
-| App | Platform | Users |
+There is **one Flutter app**, the Igongo app, for everyone: the board, the CEO, managers, staff, delivery riders and clients. There is no separate staff app, rider app or guest app.
+
+- **One entry point.** Everyone opens the same app and uses the same login screen. All accounts are registered through the super admin's rules: staff accounts come from HR, and client accounts come from sign-up, the front desk or a booking.
+- **A different interface for each role.** After login, the app reads the person's roles and builds their menus, home tiles and screens. A waiter, a rider, the GM and a guest each see a different app.
+- **Roles are data, not code.** The super admin creates any role (such as Chef or Lifeguard), sets what it can do and what its app shows, and gives it to people. A new role works at once, with no app update.
+- **Client view.** Any staff role can switch to the client view to see exactly what clients see, then switch back.
+- **Web portal.** A Next.js portal uses the same accounts, roles and modules, for work that suits a big screen, such as payroll, reports and super admin settings.
+
+| Surface | Platform | Who uses it |
 | --- | --- | --- |
-| **Guest app** | Flutter (Android and iOS) | Hotel guests and visitors |
-| **Staff app** | Flutter (Android and iOS) | All staff, supervisors and delivery riders |
-| **Web portal** | Next.js (browser) | Staff, department heads, the GM and the hotel super admin |
+| **Igongo app** | Flutter (Android and iOS) | Everyone: staff, managers, riders, board members and clients |
+| **Web portal** | Next.js (browser) | Staff, managers, the GM, the board and the hotel super admin |
+| **Public website** | Next.js (browser) | Guests booking or ordering without the app |
 
 ## Modules
 
-### 1. NFC staff cards and attendance
-- Each staff member gets an NFC card linked to their profile.
-- Clock-in and clock-out points at the **main gate** and **reception**.
-- Late arrivals, absences and overtime are recorded automatically.
-- Live "who is on site" view for management and security.
+The system is built from **82 fully independent modules**. No module is a sub-module of another: Payroll is separate from HR records, the Notice Board is separate from Chat, and Receipts are separate from Payments. Modules talk only through APIs and events, so a problem in one never breaks the rest, and each one can be switched off by the super admin. Everything is configured by the super admin, with no code changes.
 
-### 2. Daily department reports
-- Each department submits a daily report from the staff app or the web.
-- Supervisors review and **sign off** on each report.
-- Reports are archived and searchable by date and department.
+**[Read the full modules spec](docs/modules/README.md)**, with one file per module covering its features, super admin options, dependencies and events.
 
-### 3. Payroll
-- Payroll is calculated from attendance records.
-- **Salary advances**, with requests, approval and automatic deduction.
-- **Salary bonuses** and **one-time buffet bonuses**.
-- Payslips for each staff member.
-- Full payroll data is **visible to the GM only**.
+| Group | Modules |
+| --- | --- |
+| Core platform | Super Admin Console, Roles & Permissions, App Layout & Navigation, Users & Login, Audit Trail, Records Archive & Search, Custom Fields, Forms Builder, Workflow & Approvals, Notifications, Files & Media, Languages & Branding, Import/Export & Backup, Integrations Hub, Locations & Departments |
+| Identity and access hardware | NFC & QR Staff Cards, Event Wristbands, Devices & Stations, Access Zones, Visitors & Contractors, Key Control |
+| Staff | HR Records, Recruitment, Onboarding & Exit, Attendance, Shifts & Rosters, Leave, Payroll, Payslips & Lifetime Earnings, Advances & Loans, Bonuses & Rewards, Staff Meals, Performance, Training, Discipline, Staff Requests & Welfare, Petty Cash |
+| Operations | Daily Reports, Inspections, Faults & Maintenance, Asset Register, Tasks, Housekeeping, Laundry, Security & Incidents, Lost & Found, Fleet & Transport, SOPs & Knowledge Base |
+| Communication | Notice Board, Chat, Meetings & Minutes, Surveys & Polls, Company Calendar |
+| Guests and sales | CRM, Corporate Accounts, Feedback & Complaints, Loyalty, Campaigns, Promotions & Vouchers, Guest Requests, Menus, Food Ordering, Kitchen Display, Tables & Dine-in, Buffet, Delivery & Riders, Room Bookings, Museum, Events & Conferences, Venues & Equipment, Pool, Spa / Humura, Crafts & Bookshop, WhatsApp Concierge, Public Website |
+| Money and insight | Prices & Taxes, Payments, Receipts & Invoicing, Cash-up, Accounting Export, Reports & Analytics, APEX Integration |
 
-### 4. Staff CRM
-- Staff profiles, departments and roles.
-- Direct and group messaging.
-- Meeting scheduling and **minutes**, with action items.
-- Announcements with push and SMS delivery.
-
-### 5. Food delivery
-- Guests order from the menu in the guest app.
-- The **kitchen** receives, prepares and marks orders ready.
-- **Riders** pick up and deliver, with live tracking on a map.
-- Order status updates for the guest at each step.
-
-### 6. Guest experience
-- Room **bookings** and availability.
-- **Payments** by MTN MoMo, Airtel Money and card, with digital **receipts**.
-- **WhatsApp concierge** for questions and requests.
-- **Eriijukiro Museum** and cultural centre information and tours.
-- **Dining**: restaurants, menus and table reservations.
-- **Humura** information and bookings.
-- **Events**: listings, bookings and enquiries.
-
-### 7. Management reports
-- Dashboards for attendance, department reports, payroll, bookings, orders and revenue.
-- Export to PDF and spreadsheet.
-- Role-based views for the GM, department heads and super admin.
+### Working with APEX
+The hotel already uses APEX for rooms. This system **complements APEX and does not replace it**: room availability and bookings sync with APEX through the APEX Integration module.
 
 ### Out of scope
-The following were removed from scope and are **not** part of this system: guest wristbands, stock management and bar management.
+Stock management and bar management are not part of this system. Drinks can still be sold as menu items. Event wristbands are **in scope**.
 
 ## Tech stack
 
@@ -95,40 +76,36 @@ This is planned as a monorepo:
 ```
 igongo/
 ├── apps/
-│   ├── guest/            # Flutter guest app (Android + iOS)
-│   ├── staff/            # Flutter staff + rider app (Android + iOS)
-│   └── web/              # Next.js portal for staff, GM and super admin
+│   ├── igongo/           # The one Flutter app for everyone (Android + iOS)
+│   ├── web/              # Next.js portal for staff, managers and super admin
+│   └── site/             # Public website
+├── modules/              # One folder per module (API routes, tables, events), fully independent
 ├── services/
-│   └── api/              # Hono API on Cloudflare Workers
-│       ├── src/routes/   # attendance, reports, payroll, crm, orders, bookings, payments
+│   └── api/              # Hono API gateway on Cloudflare Workers
 │       ├── src/realtime/ # Durable Objects
 │       └── src/integrations/ # SMS, WhatsApp, payments, FCM
 ├── packages/
 │   ├── db/               # Drizzle schema and migrations
 │   ├── shared/           # Shared TypeScript types and validation
 │   └── ui/               # Shared web UI components
-├── docs/                 # Architecture, API and user guides
+├── docs/
+│   ├── modules/          # Modules spec, one file per module
+│   └── roles/            # Pre-made roles, one file per role
 └── README.md
 ```
 
 ## Roles and access
 
-| Role | Access |
-| --- | --- |
-| Super admin | Full system configuration, users and roles |
-| GM | All modules, including payroll |
-| Department head / supervisor | Their department's staff, attendance and report sign-off |
-| Staff | Own attendance, reports, messages and payslips |
-| Kitchen | Incoming food orders |
-| Rider | Assigned deliveries |
-| Guest | Own bookings, orders, payments and receipts |
+Roles are data that the super admin creates and edits, not code. The system ships with **72 pre-made roles** as starting templates, from the Board of Directors, CEO, Senior Manager and GM, through a manager for every department, down to the gatekeeper, electrician, plumber, waiter, rider and lifeguard, plus the guest and corporate client roles.
+
+**[Read the full roles spec](docs/roles/README.md)**, with one file per role covering its purpose, modules, default permissions, approval limits and home screen tiles.
 
 ## Security
 
 This system handles staff personal data, payroll and guest payments, so it is treated as sensitive.
 
 - **No secrets in this repository.** API keys, database URLs and payment credentials are stored as Cloudflare secrets and local `.env` files, which are never committed.
-- **Role-based access control** on every API route, with payroll restricted to the GM.
+- **Role-based access control** on every API route, with payroll visible by default only to the GM and payroll staff.
 - **Two-factor authentication** for admin, GM and supervisor accounts.
 - **Encryption** in transit (HTTPS everywhere) and at rest (Neon and R2).
 - **Audit log** of sensitive actions, such as payroll changes, advance approvals and role changes.
@@ -142,8 +119,8 @@ The project runs for **4 weeks**: 2 weeks of build and 2 weeks of testing.
 
 | Week | Phase | Focus |
 | --- | --- | --- |
-| 1 | Build | Monorepo setup, database schema, auth and roles, NFC attendance, staff app core, web portal shell |
-| 2 | Build | Daily reports, payroll, staff CRM, food delivery and rider flow, guest app bookings and payments, WhatsApp and SMS |
+| 1 | Build | Monorepo setup, database schema, auth, role builder and app layout engine, NFC attendance, the Igongo app shell, web portal shell |
+| 2 | Build | Daily reports, payroll, staff CRM, food ordering, delivery and rider screens, client bookings and payments, WhatsApp and SMS |
 | 3 | Test | Internal testing, on-site NFC testing at the gate and reception, pilot with selected staff, bug fixes |
 | 4 | Test | Full staff and guest pilot, management reports, training, App Store and Play Store release, handover |
 
