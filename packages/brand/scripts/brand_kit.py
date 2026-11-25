@@ -9,9 +9,9 @@ place only.
 from __future__ import annotations
 
 import re
-from html import escape
 from dataclasses import dataclass
-from functools import lru_cache
+from functools import cache, lru_cache
+from html import escape
 from pathlib import Path
 
 import cairosvg
@@ -123,27 +123,38 @@ class Typeface:
         self.advance = font["hmtx"]
         self.upm = font["head"].unitsPerEm
 
-    def outline(self, text: str, size: float, tracking: float = 0.0) -> tuple[str, tuple]:
-        """Return (path data, ink bounds) for `text` at `size`, baseline y = 0.
+    def letters(self, text: str, size: float, tracking: float = 0.0) -> list[tuple[str, tuple | None]]:
+        """Return (path data, ink bounds) for each letter of `text` at `size`,
+        already placed along the line, with the baseline at y = 0.
 
-        `tracking` is extra letter spacing, as a fraction of the size.
+        `tracking` is extra letter spacing, as a fraction of the size. Spaces
+        give empty path data and no bounds.
         """
         scale = size / self.upm
-        path_pen, bounds_pen = SVGPathPen(self.glyphs), BoundsPen(self.glyphs)
-        cursor = 0.0
+        out, cursor = [], 0.0
         for i, ch in enumerate(text):
             name = self.cmap[ord(ch)]
+            path_pen, bounds_pen = SVGPathPen(self.glyphs), BoundsPen(self.glyphs)
             # Flip y, because fonts draw upwards and SVG draws downwards.
             matrix = (scale, 0, 0, -scale, cursor, 0)
             self.glyphs[name].draw(TransformPen(path_pen, matrix))
             self.glyphs[name].draw(TransformPen(bounds_pen, matrix))
+            out.append((path_pen.getCommands(), bounds_pen.bounds))
             cursor += self.advance[name][0] * scale
             if i < len(text) - 1:
                 cursor += tracking * size
-        return path_pen.getCommands(), bounds_pen.bounds
+        return out
+
+    def outline(self, text: str, size: float, tracking: float = 0.0) -> tuple[str, tuple]:
+        """Return (path data, ink bounds) for the whole of `text`."""
+        letters = self.letters(text, size, tracking)
+        boxes = [b for _, b in letters if b]
+        bounds = (min(b[0] for b in boxes), min(b[1] for b in boxes),
+                  max(b[2] for b in boxes), max(b[3] for b in boxes))
+        return "".join(d for d, _ in letters), bounds
 
 
-@lru_cache(maxsize=None)
+@cache
 def typeface(file: str, weight: int | None = None) -> Typeface:
     """Load each typeface once."""
     return Typeface(file, weight)
@@ -160,19 +171,38 @@ def sub_face() -> Typeface:
 
 
 def text_block(face: Typeface, text: str, width: float, fill: str, x: float, top: float,
-               tracking: float = 0.0, align: str = "center", box: float | None = None) -> tuple[str, float]:
+               tracking: float = 0.0, align: str = "center", box: float | None = None,
+               key: str | None = None, attrs: dict | None = None,
+               centres: dict | None = None) -> tuple[str, float]:
     """Set `text` so its ink is exactly `width` wide, with its top at `top`.
 
     `align` positions the ink inside a box of width `box` starting at `x`
     (box defaults to `width`). Returns (svg, ink height).
+
+    For animation, pass `key`: each letter is then drawn in its own group
+    named `<key>-<n>`, with extra attributes from `attrs`, and the centre of
+    each letter (in canvas units) is written into `centres`.
     """
     d, (x0, y0, x1, y1) = face.outline(text, 100, tracking)
     k = width / (x1 - x0)
     box = box or width
     left = x + {"center": (box - width) / 2, "left": 0, "right": box - width}[align]
     tx, ty = left - x0 * k, top - y0 * k
-    svg = f'<path fill="{fill}" transform="translate({tx:.2f},{ty:.2f}) scale({k:.5f})" d="{d}"/>'
-    return svg, (y1 - y0) * k
+    place = f'transform="translate({tx:.2f},{ty:.2f}) scale({k:.5f})"'
+    if key is None:
+        return f'<path fill="{fill}" {place} d="{d}"/>', (y1 - y0) * k
+
+    # One group per letter, so each can move on its own.
+    svg = []
+    for n, (letter_d, bounds) in enumerate(face.letters(text, 100, tracking)):
+        if not bounds:
+            continue  # A space.
+        name = f"{key}-{n}"
+        if centres is not None:
+            centres[name] = (tx + (bounds[0] + bounds[2]) / 2 * k, ty + (bounds[1] + bounds[3]) / 2 * k)
+        extra = (attrs or {}).get(name, "")
+        svg.append(f'<g {extra}><path fill="{fill}" {place} d="{letter_d}"/></g>')
+    return "".join(svg), (y1 - y0) * k
 
 
 def text_at_size(face: Typeface, text: str, size: float, tracking: float = 0.0) -> float:

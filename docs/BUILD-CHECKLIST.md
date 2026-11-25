@@ -34,12 +34,15 @@ All assets are in the [brand kit](../packages/brand/README.md).
 - [x] Launcher icons: Android legacy, round and adaptive (with themed monochrome), and the iOS icon set (light, dark and tinted).
 - [x] Notification icon.
 - [x] Splash screens, light and dark, for Android 12+, older Android and iOS.
-- [x] Animations: splash intro, full logo intro, spiral spinner, mark loader and pulse, as Lottie, animated SVG, GIF and MP4.
+- [x] Animations: splash intro, stacked and horizontal logo intros (letter by letter), spiral spinner, mark loader and pulse, as Lottie, animated SVG, GIF and MP4.
 - [x] Favicon set, Apple touch icon, web manifest icons and the social sharing image.
 - [x] Play Store icon and feature graphic.
 - [x] First staff card template (front and back, NFC and QR).
-- [ ] Card template library: many portrait and landscape designs (managers, staff, kitchen, security, casual, intern, contractor, visitor, board), each with front and back, for the super admin to assign by role. Reference designs from you are saved as style inspiration.
-- [x] Wristband design with number and QR.
+- [x] Card template library: 10 portrait and landscape designs (staff, guest-facing, operations, cultural, executive, visitor, kitchen, contractor and casual), front and back, with live fields and print-ready CR80 PDFs, for the super admin to assign by role.
+- [x] Card types as data: NTAG213 (current) and NTAG 424 DNA (ready for the next order).
+- [x] Wristband designs (guest, VIP, crew) with number, event and QR.
+- [x] Business card, name badge, email signature and watermark.
+- [x] Social media kit: profile pictures, covers for every network, post and story templates.
 - [x] Receipt headers (58 mm and 80 mm), A4 letterhead and email header.
 - [x] QR sticker template for tables, assets, rooms, exhibits and patrol points.
 - [x] Spiral pattern for backgrounds.

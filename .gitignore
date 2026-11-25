@@ -1,0 +1,13 @@
+# Python caches and tool output
+__pycache__/
+*.pyc
+.ruff_cache/
+
+# Local secrets and environment files (never commit these)
+.env
+.env.*
+!.env.example
+
+# Dependencies and builds
+node_modules/
+.DS_Store

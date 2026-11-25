@@ -1,0 +1,47 @@
+[
+  {
+    "id": "cr80-ntag213",
+    "name": "CR80 PVC card with NXP NTAG213 (current cards)",
+    "active": true,
+    "size_mm": [
+      85.6,
+      54.0
+    ],
+    "corner_radius_mm": 3.18,
+    "chip": {
+      "model": "NXP NTAG213",
+      "standard": "ISO 14443-3A, NFC Forum Type 2",
+      "memory_bytes": 180,
+      "user_memory_bytes": 144,
+      "uid_bytes": 7
+    },
+    "encode": {
+      "write": "NDEF URL with a secure card ID",
+      "password_lock": true,
+      "check_originality_signature": true,
+      "use_tap_counter": true
+    }
+  },
+  {
+    "id": "cr80-ntag424dna",
+    "name": "CR80 PVC card with NXP NTAG 424 DNA (recommended next order)",
+    "active": false,
+    "size_mm": [
+      85.6,
+      54.0
+    ],
+    "corner_radius_mm": 3.18,
+    "chip": {
+      "model": "NXP NTAG 424 DNA",
+      "standard": "ISO 14443-4, NFC Forum Type 4",
+      "memory_bytes": 416,
+      "secure_messaging": "AES-128, a new signed code on every tap (SUN)"
+    },
+    "encode": {
+      "write": "SUN URL with a secure card ID",
+      "password_lock": true,
+      "check_originality_signature": true,
+      "use_tap_counter": true
+    }
+  }
+]

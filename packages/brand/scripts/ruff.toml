@@ -1,0 +1,6 @@
+# Lint rules for the brand scripts. Warnings count as errors.
+line-length = 130
+target-version = "py310"
+
+[lint]
+select = ["E", "F", "W", "I", "B", "UP"]

@@ -1,0 +1,59 @@
+[
+  {
+    "id": "wristband-standard",
+    "label": "GUEST",
+    "size_mm": [
+      250,
+      25
+    ],
+    "chip": "NFC (as the band type sets)",
+    "fields": [
+      "band_no",
+      "event_name",
+      "event_date",
+      "qr"
+    ],
+    "files": {
+      "svg": "wristband-standard.svg",
+      "pdf": "wristband-standard-print.pdf"
+    }
+  },
+  {
+    "id": "wristband-vip",
+    "label": "VIP",
+    "size_mm": [
+      250,
+      25
+    ],
+    "chip": "NFC (as the band type sets)",
+    "fields": [
+      "band_no",
+      "event_name",
+      "event_date",
+      "qr"
+    ],
+    "files": {
+      "svg": "wristband-vip.svg",
+      "pdf": "wristband-vip-print.pdf"
+    }
+  },
+  {
+    "id": "wristband-crew",
+    "label": "CREW",
+    "size_mm": [
+      250,
+      25
+    ],
+    "chip": "NFC (as the band type sets)",
+    "fields": [
+      "band_no",
+      "event_name",
+      "event_date",
+      "qr"
+    ],
+    "files": {
+      "svg": "wristband-crew.svg",
+      "pdf": "wristband-crew-print.pdf"
+    }
+  }
+]

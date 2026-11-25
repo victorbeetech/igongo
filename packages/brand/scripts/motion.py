@@ -72,11 +72,11 @@ class Track:
         after the last)."""
         if t <= self.keys[0][0]:
             return self.keys[0][1]
-        for (t0, v0), (t1, v1) in zip(self.keys, self.keys[1:]):
+        for (t0, v0), (t1, v1) in zip(self.keys, self.keys[1:], strict=False):
             if t <= t1:
                 e = bezier_ease(self.ease, (t - t0) / (t1 - t0))
                 if isinstance(v0, tuple):
-                    return tuple(a + (b - a) * e for a, b in zip(v0, v1))
+                    return tuple(a + (b - a) * e for a, b in zip(v0, v1, strict=True))
                 return v0 + (v1 - v0) * e
         return self.keys[-1][1]
 
@@ -141,13 +141,58 @@ def _pulse() -> list[Track]:
             for p in ("spiral", "horn-left", "horn-right", "cup")]
 
 
+def _letters_rise(centres: dict, start: float) -> tuple[list[Track], float]:
+    """IGONGO appears letter by letter: each letter rises, grows from 60% and
+    fades in, one after another. Then the subtitle follows the same way,
+    faster and smaller. Returns (tracks, end time)."""
+    tracks, end = [], start
+    name_keys = sorted((k for k in centres if k.startswith("name-")), key=lambda k: int(k.split("-")[1]))
+    for i, key in enumerate(name_keys):
+        t0 = start + i * 0.10
+        tracks += [
+            Track(key, "move", [(t0, (0.0, 40.0)), (t0 + 0.55, (0.0, 0.0))]),
+            Track(key, "scale", [(t0, 0.6), (t0 + 0.55, 1.0)], EASE_OUT, centres[key]),
+            Track(key, "opacity", [(t0, 0.0), (t0 + 0.35, 1.0)]),
+        ]
+        end = t0 + 0.55
+    sub_keys = sorted((k for k in centres if k.startswith("sub")),
+                      key=lambda k: (k.split("-")[0], int(k.split("-")[1])))
+    sub_start = end - 0.15
+    for j, key in enumerate(sub_keys):
+        t0 = sub_start + j * 0.022
+        tracks += [
+            Track(key, "move", [(t0, (0.0, 16.0)), (t0 + 0.35, (0.0, 0.0))]),
+            Track(key, "opacity", [(t0, 0.0), (t0 + 0.3, 1.0)]),
+        ]
+        end = t0 + 0.35
+    return tracks, end
+
+
+def intro_stacked(centres: dict) -> Animation:
+    """The mark builds itself, then the name and subtitle appear letter by
+    letter. `centres` holds the letter centres from `lockups.stacked`."""
+    tracks, end = _letters_rise(centres, 1.25)
+    return Animation("intro-stacked", round(end + 0.3, 2), False, _assemble() + tracks,
+                     "Website intro and app launch with the full logo and name.")
+
+
+def intro_horizontal(centres: dict) -> Animation:
+    """The mark builds itself, the divider grows from its middle, then the
+    name and subtitle appear letter by letter."""
+    divider = [
+        Track("divider", "scale", [(1.1, 0.0), (1.6, 1.0)], EASE_OUT, centres["divider"]),
+        Track("divider", "opacity", [(1.1, 0.0), (1.3, 1.0)]),
+    ]
+    tracks, end = _letters_rise({k: v for k, v in centres.items() if k != "divider"}, 1.45)
+    return Animation("intro-horizontal", round(end + 0.3, 2), False, _assemble() + divider + tracks,
+                     "Website header intro, presentations and videos.")
+
+
+# Animations that need the lockup layout (letter positions) are built by
+# `build_brand.py` with `intro_stacked` and `intro_horizontal`.
 ANIMATIONS = [
     Animation("intro-mark", 2.2, False, _assemble(),
               "Splash screen and app start: the mark builds itself once."),
-    Animation("intro-stacked", 3.0, False, _assemble() + [
-        Track("text", "move", [(1.4, (0.0, 40.0)), (2.1, (0.0, 0.0))]),
-        Track("text", "opacity", [(1.4, 0.0), (2.0, 1.0)]),
-    ], "Website intro and app launch with the full logo and name."),
     Animation("loader-spiral", 1.2, True, [_spin()],
               "The standard loading spinner in the app and on the web."),
     Animation("loader-mark", 1.2, True, [_spin()],
@@ -172,7 +217,7 @@ def _smil_values(track: Track, duration: float, fmt) -> str:
     values = ";".join(fmt(v) for _, v in keys)
     times = ";".join(f"{t / duration:.4f}" for t, _ in keys)
     splines = []
-    for (t0, v0), (t1, v1) in zip(keys, keys[1:]):
+    for (_, v0), (_, v1) in zip(keys, keys[1:], strict=False):
         curve = track.ease if v0 != v1 else LINEAR
         splines.append(" ".join(f"{c:g}" for c in curve))
     return (f'values="{values}" keyTimes="{times}" calcMode="spline" '
@@ -229,10 +274,14 @@ def _lottie_shape(d: str) -> list[dict]:
             cmd = tokens[i]
             if cmd == "M":
                 verts.append([float(tokens[i + 1]), float(tokens[i + 2])])
-                ins.append([0, 0]); outs.append([0, 0]); i += 3
+                ins.append([0, 0])
+                outs.append([0, 0])
+                i += 3
             elif cmd == "L":
                 verts.append([float(tokens[i + 1]), float(tokens[i + 2])])
-                ins.append([0, 0]); outs.append([0, 0]); i += 3
+                ins.append([0, 0])
+                outs.append([0, 0])
+                i += 3
             elif cmd == "C":
                 c1 = [float(tokens[i + 1]), float(tokens[i + 2])]
                 c2 = [float(tokens[i + 3]), float(tokens[i + 4])]
@@ -240,13 +289,17 @@ def _lottie_shape(d: str) -> list[dict]:
                 prev = verts[-1]
                 outs[-1] = [c1[0] - prev[0], c1[1] - prev[1]]
                 verts.append(end)
-                ins.append([c2[0] - end[0], c2[1] - end[1]]); outs.append([0, 0]); i += 7
+                ins.append([c2[0] - end[0], c2[1] - end[1]])
+                outs.append([0, 0])
+                i += 7
             else:
                 i += 1
         # A closed curve ends on its start point: merge the two.
         if len(verts) > 1 and abs(verts[-1][0] - verts[0][0]) < 1e-3 and abs(verts[-1][1] - verts[0][1]) < 1e-3:
             ins[0] = ins[-1]
-            verts.pop(); ins.pop(); outs.pop()
+            verts.pop()
+            ins.pop()
+            outs.pop()
         shapes.append({"ty": "sh", "ks": {"a": 0, "k": {"i": ins, "o": outs, "v": verts, "c": True}}})
     return shapes
 
@@ -257,7 +310,7 @@ def _lottie_prop(tracks: list[Track], prop: str, static, conv) -> dict:
     if not track:
         return {"a": 0, "k": static}
     frames = []
-    for (t0, v0), (t1, _) in zip(track.keys, track.keys[1:]):
+    for (t0, v0), _ in zip(track.keys, track.keys[1:], strict=False):
         x1, y1, x2, y2 = track.ease
         frames.append({"t": round(t0 * FPS), "s": conv(v0),
                        "o": {"x": [x1], "y": [y1]}, "i": {"x": [x2], "y": [y2]}})
@@ -282,7 +335,7 @@ def lottie(anim: Animation, fills: dict[str, str], view: tuple) -> str:
         ks = {
             "a": {"a": 0, "k": [px, py, 0]},
             "p": _lottie_prop(tracks, "move", [px - vx, py - vy, 0],
-                              lambda v: [px - vx + v[0], py - vy + v[1], 0]),
+                              lambda v, px=px, py=py: [px - vx + v[0], py - vy + v[1], 0]),
             "r": _lottie_prop(tracks, "rotate", 0, lambda v: [v]),
             "s": _lottie_prop(tracks, "scale", [100, 100, 100], lambda v: [v * 100, v * 100, 100]),
             "o": _lottie_prop(tracks, "opacity", 100, lambda v: [v * 100]),
