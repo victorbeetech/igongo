@@ -38,9 +38,9 @@ class _ScanFrameState extends State<ScanFrame> with SingleTickerProviderStateMix
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: p.primaryContainer,
-        border: Border.all(color: p.primary, width: 3),
+        border: Border.all(color: p.primaryText, width: 3),
       ),
-      child: Icon(Icons.contactless_outlined, size: 64, color: p.primary),
+      child: Icon(Icons.contactless_outlined, size: 64, color: p.primaryText),
     );
     // Step 2: the instruction under it.
     return Column(

@@ -19,7 +19,7 @@ export function MapPlaceholder() {
       </svg>
       {PINS.map((p) => (
         <span key={p.label} className="absolute flex -translate-x-1/2 -translate-y-full flex-col items-center" style={{ left: `${p.x}%`, top: `${p.y}%` }}>
-          <MapPin className="text-primary" fill="currentColor" size={28} aria-hidden />
+          <MapPin className="text-primary-text" fill="currentColor" size={28} aria-hidden />
           <span className="text-caption font-bold">{p.label}</span>
         </span>
       ))}

@@ -17,6 +17,6 @@ export interface ToneStyle {
 export const TONE_STYLES: Record<DialogTone, ToneStyle> = {
   danger: { icon: <OctagonAlert size={32} className="text-error" />, confirm: "Yes, continue", variant: "danger" },
   warning: { icon: <TriangleAlert size={32} className="text-warning" />, confirm: "OK", variant: "primary" },
-  sheet: { icon: <SlidersHorizontal size={28} className="text-primary" />, confirm: "Done", variant: "primary" },
-  confirm: { icon: <CircleHelp size={32} className="text-primary" />, confirm: "Confirm", variant: "primary" },
+  sheet: { icon: <SlidersHorizontal size={28} className="text-primary-text" />, confirm: "Done", variant: "primary" },
+  confirm: { icon: <CircleHelp size={32} className="text-primary-text" />, confirm: "Confirm", variant: "primary" },
 };

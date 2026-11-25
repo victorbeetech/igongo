@@ -39,7 +39,7 @@ class MapPlaceholder extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.location_on, color: p.primary, size: 28),
+                    Icon(Icons.location_on, color: p.primaryText, size: 28),
                     Text(label, style: context.text.labelSmall?.copyWith(fontWeight: FontWeight.w700)),
                   ],
                 ),

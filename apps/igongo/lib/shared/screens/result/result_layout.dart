@@ -6,6 +6,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../catalog/catalog.dart';
 import '../../theme/theme.dart';
 import '../../ui/button/igongo_button.dart';
+import '../../ui/illustration/illustration_kind.dart';
 import '../../ui/message/state_message.dart';
 
 /// The outcome of a step.
@@ -36,6 +37,8 @@ class ResultLayout extends StatelessWidget {
     return StateMessage(
       icon: good ? Icons.check_circle_outline : Icons.info_outline,
       colour: good ? p.success : p.warning,
+      // A brand kit drawing for the common results; an icon for the rest.
+      illustration: IllustrationKind.forName(screen.spec.name),
       title: screen.spec.name,
       message: screen.spec.purpose,
       actions: actions,

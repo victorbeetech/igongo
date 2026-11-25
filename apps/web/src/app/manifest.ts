@@ -5,6 +5,9 @@ import type { MetadataRoute } from "next";
 import { tokens } from "@igongo/design-tokens/tokens";
 import { SITE } from "@/shared/seo/siteConfig";
 
+/** Built once as a plain file, so it also works in the static preview. */
+export const dynamic = "force-static";
+
 /** The manifest. */
 export default function manifest(): MetadataRoute.Manifest {
   return {

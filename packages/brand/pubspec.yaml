@@ -19,6 +19,7 @@ flutter:
     - logo/spiral/
     - cards/portrait-black/
     - pattern/
+    - illustrations/
   fonts:
     - family: Cinzel
       fonts:

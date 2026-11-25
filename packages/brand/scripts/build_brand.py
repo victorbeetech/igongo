@@ -20,6 +20,7 @@ from animations import build_animations
 from app_assets import build_app_icons, build_splash
 from brand_kit import BRAND
 from cards import build_cards
+from illustrations import build_illustrations
 from logos import build_logos, build_patterns, build_preview
 from social import build_social
 from stationery import build_print
@@ -31,7 +32,7 @@ OUTPUTS = ["logo", "app-icon", "splash", "web", "store", "social", "print", "car
 
 # Every builder, in the order the brand guide lists their output.
 STEPS = [build_logos, build_app_icons, build_splash, build_web, build_store, build_social,
-         build_print, build_cards, build_patterns, build_animations, build_preview]
+         build_print, build_cards, build_patterns, build_animations, build_illustrations, build_preview]
 
 
 def main() -> None:

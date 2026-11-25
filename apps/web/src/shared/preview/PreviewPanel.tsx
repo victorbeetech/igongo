@@ -48,7 +48,7 @@ export function PreviewPanel({ onClose }: { onClose: () => void }) {
       <SectionHeader title="Role" />
       <label className="block px-4">
         <span className="sr-only">Role</span>
-        <select value={prefs.role} onChange={(e) => setPreferences({ role: e.target.value })} className="min-h-11 w-full rounded-md border border-line bg-surface-alt px-3 text-body">
+        <select value={prefs.role} onChange={(e) => setPreferences({ role: e.target.value })} className="min-h-11 w-full rounded-md border border-outline bg-surface-alt px-3 text-body">
           {catalog.roles.map((r) => <option key={r.key} value={r.key}>{r.name} · {r.level}</option>)}
         </select>
       </label>

@@ -42,7 +42,7 @@ class BarChart extends StatelessWidget {
                         heightFactor: values[i],
                         child: Container(
                           decoration: BoxDecoration(
-                            color: i == values.length - 1 ? p.primary : p.primary.withValues(alpha: 0.35),
+                            color: i == values.length - 1 ? p.primaryText : p.primaryText.withValues(alpha: 0.35),
                             borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
                           ),
                         ),

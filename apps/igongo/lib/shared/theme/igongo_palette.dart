@@ -22,9 +22,11 @@ class IgongoPalette extends ThemeExtension<IgongoPalette> {
     required this.text,
     required this.textMuted,
     required this.border,
+    required this.outline,
     required this.success,
     required this.warning,
     required this.error,
+    required this.onError,
     required this.info,
     required this.brandCream,
   });
@@ -44,9 +46,11 @@ class IgongoPalette extends ThemeExtension<IgongoPalette> {
     text: IgongoColorsLight.text,
     textMuted: IgongoColorsLight.textMuted,
     border: IgongoColorsLight.border,
+    outline: IgongoColorsLight.outline,
     success: IgongoColorsLight.success,
     warning: IgongoColorsLight.warning,
     error: IgongoColorsLight.error,
+    onError: IgongoColorsLight.onError,
     info: IgongoColorsLight.info,
     brandCream: IgongoColorsLight.brandCream,
   );
@@ -66,9 +70,11 @@ class IgongoPalette extends ThemeExtension<IgongoPalette> {
     text: IgongoColorsDark.text,
     textMuted: IgongoColorsDark.textMuted,
     border: IgongoColorsDark.border,
+    outline: IgongoColorsDark.outline,
     success: IgongoColorsDark.success,
     warning: IgongoColorsDark.warning,
     error: IgongoColorsDark.error,
+    onError: IgongoColorsDark.onError,
     info: IgongoColorsDark.info,
     brandCream: IgongoColorsDark.brandCream,
   );
@@ -88,7 +94,9 @@ class IgongoPalette extends ThemeExtension<IgongoPalette> {
   /// Text on [primaryContainer].
   final Color onPrimaryContainer;
 
-  /// Links and highlighted words. Cream in dark mode, where red is too dim for small text.
+  /// Links, highlighted words, and small red marks: icons, focus rings, chart
+  /// bars and the scan ring. Cream in dark mode, where Igongo red is too dim
+  /// (under 3:1) on the night background. Filled shapes still use [primary].
   final Color primaryText;
 
   /// Charcoal in light mode, cream in dark mode: second buttons and icons.
@@ -109,8 +117,11 @@ class IgongoPalette extends ThemeExtension<IgongoPalette> {
   /// Hints, captions and timestamps.
   final Color textMuted;
 
-  /// Dividers and outlines.
+  /// Dividers and card edges (decorative, so they stay soft).
   final Color border;
+
+  /// Field outlines: strong enough (3:1) to show where a field is.
+  final Color outline;
 
   /// Paid, approved, on duty.
   final Color success;
@@ -120,6 +131,9 @@ class IgongoPalette extends ThemeExtension<IgongoPalette> {
 
   /// Failed, refused, overdue. Always shown with an icon, never by colour alone.
   final Color error;
+
+  /// Text and icons on a filled error shape, such as the danger button.
+  final Color onError;
 
   /// Tips and the client view banner.
   final Color info;
@@ -150,9 +164,11 @@ class IgongoPalette extends ThemeExtension<IgongoPalette> {
       text: mix(text, other.text),
       textMuted: mix(textMuted, other.textMuted),
       border: mix(border, other.border),
+      outline: mix(outline, other.outline),
       success: mix(success, other.success),
       warning: mix(warning, other.warning),
       error: mix(error, other.error),
+      onError: mix(onError, other.onError),
       info: mix(info, other.info),
       brandCream: mix(brandCream, other.brandCream),
     );

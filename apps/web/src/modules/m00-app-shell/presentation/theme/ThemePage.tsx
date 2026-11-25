@@ -38,7 +38,7 @@ export function ThemePage({ screen }: { screen: ScreenContext }) {
             </span>
             <span className="flex items-center justify-between text-subtitle font-bold">
               {c.label}
-              {prefs.theme === c.value && <CheckCircle2 size={18} className="text-primary" />}
+              {prefs.theme === c.value && <CheckCircle2 size={18} className="text-primary-text" />}
             </span>
           </button>
         ))}

@@ -6,6 +6,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../theme/theme.dart';
 import '../ui/button/igongo_button.dart';
+import '../ui/illustration/illustration_kind.dart';
 import '../ui/message/state_message.dart';
 import '../ui/skeleton/skeleton_list.dart';
 import 'view_state.dart';
@@ -36,12 +37,15 @@ class StateView extends StatelessWidget {
       ViewState.loading => const SkeletonList(),
       ViewState.empty => StateMessage(
         icon: Icons.inbox_outlined,
+        illustration: IllustrationKind.empty,
+        colour: p.textMuted,
         title: 'Nothing here yet',
         message: '${screenName.toLowerCase()} will appear here. Add the first one to get started.',
         actions: [IgongoButton(label: 'Add the first one', icon: Icons.add, onPressed: onRetry)],
       ),
       ViewState.error => StateMessage(
         icon: Icons.error_outline,
+        illustration: IllustrationKind.error,
         colour: p.error,
         title: 'Something went wrong',
         message: "We couldn't load $screenName. Check your connection and try again, or report it.",
@@ -52,6 +56,7 @@ class StateView extends StatelessWidget {
       ),
       ViewState.denied => StateMessage(
         icon: Icons.lock_outline,
+        illustration: IllustrationKind.denied,
         colour: p.warning,
         title: "Your role can't open this",
         message: 'Ask your head of department or the super admin to give your role access to $screenName.',
@@ -59,6 +64,7 @@ class StateView extends StatelessWidget {
       ),
       ViewState.success => StateMessage(
         icon: Icons.check_circle_outline,
+        illustration: IllustrationKind.success,
         colour: p.success,
         title: 'Done',
         message: 'Saved and sent. Everyone who needs to know has been told.',

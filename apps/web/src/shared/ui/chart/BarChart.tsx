@@ -8,7 +8,7 @@ export function BarChart({ values, labels }: { values: number[]; labels: string[
       {values.map((v, i) => (
         <div key={labels[i]} className="flex h-full flex-1 flex-col items-center justify-end gap-1">
           {/* Today's bar is full red; earlier days are softer. */}
-          <div className={`w-full rounded-t-sm ${i === values.length - 1 ? "bg-primary" : "bg-primary/35"}`} style={{ height: `${v * 100}%` }} />
+          <div className={`w-full rounded-t-sm ${i === values.length - 1 ? "bg-primary-text" : "bg-primary-text/35"}`} style={{ height: `${v * 100}%` }} />
           <span className="text-caption text-muted">{labels[i]}</span>
         </div>
       ))}

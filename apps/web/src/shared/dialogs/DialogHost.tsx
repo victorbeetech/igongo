@@ -3,11 +3,11 @@
 // a side sheet for choices, a centred dialog for everything else. Confirm
 // goes to the dialog's next page, or shows a toast when it has none.
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { catalog } from "@/shared/catalog/catalogIndex";
 import { hintFor } from "@/shared/mock/sampleText";
 import { hrefFor } from "@/shared/navigation/hrefFor";
+import { useAddress } from "@/shared/navigation/useAddress";
 import { Button } from "@/shared/ui/button/Button";
 import { Field } from "@/shared/ui/field/Field";
 import { showToast } from "@/shared/ui/toast/toast";
@@ -15,9 +15,8 @@ import { TONE_STYLES } from "./toneStyle";
 
 /** Shows the dialog from the address, if any. Put one on every page. */
 export function DialogHost() {
-  const params = useSearchParams();
-  const path = usePathname();
-  const router = useRouter();
+  // The address works the same in the normal build and the static preview.
+  const { params, path, push, replace } = useAddress();
   const ref = useRef<HTMLDialogElement>(null);
   const dialog = catalog.dialogBySlug(params.get("dialog") ?? "");
 
@@ -28,10 +27,10 @@ export function DialogHost() {
   if (!dialog) return null;
 
   // Step 2: closing removes `?dialog=` from the address; confirming goes on.
-  const close = () => router.replace(path, { scroll: false });
+  const close = () => replace(path);
   const confirm = () => {
     const next = dialog.opens[0];
-    if (next) router.push(hrefFor(next, path));
+    if (next) push(hrefFor(next, path));
     else {
       showToast(`${dialog.name}: done`);
       close();

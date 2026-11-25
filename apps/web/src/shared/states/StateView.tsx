@@ -21,26 +21,26 @@ export function StateView({ state, name }: { state: ViewState; name: string }) {
       return <SkeletonList />;
     case "empty":
       return (
-        <StateMessage icon={<Inbox size={36} />} title="Nothing here yet" message={`${name} will appear here. Add the first one to get started.`}>
+        <StateMessage icon={<Inbox size={36} />} illustration="empty" tone="muted" title="Nothing here yet" message={`${name} will appear here. Add the first one to get started.`}>
           <Button icon={<Plus size={16} />} onClick={retry}>Add the first one</Button>
         </StateMessage>
       );
     case "error":
       return (
-        <StateMessage icon={<AlertCircle size={36} />} tone="error" title="Something went wrong" message={`We couldn't load ${name}. Check your connection and try again, or report it.`}>
+        <StateMessage icon={<AlertCircle size={36} />} illustration="error" tone="error" title="Something went wrong" message={`We couldn't load ${name}. Check your connection and try again, or report it.`}>
           <Button icon={<RefreshCw size={16} />} onClick={retry}>Try again</Button>
           {back}
         </StateMessage>
       );
     case "denied":
       return (
-        <StateMessage icon={<Lock size={36} />} tone="warning" title="Your role can't open this" message={`Ask your head of department or the super admin to give your role access to ${name}.`}>
+        <StateMessage icon={<Lock size={36} />} illustration="denied" tone="warning" title="Your role can't open this" message={`Ask your head of department or the super admin to give your role access to ${name}.`}>
           {back}
         </StateMessage>
       );
     case "success":
       return (
-        <StateMessage icon={<CheckCircle2 size={36} />} tone="success" title="Done" message="Saved and sent. Everyone who needs to know has been told.">
+        <StateMessage icon={<CheckCircle2 size={36} />} illustration="success" tone="success" title="Done" message="Saved and sent. Everyone who needs to know has been told.">
           <Button href="/home">Done</Button>
         </StateMessage>
       );
