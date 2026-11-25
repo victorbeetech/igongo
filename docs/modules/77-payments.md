@@ -19,7 +19,8 @@ Takes and records every payment, by MTN MoMo, Airtel Money, card, bank and cash,
 - Daily settlement report per provider.
 
 ## Super admin options
-- Payment methods on or off per outlet and module.
+- Every payment method is built and ready: MTN MoMo, Airtel Money, card through Flutterwave, bank transfer, cash, charge to room and corporate account. Each one has its own on and off switch for the whole system, then per outlet and module, so the hotel turns methods on as it agrees them with each provider.
+- Provider keys and settings are entered in [Integrations & API](14-integrations.md), never in code.
 - Refund approval tiers.
 - Whether staff can mark a payment as received manually.
 

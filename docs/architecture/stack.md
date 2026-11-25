@@ -71,7 +71,7 @@ This is the stack, reviewed against the requirements: one app for every role, a 
 | Audit archive | R2 with Bucket Locks |
 | Search | Postgres full-text and `pg_trgm` |
 | PDFs and card printing | Cloudflare Browser Rendering for exact-size print PDFs; printing through the browser print dialog or the card printer's driver with saved presets |
-| Auth | Better Auth (phone OTP, password, PIN, card tap, Google and Apple sign-in, 2FA) |
+| Auth | Better Auth (email and password, Google and Apple sign-in, phone OTP by SMS or WhatsApp, PIN, card tap, 2FA). Every method is built and switched on or off by the super admin |
 | Errors and logs | Sentry and Cloudflare Workers Logs |
 
 ### Outside services

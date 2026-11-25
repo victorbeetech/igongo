@@ -185,7 +185,7 @@ The stack was reviewed against the requirements, and the changes are explained i
 | Audit trail | Append-only log with a hash chain, archived to R2 with Bucket Locks |
 | Search | Postgres full-text search and pg_trgm |
 | PDFs | Cloudflare Browser Rendering |
-| Auth | Better Auth: phone OTP, password, PIN, card tap, Google and Apple, 2FA |
+| Auth | Better Auth: email and password, Google and Apple, phone OTP, PIN, card tap and 2FA, each switched on or off by the super admin |
 | Cards and wristbands | Card and band types are data. The hotel's current cards are NTAG213, protected by server checks, the originality signature and a password lock. NTAG 424 DNA (copy-proof) is recommended for the next card order. |
 | Messaging | FCM push, Africa's Talking SMS, Meta WhatsApp Cloud API, Resend email |
 | Payments | MTN MoMo, Airtel Money and Flutterwave |
