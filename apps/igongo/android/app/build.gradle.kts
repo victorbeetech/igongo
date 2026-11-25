@@ -16,7 +16,8 @@ if (keyPropertiesFile.exists()) keyPropertiesFile.inputStream().use { keyPropert
 
 android {
     namespace = "ug.co.igongo.igongo"
-    compileSdk = flutter.compileSdkVersion
+    // 37: the androidx libraries used by the push plugins need it (Flutter defaults to 36).
+    compileSdk = 37
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
