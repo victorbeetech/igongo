@@ -55,7 +55,7 @@ Stock management and bar management were removed from the signed scope. Drinks c
 
 | # | Module | What it does |
 | --- | --- | --- |
-| 16 | [NFC & QR Staff Cards](16-staff-cards.md) | Issues and controls the staff ID card. Each card has an NFC chip and a printed QR code, and links to the staff member's full profile on the server. |
+| 16 | [NFC & QR Staff Cards](16-staff-cards.md) | Designs, prints and controls every ID card: staff, casual, intern, contractor, visitor and board member. |
 | 17 | [Event Wristbands](17-wristbands.md) | Manages 3,000 to 5,000 reusable NFC and QR wristbands. |
 | 18 | [Devices & Stations](18-devices-stations.md) | A register of every phone, tablet, handheld, card reader, printer and kiosk the hotel uses, and the station each one serves. |
 | 19 | [Access Control & Zones](19-access-zones.md) | Defines restricted areas, such as the store, kitchen, server room, VIP area or event hall, and who may enter each one and when, using staff cards, wristbands or QR codes. |

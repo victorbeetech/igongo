@@ -17,7 +17,7 @@ This is the stack, reviewed against the requirements: one app for every role, a 
 | **Offline-first app storage with Drift (SQLite)** | Gate clock-in, wristband scans, meal claims and inspections must work with no network and sync later. |
 | **An append-only audit log with a hash chain**, archived to R2 with Bucket Locks | Records must be permanent and tamper-proof, and searchable years back. |
 | **Postgres full-text search and `pg_trgm`** on Neon | One search box over every module ("who did X two years ago") without another paid service. |
-| **NTAG 424 DNA chips for staff cards**, NTAG 215/216 for wristbands | 424 DNA cards produce a new signed code on every tap, so a card can't be copied. Wristbands only need a cheap, rewritable chip, as they are reset and reused. |
+| **Card and chip types as data**, supporting the hotel's current NTAG213 cards now, and NTAG 424 DNA for the next order | The hotel can change card designs and chips without code. NTAG213 has no encryption, so it is protected by server checks, its originality signature and a password lock; 424 DNA cards make a new signed code on every tap and can't be copied. |
 | **PDF generation with Cloudflare Browser Rendering** | Receipts, invoices, payslips, earnings statements and reports, all from editable HTML templates. |
 | **Sentry** for crash and error tracking in the app, web and API | You asked that no warning or error be ignored. Sentry shows every one, with the screen and the user's role. |
 | **OpenAPI generated from the API**, with the Dart and TypeScript clients generated from it | The app, web and API can't drift apart across 83 modules. |
@@ -36,7 +36,7 @@ This is the stack, reviewed against the requirements: one app for every role, a 
 | Navigation | go_router, with routes built from the server-driven layout |
 | Offline storage | Drift (SQLite), plus a sync queue |
 | Secure storage | flutter_secure_storage for tokens and PINs |
-| NFC | nfc_manager (NTAG 424 DNA for staff cards, NTAG 215/216 for wristbands) |
+| NFC | nfc_manager (current cards NTAG213; NTAG 424 DNA and NTAG 215/216 supported as card types) |
 | QR scanning | mobile_scanner |
 | Biometrics | local_auth (fingerprint or face to open payslips) |
 | Push | Firebase Cloud Messaging |
@@ -70,7 +70,7 @@ This is the stack, reviewed against the requirements: one app for every role, a 
 | Files | Cloudflare R2, with Cloudflare Images for resizing |
 | Audit archive | R2 with Bucket Locks |
 | Search | Postgres full-text and `pg_trgm` |
-| PDFs | Cloudflare Browser Rendering |
+| PDFs and card printing | Cloudflare Browser Rendering for exact-size print PDFs; printing through the browser print dialog or the card printer's driver with saved presets |
 | Auth | Better Auth (phone OTP, password, PIN, card tap, Google and Apple sign-in, 2FA) |
 | Errors and logs | Sentry and Cloudflare Workers Logs |
 

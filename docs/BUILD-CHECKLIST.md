@@ -37,7 +37,8 @@ All assets are in the [brand kit](../packages/brand/README.md).
 - [x] Animations: splash intro, full logo intro, spiral spinner, mark loader and pulse, as Lottie, animated SVG, GIF and MP4.
 - [x] Favicon set, Apple touch icon, web manifest icons and the social sharing image.
 - [x] Play Store icon and feature graphic.
-- [x] Staff card designs (front and back, NFC and QR).
+- [x] First staff card template (front and back, NFC and QR).
+- [ ] Card template library: many portrait and landscape designs (managers, staff, kitchen, security, casual, intern, contractor, visitor, board), each with front and back, for the super admin to assign by role. Reference designs from you are saved as style inspiration.
 - [x] Wristband design with number and QR.
 - [x] Receipt headers (58 mm and 80 mm), A4 letterhead and email header.
 - [x] QR sticker template for tables, assets, rooms, exhibits and patrol points.
@@ -109,7 +110,10 @@ All assets are in the [brand kit](../packages/brand/README.md).
 
 ## Phase 9: Hardware
 
-- [ ] Buy and test the staff cards (NTAG 424 DNA) and the wristbands (NTAG 215/216).
+- [ ] Test the current cards (NXP NTAG213): write, password-lock, originality signature check, tap at every station.
+- [ ] Decide whether the next card order moves to NTAG 424 DNA (copy-proof), and set it up as a new card type.
+- [ ] Buy and test the wristbands.
+- [ ] Set up the card printer as a print preset, and test one-click printing at the exact card size.
 - [ ] Set up gate and station devices in kiosk mode.
 - [ ] Card printer and receipt printers.
 - [ ] On-site NFC tests at the gate, reception, canteen, pool and event hall.

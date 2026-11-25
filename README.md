@@ -60,7 +60,7 @@ Each module has its own file in [docs/modules](docs/modules/README.md), with its
 
 | # | Module | What it does |
 | --- | --- | --- |
-| 16 | [NFC & QR Staff Cards](docs/modules/16-staff-cards.md) | Issues and controls the staff ID card. Each card has an NFC chip and a printed QR code, and links to the staff member's full profile on the server. |
+| 16 | [NFC & QR Staff Cards](docs/modules/16-staff-cards.md) | Designs, prints and controls every ID card: staff, casual, intern, contractor, visitor and board member. |
 | 17 | [Event Wristbands](docs/modules/17-wristbands.md) | Manages 3,000 to 5,000 reusable NFC and QR wristbands. |
 | 18 | [Devices & Stations](docs/modules/18-devices-stations.md) | A register of every phone, tablet, handheld, card reader, printer and kiosk the hotel uses, and the station each one serves. |
 | 19 | [Access Control & Zones](docs/modules/19-access-zones.md) | Defines restricted areas, such as the store, kitchen, server room, VIP area or event hall, and who may enter each one and when, using staff cards, wristbands or QR codes. |
@@ -185,7 +185,7 @@ The stack was reviewed against the requirements, and the changes are explained i
 | Search | Postgres full-text search and pg_trgm |
 | PDFs | Cloudflare Browser Rendering |
 | Auth | Better Auth: phone OTP, password, PIN, card tap, Google and Apple, 2FA |
-| Cards and wristbands | NTAG 424 DNA staff cards (copy-proof), NTAG 215/216 wristbands (rewritable) |
+| Cards and wristbands | Card and band types are data. The hotel's current cards are NTAG213, protected by server checks, the originality signature and a password lock. NTAG 424 DNA (copy-proof) is recommended for the next card order. |
 | Messaging | FCM push, Africa's Talking SMS, Meta WhatsApp Cloud API, Resend email |
 | Payments | MTN MoMo, Airtel Money and Flutterwave |
 | Maps | Google Maps Platform |
