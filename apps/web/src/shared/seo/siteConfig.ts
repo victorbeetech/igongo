@@ -11,6 +11,10 @@ export const SITE = {
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://igongo.co.ug",
   /** The default description for search results and sharing. */
   description: "Hotel, cultural museum, dining, events, pool and spa at Biharwe, Mbarara, Uganda. Book rooms, tours and tables, and order food online.",
+  /** Whether search engines may index any page. Hosts with sample data
+   *  (such as the Cloudflare review site) build with NEXT_PUBLIC_NOINDEX=1,
+   *  which turns every page and the robots file to "noindex". */
+  indexable: process.env.NEXT_PUBLIC_NOINDEX !== "1",
   /** The sharing image from the brand kit (1200 by 630). */
   ogImage: "/brand/web/og-image.png",
   /** Where the hotel is. */

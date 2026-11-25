@@ -13,6 +13,20 @@ pnpm --filter @igongo/web build:preview   # one static page (screens routed by #
 pnpm --filter @igongo/web test:e2e        # axe accessibility on every page, light and dark, plus screenshots
 ```
 
+## Hosted preview (Cloudflare)
+
+The clickable preview with sample data is live at **https://igongo.victorbee.com**. It opens on the role switcher, and every portal (staff, managers, super admin) is reached from there. It is the static preview build served as Cloudflare Workers static assets, set up in `wrangler.jsonc`:
+
+- **SPA fallback.** Screens live after `#` (such as `/#/settings`), so a reload never 404s, and any unknown path returns the preview page.
+- **No indexing.** `cloudflare/_headers` sends `X-Robots-Tag: noindex`, `robots.txt` disallows everything, and every page's meta tag says noindex (`NEXT_PUBLIC_NOINDEX=1`). SEO stays off until the hotel confirms.
+- **HTTPS and DNS** come with the Worker's custom domain; Cloudflare makes the record and the certificate.
+
+Deploy from your computer (once: `npx wrangler login` with the Cloudflare account):
+
+```bash
+pnpm --filter @igongo/web deploy:cloudflare   # builds, prepares out/ (scripts/prepare-cloudflare.mjs), then wrangler deploy
+```
+
 `test:e2e` needs the preview build in `out/`. Screenshots live in `e2e/screenshots/`; redraw them with `--update-snapshots` after an approved design change.
 
 **Sidebar.** Every portal has a sidebar that is open by default. The fold button sits inside it, at the top, and folds it to an icon rail (remembered per browser). On phones it opens from the menu button as a drawer. Its search (Ctrl or Cmd+K) finds modules, every page and every pop-up, not only the menu entries.

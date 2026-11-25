@@ -5,12 +5,13 @@ import type { Metadata } from "next";
 import type { ScreenSpec } from "@/shared/catalog/types";
 import { SITE } from "./siteConfig";
 
-/** Whether search engines may index [spec]: only public pages. */
+/** Whether [spec] is a public page (the guest website). */
 export const isPublic = (spec: ScreenSpec) => spec.surfaces.includes("public");
 
 /** The meta tags for [spec] at the address [path]. */
 export function pageMetadata(spec: ScreenSpec, path: string): Metadata {
-  const indexable = isPublic(spec);
+  // Only public pages are indexed, and only on hosts that allow indexing.
+  const indexable = SITE.indexable && isPublic(spec);
   return {
     title: spec.name,
     description: indexable ? `${spec.purpose}. ${SITE.name}, Mbarara.` : spec.purpose,

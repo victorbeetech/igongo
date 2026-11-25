@@ -10,6 +10,8 @@
     "dev": "next dev",
     "build": "next build",
     "build:preview": "node scripts/sync-brand.mjs && NEXT_PUBLIC_STATIC_PREVIEW=1 next build && node scripts/relativize-preview.mjs",
+    "build:cloudflare": "NEXT_PUBLIC_NOINDEX=1 NEXT_PUBLIC_SITE_URL=https://igongo.victorbee.com pnpm build:preview && node scripts/prepare-cloudflare.mjs",
+    "deploy:cloudflare": "pnpm build:cloudflare && wrangler deploy",
     "start": "next start",
     "lint": "eslint --max-warnings 0 . && tsc --noEmit",
     "test:e2e": "playwright test"
@@ -31,6 +33,7 @@
     "eslint": "9.39.5",
     "eslint-config-next": "16.4.6",
     "tailwindcss": "4.3.5",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "wrangler": "4.168.0"
   }
 }

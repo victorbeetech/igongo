@@ -1,0 +1,14 @@
+# Response headers for every file of the hosted web preview (Cloudflare reads
+# this file from the assets folder; scripts/prepare-cloudflare.mjs copies it).
+# The site holds sample data and SEO is on hold until the hotel confirms, so
+# search engines must not index it. The other lines are basic browser safety.
+/*
+  X-Robots-Tag: noindex, nofollow
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+
+# Built scripts and styles have content hashes in their names, so browsers may
+# keep them for a year.
+/app/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable

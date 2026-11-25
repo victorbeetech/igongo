@@ -1,0 +1,26 @@
+// Cloudflare Workers settings for the hosted web preview (sample data only).
+// It serves the static preview build in `out/` as Workers static assets: no
+// server code runs. Deploy with `pnpm --filter @igongo/web deploy:cloudflare`
+// (see README.md), after `npx wrangler login` once on your computer.
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  // The Worker's name in the Cloudflare dashboard.
+  "name": "igongo-web",
+  // The Workers runtime version these settings were written for.
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    // The folder `scripts/prepare-cloudflare.mjs` fills from the preview build.
+    "directory": "./out",
+    // The preview is one page that draws every screen from the `#` address,
+    // so any unknown path returns that page instead of a 404 (SPA fallback).
+    "not_found_handling": "single-page-application",
+    // "/design-system" serves design-system.html, with or without the slash.
+    "html_handling": "auto-trailing-slash"
+  },
+  // The only public address: HTTPS on a subdomain of victorbee.com. Cloudflare
+  // creates the DNS record and the certificate for it.
+  "routes": [{ "pattern": "igongo.victorbee.com", "custom_domain": true }],
+  // No extra *.workers.dev or preview addresses: one address to share.
+  "workers_dev": false,
+  "preview_urls": false
+}
