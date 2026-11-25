@@ -1,0 +1,32 @@
+{
+  "name": "@igongo/web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The Igongo web portal for staff and the super admin, and the public pages. Clickable UI with sample data.",
+  "scripts": {
+    "sync-brand": "node scripts/sync-brand.mjs",
+    "predev": "node scripts/sync-brand.mjs",
+    "prebuild": "node scripts/sync-brand.mjs",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint --max-warnings 0 . && tsc --noEmit"
+  },
+  "dependencies": {
+    "@igongo/design-tokens": "workspace:*",
+    "lucide-react": "1.80.0",
+    "next": "16.4.6",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.3.5",
+    "@types/node": "24.19.4",
+    "@types/react": "19.3.3",
+    "@types/react-dom": "19.3.0",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.4.6",
+    "tailwindcss": "4.3.5",
+    "typescript": "5.9.3"
+  }
+}

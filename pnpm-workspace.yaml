@@ -1,0 +1,4 @@
+# The TypeScript workspace: the web portal and the shared packages it uses.
+packages:
+  - apps/web
+  - packages/design-tokens

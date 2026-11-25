@@ -1,0 +1,32 @@
+# The Igongo brand kit as a Dart package, so the Flutter app uses the kit's own
+# logo, card and font files instead of keeping copies (brand rule 1).
+# In the app: AssetImage('packages/igongo_brand/logo/...'), and fonts with
+# package: 'igongo_brand'.
+name: igongo_brand
+description: Igongo logos, cards, animations and fonts.
+publish_to: none
+version: 1.0.0
+environment:
+  sdk: ^3.14.0
+dependencies:
+  flutter:
+    sdk: flutter
+flutter:
+  assets:
+    - logo/mark/
+    - logo/horizontal/
+    - logo/stacked/
+    - logo/spiral/
+    - cards/portrait-black/
+    - pattern/
+  fonts:
+    - family: Cinzel
+      fonts:
+        - asset: fonts/Cinzel-Variable.ttf
+    - family: Lato
+      fonts:
+        - asset: fonts/Lato-Regular.ttf
+        - asset: fonts/Lato-Bold.ttf
+          weight: 700
+        - asset: fonts/Lato-Black.ttf
+          weight: 900

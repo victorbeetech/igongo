@@ -1,0 +1,11 @@
+{
+  "name": "@igongo/design-tokens",
+  "version": "0.3.0",
+  "private": true,
+  "description": "Igongo colours, type, spacing and shape for the web, generated from tokens.json.",
+  "exports": {
+    "./tokens.css": "./web/tokens.css",
+    "./tokens": "./web/tokens.ts",
+    "./tokens.json": "./tokens.json"
+  }
+}

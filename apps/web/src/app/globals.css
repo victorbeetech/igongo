@@ -1,0 +1,74 @@
+/* Global styles for the Igongo web portal. Every colour, size and radius comes
+   from the design tokens (packages/design-tokens/tokens.json), turned into CSS
+   variables by tools/ui-gen. Change the tokens file and the whole portal
+   follows. Igongo red is the same in light and dark mode. */
+
+@import "tailwindcss";
+@import "@igongo/design-tokens/tokens.css";
+
+/* Brand fonts, served from the brand kit copy in public/brand. */
+@font-face { font-family: "Lato"; src: url("/brand/fonts/Lato-Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Lato"; src: url("/brand/fonts/Lato-Bold.ttf") format("truetype"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Lato"; src: url("/brand/fonts/Lato-Black.ttf") format("truetype"); font-weight: 900; font-display: swap; }
+@font-face { font-family: "Cinzel"; src: url("/brand/fonts/Cinzel-Variable.ttf") format("truetype"); font-weight: 400 900; font-display: swap; }
+
+/* Tailwind names for the token variables: bg-primary, text-muted, border-line and so on. */
+@theme inline {
+  --color-primary: var(--c-primary);
+  --color-on-primary: var(--c-on-primary);
+  --color-primary-dark: var(--c-primary-dark);
+  --color-primary-container: var(--c-primary-container);
+  --color-on-primary-container: var(--c-on-primary-container);
+  --color-primary-text: var(--c-primary-text);
+  --color-secondary: var(--c-secondary);
+  --color-page: var(--c-background);
+  --color-surface: var(--c-surface);
+  --color-surface-alt: var(--c-surface-alt);
+  --color-ink: var(--c-text);
+  --color-muted: var(--c-text-muted);
+  --color-line: var(--c-border);
+  --color-success: var(--c-success);
+  --color-warning: var(--c-warning);
+  --color-error: var(--c-error);
+  --color-info: var(--c-info);
+  --font-brand: "Cinzel", Georgia, serif;
+  --font-body: "Lato", "Segoe UI", system-ui, sans-serif;
+  --text-display: var(--t-display-size);
+  --text-display--line-height: var(--t-display-line);
+  --text-headline: var(--t-headline-size);
+  --text-headline--line-height: var(--t-headline-line);
+  --text-title: var(--t-title-size);
+  --text-title--line-height: var(--t-title-line);
+  --text-subtitle: var(--t-subtitle-size);
+  --text-subtitle--line-height: var(--t-subtitle-line);
+  --text-body: var(--t-body-size);
+  --text-body--line-height: var(--t-body-line);
+  --text-label: var(--t-label-size);
+  --text-label--line-height: var(--t-label-line);
+  --text-caption: var(--t-caption-size);
+  --text-caption--line-height: var(--t-caption-line);
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+}
+
+/* Base: the cream (or night) page, Lato body text at the token size. */
+html { background: var(--c-background); }
+body { background: var(--c-background); color: var(--c-text); font-family: var(--font-body); font-size: var(--t-body-size); line-height: var(--t-body-line); }
+:focus-visible { outline: 2px solid var(--c-primary); outline-offset: 2px; }
+
+/* The logo swaps colourways with the theme: colour on light, reversed on dark. */
+.logo-dark { display: none; }
+:root[data-theme="dark"] .logo-light { display: none; }
+:root[data-theme="dark"] .logo-dark { display: inline-block; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .logo-light { display: none; }
+  :root:not([data-theme="light"]) .logo-dark { display: inline-block; }
+}
+
+/* Motion is short, and off when the device asks for reduced motion. */
+@keyframes igongo-spin { to { transform: rotate(360deg); } }
+@keyframes igongo-pulse { 50% { transform: scale(1.04); } }
+.spin { animation: igongo-spin 1.2s linear infinite; }
+.pulse { animation: igongo-pulse 1.6s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .spin, .pulse { animation: none; } }
