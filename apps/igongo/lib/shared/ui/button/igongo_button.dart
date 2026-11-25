@@ -55,7 +55,7 @@ class IgongoButton extends StatelessWidget {
         onPressed: onPressed,
         style: FilledButton.styleFrom(
           backgroundColor: context.palette.error,
-          foregroundColor: context.palette.background, // Page colour on red reads in both modes.
+          foregroundColor: context.palette.onError, // The token checked for 4.5:1 on the error colour.
         ),
         child: child,
       ),

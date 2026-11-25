@@ -23,8 +23,8 @@ class DialogToneStyle {
         ButtonVariant.danger,
       ),
       DialogTone.warning => DialogToneStyle._(Icons.report_problem_outlined, p.warning, 'OK', ButtonVariant.primary),
-      DialogTone.sheet => DialogToneStyle._(Icons.tune, p.primary, 'Done', ButtonVariant.primary),
-      DialogTone.confirm => DialogToneStyle._(Icons.help_outline, p.primary, 'Confirm', ButtonVariant.primary),
+      DialogTone.sheet => DialogToneStyle._(Icons.tune, p.primaryText, 'Done', ButtonVariant.primary),
+      DialogTone.confirm => DialogToneStyle._(Icons.help_outline, p.primaryText, 'Confirm', ButtonVariant.primary),
     };
   }
 

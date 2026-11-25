@@ -20,9 +20,11 @@ abstract final class IgongoColorsLight {
   static const text = Color(0xFF1C1C1C);
   static const textMuted = Color(0xFF665C56);
   static const border = Color(0xFFE2D9D1);
-  static const success = Color(0xFF2A7349);
-  static const warning = Color(0xFF8A5A00);
-  static const error = Color(0xFFC62828);
+  static const outline = Color(0xFF857A73);
+  static const success = Color(0xFF256B43);
+  static const warning = Color(0xFF855600);
+  static const error = Color(0xFFB3261E);
+  static const onError = Color(0xFFFFFFFF);
   static const info = Color(0xFF2F6690);
   static const clientViewBanner = Color(0xFF2F6690);
   static const primaryText = Color(0xFFB8292F);
@@ -45,9 +47,11 @@ abstract final class IgongoColorsDark {
   static const text = Color(0xFFF6F1EC);
   static const textMuted = Color(0xFFB3A69F);
   static const border = Color(0xFF3D302B);
+  static const outline = Color(0xFF857670);
   static const success = Color(0xFF6CC08F);
   static const warning = Color(0xFFE0B25A);
   static const error = Color(0xFFFF8A80);
+  static const onError = Color(0xFF1A1210);
   static const info = Color(0xFF8DB9DE);
   static const clientViewBanner = Color(0xFF8DB9DE);
   static const primaryText = Color(0xFFF6F1EC);

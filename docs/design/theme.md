@@ -1,6 +1,6 @@
 # Theme (step 1 of the build checklist)
 
-**Status:** proposal, waiting for approval. The colours are sampled straight from the hotel's logo files, and the fonts match the logo. Version 0.2.
+**Status:** proposal, waiting for approval. The colours are sampled straight from the hotel's logo files, and the fonts match the logo. Version 0.4.
 
 The values live in one file, [`packages/design-tokens/tokens.json`](../../packages/design-tokens/tokens.json), which both the Flutter app and the web read. No screen sets its own colour or font size, so the whole app stays uniform with the logo.
 
@@ -20,13 +20,15 @@ The values live in one file, [`packages/design-tokens/tokens.json`](../../packag
 | Surface | `#FFFFFF` | `#241A17` | | Cards, sheets, dialogs |
 | Text | `#1C1C1C` | `#F6F1EC` | | Main text |
 | Muted text | `#665C56` | `#B3A69F` | | Hints, captions, timestamps |
-| Border | `#E2D9D1` | `#3D302B` | | Dividers and outlines |
-| Success | `#2A7349` | `#6CC08F` | | Paid, approved, on duty |
-| Warning | `#8A5A00` | `#E0B25A` | | Late, pending, low |
-| Error | `#C62828` | `#FF8A80` | | Failed, refused, overdue |
+| Border | `#E2D9D1` | `#3D302B` | | Dividers and card edges (decorative) |
+| Outline | `#857A73` | `#857670` | | Field outlines, switch tracks and other edges you must see (3:1) |
+| Success | `#256B43` | `#6CC08F` | | Paid, approved, on duty |
+| Warning | `#855600` | `#E0B25A` | | Late, pending, low |
+| Error | `#B3261E` | `#FF8A80` | | Failed, refused, overdue |
+| On error | `#FFFFFF` | `#1A1210` | | Text on danger buttons |
 | Info | `#2F6690` | `#8DB9DE` | | Tips, and the client view banner |
 
-**Contrast checks (WCAG AA):** white on Igongo red is 6.2:1, Igongo red on cream is 5.5:1, text on cream is 15.2:1, and muted, success, warning, error and info text on cream are all 5:1 or more. In dark mode, white on Igongo red stays 6.2:1 and cream text on the dark background is 15.7:1. Igongo red on the dark background is only 3:1, so in dark mode red is used for filled shapes (buttons, bars, badges, the logo) and never for small text.
+**Contrast checks (WCAG 2.2 AA):** every pair the app and web draw, in both modes, is checked by [`tools/contrast-check`](../../tools/contrast-check/check_contrast.py) (4.5:1 for text, 3:1 for icons, outlines, focus rings and chart marks). All pass: see the [contrast report](contrast-report.md). Igongo red on the dark background is only 3:1, so in dark mode red is used for filled shapes (buttons, bars, badges, the logo), and small red marks (links, icons, focus rings, chart bars) use **Primary text**, which is cream there. A failing pair is fixed in `tokens.json`, never in a screen.
 
 Because the brand is red, errors are never shown by colour alone. They always carry an icon and a message.
 

@@ -6,7 +6,7 @@ import { Nfc } from "lucide-react";
 export function ScanFrame() {
   return (
     <div className="flex flex-col items-center gap-3 py-8 text-center">
-      <div className="pulse flex size-40 items-center justify-center rounded-full border-4 border-primary bg-primary-container text-primary">
+      <div className="pulse flex size-40 items-center justify-center rounded-full border-4 border-primary-text bg-primary-container text-primary-text">
         <Nfc size={64} aria-hidden />
       </div>
       <p className="text-subtitle font-bold">Hold the card, wristband or QR code here</p>

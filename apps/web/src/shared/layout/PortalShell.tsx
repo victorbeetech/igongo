@@ -9,7 +9,7 @@ import type { RoleSpec, ScreenSpec } from "@/shared/catalog/types";
 import { PreviewPanel } from "@/shared/preview/PreviewPanel";
 import { StatusBanner } from "@/shared/ui/banner/StatusBanner";
 import { Logo } from "@/shared/ui/logo/Logo";
-import { PortalSidebar } from "./PortalSidebar";
+import { PortalSidebar } from "./sidebar/PortalSidebar";
 
 interface PortalShellProps {
   /** The page inside the frame. */
@@ -27,7 +27,7 @@ export function PortalShell({ spec, role, offline, children }: PortalShellProps)
   const [menu, setMenu] = useState(false);
   const [preview, setPreview] = useState(false);
   // Icon links in the red bar; white on Igongo red keeps strong contrast in both modes.
-  const barLink = "inline-flex size-10 items-center justify-center rounded-md hover:bg-primary-dark";
+  const barLink = "inline-flex size-11 items-center justify-center rounded-md hover:bg-primary-dark";
   return (
     <div className="flex min-h-dvh flex-col">
       {/* Step 1: the red top bar, the same in light and dark mode. */}
@@ -44,11 +44,8 @@ export function PortalShell({ spec, role, offline, children }: PortalShellProps)
         <button type="button" className={barLink} aria-label="Preview" onClick={() => setPreview(true)}><SlidersHorizontal size={20} /></button>
       </header>
       <div className="flex flex-1">
-        {/* Step 2: the role's modules; a drawer on small screens. */}
-        <aside className={`${menu ? "block" : "hidden"} fixed inset-y-14 left-0 z-20 w-64 overflow-y-auto border-r border-line bg-surface lg:sticky lg:top-14 lg:block lg:h-[calc(100dvh-3.5rem)]`}>
-          <div className="px-4 pt-4 text-caption font-bold tracking-widest text-muted uppercase">{role.name}</div>
-          <PortalSidebar role={role} activeCode={spec.id.slice(1, 3)} />
-        </aside>
+        {/* Step 2: the sidebar: the role's modules and the search; a drawer on small screens. */}
+        <PortalSidebar role={role} activeCode={spec.id.slice(1, 3)} drawerOpen={menu} onCloseDrawer={() => setMenu(false)} />
         {/* Step 3: the banners and the page. */}
         <main className="min-w-0 flex-1 pb-12">
           {offline && <StatusBanner tone="offline" message="You're offline. Saved items show; new ones sync later." action="Sync status" href="/sync-status" />}

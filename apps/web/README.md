@@ -9,7 +9,15 @@ pnpm install          # from the repository root
 pnpm web:dev          # http://localhost:3000
 pnpm web:build        # builds all 639 pages ahead of time
 pnpm web:lint         # ESLint with zero warnings, then the type check
+pnpm --filter @igongo/web build:preview   # one static page (screens routed by #/path) to host anywhere
+pnpm --filter @igongo/web test:e2e        # axe accessibility on every page, light and dark, plus screenshots
 ```
+
+`test:e2e` needs the preview build in `out/`. Screenshots live in `e2e/screenshots/`; redraw them with `--update-snapshots` after an approved design change.
+
+**Sidebar.** Every portal has a sidebar that is open by default. The fold button sits inside it, at the top, and folds it to an icon rail (remembered per browser). On phones it opens from the menu button as a drawer. Its search (Ctrl or Cmd+K) finds modules, every page and every pop-up, not only the menu entries.
+
+**Design system.** `/design-system` shows the brand, colours, type, buttons, fields, chips, cards, dialogs, toasts and illustrations in light and dark. It also opens from the preview panel.
 
 `predev` and `prebuild` copy the logos, fonts, card and icons from `packages/brand` into `public/brand` (not committed), so the brand kit stays the only source.
 

@@ -6,3 +6,6 @@ next-env.d.ts
 *.tsbuildinfo
 # Copied from packages/brand by scripts/sync-brand.mjs before each build
 public/brand/
+# Playwright run output
+test-results/
+playwright-report/

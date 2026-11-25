@@ -44,7 +44,7 @@ class ThemeScreen extends StatelessWidget {
                   // A small preview of the mode: its background with the same red bar.
                   _MiniPreview(palette: palette ?? (context.isDark ? IgongoPalette.dark : IgongoPalette.light)),
                   Expanded(child: Text(label, style: context.text.titleSmall)),
-                  if (prefs.themeMode == mode) Icon(Icons.check_circle, color: context.palette.primary),
+                  if (prefs.themeMode == mode) Icon(Icons.check_circle, color: context.palette.primaryText),
                 ],
               ),
             ),

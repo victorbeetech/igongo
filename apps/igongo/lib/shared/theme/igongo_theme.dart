@@ -26,7 +26,7 @@ abstract final class IgongoTheme {
       secondary: p.secondary,
       onSecondary: p.background,
       error: p.error,
-      onError: p.onPrimary,
+      onError: p.onError,
       surface: p.surface,
       onSurface: p.text,
       onSurfaceVariant: p.textMuted,
@@ -34,7 +34,8 @@ abstract final class IgongoTheme {
       surfaceContainerHigh: p.surfaceAlt,
       surfaceContainer: p.surface,
       surfaceContainerLow: p.surface,
-      outline: p.border,
+      outline: p.outline, // Strong edges: switch tracks, field outlines (3:1).
+      // Soft edges stay soft: dividers and card edges.
       outlineVariant: p.border,
     );
     final text = igongoTextTheme(p.text, p.textMuted);
@@ -92,19 +93,23 @@ abstract final class IgongoTheme {
         filled: true,
         fillColor: p.surfaceAlt,
         isDense: true,
+        // Dense to keep forms compact, but never under the 48 tap target (accessibility test).
+        constraints: const BoxConstraints(minHeight: IgongoTouch.preferred),
         labelStyle: text.labelLarge?.copyWith(color: p.textMuted),
         hintStyle: text.bodyMedium?.copyWith(color: p.textMuted),
+        // Field outlines use the strong outline token (3:1), so every field can be found.
         border: OutlineInputBorder(
           borderRadius: radius,
-          borderSide: BorderSide(color: p.border),
+          borderSide: BorderSide(color: p.outline),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: radius,
-          borderSide: BorderSide(color: p.border),
+          borderSide: BorderSide(color: p.outline),
         ),
+        // The focus ring is red in light mode and cream in dark mode (primaryText).
         focusedBorder: OutlineInputBorder(
           borderRadius: radius,
-          borderSide: BorderSide(color: p.primary, width: 2),
+          borderSide: BorderSide(color: p.primaryText, width: 2),
         ),
       ),
       chipTheme: ChipThemeData(
@@ -120,7 +125,7 @@ abstract final class IgongoTheme {
         height: 60,
         labelTextStyle: WidgetStatePropertyAll(text.labelSmall),
         iconTheme: WidgetStateProperty.resolveWith(
-          (states) => IconThemeData(color: states.contains(WidgetState.selected) ? p.primary : p.textMuted),
+          (states) => IconThemeData(color: states.contains(WidgetState.selected) ? p.primaryText : p.textMuted),
         ),
       ),
       switchTheme: SwitchThemeData(
@@ -144,7 +149,7 @@ abstract final class IgongoTheme {
         contentTextStyle: text.bodyMedium?.copyWith(color: p.background),
         shape: const RoundedRectangleBorder(borderRadius: radius),
       ),
-      progressIndicatorTheme: ProgressIndicatorThemeData(color: p.primary),
+      progressIndicatorTheme: ProgressIndicatorThemeData(color: p.primaryText),
       listTileTheme: ListTileThemeData(
         dense: true,
         iconColor: p.textMuted,

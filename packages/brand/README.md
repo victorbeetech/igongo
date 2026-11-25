@@ -71,6 +71,9 @@ packages/brand/
 ├── print/                    Wristbands, QR sticker, business card, name badge, letterhead,
 │                             receipt headers, email header and signature, watermark
 ├── pattern/                  Repeating spiral pattern for backgrounds and packaging
+├── illustrations/            Screen state drawings (empty, error, offline, success, denied,
+│                             not found), in currentColor so the theme tints them
+├── store/screenshots/        App Store and Play Store screenshots, made by the app's tests
 ├── preview/                  The overview image above
 └── scripts/                  The scripts that build everything
 ```
@@ -219,6 +222,7 @@ python packages/brand/scripts/build_brand.py
 | `scripts/stationery.py` | Wristbands, sticker, business card, badge, letterhead, receipts, email, watermark |
 | `scripts/cards.py` | The ID card template library, its manifest and card types |
 | `scripts/animations.py` | Renders the animations to animated SVG, Lottie, GIF and MP4 |
+| `scripts/illustrations.py` | The screen state illustrations, drawn in the theme colour with the red spiral |
 | `scripts/build_brand.py` | Runs every builder in order |
 
 The scripts pass `ruff check` (config in `scripts/ruff.toml`) with no warnings.

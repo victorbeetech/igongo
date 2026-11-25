@@ -1,0 +1,274 @@
+{
+  "$note": "Every colour pair the app and web actually draw, checked in light and dark mode by check_contrast.py. 'fg' sits on 'bg'. 'tint' means the background is fg (or 'tintOf') at that opacity over bg, as status chips and banners are drawn. 'min' is the WCAG 2.2 AA ratio: 4.5 for normal text, 3 for large text and for icons, field outlines, focus rings and chart marks (non-text, rule 1.4.11). Add a pair here whenever a component draws a new combination.",
+  "pairs": [
+    {
+      "use": "Main text on the page",
+      "fg": "text",
+      "bg": "background",
+      "min": 4.5
+    },
+    {
+      "use": "Main text on cards, sheets and dialogs",
+      "fg": "text",
+      "bg": "surface",
+      "min": 4.5
+    },
+    {
+      "use": "Main text in fields and chips",
+      "fg": "text",
+      "bg": "surfaceAlt",
+      "min": 4.5
+    },
+    {
+      "use": "Muted text (hints, captions) on the page",
+      "fg": "textMuted",
+      "bg": "background",
+      "min": 4.5
+    },
+    {
+      "use": "Muted text on cards",
+      "fg": "textMuted",
+      "bg": "surface",
+      "min": 4.5
+    },
+    {
+      "use": "Muted text and labels in fields",
+      "fg": "textMuted",
+      "bg": "surfaceAlt",
+      "min": 4.5
+    },
+    {
+      "use": "Links and red words on the page",
+      "fg": "primaryText",
+      "bg": "background",
+      "min": 4.5
+    },
+    {
+      "use": "Links and text buttons on cards",
+      "fg": "primaryText",
+      "bg": "surface",
+      "min": 4.5
+    },
+    {
+      "use": "Red icons, focus rings, chart bars and the scan ring on the page",
+      "fg": "primaryText",
+      "bg": "background",
+      "min": 3
+    },
+    {
+      "use": "Red icons and chart bars on cards",
+      "fg": "primaryText",
+      "bg": "surface",
+      "min": 3
+    },
+    {
+      "use": "Scan ring icon on its red container",
+      "fg": "primaryText",
+      "bg": "primaryContainer",
+      "min": 3
+    },
+    {
+      "use": "Button and app bar text on Igongo red",
+      "fg": "onPrimary",
+      "bg": "primary",
+      "min": 4.5
+    },
+    {
+      "use": "Pressed button text on deep red",
+      "fg": "onPrimary",
+      "bg": "primaryDark",
+      "min": 4.5
+    },
+    {
+      "use": "Selected chip and tab text",
+      "fg": "onPrimaryContainer",
+      "bg": "primaryContainer",
+      "min": 4.5
+    },
+    {
+      "use": "Second button text",
+      "fg": "onSecondary",
+      "bg": "secondary",
+      "min": 4.5
+    },
+    {
+      "use": "Toast text on the dark (or cream) toast",
+      "fg": "background",
+      "bg": "secondary",
+      "min": 4.5
+    },
+    {
+      "use": "Danger button text on the error colour",
+      "fg": "onError",
+      "bg": "error",
+      "min": 4.5
+    },
+    {
+      "use": "Field outlines on cards",
+      "fg": "outline",
+      "bg": "surface",
+      "min": 3
+    },
+    {
+      "use": "Field outlines on the page",
+      "fg": "outline",
+      "bg": "background",
+      "min": 3
+    },
+    {
+      "use": "Switch track when off, and other strong edges",
+      "fg": "outline",
+      "bg": "surface",
+      "min": 3
+    },
+    {
+      "use": "Field outline against its own fill",
+      "fg": "outline",
+      "bg": "surfaceAlt",
+      "min": 3
+    },
+    {
+      "use": "Success text on the page",
+      "fg": "success",
+      "bg": "background",
+      "min": 4.5
+    },
+    {
+      "use": "Warning text on the page",
+      "fg": "warning",
+      "bg": "background",
+      "min": 4.5
+    },
+    {
+      "use": "Error text on the page",
+      "fg": "error",
+      "bg": "background",
+      "min": 4.5
+    },
+    {
+      "use": "Info text on the page",
+      "fg": "info",
+      "bg": "background",
+      "min": 4.5
+    },
+    {
+      "use": "Success chip on a card",
+      "fg": "success",
+      "bg": "surface",
+      "tint": 0.12,
+      "min": 4.5
+    },
+    {
+      "use": "Success chip on the page",
+      "fg": "success",
+      "bg": "background",
+      "tint": 0.12,
+      "min": 4.5
+    },
+    {
+      "use": "Warning chip on a card",
+      "fg": "warning",
+      "bg": "surface",
+      "tint": 0.12,
+      "min": 4.5
+    },
+    {
+      "use": "Warning chip on the page",
+      "fg": "warning",
+      "bg": "background",
+      "tint": 0.12,
+      "min": 4.5
+    },
+    {
+      "use": "Error chip on a card",
+      "fg": "error",
+      "bg": "surface",
+      "tint": 0.12,
+      "min": 4.5
+    },
+    {
+      "use": "Error chip on the page",
+      "fg": "error",
+      "bg": "background",
+      "tint": 0.12,
+      "min": 4.5
+    },
+    {
+      "use": "Info chip on a card",
+      "fg": "info",
+      "bg": "surface",
+      "tint": 0.12,
+      "min": 4.5
+    },
+    {
+      "use": "Info chip on the page",
+      "fg": "info",
+      "bg": "background",
+      "tint": 0.12,
+      "min": 4.5
+    },
+    {
+      "use": "Neutral chip on a card",
+      "fg": "textMuted",
+      "bg": "surface",
+      "tint": 0.12,
+      "min": 4.5
+    },
+    {
+      "use": "Neutral chip on the page",
+      "fg": "textMuted",
+      "bg": "background",
+      "tint": 0.12,
+      "min": 4.5
+    },
+    {
+      "use": "Red message icon in its tinted circle (red in light, cream in dark)",
+      "fg": "primaryText",
+      "bg": "background",
+      "tint": 0.12,
+      "min": 3
+    },
+    {
+      "use": "Offline banner text",
+      "fg": "text",
+      "bg": "background",
+      "tint": 0.14,
+      "tintOf": "warning",
+      "min": 4.5
+    },
+    {
+      "use": "Offline banner icon",
+      "fg": "warning",
+      "bg": "background",
+      "tint": 0.14,
+      "min": 3
+    },
+    {
+      "use": "Client view and tip banner text",
+      "fg": "text",
+      "bg": "background",
+      "tint": 0.14,
+      "tintOf": "info",
+      "min": 4.5
+    },
+    {
+      "use": "Client view and tip banner icon",
+      "fg": "info",
+      "bg": "background",
+      "tint": 0.14,
+      "min": 3
+    }
+  ],
+  "decorative": [
+    {
+      "use": "Dividers and card edges (decorative; cards are also set apart by their surface)",
+      "fg": "border",
+      "bg": "background"
+    },
+    {
+      "use": "Igongo red filled shapes (buttons, app bar, badges, the logo) on the dark page. Each carries its own label in onPrimary, so the shape edge is not needed to read it",
+      "fg": "primary",
+      "bg": "background"
+    }
+  ]
+}

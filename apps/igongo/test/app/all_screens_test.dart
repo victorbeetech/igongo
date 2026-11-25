@@ -1,5 +1,5 @@
 // Opens every screen of the inventory in light and dark mode, and at the
-// largest text size, and fails if any screen throws or overflows.
+// largest and smallest text sizes, and fails if any screen throws or overflows.
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:igongo/app/catalog/catalog_index.dart';
@@ -15,6 +15,7 @@ void main() {
     ('light', ThemeMode.light, TextSize.standard),
     ('dark', ThemeMode.dark, TextSize.standard),
     ('dark, extra large text', ThemeMode.dark, TextSize.extraLarge),
+    ('light, compact text', ThemeMode.light, TextSize.compact),
   ];
 
   for (final (name, mode, size) in cases) {

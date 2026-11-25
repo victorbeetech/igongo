@@ -3,6 +3,7 @@
 
 export 'dialog_spec.dart';
 export 'module_mock.dart';
+export 'module_matches.dart';
 export 'module_spec.dart';
 export 'role_spec.dart';
 export 'role_tile.dart';

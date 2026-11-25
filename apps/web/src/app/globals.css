@@ -27,9 +27,11 @@
   --color-ink: var(--c-text);
   --color-muted: var(--c-text-muted);
   --color-line: var(--c-border);
+  --color-outline: var(--c-outline);
   --color-success: var(--c-success);
   --color-warning: var(--c-warning);
   --color-error: var(--c-error);
+  --color-on-error: var(--c-on-error);
   --color-info: var(--c-info);
   --font-brand: "Cinzel", Georgia, serif;
   --font-body: "Lato", "Segoe UI", system-ui, sans-serif;
@@ -55,7 +57,12 @@
 /* Base: the cream (or night) page, Lato body text at the token size. */
 html { background: var(--c-background); }
 body { background: var(--c-background); color: var(--c-text); font-family: var(--font-body); font-size: var(--t-body-size); line-height: var(--t-body-line); }
-:focus-visible { outline: 2px solid var(--c-primary); outline-offset: 2px; }
+/* The focus ring uses primary-text: red in light mode, cream in dark mode, so it
+   always reaches 3:1 (Igongo red is too dim on the night background). It sits in
+   the base layer so a component that draws its own focus (a search box) can turn it off. */
+@layer base {
+  :focus-visible { outline: 2px solid var(--c-primary-text); outline-offset: 2px; }
+}
 
 /* The logo swaps colourways with the theme: colour on light, reversed on dark. */
 .logo-dark { display: none; }

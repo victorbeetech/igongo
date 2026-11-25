@@ -3,6 +3,7 @@
 // theme, the text size and the role. It goes away when real data arrives.
 
 import { X } from "lucide-react";
+import Link from "next/link";
 import { catalog } from "@/shared/catalog/catalogIndex";
 import { setPreferences, usePreferences } from "@/shared/preferences/usePreferences";
 import type { ThemeChoice } from "@/shared/preferences/preferences";
@@ -35,6 +36,8 @@ export function PreviewPanel({ onClose }: { onClose: () => void }) {
         <h2 className="text-title font-bold">Preview</h2>
         <button type="button" aria-label="Close" onClick={onClose}><X /></button>
       </div>
+      {/* Step 0: the design system showcase: every token and component on one page. */}
+      <Link href="/design-system" className="mx-4 mb-2 flex min-h-11 items-center rounded-md border border-outline px-3 text-label font-bold">Open the design system</Link>
       {/* Step 1: the state every page shows. */}
       <SectionHeader title="Screen state" />
       <Choices values={Object.entries(VIEW_STATES) as [ViewState, string][]} current={prefs.state} pick={(state) => setPreferences({ state })} />
@@ -48,7 +51,7 @@ export function PreviewPanel({ onClose }: { onClose: () => void }) {
       <SectionHeader title="Role" />
       <label className="block px-4">
         <span className="sr-only">Role</span>
-        <select value={prefs.role} onChange={(e) => setPreferences({ role: e.target.value })} className="min-h-11 w-full rounded-md border border-line bg-surface-alt px-3 text-body">
+        <select value={prefs.role} onChange={(e) => setPreferences({ role: e.target.value })} className="min-h-11 w-full rounded-md border border-outline bg-surface-alt px-3 text-body">
           {catalog.roles.map((r) => <option key={r.key} value={r.key}>{r.name} · {r.level}</option>)}
         </select>
       </label>
