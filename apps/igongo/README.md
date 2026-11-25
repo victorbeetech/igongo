@@ -12,6 +12,16 @@ flutter run -d chrome  # in the browser
 
 Tap the **sliders icon** in the red bar to open the preview panel: pick the role (all 121), the screen state (normal, loading, empty, error, offline, permission denied, success), light or dark, and the text size.
 
+## Push notifications
+
+Push (module 10, in `lib/modules/m10_notifications/`) is **off until the build has Firebase settings**, and the app works the same without them. Fill `config/firebase-app.json` from `config/firebase-app.example.json` (the values are not secret) and build with:
+
+```bash
+flutter run --dart-define-from-file=config/firebase-app.json
+```
+
+Users & Login calls `PushModule.instance!.start(...)` after sign-in and `stop(...)` at sign-out. What is still needed from the hotel's accounts is in [docs/NEEDS-YOU.md](../../docs/NEEDS-YOU.md).
+
 ## Folders
 
 | Folder | What it holds |
