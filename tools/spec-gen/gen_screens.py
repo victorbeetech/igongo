@@ -26,6 +26,7 @@ Run from the repository root:  python tools/spec-gen/gen_screens.py .
 from __future__ import annotations
 
 import glob
+import json
 import os
 import re
 import sys
@@ -300,6 +301,22 @@ def main(root: str) -> None:
         index += ["", f"**Not connected yet ({len(orphans)}):** "
                   + ", ".join(link(s, "") for s in orphans)]
     (out / "README.md").write_text("\n".join(index) + "\n", encoding="utf-8")
+
+    # Step 9: the same data as JSON, for the clickable wireframes.
+    data = {
+        "modules": {n: name for n, (name, _) in names.items()},
+        "screens": [{"id": s.sid, "key": s.key, "module": s.module, "name": s.name, "where": s.surfaces,
+                     "purpose": s.purpose, "route": s.route,
+                     "opens": sorted("home" if k == "home" else screens[k].sid for k in s.opens),
+                     "from": sorted("home" if k == "home" else screens[k].sid for k in s.opened_from)}
+                    for s in screens.values()],
+        "roles": [{"key": r["key"], "name": r["name"], "level": r["level"],
+                   "tiles": [[t, sc.sid] for t, sc in role_tiles[r["key"]]]} for r in roles],
+        "flows": [{"title": t, "paths": [["home" if x == "home" else screens[x].sid for x in p if x == "home" or x in screens]
+                                         for p in steps]} for t, steps in flows],
+    }
+    Path(root, "docs", "ui", "wireframes").mkdir(parents=True, exist_ok=True)
+    Path(root, "docs", "ui", "wireframes", "screens.json").write_text(json.dumps(data, separators=(",", ":")), encoding="utf-8")
     print(f"{total_s} screens, {total_d} dialogs, {len(roles)} roles, {len(flows)} flows, "
           f"{len(problems)} problems, {len(orphans)} not connected")
 

@@ -72,10 +72,10 @@ All assets are in the [brand kit](../packages/brand/README.md).
 - [x] Give every screen its route (its address in the app and on the web).
 - [x] Map the [flows](ui/flows.md) from start to end: first open, login, home for each role, each task, and back. Every screen lists which screens open it and which screens it opens.
 - [x] Check there are no orphans: every screen and dialog can be reached from a home screen, and every one has a way back.
-- [ ] Sketch every screen in low detail.
-- [ ] Sketch every state of every screen: loading, empty, error, offline, permission denied and success.
-- [ ] Sketch every dialog, bottom sheet, toast, confirmation, warning and pop-up.
-- [ ] Sketch the super admin builders: role builder, layout editor, form builder and workflow builder.
+- [x] Sketch every screen in low detail. Done as the [clickable wireframes](ui/wireframes/index.html), drawn from `screens.json`.
+- [x] Sketch every state of every screen: loading, empty, error, offline, permission denied and success.
+- [x] Sketch every dialog, bottom sheet, toast, confirmation, warning and pop-up.
+- [x] Sketch the super admin builders: role builder, layout editor, form builder and workflow builder.
 - [ ] Review the sketches module by module.
 - [ ] Approve all sketches.
 
