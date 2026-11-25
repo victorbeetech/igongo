@@ -1,16 +1,18 @@
-// Release signing: android/key.properties (git-ignored) points at the upload
-// keystore. Without it, release builds fall back to the debug key so CI and
-// `flutter run --release` still work. Steps: docs/MAC-STEPS.md.
-val keyProperties = java.util.Properties().apply {
-    val file = rootProject.file("key.properties")
-    if (file.exists()) file.inputStream().use { load(it) }
-}
+// java.util is imported because `java` alone means the Gradle java extension here.
+import java.util.Properties
 
 plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
+
+// Release signing: android/key.properties (git-ignored) points at the upload
+// keystore. Without it, release builds fall back to the debug key so CI and
+// `flutter run --release` still work. Steps: docs/MAC-STEPS.md.
+val keyProperties = Properties()
+val keyPropertiesFile: File = rootProject.file("key.properties")
+if (keyPropertiesFile.exists()) keyPropertiesFile.inputStream().use { keyProperties.load(it) }
 
 android {
     namespace = "ug.co.igongo.igongo"
