@@ -1,49 +1,38 @@
 # Brand assets (step 2 of the build checklist)
 
-**Status:** waiting for the official logo file.
+**Status:** done, waiting for approval.
 
-The website's logo is at `igongo.co.ug/wp-content/uploads/2023/06/logo.png`, but the website server returned an error when the image was requested, so it could not be viewed yet. The best source is the **original logo file from the hotel** (SVG, AI, EPS or PDF, or failing that a large PNG), with any brand guide they have. All assets below are then built from it, so the app matches the hotel's own brand exactly instead of a lookalike.
+The brand kit is in [`packages/brand`](../../packages/brand/README.md). It was built from the hotel's original logo files:
+
+1. The original mark was traced into a clean master vector, with the spiral, the two horns and the cup as separate parts.
+2. The logo's colours were sampled exactly: Igongo red `#B8292F`, black, charcoal `#222323` and cream `#F6F1EC`.
+3. The logo's fonts were matched: Cinzel for the IGONGO name and Lato for the subtitle. Both are free, and the text is converted to outlines.
+4. Every asset was generated from that one master, so they all match.
 
 [Back to the build checklist](../BUILD-CHECKLIST.md)
 
-## Asset list
+## What was made
 
-Every asset is made from one master logo and the [theme](theme.md) colours, and kept in `packages/brand/`.
-
-### Logo versions
-- Full logo (emblem plus name), in colour, all white, and all dark.
-- Emblem only (for small spaces), in the same three versions.
-- Wordmark only.
-- Clear space and minimum size rules.
-
-### App icons
-- Android adaptive launcher icon (foreground, background and monochrome layer for themed icons) at all densities.
-- iOS app icon set, including the 1024 px App Store icon, with dark and tinted versions.
-- Notification icon (white emblem, Android).
-- Play Store feature graphic and store screenshots frame.
-
-### Launch and loading
-- Splash screen for Android 12+ and iOS, light and dark.
-- Branded loader: the emblem with a gentle pulse, used for every loading state.
-- Pull-to-refresh and skeleton loading styles in theme colours.
-
-### Web
-- Favicon (ICO, 16, 32 and 48 px), SVG favicon, Apple touch icon, and web manifest icons (192 and 512 px, maskable).
-- Social sharing image (Open Graph).
-
-### Print and hardware
-- Staff ID card front and back (NFC and QR), per card type.
-- Wristband print design, with number and QR code.
-- Receipt header for 58 mm and 80 mm printers, and invoice letterhead (A4).
-- QR stickers for tables, assets, rooms, exhibits and patrol points.
-
-### In-app art
-- Empty states, error and offline screens, success screens and illustrations in the brand style.
-- Map pin for the rider and the hotel.
-- Email and SMS/WhatsApp header images.
+| Group | Files |
+| --- | --- |
+| Logos | 6 layouts (stacked, horizontal, mark, spiral, wordmark, name) × 5 colourways (colour, reversed, black, white, red), each as SVG and as PNG at 256, 512, 1024 and 2048 px |
+| App icons | Android launcher (legacy, round, adaptive with themed monochrome) at every density, notification icon, iOS icon set (light, dark, tinted) and every legacy size, Play Store icon |
+| Splash | Android 12+ splash icons, centre logos at 1x, 2x and 3x, light and dark, with previews |
+| Web | favicon.ico, SVG favicon with dark mode, PNG favicons, Apple touch icon, PWA and maskable icons, web manifest, social share image, head tags |
+| Store | Play Store feature graphic |
+| Animations | Splash intro, full logo intro, spiral spinner, mark loader and pulse, each as Lottie, animated SVG, GIF and MP4, light and dark |
+| Print | Staff card front and back, event wristband, QR sticker, thermal receipt headers (58 and 80 mm), A4 letterhead, email header |
+| Patterns | Repeating spiral pattern on cream, red and dark |
 
 ## Consistency rules
 
 - Only the files in `packages/brand/` are used. No screen loads its own copy of the logo.
-- Only the approved colours from the tokens file.
-- The emblem is never stretched, recoloured outside the approved versions, or placed on a busy photo without a backing.
+- Only the approved colours from the [design tokens](../../packages/design-tokens/tokens.json).
+- The full rules are in the [brand guide](../../packages/brand/README.md#rules).
+
+## To approve
+
+1. The redrawn logos in all colourways ([overview](../../packages/brand/preview/brand-overview.png)).
+2. The app icon and splash screen.
+3. The animations.
+4. The print templates.

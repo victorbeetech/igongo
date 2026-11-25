@@ -248,8 +248,8 @@ These are required for all code, even when a task doesn't repeat them. The detai
 
 ## Design
 
-- [Theme](docs/design/theme.md): Igongo red, terracotta, gold and cream, with Playfair Display and Inter. Text is small by default, and each person can choose a text size from Compact to Extra large.
-- [Brand assets](docs/design/brand-assets.md): every icon, splash, favicon, loader, card and print design made from the official logo.
+- [Theme](docs/design/theme.md): Igongo red, charcoal and cream, sampled from the logo, with the logo's fonts (Cinzel for brand moments, Lato for everything else). Text is small by default, and each person can choose a text size from Compact to Extra large.
+- [Brand kit](packages/brand/README.md): the logo redrawn as clean vectors in every layout and colourway, plus app icons, splash screens, favicons, animations (Lottie, SVG, GIF, MP4), print templates and patterns, all built from one master.
 
 ## Roles and access
 

@@ -17,28 +17,34 @@ Every phase follows the [code standards](architecture/code-standards.md): clean 
 ## Phase 1: Theme
 
 - [x] Propose the theme in Igongo's reddish brand: colours, fonts, text sizes, light and dark mode. See [theme](design/theme.md).
+- [x] Match the colours exactly to the official logo file, and match the fonts to the logo (Cinzel and Lato).
 - [x] Put every value in one [design tokens file](../packages/design-tokens/tokens.json).
-- [ ] Match the colours exactly to the official logo file.
 - [ ] Approve the palette.
-- [ ] Approve the fonts (Playfair Display and Inter).
+- [ ] Approve the fonts (Cinzel for brand moments, Lato for everything else).
 - [ ] Approve the text sizes: small by default, sized for their part of the screen, and a text size setting from Compact to Extra large.
 - [ ] Lock the tokens as version 1.0.
 
 ## Phase 2: Logo and brand assets
 
-- [ ] Get the original logo file from the hotel (SVG, AI, EPS or PDF), and any brand guide.
-- [ ] Clean the master logo: full logo, emblem only and wordmark, in colour, white and dark.
-- [ ] Launcher icons: Android adaptive (with themed monochrome) and the iOS icon set.
-- [ ] Notification icon.
-- [ ] Splash screens, light and dark, for Android and iOS.
-- [ ] Branded loader animation, and skeleton loading styles.
-- [ ] Favicon set, Apple touch icon, web manifest icons and the social sharing image.
-- [ ] Store listing graphics.
-- [ ] Staff card designs (front and back, NFC and QR) for each card type.
-- [ ] Wristband design with number and QR.
-- [ ] Receipt headers (58 mm and 80 mm) and invoice letterhead.
-- [ ] QR stickers for tables, assets, rooms, exhibits and patrol points.
-- [ ] Empty state, error, offline and success illustrations.
+All assets are in the [brand kit](../packages/brand/README.md).
+
+- [x] Get the logo files from the hotel.
+- [x] Trace a clean master vector of the mark, with the spiral, horns and cup as separate parts.
+- [x] Logos: stacked, horizontal, mark, spiral, wordmark and name, in colour, reversed, black, white and red, as SVG and PNG in four sizes.
+- [x] Launcher icons: Android legacy, round and adaptive (with themed monochrome), and the iOS icon set (light, dark and tinted).
+- [x] Notification icon.
+- [x] Splash screens, light and dark, for Android 12+, older Android and iOS.
+- [x] Animations: splash intro, full logo intro, spiral spinner, mark loader and pulse, as Lottie, animated SVG, GIF and MP4.
+- [x] Favicon set, Apple touch icon, web manifest icons and the social sharing image.
+- [x] Play Store icon and feature graphic.
+- [x] Staff card designs (front and back, NFC and QR).
+- [x] Wristband design with number and QR.
+- [x] Receipt headers (58 mm and 80 mm), A4 letterhead and email header.
+- [x] QR sticker template for tables, assets, rooms, exhibits and patrol points.
+- [x] Spiral pattern for backgrounds.
+- [ ] Get the original vector logo from the hotel or its designer, if one exists, and compare it with the traced master.
+- [ ] Empty state, error, offline and success illustrations (made with the UI designs in Phase 4).
+- [ ] App Store and Play Store screenshots (made once the screens exist).
 - [ ] Approve all assets.
 - [ ] Check uniformity: the same logo, colours and type everywhere. See [brand assets](design/brand-assets.md).
 
