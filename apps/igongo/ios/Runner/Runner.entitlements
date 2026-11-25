@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<!-- Push notifications (module 10). Xcode switches this to "production" when
-     the app is archived for the App Store. -->
+<!-- What the Igongo app is allowed to do on iPhone. Each key must also be
+     ticked for the App ID ug.co.igongo.igongo (team UNNDMY45JR); Xcode's
+     automatic signing does that the first time it archives.
+     - aps-environment: push notifications (module 10). Xcode switches it to
+       "production" when the app is archived for the App Store.
+     - nfc.readersession.formats: reading the NFC staff cards and wristbands.
+     - applesignin: Sign in with Apple (module 04, Users & Login). -->
 <plist version="1.0">
 <dict>
 	<key>aps-environment</key>
 	<string>development</string>
+	<key>com.apple.developer.nfc.readersession.formats</key>
+	<array>
+		<string>TAG</string>
+	</array>
+	<key>com.apple.developer.applesignin</key>
+	<array>
+		<string>Default</string>
+	</array>
 </dict>
 </plist>

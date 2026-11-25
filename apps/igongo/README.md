@@ -12,6 +12,10 @@ flutter run -d chrome  # in the browser
 
 Tap the **sliders icon** in the red bar to open the preview panel: pick the role (all 121), the screen state (normal, loading, empty, error, offline, permission denied, success), light or dark, and the text size.
 
+## Builds
+
+GitHub Actions (`.github/workflows/app.yml`) runs `flutter analyze` and `flutter test` on every pull request, builds a debug APK (download it from the run's **Artifacts**) and compiles the iPhone app without signing. Signing and the TestFlight upload are done on a Mac: [docs/MAC-STEPS.md](../../docs/MAC-STEPS.md).
+
 ## Push notifications
 
 Push (module 10, in `lib/modules/m10_notifications/`) is **off until the build has Firebase settings**, and the app works the same without them. Fill `config/firebase-app.json` from `config/firebase-app.example.json` (the values are not secret) and build with:
