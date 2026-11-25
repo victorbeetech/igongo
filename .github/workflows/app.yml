@@ -1,6 +1,6 @@
 # Checks and builds for the Igongo app (apps/igongo, Flutter) on every pull
 # request and push to main that touches the app or the packages it uses:
-#   1. check:   flutter analyze (strict) and every test, goldens included
+#   1. app-check: flutter analyze (strict) and every test, goldens included
 #   2. android: a debug APK, saved as a download on the run's page
 #   3. ios:     a release build without signing, to prove it compiles on a Mac
 # Signing and store uploads happen on the owner's Mac (docs/MAC-STEPS.md).
@@ -37,7 +37,7 @@ defaults:
     working-directory: apps/igongo
 
 jobs:
-  check:
+  app-check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
