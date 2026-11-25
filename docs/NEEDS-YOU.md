@@ -8,6 +8,16 @@ Never paste a password, private key or secret into the chat. Where a secret is n
 
 ---
 
+## iPhone app on TestFlight (your Mac, 20 minutes the first time)
+
+**Status:** the app is ready for iPhone and Android (app ID `ug.co.igongo.igongo`, team UNNDMY45JR, NFC, push and Sign in with Apple switched on in the project). GitHub builds an Android test APK and compiles the iPhone app on every change, so nothing needs your Mac except **signing and uploading**.
+
+**Why Claude could not do it:** signing uses your Apple account in Xcode on your Mac.
+
+**Steps:** follow [MAC-STEPS.md](MAC-STEPS.md): `flutter pub get`, `flutter build ipa`, then Distribute App > Upload in Xcode's Organizer.
+
+---
+
 ## Sign-in: what is live and what waits (25 Nov 2026)
 
 **Live now** at https://igongo-api.victorbee.com: email and password, Google, PIN, sessions, roles, audit trail and the console. Nothing to do for these.
