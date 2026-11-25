@@ -1,0 +1,9 @@
+# Igongo design tokens as a Dart package, so the Flutter app reads the same
+# values as the web. lib/igongo_tokens.dart is generated from tokens.json by
+# tools/ui-gen/gen_ui.py; never edit it by hand.
+name: igongo_tokens
+description: Igongo colours, type, spacing and shape, generated from tokens.json.
+publish_to: none
+version: 0.3.0
+environment:
+  sdk: ^3.14.0

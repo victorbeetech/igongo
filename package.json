@@ -1,0 +1,12 @@
+{
+  "name": "igongo",
+  "private": true,
+  "description": "Igongo Staff & Guest System monorepo: the Igongo app (Flutter), the web portal (Next.js) and shared packages.",
+  "packageManager": "pnpm@10.20.0",
+  "scripts": {
+    "gen:ui": "python3 tools/ui-gen/gen_ui.py .",
+    "web:dev": "pnpm --filter @igongo/web dev",
+    "web:build": "pnpm --filter @igongo/web build",
+    "web:lint": "pnpm --filter @igongo/web lint"
+  }
+}
