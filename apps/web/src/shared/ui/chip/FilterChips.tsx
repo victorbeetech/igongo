@@ -5,9 +5,11 @@
 
 import { useState } from "react";
 
-/** The chips for [options]; the first starts picked. */
-export function FilterChips({ options, label }: { options: string[]; label: string }) {
-  const [picked, setPicked] = useState(options[0]);
+/** The chips for [options]; the first starts picked. Pass `value` and `onChange` to control it. */
+export function FilterChips({ options, label, value, onChange }: { options: string[]; label: string; value?: string; onChange?: (value: string) => void }) {
+  const [own, setOwn] = useState(options[0]);
+  const picked = value ?? own;
+  const setPicked = (o: string) => (onChange ? onChange(o) : setOwn(o));
   return (
     <div role="group" aria-label={label} className="flex gap-2 overflow-x-auto px-4 pb-3">
       {options.map((o) => (

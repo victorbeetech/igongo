@@ -1,7 +1,9 @@
-# The TypeScript workspace: the web portal, the API modules and the shared
-# packages they use.
+# The TypeScript workspace: the web portal, the API Worker, the API modules
+# and the shared packages they use.
 packages:
   - apps/web
+  - apps/api
   - modules/*
+  - packages/core
   - packages/design-tokens
   - packages/contracts

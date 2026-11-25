@@ -1,0 +1,35 @@
+{
+  "name": "@igongo/users-login",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Users, Accounts & Login (module 4) API: Better Auth with every sign-in method built and switched on or off by the super admin (system-wide, then per role), 2FA, sessions and remote sign-out, account locks and the one-time first super admin set-up.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint --max-warnings 0 . && tsc --noEmit",
+    "test": "vitest run",
+    "db:generate": "drizzle-kit generate"
+  },
+  "dependencies": {
+    "@hono/zod-validator": "0.9.1",
+    "@igongo/contracts": "workspace:*",
+    "@igongo/core": "workspace:*",
+    "drizzle-orm": "0.45.4",
+    "hono": "4.13.22",
+    "zod": "4.6.7",
+    "better-auth": "1.7.28",
+    "jose": "6.2.18"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "5.20261125.1",
+    "@electric-sql/pglite": "0.6.0",
+    "@types/node": "24.19.4",
+    "drizzle-kit": "0.31.11",
+    "eslint": "9.39.5",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.74.0",
+    "vitest": "5.1.2"
+  }
+}

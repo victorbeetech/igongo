@@ -2,6 +2,7 @@
 // of the module uses a shared layout from its kind.
 
 import type { ScreenOverrides } from "@/shared/catalog/types";
+import { ActiveSessionsPage } from "./presentation/active-sessions/ActiveSessionsPage";
 import { GuestHomePage } from "./presentation/guest-home/GuestHomePage";
 import { RoleHomePage } from "./presentation/role-home/RoleHomePage";
 import { SignInPage } from "./presentation/sign-in/SignInPage";
@@ -15,4 +16,5 @@ export const m00Overrides: ScreenOverrides = {
   "S00-21": (s) => <RoleHomePage screen={s} />,
   "S00-33": (s) => <TextSizePage screen={s} />,
   "S00-34": (s) => <ThemePage screen={s} />,
+  "S00-36": (s) => <ActiveSessionsPage screen={s} />,
 };

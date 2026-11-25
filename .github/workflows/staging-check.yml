@@ -1,0 +1,21 @@
+# Staging check: signs in against the live API (igongo-api.victorbee.com)
+# the way the web portal does, then deletes its throwaway account. Runs
+# after every push to main, every morning, and by hand.
+name: Staging check
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 4 * * *"
+  workflow_dispatch:
+
+jobs:
+  sign-in:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node apps/api/scripts/staging-check.mjs

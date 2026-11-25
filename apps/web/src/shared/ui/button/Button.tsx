@@ -29,12 +29,16 @@ interface ButtonProps {
   icon?: ReactNode;
   /** Fill the width. */
   block?: boolean;
+  /** `submit` for a form's main button. */
+  type?: "button" | "submit";
+  /** Greyed out and not pressable, such as while saving. */
+  disabled?: boolean;
 }
 
 /** An Igongo button or link-button. */
-export function Button({ children, href, onClick, variant = "primary", icon, block }: ButtonProps) {
+export function Button({ children, href, onClick, variant = "primary", icon, block, type = "button", disabled }: ButtonProps) {
   // Every button is at least 44 pixels tall: the minimum tap target.
-  const cls = `inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-4 text-label font-bold transition-colors ${VARIANTS[variant]} ${block ? "w-full" : ""}`;
+  const cls = `inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-4 text-label font-bold transition-colors disabled:opacity-50 ${VARIANTS[variant]} ${block ? "w-full" : ""}`;
   const body = (
     <>
       {icon}
@@ -46,7 +50,7 @@ export function Button({ children, href, onClick, variant = "primary", icon, blo
       {body}
     </Link>
   ) : (
-    <button type="button" onClick={onClick} className={cls}>
+    <button type={type} onClick={onClick} disabled={disabled} className={cls}>
       {body}
     </button>
   );

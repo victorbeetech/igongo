@@ -1,0 +1,40 @@
+{
+  "name": "@igongo/api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The Igongo API Worker (igongo-api.victorbee.com): the app shell (config, errors, Sentry, request IDs, health, database) and the gateway that mounts each module's router.",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "lint": "eslint --max-warnings 0 . && tsc --noEmit",
+    "test": "vitest run",
+    "build": "wrangler deploy --dry-run --outdir dist",
+    "deploy": "wrangler deploy",
+    "db:migrations": "node scripts/list-migrations.mjs",
+    "staging-check": "node scripts/staging-check.mjs",
+    "gen:migrations": "node scripts/gen-migrations.mjs"
+  },
+  "dependencies": {
+    "@igongo/audit-trail": "workspace:*",
+    "@igongo/contracts": "workspace:*",
+    "@igongo/core": "workspace:*",
+    "@igongo/notifications": "workspace:*",
+    "@igongo/roles-permissions": "workspace:*",
+    "@igongo/super-admin": "workspace:*",
+    "@igongo/users-login": "workspace:*",
+    "@sentry/cloudflare": "11.18.0",
+    "drizzle-orm": "0.45.4",
+    "hono": "4.13.22",
+    "postgres": "4.1.1"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "5.20261125.1",
+    "@electric-sql/pglite": "0.6.0",
+    "@types/node": "24.19.4",
+    "eslint": "9.39.5",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.74.0",
+    "vitest": "5.1.2",
+    "wrangler": "4.168.0"
+  }
+}

@@ -8,6 +8,27 @@ Never paste a password, private key or secret into the chat. Where a secret is n
 
 ---
 
+## Sign-in: what is live and what waits (25 Nov 2026)
+
+**Live now** at https://igongo-api.victorbee.com: email and password, Google, PIN, sessions, roles, audit trail and the console. Nothing to do for these.
+
+### First super admin (2 minutes, once)
+
+0. If you have not yet: in Google Cloud console > APIs & Services > Credentials, open the web OAuth client and add the authorised redirect URI `https://igongo-api.victorbee.com/api/auth/callback/google` (and the JavaScript origin `https://igongo.victorbee.com`). Without it Google shows "redirect_uri_mismatch".
+1. Open https://igongo.victorbee.com/#/sign-in.
+2. In the **First set-up** box, click **Sign in with Google to start** and choose your own Google account (the one this project uses).
+3. Back on the sign-in page, click **Finish set-up**. You are now the super admin. Only your Google email can do this, and only once.
+
+### Apple sign-in (when you have the values)
+
+Built and switched off. Open the console's keys (`PUT /api/admin/keys/...`, the keys screen comes with the Integrations thread) and save four keys: `apple.team_id`, `apple.key_id`, `apple.client_id` (the Services ID `com.victorbee.igongo.web`) and `apple.private_key` (the whole .p8 text). Then switch **Sign in with Apple** on in Users & Login > Login methods. In Apple's developer site, the Services ID's return URL must be `https://igongo-api.victorbee.com/api/auth/callback/apple`. Never paste the .p8 key in a chat other than the project chat.
+
+### Phone codes, email links and email codes
+
+Built and switched off until the hotel agrees the providers (Africa's Talking, Meta WhatsApp, Resend). Then their keys go into the console and the switches go on. Password-reset emails also wait for the email provider.
+
+---
+
 ## Push notifications (Firebase Cloud Messaging)
 
 **Status:** all the code is built and tested with fakes (see `modules/notifications/` and `apps/igongo/lib/modules/m10_notifications/`). Pushes start working as soon as the steps below are done. The free Spark plan is enough; FCM costs nothing.

@@ -1,0 +1,32 @@
+// The Igongo API Worker. Secrets are NOT here: they are set in Cloudflare
+// (Workers > igongo-api > Settings > Variables and Secrets):
+//   BETTER_AUTH_SECRET, SETTINGS_ENCRYPTION_KEY, GOOGLE_CLIENT_SECRET,
+//   BOOTSTRAP_ADMIN_EMAIL, SENTRY_DSN, APNS_PRIVATE_KEY, and later FCM_SERVICE_ACCOUNT.
+// See apps/api/README.md.
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "igongo-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-01",
+  // postgres.js and Better Auth (AsyncLocalStorage) need Node.js APIs.
+  "compatibility_flags": ["nodejs_compat"],
+  "minify": true,
+  "upload_source_maps": true,
+  "workers_dev": false,
+  "routes": [{ "pattern": "igongo-api.victorbee.com", "custom_domain": true }],
+  "observability": { "enabled": true },
+  "hyperdrive": [{ "binding": "HYPERDRIVE", "id": "aa97bc9835a7454d9b149a7a5f9befb3" }],
+  "vars": {
+    "ENVIRONMENT": "production",
+    "API_BASE_URL": "https://igongo-api.victorbee.com",
+    "WEB_ORIGINS": "https://igongo.victorbee.com,http://localhost:3000",
+    // Public by design (it is in every Google sign-in link).
+    "GOOGLE_CLIENT_ID": "707707727967-gdpm3r7q6ckrlorrmoq9a2obchqkm4a7.apps.googleusercontent.com",
+    // Apple push (APNs) key ID and team; the key itself is the secret APNS_PRIVATE_KEY.
+    "APNS_KEY_ID": "J52S98JL2W",
+    "APPLE_TEAM_ID": "UNNDMY45JR",
+    // Sign in with Apple: the web Services ID (the .p8 key is the secret APPLE_PRIVATE_KEY).
+    "APPLE_SERVICES_ID": "com.victorbee.igongo.web",
+    "APPLE_KEY_ID": "92F73K6327"
+  }
+}
