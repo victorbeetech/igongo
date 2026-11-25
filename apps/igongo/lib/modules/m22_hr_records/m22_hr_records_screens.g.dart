@@ -2,13 +2,14 @@
 // Module 22: HR Staff Records. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm22_hr_records_overrides.dart';
 
 /// Module 22, HR Staff Records: every screen and dialog, with its sample data.
-const m22HrRecordsModule = ModuleSpec(
+final m22HrRecordsModule = ModuleSpec(
   code: '22',
   name: 'HR Staff Records',
   slug: 'hr-records',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S22-01',
       name: 'Staff directory',
@@ -109,7 +110,8 @@ const m22HrRecordsModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m22Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D22-01',
       name: 'Change request',
@@ -127,7 +129,7 @@ const m22HrRecordsModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Atuhaire Grace · Front office',
       'Mugisha Brian · Kitchen',

@@ -11,6 +11,8 @@
  *   /api/admin/*           module switches, settings, keys           module 1
  *   /api/public/*          settings safe to show before sign-in      module 1
  *   /api/notifications/*   push devices and sends                    module 10
+ *   /api/hr, /cards, /wristbands, /attendance, /daily-reports,
+ *   /staff-meals, /notices  the staff modules (see staff/staff-routes.ts)
  */
 
 import { auditRouter } from "@igongo/audit-trail";
@@ -22,6 +24,7 @@ import { AUTH_BASE_PATH, loginMethodsRouter, setupRouter, usersRouter, type User
 import type { Context, Hono } from "hono";
 import type { ApiEnv } from "../shell/api-env";
 import { moduleGate } from "./module-gate";
+import { mountStaffRoutes } from "./staff/staff-routes";
 
 /** The shell's context, seen through a module router's narrower type. */
 const api = (c: Context<ActorEnv>) => c as unknown as Context<ApiEnv>;
@@ -57,4 +60,5 @@ export function mountRoutes(app: Hono<ApiEnv>) {
   // Non-core modules sit behind their switch.
   app.use("/api/notifications/*", moduleGate("notifications"));
   app.route("/api/notifications", createNotificationsRouter());
+  mountStaffRoutes(app);
 }

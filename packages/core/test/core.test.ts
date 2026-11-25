@@ -1,5 +1,6 @@
 /** Tests for the shared core: permission matching, secret encryption and errors. */
 
+import type { Actor } from "@igongo/contracts/users-login";
 import { describe, expect, it } from "vitest";
 import { AppError, hasPermission, permissionMatches, SecretBox, sha256Hex, toBase64 } from "../src";
 
@@ -50,5 +51,37 @@ describe("hashPassword", () => {
     expect(await verifyPassword(stored, "Correct horse 1")).toBe(true);
     expect(await verifyPassword(stored, "wrong")).toBe(false);
     expect(await verifyPassword("garbage", "x")).toBe(false);
+  });
+});
+
+describe("scopes and hotel dates", () => {
+  /** A caller holding [grants]. */
+  const actorWith = (grants: { key: string; scope: "all" | "team" | "own" }[]): Actor => ({
+    userId: "u",
+    sessionId: "s",
+    name: "N",
+    email: "e",
+    access: { userId: "u", roles: [], permissions: grants, homeTiles: [], menu: [], isStaff: true },
+  });
+
+  it("takes the widest scope across roles and maps it to staff records", async () => {
+    const { scopeOf, staffScope, scopeReaches } = await import("../src");
+    const supervisor = actorWith([{ key: "attendance.*.view", scope: "own" }, { key: "attendance.*.view", scope: "team" }]);
+    expect(scopeOf(supervisor, "attendance.records.view")).toBe("team");
+    expect(scopeOf(supervisor, "attendance.records.edit")).toBeNull();
+    const scope = staffScope(supervisor, "attendance.records.view", { staffId: "st1", department: "kitchen" });
+    expect(scope).toEqual({ kind: "department", department: "kitchen" });
+    if (!scope) throw new Error("expected a scope");
+    expect(scopeReaches(scope, { staffId: "st2", department: "kitchen" })).toBe(true);
+    expect(scopeReaches(scope, { staffId: "st3", department: "pool" })).toBe(false);
+    expect(staffScope(actorWith([{ key: "*", scope: "all" }]), "x.y.z", null)).toEqual({ kind: "all" });
+    expect(staffScope(actorWith([{ key: "attendance.*.view", scope: "own" }]), "attendance.records.view", null)).toBeNull();
+  });
+
+  it("turns over the hotel's day at Kampala midnight", async () => {
+    const { hotelDate, hotelTime } = await import("../src");
+    expect(hotelDate(new Date("2026-11-25T20:59:00Z"))).toBe("2026-11-25");
+    expect(hotelDate(new Date("2026-11-25T21:00:00Z"))).toBe("2026-11-26");
+    expect(hotelTime(new Date("2026-11-25T05:15:00Z"))).toBe("08:15");
   });
 });

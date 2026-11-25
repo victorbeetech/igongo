@@ -15,6 +15,13 @@
       "when": 1795645012760,
       "tag": "0001_seed_premade_roles",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1795700000000,
+      "tag": "0002_station_permissions",
+      "breakpoints": true
     }
   ]
 }

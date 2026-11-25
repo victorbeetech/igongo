@@ -1,0 +1,11 @@
+-- Gate and reception stations clock other people's cards in and out
+--> statement-breakpoint
+-- (Attendance, module 25, `attendance.station.create` with scope `all`).
+--> statement-breakpoint
+-- Given to the pre-made Gatekeeper, Receptionist and Security Guard roles.
+--> statement-breakpoint
+-- SELECT ... WHERE EXISTS skips roles the super admin has deleted;
+--> statement-breakpoint
+-- ON CONFLICT DO NOTHING keeps any change they made.
+--> statement-breakpoint
+INSERT INTO "roles"."role_permissions" ("role_id","permission_key","scope") SELECT "id", 'attendance.station.create', 'all' FROM "roles"."roles" WHERE "id" IN ('role_gatekeeper', 'role_receptionist', 'role_security-guard') ON CONFLICT DO NOTHING;

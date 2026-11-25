@@ -2,13 +2,14 @@
 // Module 38: Daily Reports. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm38_daily_reports_overrides.dart';
 
 /// Module 38, Daily Reports: every screen and dialog, with its sample data.
-const m38DailyReportsModule = ModuleSpec(
+final m38DailyReportsModule = ModuleSpec(
   code: '38',
   name: 'Daily Reports',
   slug: 'daily-reports',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S38-01',
       name: 'My daily report',
@@ -98,7 +99,8 @@ const m38DailyReportsModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m38Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D38-01',
       name: 'Submit report',
@@ -116,7 +118,7 @@ const m38DailyReportsModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Kitchen · Today',
       'Front office · Today',

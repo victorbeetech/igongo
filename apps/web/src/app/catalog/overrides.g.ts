@@ -8,7 +8,14 @@ import { m02Overrides } from "@/modules/m02-roles-permissions/overrides";
 import { m04Overrides } from "@/modules/m04-users-login/overrides";
 import { m05Overrides } from "@/modules/m05-audit-trail/overrides";
 import { m14Overrides } from "@/modules/m14-integrations-hub/overrides";
+import { m16Overrides } from "@/modules/m16-staff-cards/overrides";
+import { m17Overrides } from "@/modules/m17-wristbands/overrides";
+import { m22Overrides } from "@/modules/m22-hr-records/overrides";
+import { m25Overrides } from "@/modules/m25-attendance/overrides";
+import { m32Overrides } from "@/modules/m32-staff-meals/overrides";
+import { m38Overrides } from "@/modules/m38-daily-reports/overrides";
+import { m49Overrides } from "@/modules/m49-notice-board/overrides";
 import { m77Overrides } from "@/modules/m77-payments/overrides";
 
 /** Hand-made screens by screen number. Every other screen uses a shared layout. */
-export const allOverrides: ScreenOverrides = {...m00Overrides, ...m01Overrides, ...m02Overrides, ...m04Overrides, ...m05Overrides, ...m14Overrides, ...m77Overrides};
+export const allOverrides: ScreenOverrides = {...m00Overrides, ...m01Overrides, ...m02Overrides, ...m04Overrides, ...m05Overrides, ...m14Overrides, ...m16Overrides, ...m17Overrides, ...m22Overrides, ...m25Overrides, ...m32Overrides, ...m38Overrides, ...m49Overrides, ...m77Overrides};

@@ -39,6 +39,20 @@ Built and switched off until the hotel agrees the providers (Africa's Talking, M
 
 ---
 
+## Staff cards: test NFC on a real phone (25 Nov 2026)
+
+**Status:** clock-in, station mode, meals and wristband scans are built and tested with a mock card reader. The cloud has no NFC, so a real tap has never been tried.
+
+1. **Android:** install a debug build on an NFC phone, sign in as a gatekeeper, open Attendance > Clock in > Station mode, and tap a staff card. The name and "Clocked in" should show.
+2. **iPhone (needs your Mac):** in [developer.apple.com](https://developer.apple.com/account) > Identifiers > `ug.co.igongo.igongo`, tick **NFC Tag Reading**, then rebuild in Xcode. The app already asks for it (`Runner.entitlements`, `Info.plist`).
+3. **Gate and reception PCs:** plug in a USB NFC reader that types the card number like a keyboard (for example ACR122U with keyboard-wedge software). The web station pages read it. Tell Claude which reader you buy.
+
+### Your computer's Claude Code could not connect
+
+Your screenshot shows Claude Code on your computer failing with "Connection refused" and saying connectors are off because `ANTHROPIC_API_KEY` is set. Remove that variable (or sign in with `/login` instead of the key), restart Claude Code, then retry. iOS builds still need your Mac.
+
+---
+
 ## Push notifications (Firebase Cloud Messaging)
 
 **Status:** all the code is built and tested with fakes (see `modules/notifications/` and `apps/igongo/lib/modules/m10_notifications/`). Pushes start working as soon as the steps below are done. The free Spark plan is enough; FCM costs nothing.

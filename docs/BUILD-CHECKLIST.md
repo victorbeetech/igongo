@@ -130,7 +130,18 @@ The whole app and web portal are built as a clickable product first, with sample
   - [x] Super Admin Console (`modules/super-admin`): module switches and maintenance, hotel, branding and regional settings, encrypted integration and gateway keys.
   - [ ] App Layout & Navigation (module 3): server-driven menus and layouts per role.
   - [x] Web portal connected for these: sign-in, first set-up, active sessions, accounts, create account, login methods, roles list, role builder, permissions matrix, role holders, permission report, audit search, modules list and settings.
-  - [ ] Connect the app's sign-in and the console keys screen (S14-02) to the API.
+  - [x] Connect the app's sign-in to the API (email and password; the session is kept in the phone's secure storage). The console keys screen (S14-02) is still to do.
+- [x] Staff modules (25 Nov 2026), each its own folder, schema, routes, permissions, audit and tests:
+  - [x] HR Records (`modules/hr-records`): staff records with IGG numbers, enrolment, my profile.
+  - [x] Staff Cards (`modules/staff-cards`): issue, encode, reset, lost; QR `IGG-CARD:` and NFC chip ID; card lookup for every station.
+  - [x] Wristbands (`modules/wristbands`): register, assign and reset by number range (up to 5,000), gate scan with a verdict.
+  - [x] Attendance (`modules/attendance`): clock in and out from the phone or a station (gate, reception, security), late rules, board, on-site list, corrections.
+  - [x] Daily Reports (`modules/daily-reports`): template, my report, sign-off, return, comments, who has not reported.
+  - [x] Staff Meals (`modules/staff-meals`): meal windows, serve by card tap, one claim per meal per day.
+  - [x] Notice Board (`modules/notice-board`): posts by audience, likes, comments and who read it, each switchable by the super admin.
+  - [x] Web staff portal pages on the real API for all seven (stations work with USB card readers).
+  - [x] App screens on the real API: clock-in and station mode, my attendance, my card, notice board and post, my daily report, meal today, my profile. NFC is behind an interface with a mock off phones.
+  - [ ] Real-phone NFC test (see [NEEDS-YOU](NEEDS-YOU.md)).
 - [ ] Event bus (Queues and outbox), Notifications, Files & Media.
 - [ ] Build each module's back end (domain, use cases, database, API and events), in the agreed order.
 - [ ] Connect each module's screens to its API.
