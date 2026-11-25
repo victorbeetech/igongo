@@ -1,6 +1,24 @@
 #!/usr/bin/env python3
-"""Render docs/modules and docs/roles from compact source files."""
-import glob, os, re, sys
+"""Render docs/modules and docs/roles from the short source files in src/.
+
+Run from the repository root:  python tools/spec-gen/gen.py .
+"""
+import glob
+import os
+import re
+import sys
+from pathlib import Path
+
+
+def read(path):
+    """Read a source file as text."""
+    return Path(path).read_text(encoding="utf-8")
+
+
+def write(path, text):
+    """Write a generated file."""
+    Path(path).write_text(text, encoding="utf-8")
+
 
 SRC = os.path.join(os.path.dirname(__file__), "src")
 OUT = sys.argv[1]
@@ -18,8 +36,8 @@ SCOPES = {"all": "Everything", "dept": "Own department", "own": "Own records",
 def read_blocks(pattern):
     blocks = []
     for path in sorted(glob.glob(os.path.join(SRC, pattern))):
-        text = open(path, encoding="utf-8").read()
-        for chunk in re.split(r"^@@ ", text, flags=re.M)[1:]:
+        text = read(path)
+        for chunk in re.split(r"^@@ ", text, flags=re.MULTILINE)[1:]:
             head, _, body = chunk.partition("\n")
             blocks.append(([h.strip() for h in head.split("|")], body.strip("\n")))
     return blocks
@@ -30,8 +48,8 @@ modules = {}
 order = []
 for head, body in read_blocks("m*.txt"):
     num, slug, name, group = head
-    modules[num] = dict(num=num, slug=slug, name=name, group=group, body=body,
-                        file=f"{num}-{slug}.md")
+    modules[num] = {"num": num, "slug": slug, "name": name, "group": group, "body": body,
+                    "file": f"{num}-{slug}.md"}
     order.append(num)
 
 
@@ -70,7 +88,7 @@ for num in order:
     out += [f"- `{e}`" for e in events] or ["- None"]
     out += ["", "## If this module is switched off or fails", "", off or
             "Its menu items and home tiles disappear from every app. Other modules keep working and skip anything they would have sent to it.", ""]
-    open(os.path.join(MOD_DIR, m["file"]), "w", encoding="utf-8").write("\n".join(out))
+    write(os.path.join(MOD_DIR, m["file"]), "\n".join(out))
 
 # module index
 groups = []
@@ -78,7 +96,7 @@ for num in order:
     g = modules[num]["group"]
     if g not in groups:
         groups.append(g)
-idx = open(os.path.join(SRC, "modules-intro.md"), encoding="utf-8").read().rstrip() + "\n\n"
+idx = read(os.path.join(SRC, "modules-intro.md")).rstrip() + "\n\n"
 idx += f"## The {len(order)} modules\n\n"
 for g in groups:
     idx += f"### {g}\n\n| # | Module | What it does |\n| --- | --- | --- |\n"
@@ -91,7 +109,7 @@ for g in groups:
                 s = s + " " + parts[1].rstrip(".") + "."
             idx += f"| {int(num)} | {mlink(num)} | {s} |\n"
     idx += "\n"
-open(os.path.join(MOD_DIR, "README.md"), "w", encoding="utf-8").write(idx)
+write(os.path.join(MOD_DIR, "README.md"), idx)
 
 # ---------------------------------------------------------------- roles
 roles = []
@@ -105,7 +123,7 @@ for head, body in read_blocks("r*.txt"):
             fields[cur] = mm.group(2)
         elif cur and ln.strip():
             fields[cur] += "\n" + ln
-    roles.append(dict(slug=slug, name=name, level=level, f=fields))
+    roles.append({"slug": slug, "name": name, "level": level, "f": fields})
 role_by_slug = {r["slug"]: r for r in roles}
 
 
@@ -147,7 +165,7 @@ for r in roles:
     out += ["## Home screen tiles", ""]
     out += [f"- {t.strip()}" for t in f.get("HOME", "").split(";") if t.strip()]
     out += ["", "## Modules, screens and default permissions", ""]
-    if r["slug"] != "staff-base" and r["level"] not in ("Guests and clients", "System"):
+    if r["slug"] != "staff-base" and r["level"] not in ("Guests and clients", "System", "Partners and suppliers"):
         out += ["Includes everything in the " + rlink("staff-base") + " role, plus:", ""]
     out += perms_table(f.get("PERMS", ""))
     scr = f.get("SCREENS", "").strip()
@@ -158,16 +176,16 @@ for r in roles:
     out += ["", "## Extra rules", ""]
     rules = f.get("RULES", "").strip()
     out += [f"- {dot(t.strip())}" for t in rules.split(";") if t.strip()] if rules else []
-    if r["level"] != "Guests and clients":
+    if r["level"] not in ("Guests and clients", "Partners and suppliers"):
         out += ["- Can switch to the client view at any time to see the app exactly as a guest sees it."]
     out.append("")
-    open(os.path.join(ROLE_DIR, f"{r['slug']}.md"), "w", encoding="utf-8").write("\n".join(out))
+    write(os.path.join(ROLE_DIR, f"{r['slug']}.md"), "\n".join(out))
 
 levels = []
 for r in roles:
     if r["level"] not in levels:
         levels.append(r["level"])
-idx = open(os.path.join(SRC, "roles-intro.md"), encoding="utf-8").read().rstrip() + "\n\n"
+idx = read(os.path.join(SRC, "roles-intro.md")).rstrip() + "\n\n"
 idx += f"## The {len(roles)} pre-made roles\n\n"
 for lv in levels:
     idx += f"### {lv}\n\n| Role | Purpose |\n| --- | --- |\n"
@@ -176,5 +194,5 @@ for lv in levels:
             p = r["f"].get("PURPOSE", "").split(". ")[0].rstrip(".") + "."
             idx += f"| {rlink(r['slug'])} | {p} |\n"
     idx += "\n"
-open(os.path.join(ROLE_DIR, "README.md"), "w", encoding="utf-8").write(idx)
+write(os.path.join(ROLE_DIR, "README.md"), idx)
 print(len(order), "modules,", len(roles), "roles")

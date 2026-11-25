@@ -1,0 +1,169 @@
+@@ 16
+Cards home | W | Cards issued, waiting to print, blocked, expiring, and print queue status
+Card templates | W | Every template, portrait and landscape, with the default marked
+Card designer | W | Drag and drop front and back design with brand-only colours, fonts and logos
+Template preview | W | Live preview with a real person's data and a long-name fit check
+Template assignment | W | Which template each role, department and card type uses
+Card types | W | Size, print preset, printer profile and chip for each card type
+Card type editor | W | Chip settings: what is written, password lock, originality and tap counter checks
+Cards list | AW | Every card with holder, status, type and expiry, with filters
+Card detail | AW | One card: holder, status, history of holders, taps and prints
+Issue card | AW | Pick a person, template and card type, then print and encode
+Print queue | W | Cards waiting to print, printing and printed, per printer
+Print log | W | Every print with who, when, printer and copies
+Encode card | AK | Hold the card to the phone or reader to write and lock the chip
+Test card | AK | Tap to check the chip and QR open the right record
+Who owns this card | AK | Tap or scan any card: photo, name, role, status and on duty, by viewer permission
+Unassigned card | AK | Shown when a tapped card has no holder, with an option to assign it
+Card warning | AK | Shown for a blocked, lost or expired card, with security alerted
+Reset card | AK | Wipe the chip, unlink the holder and return the card to stock
+My card | A | The holder's own card, front and back, with download and report lost
+Clone alerts | W | Cards used in two places at once or failing the originality check
+Card settings | W | Who can design, print, encode, assign and block, approvals and fees
+Card requests | AW | Requests for new, replacement and lost cards, waiting for approval or print
+! Print card | Choose printer and copies, front and back, then print
+! Download card | PDF print-ready or PNG, front and back
+! Block card | Reason, lost or stolen, and alert security
+! Replace card | Reason, fee if any, and approval if needed
+! Reset and reassign | Confirm wiping the chip and unlinking the current holder
+! Publish template | Confirm, and whether to reprint existing cards
+! Chip write failed | Hold the card still and try again, or use another card
+
+@@ 17
+Wristbands home | W | Bands in store, assigned, in use, lost and damaged
+Band stock | W | Every band with number, chip, colour, type and status
+Register bands | AW | Register bands in bulk by scanning or spreadsheet
+Band types | W | Colours, types, sizes, chips and default entitlements
+Event bands | AW | Ranges assigned to one event, with access per range
+Assign range | AW | Pick a range such as 1-200, preview conflicts, set access
+Band scanner | AK | Scan at the gate or food line: allowed or refused, with entitlements left
+Band detail | AW | One band: event, attendee, entitlements and scan history
+Missing bands | W | Assigned but not returned after an event, with charges
+Scan log | W | Every scan with place, time, device and result
+Event band summary | W | Bands used, meals served and peak entry times
+Band designs | W | Wristband designs in the card designer
+! Reset range | Confirm resetting a range and returning bands to store
+! Reassign range | Move a range straight to another event
+! Block band | Mark a band lost and block it
+! Top up entitlements | Add meals, drinks or entries to a band or range
+! Range conflict | Bands in the range already in use, lost or damaged
+
+@@ 18
+Devices list | W | Every device with type, station, status, battery and last seen
+Device detail | W | One device: station, app version, health and history
+Register device | W | Name, type, serial, location and station
+Pair device | AWK | Show a QR on the web and scan it with the device
+Stations | W | Gates, reception, kitchen pass, food line and pool entrance
+Station detail | W | What the station does, its devices and printers
+Printers | W | Card, receipt and kitchen printers and where they are
+Kiosk mode | K | The locked single-screen mode for a station device
+Device alerts | W | Offline too long, low battery and wrong location
+Device settings | W | Station types and what each station does; Which roles can use which station; Alert rules for offline devices; Whether personal phones may be used as stations
+! Lock device | Remote lock with a message
+! Wipe device | Confirm a remote wipe
+! Unpair device | Remove the device from its station
+
+@@ 19
+Zones list | W | Every restricted zone with its doors and devices
+Zone editor | W | Name, map area, guarding devices and rules
+Zone rules | W | By role, person, card type, band range, day and time
+Zone live | AW | Who is inside each zone now
+Zone check | AK | Guard scans a card or band: allowed or refused with reason
+Entry log | W | Every entry and refusal, with photo where available
+Temporary passes | AW | Passes for contractors and visitors with time limits
+! Override refusal | Guard lets someone in, with a reason
+! Start lockdown | Close a zone to everyone, with who is told
+! End lockdown | Reopen the zone
+
+@@ 20
+Visitors today | AW | Expected, inside and left, with overstays highlighted
+Pre-register visitor | AW | Host enters the visit and a QR pass is sent
+Walk-in registration | AK | Name, phone, ID photo, company, host and vehicle
+Visitor pass | AKP | The QR pass on the visitor's phone or printed badge
+Visitor detail | AW | One visit with times, host and photos
+Contractors | W | Company, work order, insurance and safety briefing
+Gate vehicle log | AK | Vehicles in and out at the gate with plate, driver and time
+Blacklist | W | Blocked visitors with reasons
+Visitor settings | W | Required fields, ID types, approvals and pass lifetime
+! Host confirmation | Host confirms or refuses the visitor
+! Sign out visitor | Confirm the visitor left
+! Blacklisted visitor | Warning shown at the gate
+
+@@ 21
+Keys register | AW | Every key with tag, what it opens and where it is
+Key detail | AW | One key with its history
+Sign out key | AK | Tap staff card, take photo, sign out
+Return key | AK | Tap staff card and return
+Keys out now | AW | Keys signed out, with overdue highlighted
+Key settings | W | Which roles can hold which keys; Maximum time a key can be out; Who is alerted for overdue or lost keys
+! Restricted key approval | Manager approves a restricted key
+! Report lost key | Record a lost key and lock change
+
+@@ 25
+Clock in | AK | Tap card, scan QR or use the phone at a station, with photo and location
+Clock-in result | AK | Welcome, late or refused, with the reason
+My attendance | A | My days, hours, late arrivals and overtime
+Attendance today | AW | Who is in, late, absent and on leave, by department
+Attendance board | W | Big screen view of today for the gate or HR office
+On site now | AW | Everyone inside the hotel now: staff, visitors and contractors
+Attendance detail | AW | One person's day with every tap and photo
+Corrections | AW | Requests to fix a missed or wrong clock
+Overtime | AW | Overtime claimed and approved
+Attendance reports | W | Late, absent and hours by person, department and period
+Attendance rules | W | Grace minutes, rounding, locations and photo rules
+! Forgot to clock out | Ask for the real time and a reason
+! Clock outside area | Explain the location rule and allow a request
+! Request correction | Pick the day, time and reason
+! Offline clock saved | Confirm the clock is saved and will sync
+
+@@ 26
+Roster | AW | Week or month view by department, with drag and drop
+My shifts | A | My upcoming shifts and swaps
+Shift templates | W | Morning, evening, night and split shifts
+Swap requests | AW | Swap and cover requests waiting for approval
+Open shifts | A | Extra shifts staff can pick up
+! Publish roster | Confirm and notify staff
+! Request swap | Pick the shift and the colleague
+! Roster clash | Warn about double booking, leave or too many hours
+
+@@ 27
+My leave | A | Balances, requests and history
+Request leave | A | Type, dates, reason and attachment
+Leave requests | AW | Requests waiting for approval
+Leave calendar | AW | Who is away, by department
+Leave types | W | Annual, sick, maternity and others, with rules
+! Cancel leave | Confirm cancelling a request
+! Leave clash | Warn when too many in a department are away
+
+@@ 32
+Meal today | A | My meal entitlement for today and where to claim it
+Claim meal | AK | Tap card at the canteen: allowed, already claimed or not entitled
+Canteen screen | K | Live claims count and the last person served
+Meals today | AW | Claims by meal, department and time
+Meal forecast | AW | Expected meals for the kitchen
+Meal rules | W | Who gets which meals, times and exceptions
+Meal reports | W | Claims by person, department and period
+! Already claimed | Show when and where the meal was claimed
+! Guest meal | Record a meal for a visitor or casual worker
+
+@@ 38
+My daily report | A | Today's report form for my role
+Fill daily report | A | Questions, numbers and photos, saved offline
+Reports to sign | AW | Reports waiting for the head of department
+Executive reports | AW | Monthly reports from the CEO and GM to the board
+Department reports | AW | Reports by department and day
+Report detail | AW | One report with comments and likes
+Report templates | W | Which form each role fills and when it is due
+Missing reports | AW | Who has not submitted today
+! Submit report | Confirm, with late warning if past the deadline
+! Return report | Send back with a comment
+
+@@ 49
+Notice board | A | Posts and announcements, pinned first
+Post detail | A | One post with comments, likes and who has read it
+New post | AW | Text, photos, files, audience and schedule
+Read receipts | AW | Who has read and acknowledged a post
+Board settings | W | Who can post, comment and like, per role and board
+! Acknowledge post | Confirm I have read it
+! Delete post | Confirm, with a reason
+! Report post | Flag a post or comment

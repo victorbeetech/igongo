@@ -7,7 +7,8 @@ These are the pre-made roles for the Igongo app. **Roles are data, not code.** E
 - There is **one Igongo app** for everyone: the board, the CEO, managers, staff, riders and clients. There is no separate staff app, rider app or guest app.
 - Everyone opens the same app and uses the **same login screen**. Accounts are registered through the super admin's rules: staff from HR records, clients by sign-up, at the front desk or from a booking.
 - After login, the app reads the person's roles and **builds their interface**: menus, home tiles, screens and actions. Two people with different roles see two different apps.
-- A person can hold **several roles**, such as Receptionist plus Cashier. Their permissions add together.
+- A person can hold **several roles**, such as Receptionist plus Cashier, or Pool Attendant plus Museum Guide. Their permissions, menus and home tiles add together, so one person sees the pool work and the museum work in one app.
+- **The super admin makes the final roles.** These pre-made roles are starting points. The super admin can create any new role, combine duties, split them, rename them and give one person any mix of roles, because only the hotel knows who really does what.
 - **Every staff role can switch to the client view** to see the app exactly as a guest sees it, then switch back. Orders made there are marked as staff orders.
 - The web portal uses the same roles, for work that suits a big screen.
 

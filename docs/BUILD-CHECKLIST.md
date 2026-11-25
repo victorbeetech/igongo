@@ -8,7 +8,7 @@ Every phase follows the [code standards](architecture/code-standards.md): clean 
 
 - [x] Agree the deliverables: one Igongo app for everyone, the web portal and the public website.
 - [x] Write the [modules spec](modules/README.md): 84 independent modules.
-- [x] Write the [roles spec](roles/README.md): 72 pre-made roles, all editable by the super admin.
+- [x] Write the [roles spec](roles/README.md): 121 pre-made roles (including small roles and partner roles), all editable by the super admin, who also creates new roles and gives one person several roles.
 - [x] Review the [tech stack](architecture/stack.md) against the requirements.
 - [x] Write the [code standards](architecture/code-standards.md).
 - [x] Choose state management: Riverpod in the app, TanStack Query and Zustand on the web (see the [stack](architecture/stack.md)).
@@ -25,7 +25,7 @@ Both the app and the web portal use the same API, so the back end for each modul
 4. **Managers and money (web and app).** Payroll, advances, bonuses, lifetime earnings, HR records, CRM, reports and dashboards for managers, the GM and the board.
 5. **Everything else**, module by module in the agreed order: events and wristbands, stock, museum, pool, spa, shop, maintenance, inspections, chat and the rest.
 
-Each step goes through sketches, branded designs, code, tests and approval before the next one starts. The public website and SEO run alongside from step 3.
+The UI comes first and covers everyone: the sketches and branded designs for every screen of every person (super admin, staff, managers, riders and guests) are finished and approved in Phases 3 and 4 before any coding. Only then is the code built step by step in this order, each step tested and approved before the next one starts. The public website and SEO run alongside from step 3.
 - [ ] Confirm open questions with the hotel: Humura (spa), staff headcount, APEX vendor contact and link type, card and wristband quantities, card printer model.
 
 ## Phase 1: Theme
@@ -68,8 +68,10 @@ All assets are in the [brand kit](../packages/brand/README.md).
 
 ## Phase 3: UI sketches (wireframes)
 
-- [ ] Build the screen inventory: every screen of every module, for every role, including the client view. Number every screen.
-- [ ] Map the flows from start to end: first open, login, home for each role, each task, and back.
+- [x] Build the [screen inventory](ui/screens/README.md): every screen and dialog of every module, for every person (super admin, staff, managers, riders and guests), including the client view, however minor. Number every screen. Includes a home screen for every role, with each tile linked to its screen ([role homes](ui/screens/role-homes.md)).
+- [x] Give every screen its route (its address in the app and on the web).
+- [x] Map the [flows](ui/flows.md) from start to end: first open, login, home for each role, each task, and back. Every screen lists which screens open it and which screens it opens.
+- [x] Check there are no orphans: every screen and dialog can be reached from a home screen, and every one has a way back.
 - [ ] Sketch every screen in low detail.
 - [ ] Sketch every state of every screen: loading, empty, error, offline, permission denied and success.
 - [ ] Sketch every dialog, bottom sheet, toast, confirmation, warning and pop-up.
@@ -93,11 +95,11 @@ All assets are in the [brand kit](../packages/brand/README.md).
 - [ ] CI on every pull request: lint, type check, tests and build.
 - [ ] Shared packages: core, contracts, design tokens, brand and UI components.
 - [ ] Database: Neon project, one schema per module, Drizzle migrations, and development, staging and production branches.
-- [ ] Core modules first: Users & Login, Roles & Permissions, App Layout & Navigation, Audit Trail, Super Admin Console.
-- [ ] Event bus (Queues and outbox), Notifications, Files & Media.
 - [ ] Error tracking with Sentry in the app, web and API.
 
 ## Phase 6: Code the UI and connect every screen
+
+The whole app and web portal are built as a clickable product first, with sample data and no real functions. Every screen is coded and every route is connected, from the first screen to the last, for every person, before any functionality is built in Phase 7.
 
 - [ ] Code the reusable UI components once, with comments and tests.
 - [ ] Code every approved screen, module by module, each in its own folder.
@@ -111,6 +113,8 @@ All assets are in the [brand kit](../packages/brand/README.md).
 
 ## Phase 7: Build the modules
 
+- [ ] Core modules first: Users & Login, Roles & Permissions, App Layout & Navigation, Audit Trail, Super Admin Console.
+- [ ] Event bus (Queues and outbox), Notifications, Files & Media.
 - [ ] Build each module's back end (domain, use cases, database, API and events), in the agreed order.
 - [ ] Connect each module's screens to its API.
 - [ ] Unit and integration tests for each module.

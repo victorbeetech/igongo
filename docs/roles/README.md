@@ -7,7 +7,8 @@ These are the pre-made roles for the Igongo app. **Roles are data, not code.** E
 - There is **one Igongo app** for everyone: the board, the CEO, managers, staff, riders and clients. There is no separate staff app, rider app or guest app.
 - Everyone opens the same app and uses the **same login screen**. Accounts are registered through the super admin's rules: staff from HR records, clients by sign-up, at the front desk or from a booking.
 - After login, the app reads the person's roles and **builds their interface**: menus, home tiles, screens and actions. Two people with different roles see two different apps.
-- A person can hold **several roles**, such as Receptionist plus Cashier. Their permissions add together.
+- A person can hold **several roles**, such as Receptionist plus Cashier, or Pool Attendant plus Museum Guide. Their permissions, menus and home tiles add together, so one person sees the pool work and the museum work in one app.
+- **The super admin makes the final roles.** These pre-made roles are starting points. The super admin can create any new role, combine duties, split them, rename them and give one person any mix of roles, because only the hotel knows who really does what.
 - **Every staff role can switch to the client view** to see the app exactly as a guest sees it, then switch back. Orders made there are marked as staff orders.
 - The web portal uses the same roles, for work that suits a big screen.
 
@@ -50,7 +51,7 @@ Amounts are not written into the code. The super admin sets the amount behind ea
 | Tier 3 | Large amounts, for the GM and CEO |
 | Unlimited | Board level |
 
-## The 72 pre-made roles
+## The 121 pre-made roles
 
 ### System
 
@@ -108,6 +109,15 @@ Amounts are not written into the code. The super admin sets the amount behind ea
 | [IT Support Officer](it-support.md) | Sets up devices and printers, prints cards and helps staff with app problems. |
 | [Delivery Dispatcher](dispatcher.md) | Assigns deliveries to riders and watches them until delivered. |
 | [Sales Executive](sales-executive.md) | Finds and looks after corporate, event and group clients. |
+| [Museum Curator](museum-curator.md) | Looks after the collection and exhibits, writes exhibit content and audio guides. |
+| [Night Auditor](night-auditor.md) | Checks the day's takings, bills and room charges overnight and closes the day. |
+| [Health and Safety Officer](health-safety-officer.md) | Runs safety inspections, fire drills and incident follow-up. |
+| [Procurement Officer](procurement-officer.md) | Buys for the hotel: quotes, purchase orders and supplier follow-up. |
+| [Credit Controller](credit-controller.md) | Follows up corporate balances, invoices and deposits. |
+| [Social Media and Content Officer](social-media-officer.md) | Posts on social media, answers reviews and runs campaigns. |
+| [Personal Assistant to the GM](personal-assistant.md) | Manages the GM's diary, meetings and correspondence. |
+| [Board Secretary](company-secretary.md) | Prepares board papers, minutes and resolutions. |
+| [Tours and Experiences Coordinator](tour-coordinator.md) | Plans tours and cultural experiences and books guides and performers. |
 
 ### Everyone
 
@@ -150,6 +160,41 @@ Amounts are not written into the code. The super admin sets the amount behind ea
 | [Store Keeper](store-keeper.md) | Keeps the stores: receives deliveries, issues stock against approved requisitions, runs counts, and signs assets, uniforms, linen and keys in and out. |
 | [Casual Worker](casual-worker.md) | A short-term or daily worker, such as extra event staff. |
 | [Intern / Trainee](intern.md) | A learner placed in a department, with view access to their department's work and their training plan. |
+| [Pool Attendant](pool-attendant.md) | Keeps the pool area clean and ready: towels, loungers, entry checks and pool-side orders. |
+| [Pool Plant Operator](pool-plant-operator.md) | Runs pumps, filters and dosing, and records water tests and plant checks. |
+| [Swimming Instructor](swimming-instructor.md) | Teaches swimming lessons and keeps lesson registers. |
+| [Museum Ticket Attendant](museum-attendant.md) | Sells and scans museum tickets and welcomes visitors at the entrance. |
+| [Craftsperson / Artisan in Residence](craftsperson.md) | Makes and demonstrates crafts, runs craft experiences for guests. |
+| [Bookshop Assistant](bookshop-assistant.md) | Sells books and souvenirs and keeps the shelves. |
+| [Switchboard / Call Centre Agent](switchboard-operator.md) | Answers calls, takes phone orders and bookings, and passes messages. |
+| [Room Service Attendant](room-service-attendant.md) | Takes room service orders and delivers them to rooms. |
+| [Food Runner](food-runner.md) | Carries food from the pass to tables, rooms and events. |
+| [Restaurant Host / Hostess](host-hostess.md) | Greets diners, manages reservations, the waiting list and seating. |
+| [Buffet Attendant](buffet-attendant.md) | Checks buffet entry, refills the buffet and records waste. |
+| [Staff Canteen Attendant](canteen-attendant.md) | Serves staff meals and confirms each claim with a card tap. |
+| [Pastry Chef / Baker](pastry-chef.md) | Makes bread, pastries and desserts for outlets and events. |
+| [Butcher](butcher.md) | Prepares meat and keeps the cold room in order. |
+| [Dishwasher / Kitchen Porter](dishwasher.md) | Washes dishes and pots and keeps the kitchen clean. |
+| [Banquet and Setup Crew](banquet-staff.md) | Sets up and clears venues for events and conferences. |
+| [Sound and AV Technician](av-technician.md) | Runs sound, lights, projectors and microphones for events. |
+| [Decorator](decorator.md) | Decorates venues and rooms for events and special stays. |
+| [Wristband Desk Attendant](wristband-desk.md) | Hands out, links and collects event wristbands at the desk. |
+| [Linen Keeper](linen-keeper.md) | Issues and counts linen and uniforms between the laundry and departments. |
+| [Tailor](tailor.md) | Repairs and alters uniforms, linen and guest clothing. |
+| [Minibar Attendant](minibar-attendant.md) | Checks and refills minibars and amenities in rooms. |
+| [Pest Control Officer](pest-control.md) | Carries out pest control rounds and records treatments. |
+| [Generator and Power Operator](generator-operator.md) | Runs and checks generators, solar, power changeovers and fuel levels. |
+| [Refrigeration and AC Technician](refrigeration-technician.md) | Maintains fridges, cold rooms, freezers and air conditioning. |
+| [Painter / Mason](painter-mason.md) | Paints, plasters and repairs walls, floors and buildings. |
+| [Mechanic](mechanic.md) | Services and repairs hotel vehicles, mowers and machines. |
+| [Parking Attendant](parking-attendant.md) | Directs and records vehicles in the car park. |
+| [Night Watchman](night-watchman.md) | Patrols at night and reports incidents. |
+| [CCTV Operator](cctv-operator.md) | Watches the cameras and raises incidents and alerts. |
+| [Nurse / First Aider](first-aider.md) | Gives first aid to guests and staff and records each case. |
+| [Photographer](photographer.md) | Takes photos and videos of events, rooms and food for marketing. |
+| [Office Assistant / Messenger](office-assistant.md) | Runs errands, delivers documents and helps offices. |
+| [Kids Club Attendant](kids-club-attendant.md) | Looks after children in the play area and kids' activities. |
+| [Volunteer](volunteer.md) | A short-term helper with access only to assigned tasks and events. |
 
 ### Guests and clients
 
@@ -158,4 +203,14 @@ Amounts are not written into the code. The super admin sets the amount behind ea
 | [Guest / Client](guest.md) | Any visitor or customer: hotel guests, diners, museum visitors, swimmers, spa clients, shoppers and event guests. |
 | [Corporate Booker](corporate-client.md) | A person who books for a company, NGO, government office or school, using the company's account and agreed terms. |
 | [Event Client / Organiser](event-organiser.md) | The client who booked an event, such as a wedding or conference, who manages their own guest list and follows the plan. |
+
+### Partners and suppliers
+
+| Role | Purpose |
+| --- | --- |
+| [Supplier](supplier.md) | An outside supplier who sees their purchase orders, deliveries and payments, and books deliveries. |
+| [Contractor](contractor.md) | An outside company or worker doing a job on site, with a pass, work orders and safety briefing. |
+| [Event Vendor](event-vendor.md) | A caterer, decorator, DJ or photographer working at an event booked at Igongo. |
+| [Artisan / Consignor](artisan-partner.md) | A maker who sells through the crafts shop and sees their sales and balance. |
+| [Delivery Partner Rider](delivery-partner.md) | A rider from an outside delivery company, with the same rider screens limited to assigned orders. |
 

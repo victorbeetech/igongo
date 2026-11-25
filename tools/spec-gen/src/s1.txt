@@ -22,6 +22,7 @@ Account locked | AWK | Shown when an account is locked, with who to contact
 Role home | AW | Home screen built from the person's roles: tiles, counters and shortcuts
 Role switcher | AW | For people with several roles: pick which view to show
 Client view home | A | The app exactly as a guest sees it, with a banner to switch back
+Panic button | A | Hold-to-send emergency button available to every staff role
 Global search | AW | One search box over every module the person can see
 Search results | AW | Results grouped by module, with filters
 Everything about | AW | All records linked to one person, room, asset or event
@@ -174,6 +175,7 @@ Channel spend | W | SMS and WhatsApp spend against limits
 File browser | W | Folders per module and record
 File viewer | AW | View a photo, PDF or video, with annotation
 Storage usage | W | Quota per module
+Files settings | W | Maximum file size and allowed file types per module; Storage quota per module and alerts when near; How long files are kept, per module; Whether downloads...
 ! Upload | Pick from camera, gallery or computer
 ! Delete file | Confirm, with where the file is used
 

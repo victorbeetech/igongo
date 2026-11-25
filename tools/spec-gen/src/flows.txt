@@ -1,0 +1,585 @@
+# Start-to-end flows. Each line is one path, steps joined by " > ".
+# A step is NN:Screen name, NN!Dialog name, or home (the role's home,
+# built from its tiles and menu). Lines starting "home >" are menu entries.
+
+## First open and sign in
+00:Launch splash > 00:Force update
+00:Launch splash > 00:Maintenance notice
+00:Launch splash > 00:First-run welcome > 00:Language picker > 00:Sign in
+00:First-run welcome > 00:Explore as guest home > 00:Sign in
+00:Launch splash > 00:Sign in > 00:Password entry > 00:Two-factor check > home
+00:Sign in > 00:Sign in with Google > home
+00:Sign in > 00:Sign in with Apple > home
+00:Sign in > 00:Phone number entry > 00:OTP code entry > home
+00:Sign in > 00:Tap card to sign in > 00:PIN entry > home
+00:Launch splash > 00:Biometric unlock > home
+00:Password entry > 00:Forgot password > 00:Verify email > 00:Password entry
+00:Sign in > 00:Create client account > 00:Verify email > 00:Account pending approval
+00:Sign in > 00:Account locked
+00:Sign in with Google > 00:Account pending approval
+00:Biometric unlock > 00!Session expired > 00:Sign in
+
+## Home, switching and everyday shell screens
+home > 00:Role home > 00:Role switcher > home
+home > 00!Switch to client view > 00:Client view home > home
+home > 00:Panic button > 00!Panic button confirmation > 45:Panic alert
+home > 00:Global search > 00:Search results > 00:Everything about > 05:Record timeline
+home > 00:Notification inbox > 00:Notification detail > 00:Not found
+home > 00:Approvals inbox > 09:Request detail
+home > 00:My profile > 00:Link sign-in methods
+00:My profile > 00:Active sessions > 00!Sign out confirmation > 00:Sign in
+home > 00:Settings > 00:Text size setting
+00:Settings > 00:Theme setting
+00:Settings > 00:Notification preferences
+00:Settings > 00:Language picker
+00:Settings > 00:Help and support > 00:About
+00:Settings > 00!Sign out confirmation
+home > 00:Offline banner > 00:Sync status
+home > 00:Permission denied
+home > 00:Something went wrong > 00:Help and support
+home > 00!Rate the app
+home > 00!Camera, location, NFC and notification permission
+00:Settings > 00!Unsaved changes
+00:Explore as guest home > 67:Rooms
+00:Explore as guest home > 62:Food home
+00:Explore as guest home > 68:Museum home
+00:Explore as guest home > 69:Events home
+00:Explore as guest home > 71:Pool home
+00:Explore as guest home > 72:Spa home
+00:Explore as guest home > 73:Shop
+
+## Super admin console
+home > 01:Console home > 01:Modules list > 01:Module settings > 01!Turn module off
+01:Modules list > 01:Module health > 01:Background jobs
+01:Modules list > 01!Maintenance mode
+01:Console home > 01:Hotel profile
+01:Console home > 01:Business settings > 01:Change preview > 01:Sandbox
+01:Console home > 01:Change sets > 01:Change set detail > 01!Apply change set
+01:Change set detail > 01!Roll back
+01:Console home > 01:Dual approval queue > 01:Change set detail
+01:Console home > 01:Global banner
+01:Console home > 01:App versions
+01:Console home > 01:Break-glass access
+01:Console home > 02:Roles list
+01:Console home > 03:Layout editor
+01:Console home > 04:Accounts list
+01:Console home > 05:Audit search
+01:Console home > 06:Archive policies
+01:Console home > 07:Record types
+01:Console home > 08:Forms library
+01:Console home > 09:Workflows list
+01:Console home > 10:Notification rules
+01:Console home > 11:File browser
+01:Console home > 12:Wording editor
+01:Console home > 13:Import wizard
+01:Console home > 14:Integrations
+01:Console home > 15:Organisation chart
+
+## Roles and permissions
+home > 02:Roles list > 02:Role builder > 02:Permissions matrix > 02:Field permissions
+02:Role builder > 02:Approval limits > 02:Approval tier amounts
+02:Role builder > 02:Role conditions
+02:Role builder > 02:Role holders > 02!Assign role
+02:Roles list > 02:Temporary roles > 02!Assign role
+02:Roles list > 02:Compare roles
+02:Roles list > 02!Clone role > 02:Role builder
+02:Roles list > 02!Delete or archive role
+02:Roles list > 02:View as role > 03:Layout preview
+02:Roles list > 02:Permission report
+02:Roles list > 02:Separation of duties
+
+## App layout
+home > 03:Layout editor > 03:Tile library > 03:Tile settings
+03:Layout editor > 03:Screen order
+03:Layout editor > 03:Device layouts
+03:Layout editor > 03:Public screens
+03:Layout editor > 03:Client view settings
+03:Layout editor > 03:Layout preview > 03!Publish layout
+03:Layout editor > 03:Layout history
+
+## Accounts and login
+home > 04:Accounts list > 04:Account detail > 04!Lock account
+04:Account detail > 04!Sign out all devices
+04:Account detail > 04!Reset PIN
+04:Account detail > 05:Record timeline
+04:Accounts list > 04:Create account
+04:Accounts list > 04:Pending approvals > 04:Account detail
+04:Accounts list > 04:Merge accounts
+04:Accounts list > 04:Login methods > 04:Login method setup
+04:Login methods > 04!Switch login method off
+04:Accounts list > 04:Security settings
+04:Accounts list > 04:Login activity
+00:My profile > 04:My data
+
+## Audit, records, fields, forms and workflows
+home > 05:Audit search > 05:Audit entry > 05!Undo change
+05:Audit search > 05:Export audit
+05:Audit search > 05:Audit alerts > 05:Alert rules
+home > 06:Archive policies > 06:Legal holds > 06!Place legal hold
+home > 06:Saved searches > 00:Search results
+home > 07:Record types > 07:Field list > 07:Field editor > 07!Retire field
+home > 08:Forms library > 08:Form designer > 08:Form logic
+08:Form designer > 08:Form settings
+08:Form designer > 08:Form preview > 08!Publish form
+08:Form designer > 08:Form versions
+08:Forms library > 08:Form submissions > 08:Submission detail
+home > 08:Fill form > 08:Submission detail
+75:Website home > 08:Public form
+home > 09:Workflows list > 09:Workflow builder
+09:Workflows list > 09:Approval SLA report
+home > 09:Delegations
+09:Request detail > 09!Approve
+09:Request detail > 09!Reject
+00:Approvals inbox > 09!Bulk approve
+
+## Notifications, files, wording, data, integrations, organisation
+home > 10:Notification rules > 10:Rule editor > 10:Message templates
+10:Notification rules > 10:Broadcast
+10:Notification rules > 10:Delivery log > 10:Channel spend
+home > 11:File browser > 11:File viewer > 11!Delete file
+11:File browser > 11!Upload
+11:File browser > 11:Storage usage
+home > 12:Wording editor > 12:Languages > 12:Translation editor
+12:Wording editor > 12:Brand kit
+home > 13:Import wizard > 13:Import history
+home > 13:Exports
+13:Import wizard > 13:Backups > 13:Restore record
+home > 14:Integrations > 14:Connection settings
+14:Integrations > 14:Webhooks
+14:Integrations > 14:API keys
+home > 15:Organisation chart > 15:Departments
+15:Organisation chart > 15:Locations and areas
+15:Organisation chart > 15:Outlets
+15:Organisation chart > 15:Cost centres
+
+## Staff cards
+home > 16:Cards home > 16:Card templates > 16:Card designer > 16:Template preview > 16!Publish template
+16:Card templates > 16:Template assignment
+16:Cards home > 16:Card types > 16:Card type editor
+16:Cards home > 16:Cards list > 16:Card detail > 16!Print card
+16:Card detail > 16!Download card
+16:Card detail > 16!Block card
+16:Card detail > 16!Replace card > 16:Issue card
+16:Card detail > 16:Reset card > 16!Reset and reassign > 16:Issue card
+16:Cards home > 16:Issue card > 16:Print queue > 16:Encode card > 16:Test card
+16:Encode card > 16!Chip write failed > 16:Encode card
+16:Print queue > 16:Print log
+16:Cards home > 16:Card requests > 16:Issue card
+16:Cards home > 16:Clone alerts > 16:Card detail
+16:Cards home > 16:Card settings
+home > 16:Who owns this card > 22:Staff profile
+16:Who owns this card > 16:Unassigned card > 16:Issue card
+16:Who owns this card > 16:Card warning > 45:Report incident
+home > 16:My card > 16!Download card
+16:My card > 16!Block card
+
+## Wristbands
+home > 17:Wristbands home > 17:Band stock > 17:Band detail > 17!Block band
+17:Band stock > 17:Register bands
+17:Wristbands home > 17:Band types > 17:Band designs > 16:Card designer
+17:Wristbands home > 17:Event bands > 17:Assign range > 17!Range conflict
+17:Event bands > 17!Reset range
+17:Event bands > 17!Reassign range
+17:Event bands > 17!Top up entitlements
+17:Event bands > 17:Event band summary
+17:Wristbands home > 17:Missing bands
+17:Wristbands home > 17:Scan log
+home > 17:Band scanner > 17:Band detail
+
+## Devices, zones, visitors and keys
+home > 18:Devices list > 18:Device detail > 18!Lock device
+18:Device detail > 18!Wipe device
+18:Device detail > 18!Unpair device
+18:Devices list > 18:Register device > 18:Pair device > 18:Kiosk mode
+18:Devices list > 18:Stations > 18:Station detail > 18:Printers
+18:Devices list > 18:Device alerts
+home > 19:Zones list > 19:Zone editor > 19:Zone rules
+19:Zones list > 19:Zone live
+19:Zones list > 19:Entry log
+19:Zones list > 19:Temporary passes
+19:Zones list > 19!Start lockdown > 19!End lockdown
+home > 19:Zone check > 19!Override refusal
+home > 20:Visitors today > 20:Visitor detail > 20!Sign out visitor
+20:Visitors today > 20:Pre-register visitor > 20:Visitor pass
+20:Visitors today > 20:Walk-in registration > 20!Host confirmation > 20:Visitor pass
+20:Walk-in registration > 20!Blacklisted visitor
+20:Visitors today > 20:Contractors
+20:Visitors today > 20:Gate vehicle log
+20:Visitors today > 20:Blacklist
+20:Visitors today > 20:Visitor settings
+home > 21:Keys register > 21:Key detail
+21:Keys register > 21:Sign out key > 21!Restricted key approval
+21:Keys register > 21:Return key
+21:Keys register > 21:Keys out now > 21!Report lost key
+
+## HR, recruitment, onboarding and exit
+home > 22:Staff directory > 22:Staff profile > 22:Edit staff > 22!Confirm pay change
+22:Staff profile > 22:Staff documents
+22:Staff profile > 22:Job history
+22:Staff profile > 16:Card detail
+22:Staff directory > 22:Add staff > 24!Start onboarding > 24:Onboarding checklist
+22:Staff directory > 22:Expiring documents
+home > 22:My profile at work > 22!Change request
+home > 23:Vacancies > 23:Vacancy editor
+23:Vacancies > 23:Applicants > 23:Applicant detail > 23!Move stage
+23:Applicant detail > 23!Send offer
+23:Applicant detail > 23!Reject applicant
+23:Applicants > 23:Interview schedule > 23:Interview score
+75:Website home > 23:Jobs page > 23:Apply for job
+home > 24:Onboarding list > 24:Onboarding checklist
+home > 24:My first days
+home > 24:Exit list > 24!Start exit > 24:Exit checklist > 24!Clearance missing
+24:Exit checklist > 24:Exit interview
+
+## Attendance, shifts, leave
+home > 25:Clock in > 25:Clock-in result
+25:Clock in > 25!Clock outside area
+25:Clock in > 25!Offline clock saved
+home > 25:My attendance > 25!Request correction
+25:My attendance > 25!Forgot to clock out
+home > 25:Attendance today > 25:Attendance detail
+25:Attendance today > 25:Attendance board
+25:Attendance today > 25:On site now
+25:Attendance today > 25:Corrections
+25:Attendance today > 25:Overtime
+25:Attendance today > 25:Attendance reports
+25:Attendance today > 25:Attendance rules
+home > 26:Roster > 26!Publish roster
+26:Roster > 26!Roster clash
+26:Roster > 26:Shift templates
+26:Roster > 26:Swap requests
+home > 26:My shifts > 26!Request swap
+26:My shifts > 26:Open shifts
+home > 27:My leave > 27:Request leave > 27!Leave clash
+27:My leave > 27!Cancel leave
+home > 27:Leave requests > 27:Leave calendar
+27:Leave requests > 27:Leave types
+
+## Payroll, payslips, advances, rewards
+home > 28:Payroll home > 28!Start pay run > 28:Hours to import > 28:Pay run review > 28!Approve pay run
+28:Payroll home > 28:Pay runs > 28:Pay run detail > 28!Lock pay run
+28:Pay run detail > 28!Reverse pay run
+28:Pay run detail > 28:Bank and mobile money file
+28:Payroll home > 28:Pay items
+28:Payroll home > 28:Statutory settings
+28:Payroll home > 28:Payroll reports
+home > 29:My payslips > 29!Unlock payslips > 29:Payslip
+29:My payslips > 29:Lifetime earnings > 29:Earnings statement > 29!Download statement
+home > 30:My advances > 30:Request advance > 30!Over limit
+home > 30:Advance requests > 30!Approve advance
+30:Advance requests > 30:Loans > 30:Loan detail
+30:Advance requests > 30:Advance rules
+home > 31:My rewards > 31:Buffet passes > 31!Use buffet pass
+home > 31:Rewards list > 31:Give reward > 31!Confirm reward
+31:Rewards list > 31:Reward rules
+
+## Meals
+home > 32:Meal today > 32:Claim meal > 32!Already claimed
+home > 32:Canteen screen
+home > 32:Meals today > 32!Guest meal
+32:Meals today > 32:Meal forecast
+32:Meals today > 32:Meal rules
+32:Meals today > 32:Meal reports
+
+## Performance, training, discipline, welfare, petty cash
+home > 33:My appraisals > 33:Appraisal form > 33!Submit appraisal
+33:Appraisal form > 33!Sign appraisal
+home > 33:Appraisals list > 33:Appraisal form
+33:Appraisals list > 33:Goals
+33:Appraisals list > 33:Probation reviews
+33:Appraisals list > 33:Appraisal cycles
+home > 34:My training > 34:Course player
+34:My training > 34:Certificates > 34!Certificate expiring
+home > 34:Courses > 34!Enrol
+34:Courses > 34:Training sessions
+34:Courses > 34:Training matrix
+home > 35:Cases > 35:Case detail > 35!Schedule hearing
+35:Case detail > 35!Record outcome
+35:Cases > 35:Open case
+35:Cases > 35:Warnings > 35!Issue warning
+home > 35:My cases
+home > 36:My requests > 36:New request
+home > 36:Requests inbox > 36!Close request
+36:Requests inbox > 36:Welfare fund
+home > 37:My claims > 37:New claim
+home > 37:Claims to approve > 37!Approve claim > 37!Pay claim
+37:Claims to approve > 37:Petty cash box > 37:Cash count
+
+## Daily reports, inspections, faults, assets, tasks
+home > 38:My daily report > 38:Fill daily report > 38!Submit report
+home > 38:Reports to sign > 38:Report detail > 38!Return report
+38:Reports to sign > 38:Department reports
+38:Reports to sign > 38:Missing reports
+38:Reports to sign > 38:Report templates
+home > 38:Executive reports > 38:Report detail
+home > 39:Inspections due > 39:Run inspection > 39:Inspection result > 39!Failed item > 40:Report fault
+home > 39:Inspections list > 39:Inspection result
+39:Inspections list > 39:Inspection schedule
+home > 40:Report fault > 40:My faults > 40:Fault detail > 40!Reopen fault
+home > 40:Fault board > 40:Fault detail > 40!Assign fault
+40:Fault detail > 40!Close fault
+40:Fault board > 40:Work orders > 40:Fault detail
+40:Fault board > 40:Planned maintenance
+home > 41:Assets list > 41:Asset detail > 41!Move asset
+41:Asset detail > 41!Dispose asset
+41:Assets list > 41:Add asset
+41:Assets list > 41:Asset count
+home > 41:Scan asset > 41:Asset detail > 40:Report fault
+home > 42:My tasks > 42:Task detail > 42!Complete task
+home > 42:Team tasks > 42:New task
+42:Team tasks > 42:Task detail > 42!Reassign task
+
+## Housekeeping, laundry, security, lost and found, fleet, knowledge
+home > 43:Room board > 43:Room detail > 43!Mark out of order
+43:Room board > 43:Housekeeping assignment
+home > 43:My rooms > 43:Clean room > 43!Minibar charge
+home > 43:Rooms to inspect > 39:Run inspection
+home > 44:Laundry orders > 44!Laundry ready
+44:Laundry orders > 44:Linen stock
+44:Laundry orders > 44:Uniforms
+home > 44:Guest laundry request > 60:My requests
+home > 45:Security home > 45:Patrol route > 45!Missed checkpoint
+45:Security home > 45:Incidents > 45:Incident detail
+45:Security home > 45:Report incident
+45:Security home > 45:Panic alert
+45:Panic alert > 45!Send panic alert
+home > 46:Lost and found > 46:Claim item > 46!Hand over item
+46:Lost and found > 46!Dispose item
+home > 46:Log found item
+75:Website home > 46:Lost item report
+home > 47:Vehicles > 47:Fuel and repairs
+47:Vehicles > 47!Document expiring
+home > 47:Trip requests > 47!Assign driver > 47:Trip
+home > 47:Book transfer > 47:Trip requests
+home > 48:Knowledge base > 48:Article > 48!Acknowledge article
+48:Knowledge base > 48:Article editor
+home > 48:Must read > 48:Article
+
+## Stock and inventory
+home > 84:Stock home > 84:Stores
+84:Stock home > 84:Items > 84:Item detail > 84:Item editor
+84:Items > 84:Units and conversions
+84:Stock home > 84:Receive goods > 84!Short delivery
+home > 84:New requisition > 84:Requisitions
+84:Stock home > 84:Requisitions > 84!Approve requisition > 84:Issue stock
+84:Stock home > 84:Transfers
+84:Stock home > 84!Below minimum > 84:Purchase requests > 84:Purchase orders > 84:Receive goods
+84:Purchase orders > 84:Suppliers
+84:Stock home > 84:Stock count > 84:Count variances > 84!Approve adjustment
+84:Stock home > 84:Wastage
+84:Stock home > 84!Expiring stock > 84:Wastage
+84:Stock home > 84:Recipes
+84:Stock home > 84:Stock reports
+84:Stock home > 84:Stock settings
+
+## Notice board, chat, meetings, surveys, calendar
+home > 49:Notice board > 49:Post detail > 49!Acknowledge post
+49:Post detail > 49!Report post
+49:Post detail > 49!Delete post
+49:Post detail > 49:Read receipts
+49:Notice board > 49:New post
+49:Notice board > 49:Board settings
+home > 50:Chats > 50:Chat room > 50:Group info
+50:Chat room > 50!Delete message
+50:Chat room > 50!Report message
+50:Chats > 50:New chat > 50:Chat room
+50:Chats > 50:Chat settings
+home > 51:Meetings > 51:Meeting detail > 51:Take minutes > 51!Approve minutes
+51:Meeting detail > 51!Sign attendance
+51:Meetings > 51:Schedule meeting
+home > 51:My action items > 51:Meeting detail
+home > 52:Surveys > 52:Answer survey > 52!Submit answers
+52:Surveys > 52:Survey builder
+52:Surveys > 52:Survey results
+home > 53:Calendar > 53:Calendar event > 53!RSVP
+53:Calendar > 53:Add calendar entry
+
+## Guests, corporate, feedback, loyalty, campaigns, vouchers, requests
+home > 54:Guests list > 54:Guest profile > 05:Record timeline
+54:Guests list > 54:Segments
+54:Guests list > 54:Duplicates > 54!Merge guests
+home > 54:My account > 54:Edit my details
+54:My account > 54:Consent
+54:My account > 54!Delete my account
+54:My account > 67:My bookings
+54:My account > 62:My orders
+54:My account > 78:My receipts
+54:My account > 57:My points
+54:My account > 59:My vouchers
+home > 55:Corporate accounts > 55:Corporate detail > 55!Over credit limit
+55:Corporate accounts > 55:Add company
+55:Company portal > 67:Rooms
+55:Company portal > 78:Document view
+home > 56:Feedback inbox > 56:Feedback detail > 56!Assign complaint
+56:Complaints > 56:Feedback detail > 56!Resolve complaint
+56:Feedback inbox > 56:Online reviews
+56:Feedback inbox > 56:Feedback reports
+62:Track order > 56:Give feedback
+67:Booking detail > 56:Give feedback
+home > 57:My points > 57:Membership card
+57:My points > 57:Rewards catalogue > 57!Redeem points
+57:Members > 57:Loyalty settings
+home > 58:Campaigns > 58:Campaign editor > 58!Test send
+58:Campaign editor > 58!Send campaign > 58:Campaign results
+home > 59:Promotions > 59:Promotion editor
+59:Promotions > 59:Vouchers
+00:Client view home > 59:Buy gift card > 77:Pay
+home > 59:My vouchers
+home > 59:Redeem voucher > 59!Invalid code
+00:Client view home > 60:Request help > 60:My requests > 60!Rate service
+home > 60:Requests board > 60:Request detail
+60:Requests board > 60!Late request
+
+## Food: guest ordering, pre-order and delivery
+home > 61:Menus > 61:Menu editor > 61:Item editor
+61:Menu editor > 61!Publish menu
+home > 61:Out of stock today
+00:Client view home > 62:Food home > 62:Outlet menu > 62:Item detail > 62:Cart > 62:Order type > 62:Checkout > 77:Pay > 77:Mobile money prompt > 77:Payment result > 62:Order placed > 62:Track order
+62:Order type > 62:Pre-order arrival time > 62:Checkout
+62:Order type > 62:Delivery address > 62:Checkout
+62:Cart > 62!Edit cart item
+62:Checkout > 62!Kitchen busy
+62:Track order > 66:Live rider map > 66!Rate rider
+home > 62:My orders > 62:Track order > 62!Cancel order
+62:Orders board > 62:Order detail > 62!Void item
+home > 62:Take order > 62:Order detail
+home > 62:Waiter order > 63:Kitchen display
+home > 63:Kitchen display > 63!Bump ticket
+63:Kitchen display > 63!Recall ticket
+63:Kitchen display > 63:Expo screen
+63:Kitchen display > 63:Kitchen settings
+home > 64:Floor plan > 64:Table detail > 64!Split bill
+64:Floor plan > 64!Seat guests
+64:Floor plan > 64:Waiting list
+home > 64:Floor plan editor
+64:Reservations > 64:Table detail
+00:Client view home > 64:Book a table > 64:Reservations
+75:Website home > 64:Table QR menu > 64!Call waiter
+64:Table QR menu > 62:Cart
+home > 65:Buffet sessions > 65:Buffet live
+home > 65:Buffet entry > 65!Entry refused
+00:Client view home > 65:Buy buffet ticket > 77:Pay
+home > 66:Dispatch board > 66!Assign rider
+66:Dispatch board > 66:Delivery zones
+66:Dispatch board > 66:Riders
+home > 66:Rider home > 66:New delivery offer > 66:Pickup > 66:Navigate > 66:Proof of delivery > 66:Rider home
+66:Navigate > 66!Delivery problem
+66:Rider home > 66:Cash hand-in
+66:Rider home > 66:Rider earnings
+
+## Rooms, museum, events, venues, pool, spa, shop
+00:Client view home > 67:Rooms > 67:Room type detail > 67:Pick dates > 67:Booking summary > 77:Pay > 67:Booking confirmed > 67:Pre-arrival
+67:Pick dates > 67!APEX offline
+67:Booking confirmed > 67:Digital check-in
+home > 67:My bookings > 67:Booking detail > 67!Change booking
+67:Booking detail > 67!Cancel booking
+home > 67:Front desk bookings > 67:Booking detail
+67:Front desk bookings > 67:Packages
+67:Arrivals and departures > 67:Booking detail
+67:In-house guests > 54:Guest profile
+00:Client view home > 68:Museum home > 68:Buy tickets > 77:Pay > 68:My tickets
+68:Buy tickets > 68!Slot full
+68:Museum home > 68:Book a tour > 77:Pay
+68:Museum home > 68:Group booking
+68:Museum home > 68:Experiences
+68:Museum home > 68:Audio guide
+home > 68:Museum bookings > 68:Exhibit content
+00:Client view home > 69:Events home > 69:Event enquiry > 75!Enquiry sent
+home > 69:Enquiries > 69:Event pipeline > 69:Event detail > 69:Quote builder > 69!Send quote > 69:Contract > 69!Confirm event
+69:Event detail > 69:Run sheet
+69:Event detail > 69:Guest list > 69:Event check-in
+69:Event detail > 17:Event bands
+69:Event detail > 69:Post-event report
+home > 69:My event > 69:Contract
+home > 70:Venues > 70:Venue calendar > 70:Book venue
+70:Venue calendar > 70!Hold expiring
+70:Venues > 70:Equipment > 70!Record damage
+00:Client view home > 71:Pool home > 71:Buy pool pass > 77:Pay
+71:Pool home > 71:Swimming lessons
+71:Pool home > 71!Pool closed
+home > 71:Pool entry > 71!Pool full
+71:Pool live > 71:Lifeguard log
+00:Client view home > 72:Spa home > 72:Treatment detail > 72:Book treatment > 72:Health questions > 77:Pay
+home > 72:My spa bookings
+72:Spa schedule > 72!No-show
+00:Client view home > 73:Shop > 73:Product detail > 73:Shop cart > 77:Pay
+73:Product detail > 73!Product sold out
+home > 73:Products
+73:Products > 73:Shop sales
+
+## WhatsApp, website, prices, payments, receipts, cash-up
+home > 74:WhatsApp inbox > 74:Conversation > 74!Take over chat
+74:Conversation > 74!Send payment link > 77:Payment link
+74:WhatsApp inbox > 74:Bot menu editor > 74:Message templates
+75:Website home > 75:Website page > 75:Website booking > 67:Pick dates
+75:Website home > 75:Gallery
+75:Website home > 75:News
+75:Website home > 75:Contact > 75!Enquiry sent
+75:Website home > 75:Cookie consent
+home > 75:Pages editor
+home > 76:Price lists > 76:Price change history
+76:Price lists > 76!Approve price change
+76:Price lists > 76:Taxes
+76:Price lists > 76:Discounts
+77:Pay > 77!Payment failed
+home > 77:Payments list > 77:Payment detail > 77!Refund
+77:Payments list > 77:Payment methods
+77:Payments list > 77:Settlements
+77:Till > 77:Record cash payment > 78:Document view
+home > 78:Documents > 78:Document view > 78!Send document
+78:Document view > 78!Credit note
+78:Documents > 78:Document templates
+78:Documents > 78:Number series
+75:Website home > 78:Check a receipt
+78:My receipts > 78:Document view
+79:Open till > 77:Till > 79:Cash-up > 79!Submit cash-up
+79:Cash-up > 79!Variance found
+79:Cash-ups > 79:Cash-up detail
+
+## Accounting, reports, APEX, SEO
+home > 80:Exports > 80!Run export
+80:Exports > 80:Export mapping
+home > 81:Dashboards > 81:Dashboard > 81!Export report
+81:Dashboard > 81!Share report
+81:Dashboards > 81:Report builder > 81:Saved reports
+81:Dashboards > 81:Scheduled reports
+81:Dashboards > 81:Targets and alerts
+home > 82:APEX status > 82:Sync log > 82:Fix sync error > 82!Retry sync
+82:APEX status > 82:APEX settings
+home > 83:SEO home > 83:Page SEO
+83:SEO home > 83:Redirects
+83:SEO home > 83:Listings
+83:SEO home > 83:Tracking
+83:SEO home > 83:Search reports
+
+## Module settings
+11:File browser > 11:Files settings
+18:Devices list > 18:Device settings
+21:Keys register > 21:Key settings
+22:Staff directory > 22:HR records settings
+24:Onboarding list > 24:Onboarding and exit settings
+29:My payslips > 29:Payslip settings
+35:Cases > 35:Discipline settings
+36:My requests > 36:Requests and welfare settings
+37:My claims > 37:Petty cash settings
+40:Report fault > 40:Maintenance settings
+41:Assets list > 41:Asset settings
+42:My tasks > 42:Task settings
+43:Room board > 43:Housekeeping settings
+44:Laundry orders > 44:Laundry settings
+45:Security home > 45:Security settings
+46:Lost and found > 46:Lost and found settings
+47:Vehicles > 47:Fleet settings
+53:Calendar > 53:Calendar settings
+54:Guests list > 54:CRM settings
+55:Corporate accounts > 55:Corporate account settings
+56:Feedback inbox > 56:Feedback settings
+60:Request help > 60:Guest request settings
+62:Food home > 62:Ordering settings
+65:Buffet sessions > 65:Buffet settings
+67:Rooms > 67:Booking settings
+68:Museum home > 68:Museum settings
+70:Venues > 70:Venue settings
+71:Pool home > 71:Pool settings
+73:Shop > 73:Shop settings
+79:Cash-up > 79:Cash-up settings

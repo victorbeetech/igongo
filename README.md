@@ -254,7 +254,7 @@ These are required for all code, even when a task doesn't repeat them. The detai
 
 ## Roles and access
 
-Roles are data that the super admin creates and edits, not code. The system ships with **72 pre-made roles** as starting templates. Each one has its own file in [docs/roles](docs/roles/README.md), with its purpose, modules, default permissions, approval limits and home screen tiles. Approval limits use tiers (Tier 1, 2, 3 and Unlimited), and the super admin sets the amount for each tier.
+Roles are data that the super admin creates and edits, not code. The system ships with **121 pre-made roles** as starting templates, from the board to small roles such as pool attendant and generator operator, plus partner roles for suppliers and contractors. The super admin creates the real roles, and one person can hold several, such as Pool Attendant plus Museum Guide, seeing both jobs in one app. Each one has its own file in [docs/roles](docs/roles/README.md), with its purpose, modules, default permissions, approval limits and home screen tiles. Approval limits use tiers (Tier 1, 2, 3 and Unlimited), and the super admin sets the amount for each tier.
 
 ### System
 
@@ -312,6 +312,15 @@ Roles are data that the super admin creates and edits, not code. The system ship
 | [IT Support Officer](docs/roles/it-support.md) | Sets up devices and printers, prints cards and helps staff with app problems. |
 | [Delivery Dispatcher](docs/roles/dispatcher.md) | Assigns deliveries to riders and watches them until delivered. |
 | [Sales Executive](docs/roles/sales-executive.md) | Finds and looks after corporate, event and group clients. |
+| [Museum Curator](docs/roles/museum-curator.md) | Looks after the collection and exhibits, writes exhibit content and audio guides. |
+| [Night Auditor](docs/roles/night-auditor.md) | Checks the day's takings, bills and room charges overnight and closes the day. |
+| [Health and Safety Officer](docs/roles/health-safety-officer.md) | Runs safety inspections, fire drills and incident follow-up. |
+| [Procurement Officer](docs/roles/procurement-officer.md) | Buys for the hotel: quotes, purchase orders and supplier follow-up. |
+| [Credit Controller](docs/roles/credit-controller.md) | Follows up corporate balances, invoices and deposits. |
+| [Social Media and Content Officer](docs/roles/social-media-officer.md) | Posts on social media, answers reviews and runs campaigns. |
+| [Personal Assistant to the GM](docs/roles/personal-assistant.md) | Manages the GM's diary, meetings and correspondence. |
+| [Board Secretary](docs/roles/company-secretary.md) | Prepares board papers, minutes and resolutions. |
+| [Tours and Experiences Coordinator](docs/roles/tour-coordinator.md) | Plans tours and cultural experiences and books guides and performers. |
 
 ### Everyone
 
@@ -351,9 +360,44 @@ Roles are data that the super admin creates and edits, not code. The system ship
 | [Museum Guide](docs/roles/museum-guide.md) | Leads tours of the museum, cultural village and monuments, and checks tickets. |
 | [Cultural Performer](docs/roles/cultural-performer.md) | Performs dance, music and cultural experiences for guests and events. |
 | [Shop Attendant](docs/roles/shop-attendant.md) | Sells crafts, books and souvenirs and packs online orders. |
-| [Store Keeper](docs/roles/store-keeper.md) | Keeps the stores: issues assets, uniforms and linen, and signs keys and equipment in and out. |
+| [Store Keeper](docs/roles/store-keeper.md) | Keeps the stores: receives deliveries, issues stock against approved requisitions, runs counts, and signs assets, uniforms, linen and keys in and out. |
 | [Casual Worker](docs/roles/casual-worker.md) | A short-term or daily worker, such as extra event staff. |
 | [Intern / Trainee](docs/roles/intern.md) | A learner placed in a department, with view access to their department's work and their training plan. |
+| [Pool Attendant](docs/roles/pool-attendant.md) | Keeps the pool area clean and ready: towels, loungers, entry checks and pool-side orders. |
+| [Pool Plant Operator](docs/roles/pool-plant-operator.md) | Runs pumps, filters and dosing, and records water tests and plant checks. |
+| [Swimming Instructor](docs/roles/swimming-instructor.md) | Teaches swimming lessons and keeps lesson registers. |
+| [Museum Ticket Attendant](docs/roles/museum-attendant.md) | Sells and scans museum tickets and welcomes visitors at the entrance. |
+| [Craftsperson / Artisan in Residence](docs/roles/craftsperson.md) | Makes and demonstrates crafts, runs craft experiences for guests. |
+| [Bookshop Assistant](docs/roles/bookshop-assistant.md) | Sells books and souvenirs and keeps the shelves. |
+| [Switchboard / Call Centre Agent](docs/roles/switchboard-operator.md) | Answers calls, takes phone orders and bookings, and passes messages. |
+| [Room Service Attendant](docs/roles/room-service-attendant.md) | Takes room service orders and delivers them to rooms. |
+| [Food Runner](docs/roles/food-runner.md) | Carries food from the pass to tables, rooms and events. |
+| [Restaurant Host / Hostess](docs/roles/host-hostess.md) | Greets diners, manages reservations, the waiting list and seating. |
+| [Buffet Attendant](docs/roles/buffet-attendant.md) | Checks buffet entry, refills the buffet and records waste. |
+| [Staff Canteen Attendant](docs/roles/canteen-attendant.md) | Serves staff meals and confirms each claim with a card tap. |
+| [Pastry Chef / Baker](docs/roles/pastry-chef.md) | Makes bread, pastries and desserts for outlets and events. |
+| [Butcher](docs/roles/butcher.md) | Prepares meat and keeps the cold room in order. |
+| [Dishwasher / Kitchen Porter](docs/roles/dishwasher.md) | Washes dishes and pots and keeps the kitchen clean. |
+| [Banquet and Setup Crew](docs/roles/banquet-staff.md) | Sets up and clears venues for events and conferences. |
+| [Sound and AV Technician](docs/roles/av-technician.md) | Runs sound, lights, projectors and microphones for events. |
+| [Decorator](docs/roles/decorator.md) | Decorates venues and rooms for events and special stays. |
+| [Wristband Desk Attendant](docs/roles/wristband-desk.md) | Hands out, links and collects event wristbands at the desk. |
+| [Linen Keeper](docs/roles/linen-keeper.md) | Issues and counts linen and uniforms between the laundry and departments. |
+| [Tailor](docs/roles/tailor.md) | Repairs and alters uniforms, linen and guest clothing. |
+| [Minibar Attendant](docs/roles/minibar-attendant.md) | Checks and refills minibars and amenities in rooms. |
+| [Pest Control Officer](docs/roles/pest-control.md) | Carries out pest control rounds and records treatments. |
+| [Generator and Power Operator](docs/roles/generator-operator.md) | Runs and checks generators, solar, power changeovers and fuel levels. |
+| [Refrigeration and AC Technician](docs/roles/refrigeration-technician.md) | Maintains fridges, cold rooms, freezers and air conditioning. |
+| [Painter / Mason](docs/roles/painter-mason.md) | Paints, plasters and repairs walls, floors and buildings. |
+| [Mechanic](docs/roles/mechanic.md) | Services and repairs hotel vehicles, mowers and machines. |
+| [Parking Attendant](docs/roles/parking-attendant.md) | Directs and records vehicles in the car park. |
+| [Night Watchman](docs/roles/night-watchman.md) | Patrols at night and reports incidents. |
+| [CCTV Operator](docs/roles/cctv-operator.md) | Watches the cameras and raises incidents and alerts. |
+| [Nurse / First Aider](docs/roles/first-aider.md) | Gives first aid to guests and staff and records each case. |
+| [Photographer](docs/roles/photographer.md) | Takes photos and videos of events, rooms and food for marketing. |
+| [Office Assistant / Messenger](docs/roles/office-assistant.md) | Runs errands, delivers documents and helps offices. |
+| [Kids Club Attendant](docs/roles/kids-club-attendant.md) | Looks after children in the play area and kids' activities. |
+| [Volunteer](docs/roles/volunteer.md) | A short-term helper with access only to assigned tasks and events. |
 
 ### Guests and clients
 
@@ -362,6 +406,16 @@ Roles are data that the super admin creates and edits, not code. The system ship
 | [Guest / Client](docs/roles/guest.md) | Any visitor or customer: hotel guests, diners, museum visitors, swimmers, spa clients, shoppers and event guests. |
 | [Corporate Booker](docs/roles/corporate-client.md) | A person who books for a company, NGO, government office or school, using the company's account and agreed terms. |
 | [Event Client / Organiser](docs/roles/event-organiser.md) | The client who booked an event, such as a wedding or conference, who manages their own guest list and follows the plan. |
+
+### Partners and suppliers
+
+| Role | Purpose |
+| --- | --- |
+| [Supplier](docs/roles/supplier.md) | An outside supplier who sees their purchase orders, deliveries and payments, and books deliveries. |
+| [Contractor](docs/roles/contractor.md) | An outside company or worker doing a job on site, with a pass, work orders and safety briefing. |
+| [Event Vendor](docs/roles/event-vendor.md) | A caterer, decorator, DJ or photographer working at an event booked at Igongo. |
+| [Artisan / Consignor](docs/roles/artisan-partner.md) | A maker who sells through the crafts shop and sees their sales and balance. |
+| [Delivery Partner Rider](docs/roles/delivery-partner.md) | A rider from an outside delivery company, with the same rider screens limited to assigned orders. |
 
 ## Security
 
