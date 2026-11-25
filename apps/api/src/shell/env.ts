@@ -22,6 +22,9 @@ export interface Env extends PushEnv {
   /** Apple push key ID and team ID (the key itself is APNS_PRIVATE_KEY). */
   APNS_KEY_ID?: string;
   APPLE_TEAM_ID?: string;
+  /** Sign in with Apple: the login key's ID and the web Services ID. */
+  APPLE_KEY_ID?: string;
+  APPLE_SERVICES_ID?: string;
   // --- Secrets ---
   BETTER_AUTH_SECRET?: string;
   SETTINGS_ENCRYPTION_KEY?: string;
@@ -30,6 +33,8 @@ export interface Env extends PushEnv {
   SENTRY_DSN?: string;
   /** The Apple push .p8 key, for iPhone pushes. */
   APNS_PRIVATE_KEY?: string;
+  /** The Sign in with Apple .p8 key. */
+  APPLE_PRIVATE_KEY?: string;
 }
 
 /** The checked settings. */

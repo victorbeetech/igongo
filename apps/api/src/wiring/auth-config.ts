@@ -5,8 +5,9 @@
  * Google: the client ID is a public variable and the secret a Worker secret
  * (`GOOGLE_CLIENT_SECRET`); keys saved in the console (`google.client_id`,
  * `google.client_secret`) win, so the hotel can swap to its own account
- * without a deploy. Apple: only from the console's keys, and only when all
- * four are set (team ID, key ID, Services ID, .p8 key).
+ * without a deploy. Apple works the same way: Worker values (APPLE_TEAM_ID,
+ * APPLE_KEY_ID, APPLE_SERVICES_ID, secret APPLE_PRIVATE_KEY) unless the
+ * console's keys override them, and only when all four are set.
  */
 
 import type { SecretReader } from "@igongo/contracts/super-admin";
@@ -22,11 +23,21 @@ export async function authConfigFrom(env: Env, secrets: SecretReader): Promise<A
   );
   const googleId = gId ?? env.GOOGLE_CLIENT_ID;
   const googleSecret = gSecret ?? env.GOOGLE_CLIENT_SECRET;
+  // Apple: console keys first, then the Worker's own values.
+  const apple = {
+    teamId: teamId ?? env.APPLE_TEAM_ID,
+    keyId: keyId ?? env.APPLE_KEY_ID,
+    clientId: clientId ?? env.APPLE_SERVICES_ID,
+    privateKey: privateKey ?? env.APPLE_PRIVATE_KEY,
+  };
   return {
     baseURL: config.baseURL,
     secret: config.authSecret,
     trustedOrigins: config.webOrigins,
     google: googleId && googleSecret ? { clientId: googleId, clientSecret: googleSecret } : null,
-    apple: teamId && keyId && clientId && privateKey ? { teamId, keyId, clientId, privateKey, ...(bundle ? { appBundleIdentifier: bundle } : {}) } : null,
+    apple:
+      apple.teamId && apple.keyId && apple.clientId && apple.privateKey
+        ? { teamId: apple.teamId, keyId: apple.keyId, clientId: apple.clientId, privateKey: apple.privateKey, ...(bundle ? { appBundleIdentifier: bundle } : {}) }
+        : null,
   };
 }

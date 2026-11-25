@@ -24,6 +24,9 @@
     "GOOGLE_CLIENT_ID": "707707727967-gdpm3r7q6ckrlorrmoq9a2obchqkm4a7.apps.googleusercontent.com",
     // Apple push (APNs) key ID and team; the key itself is the secret APNS_PRIVATE_KEY.
     "APNS_KEY_ID": "J52S98JL2W",
-    "APPLE_TEAM_ID": "UNNDMY45JR"
+    "APPLE_TEAM_ID": "UNNDMY45JR",
+    // Sign in with Apple: the web Services ID (the .p8 key is the secret APPLE_PRIVATE_KEY).
+    "APPLE_SERVICES_ID": "com.victorbee.igongo.web",
+    "APPLE_KEY_ID": "92F73K6327"
   }
 }
