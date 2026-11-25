@@ -69,7 +69,7 @@ export function SidebarSearch({ modules, onQuery, focusSignal }: { modules: Modu
         <Search size={16} aria-hidden className="shrink-0 text-muted" />
         <span className="sr-only">Search pages, pop-ups and modules</span>
         <input ref={input} type="search" value={query} onChange={(e) => change(e.target.value)} onKeyDown={onKeyDown}
-          placeholder="Search everything" aria-controls="sidebar-results" autoComplete="off"
+          placeholder="Search everything" aria-controls={query.trim() ? "sidebar-results" : undefined} autoComplete="off"
           className="w-full min-w-0 bg-transparent text-label outline-none placeholder:text-muted [&::-webkit-search-cancel-button]:hidden" />
         {query ? (
           <button type="button" onClick={clear} aria-label="Clear search" className="-mr-2 inline-flex size-8 shrink-0 items-center justify-center rounded-sm text-muted hover:bg-surface"><X size={16} /></button>

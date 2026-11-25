@@ -43,7 +43,8 @@ export function ConnectionSettingsPage({ screen }: { screen: ScreenContext }) {
                 <Link key={p.slug} href={`${here}?provider=${p.slug}`} aria-current={p.slug === provider.slug ? "page" : undefined}
                   className={`flex min-h-11 items-center justify-between gap-2 rounded-md px-3 text-label ${p.slug === provider.slug ? "bg-primary-container font-bold text-on-primary-container" : "hover:bg-surface-alt"}`}>
                   <span className="truncate">{p.name}</span>
-                  <StatusChip status="Needs keys" />
+                  {/* The selected provider shows its status in the panel instead: a warning chip on the red container is too faint. */}
+                  {p.slug === provider.slug ? null : <StatusChip status="Needs keys" />}
                 </Link>
               ))}
             </div>
