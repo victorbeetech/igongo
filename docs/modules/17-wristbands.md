@@ -31,6 +31,10 @@ Manages 3,000 to 5,000 reusable NFC and QR wristbands. Bands are registered once
 - Missing band report: assigned but not returned, with a charge recorded if the client agreed to one.
 - Block a lost band instantly.
 
+### Design and print
+- Wristband designs made in the same no-code designer as staff cards, with the band number and QR code.
+- Band types record their size and chip as data, so the hotel can change band suppliers without code.
+
 ### Records
 - Scan log: every tap, where, when, by which device and whether it was allowed.
 - Event summary: bands used, meals served, peak entry times.
