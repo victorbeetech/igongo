@@ -37,6 +37,7 @@ Includes everything in the [Every Staff Member (base role)](staff-base.md) role,
 | [Corporate Accounts](../modules/55-corporate-accounts.md) | view, edit | Everything |
 | [Prices, Taxes & Discounts](../modules/76-pricing-tax.md) | view | Everything |
 | [Reports & Analytics](../modules/81-reports-analytics.md) | view, export | Everything |
+| [Stock & Inventory](../modules/84-stock-inventory.md) | view, approve, export | Everything |
 
 ## Approval limits
 

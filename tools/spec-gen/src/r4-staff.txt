@@ -1,0 +1,205 @@
+@@ staff-base | Every Staff Member (base role) | Everyone
+PURPOSE: The base role that every staff account gets automatically. It covers self-service: my attendance, shifts, leave, pay, meals, reports, tasks, notices and chat.
+HOME: Clock-in status; My shift today; My tasks; Notice board; My leave balance; My payslips; Report a fault; Switch to client view
+PERMS: 25 VC own; 26 V own; 27 VC own; 29 V own; 30 VC own; 31 V own; 32 VC own; 34 V own; 36 VC own; 38 VC own; 40 VCML dept; 42 VE assigned; 46 C all; 48 V all; 49 VML all; 50 VC own; 51 V own; 52 V own; 53 V own; 45 C all
+SCREENS: Me (profile and card), My attendance, My shifts, My leave, My pay, My meals, Notices, Chat, Tasks, Report a fault, Client view
+LIMITS: None
+RULES: Payslips open only after a PIN or fingerprint; Panic button available to everyone on site
+
+@@ receptionist | Receptionist | Frontline staff
+PURPOSE: Welcomes guests, handles front desk requests, registers walk-in clients and visitors, and takes payments at reception.
+REPORTS: front-office-manager
+HOME: Arrivals today; Guest requests; WhatsApp chats; New client account; Take payment; Lost and found
+PERMS: 54 VCE all; 60 VCE all; 67 VC all; 74 VE all; 20 VC all; 46 VCE all; 77 VC dept; 78 VC dept; 04 C all
+LIMITS: None
+RULES: Can create client accounts at the desk
+
+@@ concierge-agent | Concierge Agent (WhatsApp and chat) | Frontline staff
+PURPOSE: Answers guests on WhatsApp and in-app chat, books and orders for them, and passes requests to departments.
+REPORTS: front-office-manager
+HOME: Chats waiting; My open chats; Guest requests; Send payment link
+PERMS: 74 VE all; 54 VE all; 60 VC all; 62 VC all; 64 VC all; 68 VC all; 71 VC all; 72 VC all; 77 C all
+
+@@ porter | Porter / Bell Attendant | Frontline staff
+PURPOSE: Carries luggage, escorts guests and handles small guest requests.
+REPORTS: front-office-manager
+HOME: Requests assigned to me; Arrivals today; Lost and found
+PERMS: 60 VE assigned; 46 VC all; 47 V assigned
+
+@@ room-attendant | Room Attendant | Frontline staff
+PURPOSE: Cleans and prepares guest rooms and updates each room's status.
+REPORTS: housekeeping-supervisor
+HOME: My rooms today; Guest requests for my rooms; Report a fault; Found an item
+PERMS: 43 VE assigned; 60 VE assigned; 44 VC dept
+
+@@ cleaner | Cleaner (public areas) | Frontline staff
+PURPOSE: Cleans public areas, offices, washrooms and grounds paths on a schedule.
+REPORTS: housekeeping-supervisor
+HOME: My cleaning round; Checklist; Report a fault
+PERMS: 39 VC assigned; 43 V dept
+
+@@ laundry-attendant | Laundry Attendant | Frontline staff
+PURPOSE: Washes linen, uniforms and guest laundry, and keeps linen counts.
+REPORTS: housekeeping-manager
+HOME: Laundry orders; Linen counts; Ready for return
+PERMS: 44 VCE dept
+
+@@ chef | Chef (Chef de Partie) | Frontline staff
+PURPOSE: Runs a kitchen station, such as grill or pastry, and prepares orders from the kitchen display.
+REPORTS: sous-chef
+HOME: My station tickets; Pre-orders due; Mark item out; Record waste
+PERMS: 63 VE dept; 61 V dept; 62 V dept
+RULES: Can mark items out of stock for today at their station
+
+@@ cook | Cook | Frontline staff
+PURPOSE: Prepares food, including staff meals and buffets, following the kitchen display and production lists.
+REPORTS: sous-chef
+HOME: Tickets now; Production list today; Staff meals count
+PERMS: 63 VE dept; 65 V dept; 32 V dept
+
+@@ kitchen-steward | Kitchen Steward | Frontline staff
+PURPOSE: Keeps the kitchen, dishes and equipment clean and reports broken equipment.
+REPORTS: sous-chef
+HOME: Cleaning checklist; Report a fault
+PERMS: 39 VC assigned
+
+@@ waiter | Waiter / Waitress | Frontline staff
+PURPOSE: Serves guests at tables, by the pool and at events, taking orders and payments on their phone.
+REPORTS: restaurant-supervisor
+HOME: My tables; New order; Orders ready to serve; Call waiter alerts; Take payment; My cash-up
+PERMS: 64 VE dept; 62 VCE assigned; 77 VC own; 78 VC own; 79 VC own; 56 C all
+LIMITS: Cannot void or discount. Asks the supervisor instead
+
+@@ bartender | Bartender | Frontline staff
+PURPOSE: Prepares and sells drinks at the bars, which are sold as menu items. Bar stock is outside this project's scope.
+REPORTS: fnb-manager
+HOME: Bar tickets; New order; Take payment; My cash-up
+PERMS: 63 VE dept; 62 VC dept; 77 VC own; 78 VC own; 79 VC own
+
+@@ barista | Barista | Frontline staff
+PURPOSE: Makes and sells coffee and snacks at the coffee shops.
+REPORTS: fnb-manager
+HOME: Coffee tickets; New order; Take payment; My cash-up
+PERMS: 63 VE dept; 62 VC dept; 77 VC own; 78 VC own; 79 VC own
+
+@@ cashier | Cashier | Frontline staff
+PURPOSE: Takes payments at an outlet, issues receipts and does the end-of-shift cash-up.
+REPORTS: finance-manager
+HOME: Take payment; Open bills; Receipts today; Open shift; My cash-up
+PERMS: 77 VC dept; 78 VC dept; 79 VC own; 62 V dept; 59 V dept
+LIMITS: Cannot refund or void. Asks the supervisor instead
+RULES: Blind cash-up if the super admin switches it on
+
+@@ delivery-rider | Delivery Rider | Frontline staff
+PURPOSE: Picks up orders from the kitchen and delivers them, using the rider screens in the same Igongo app.
+REPORTS: dispatcher
+HOME: Go online; My deliveries; Navigate; Proof of delivery; Cash collected; My earnings
+PERMS: 66 VE assigned; 62 V assigned; 79 VC own
+RULES: Mobile clock-in allowed with GPS; Location shared only while online
+
+@@ driver | Driver | Frontline staff
+PURPOSE: Drives hotel vehicles for guest transfers, staff and errands.
+REPORTS: logistics-manager
+HOME: My trips today; Start trip; Fuel record; Report a vehicle fault
+PERMS: 47 VE assigned; 40 C all
+RULES: Mobile clock-in allowed with GPS
+
+@@ gatekeeper | Gatekeeper | Frontline staff
+PURPOSE: Controls the main gate: staff clock-in station, visitors, vehicles and deliveries.
+REPORTS: security-supervisor
+APP: Gate handheld in kiosk mode, and the Igongo app
+HOME: Scan card or wristband; Register visitor; Visitors inside; Vehicle log; Expected arrivals
+PERMS: 16 V all; 17 V all; 19 V all; 20 VCE all; 45 VC all; 25 V all
+SCREENS: Card scan result shows photo, name, role, on duty or not, and allowed zones only
+RULES: Can only use the gate station devices for staff clock-in
+
+@@ security-guard | Security Guard | Frontline staff
+PURPOSE: Patrols the grounds, guards zones and events, and reports incidents.
+REPORTS: security-supervisor
+HOME: My patrol route; Scan checkpoint; Scan card or wristband; Report incident; Panic button
+PERMS: 45 VC own; 16 V all; 17 V all; 19 V all; 20 V all
+
+@@ electrician | Electrician | Frontline staff
+PURPOSE: Fixes and maintains power, lighting, the generator and electrical equipment.
+REPORTS: maintenance-manager
+HOME: My jobs; Electrical faults; Planned jobs due; Scan an asset
+PERMS: 40 VEML dept; 41 V all; 39 VC assigned
+
+@@ plumber | Plumber | Frontline staff
+PURPOSE: Fixes leaks, drains, taps, toilets and pipework.
+REPORTS: maintenance-manager
+HOME: My jobs; Plumbing faults; Planned jobs due; Scan an asset
+PERMS: 40 VEML dept; 41 V all; 39 VC assigned
+
+@@ water-technician | Water Systems Technician | Frontline staff
+PURPOSE: Looks after water supply, tanks, pumps, boreholes, water treatment and the pool plant.
+REPORTS: maintenance-manager
+HOME: My jobs; Water faults; Tank and pump checks; Pool plant checks
+PERMS: 40 VEML dept; 41 V all; 39 VC assigned; 71 V all
+
+@@ carpenter | Carpenter | Frontline staff
+PURPOSE: Repairs doors, windows, furniture and wooden structures.
+REPORTS: maintenance-manager
+HOME: My jobs; Carpentry faults; Scan an asset
+PERMS: 40 VEML dept; 41 V all
+
+@@ maintenance-technician | General Maintenance Technician | Frontline staff
+PURPOSE: Handles general repairs, painting, glass, AC and anything not covered by a specialist.
+REPORTS: maintenance-manager
+HOME: My jobs; Open faults; Planned jobs due; Scan an asset
+PERMS: 40 VEML dept; 41 V all; 39 VC assigned
+
+@@ groundskeeper | Groundskeeper / Gardener | Frontline staff
+PURPOSE: Keeps the gardens, lawns, compound and cultural village grounds tidy.
+REPORTS: maintenance-manager
+HOME: My tasks today; Grounds checklist; Report a fault
+PERMS: 39 VC assigned; 42 VE assigned
+
+@@ lifeguard | Lifeguard | Frontline staff
+PURPOSE: Keeps swimmers safe, checks entries and records water tests and incidents.
+REPORTS: pool-manager
+HOME: Swimmers now; Scan pass or wristband; Water test; Report incident; Panic button
+PERMS: 71 VE dept; 45 VC own
+
+@@ spa-therapist | Spa Therapist | Frontline staff
+PURPOSE: Gives treatments and keeps the treatment rooms ready.
+REPORTS: spa-manager
+HOME: My appointments today; Guest health notes; My schedule
+PERMS: 72 VE assigned; 54 V assigned
+
+@@ museum-guide | Museum Guide | Frontline staff
+PURPOSE: Leads tours of the museum, cultural village and monuments, and checks tickets.
+REPORTS: museum-manager
+HOME: My tours today; Scan ticket; Group lists; Exhibit notes
+PERMS: 68 VE assigned; 54 V assigned
+
+@@ cultural-performer | Cultural Performer | Frontline staff
+PURPOSE: Performs dance, music and cultural experiences for guests and events.
+REPORTS: museum-manager
+HOME: My performances; My shift; Notice board
+PERMS: 68 V assigned; 69 V assigned
+
+@@ shop-attendant | Shop Attendant | Frontline staff
+PURPOSE: Sells crafts, books and souvenirs and packs online orders.
+REPORTS: crafts-manager
+HOME: New sale; Scan product; Online orders; My cash-up
+PERMS: 73 VCE dept; 77 VC own; 78 VC own; 79 VC own
+
+@@ store-keeper | Store Keeper | Frontline staff
+PURPOSE: Keeps the stores: receives deliveries, issues stock against approved requisitions, runs counts, and signs assets, uniforms, linen and keys in and out.
+REPORTS: finance-manager
+HOME: Requisitions to issue; Deliveries expected today; Low stock; Expiring soon; Count due; Asset issue and return; Uniform and linen issue; Keys out
+PERMS: 84 VCEX assigned; 41 VCE all; 21 VE all; 36 VE all; 44 V all
+RULES: Works only in the stores assigned to them; Cannot approve their own adjustments
+
+@@ casual-worker | Casual Worker | Frontline staff
+PURPOSE: A short-term or daily worker, such as extra event staff. Clocks in and sees only their shift.
+HOME: Clock-in status; My shift; Tasks
+PERMS: 25 VC own; 26 V own; 42 VE assigned
+RULES: Card expires on the last day of the engagement
+
+@@ intern | Intern / Trainee | Frontline staff
+PURPOSE: A learner placed in a department, with view access to their department's work and their training plan.
+HOME: My training; My supervisor; My tasks; Daily report
+PERMS: 34 V own; 38 VC own; 42 VE assigned; 48 V all
+RULES: Access ends on the internship end date

@@ -1,0 +1,264 @@
+@@ pool-attendant | Pool Attendant | Frontline staff
+PURPOSE: Keeps the pool area clean and ready: towels, loungers, entry checks and pool-side orders. One person can also hold the Museum Guide role or any other role, and sees both jobs.
+REPORTS: pool-manager
+HOME: Scan pass or wristband; Swimmers now; Cleaning checklist; Report a fault; Panic button
+PERMS: 71 VE dept; 39 VC assigned; 62 VC dept; 45 C all
+
+@@ pool-plant-operator | Pool Plant Operator | Frontline staff
+PURPOSE: Runs pumps, filters and dosing, and records water tests and plant checks.
+REPORTS: pool-manager
+HOME: Water tests due; Pool plant checks; Report a fault; Scan an asset
+PERMS: 71 VE dept; 39 VC assigned; 40 VC dept; 41 V dept
+
+@@ swimming-instructor | Swimming Instructor | Frontline staff
+PURPOSE: Teaches swimming lessons and keeps lesson registers.
+REPORTS: pool-manager
+HOME: My schedule; Swimmers now; Report incident
+PERMS: 71 VE assigned; 54 V assigned; 45 C all
+
+@@ museum-attendant | Museum Ticket Attendant | Frontline staff
+PURPOSE: Sells and scans museum tickets and welcomes visitors at the entrance.
+REPORTS: museum-manager
+HOME: Scan ticket; Tours booked; Take payment; My cash-up
+PERMS: 68 VCE dept; 77 VC dept; 78 VC dept; 79 VC own
+
+@@ museum-curator | Museum Curator | Supervisors and officers
+PURPOSE: Looks after the collection and exhibits, writes exhibit content and audio guides.
+REPORTS: museum-manager
+HOME: Exhibit content; Inspections due; Report a fault
+PERMS: 68 VCE dept; 11 VCE dept; 39 VC dept; 41 VCE dept
+
+@@ craftsperson | Craftsperson / Artisan in Residence | Frontline staff
+PURPOSE: Makes and demonstrates crafts, runs craft experiences for guests.
+REPORTS: crafts-manager
+HOME: My schedule; Artisan balances; Scan product
+PERMS: 73 V own; 68 V assigned
+
+@@ bookshop-assistant | Bookshop Assistant | Frontline staff
+PURPOSE: Sells books and souvenirs and keeps the shelves.
+REPORTS: crafts-manager
+HOME: New sale; Scan product; My cash-up
+PERMS: 73 VCE dept; 77 VC dept; 79 VC own
+
+@@ night-auditor | Night Auditor | Supervisors and officers
+PURPOSE: Checks the day's takings, bills and room charges overnight and closes the day.
+REPORTS: finance-manager
+HOME: Cash-ups to check; Takings today by method; Voids and refunds this week; App bookings waiting for APEX
+PERMS: 77 VX all; 78 VX all; 79 VAX all; 82 V all; 81 V all
+
+@@ switchboard-operator | Switchboard / Call Centre Agent | Frontline staff
+PURPOSE: Answers calls, takes phone orders and bookings, and passes messages.
+REPORTS: front-office-manager
+HOME: New order; Guest requests; Chats waiting
+PERMS: 62 VC all; 64 VC all; 67 VC all; 60 VC all; 74 VE all; 54 V all
+
+@@ room-service-attendant | Room Service Attendant | Frontline staff
+PURPOSE: Takes room service orders and delivers them to rooms.
+REPORTS: restaurant-supervisor
+HOME: Orders ready to serve; New order; Take payment
+PERMS: 62 VCE dept; 77 VC dept
+
+@@ food-runner | Food Runner | Frontline staff
+PURPOSE: Carries food from the pass to tables, rooms and events.
+REPORTS: restaurant-supervisor
+HOME: Orders ready to serve; My tables
+PERMS: 62 VE dept; 64 V dept
+
+@@ host-hostess | Restaurant Host / Hostess | Frontline staff
+PURPOSE: Greets diners, manages reservations, the waiting list and seating.
+REPORTS: restaurant-supervisor
+HOME: Reservations next 2 hours; Table map; Book a table
+PERMS: 64 VCE dept; 54 V dept
+
+@@ buffet-attendant | Buffet Attendant | Frontline staff
+PURPOSE: Checks buffet entry, refills the buffet and records waste.
+REPORTS: restaurant-supervisor
+HOME: Scan card or wristband; Production list today; Record waste
+PERMS: 65 VE dept; 63 V dept; 31 V all
+
+@@ canteen-attendant | Staff Canteen Attendant | Frontline staff
+PURPOSE: Serves staff meals and confirms each claim with a card tap.
+REPORTS: executive-chef
+HOME: Staff meals count; Staff meals forecast
+PERMS: 32 VCE all
+
+@@ pastry-chef | Pastry Chef / Baker | Frontline staff
+PURPOSE: Makes bread, pastries and desserts for outlets and events.
+REPORTS: sous-chef
+HOME: My station tickets; Production list today; Record waste; Mark item out
+PERMS: 63 VE dept; 61 VE dept; 84 VC dept
+
+@@ butcher | Butcher | Frontline staff
+PURPOSE: Prepares meat and keeps the cold room in order.
+REPORTS: sous-chef
+HOME: My station tickets; Production list today; Record waste
+PERMS: 63 VE dept; 84 VC dept
+
+@@ dishwasher | Dishwasher / Kitchen Porter | Frontline staff
+PURPOSE: Washes dishes and pots and keeps the kitchen clean.
+REPORTS: kitchen-steward
+HOME: Cleaning checklist; Report a fault
+PERMS: 39 VC assigned
+
+@@ banquet-staff | Banquet and Setup Crew | Frontline staff
+PURPOSE: Sets up and clears venues for events and conferences.
+REPORTS: events-coordinator
+HOME: Run sheet today; Event tasks; Venue calendar
+PERMS: 69 V dept; 70 VE dept; 42 VE assigned
+
+@@ av-technician | Sound and AV Technician | Frontline staff
+PURPOSE: Runs sound, lights, projectors and microphones for events.
+REPORTS: events-manager
+HOME: Run sheet today; Event tasks; Scan an asset; Report a fault
+PERMS: 69 V dept; 70 VE dept; 41 VE dept; 40 VC dept
+
+@@ decorator | Decorator | Frontline staff
+PURPOSE: Decorates venues and rooms for events and special stays.
+REPORTS: events-coordinator
+HOME: Run sheet today; Event tasks
+PERMS: 69 V dept; 42 VE assigned
+
+@@ wristband-desk | Wristband Desk Attendant | Frontline staff
+PURPOSE: Hands out, links and collects event wristbands at the desk.
+REPORTS: events-coordinator
+HOME: Wristbands assigned; Scan card or wristband; Guest list check-in
+PERMS: 17 VE dept; 69 V dept
+
+@@ linen-keeper | Linen Keeper | Frontline staff
+PURPOSE: Issues and counts linen and uniforms between the laundry and departments.
+REPORTS: housekeeping-supervisor
+HOME: Linen counts; Uniform and linen issue; Laundry today
+PERMS: 44 VCE all; 84 VC dept
+
+@@ tailor | Tailor | Frontline staff
+PURPOSE: Repairs and alters uniforms, linen and guest clothing.
+REPORTS: housekeeping-manager
+HOME: Laundry orders; Uniform and linen issue
+PERMS: 44 VE dept
+
+@@ minibar-attendant | Minibar Attendant | Frontline staff
+PURPOSE: Checks and refills minibars and amenities in rooms.
+REPORTS: housekeeping-supervisor
+HOME: My rooms today; Low stock
+PERMS: 43 VE dept; 84 VC dept
+
+@@ pest-control | Pest Control Officer | Frontline staff
+PURPOSE: Carries out pest control rounds and records treatments.
+REPORTS: maintenance-manager
+HOME: Checklist; Report a fault
+PERMS: 39 VC assigned; 40 VC dept
+
+@@ generator-operator | Generator and Power Operator | Frontline staff
+PURPOSE: Runs and checks generators, solar, power changeovers and fuel levels.
+REPORTS: maintenance-manager
+HOME: Tank and pump checks; Electrical faults; Fuel record; Scan an asset
+PERMS: 39 VC assigned; 40 VE dept; 41 VE dept; 47 VC dept
+
+@@ refrigeration-technician | Refrigeration and AC Technician | Frontline staff
+PURPOSE: Maintains fridges, cold rooms, freezers and air conditioning.
+REPORTS: maintenance-manager
+HOME: My jobs; Planned jobs due; Scan an asset
+PERMS: 40 VEML dept; 41 V all; 39 VC assigned
+
+@@ painter-mason | Painter / Mason | Frontline staff
+PURPOSE: Paints, plasters and repairs walls, floors and buildings.
+REPORTS: maintenance-manager
+HOME: My jobs; Report a fault
+PERMS: 40 VEML dept
+
+@@ mechanic | Mechanic | Frontline staff
+PURPOSE: Services and repairs hotel vehicles, mowers and machines.
+REPORTS: logistics-manager
+HOME: Vehicle service due; My jobs; Fuel record
+PERMS: 47 VE all; 40 VE dept; 41 VE dept
+
+@@ parking-attendant | Parking Attendant | Frontline staff
+PURPOSE: Directs and records vehicles in the car park.
+REPORTS: security-supervisor
+HOME: Vehicle log; Visitors inside
+PERMS: 20 VCE all
+
+@@ night-watchman | Night Watchman | Frontline staff
+PURPOSE: Patrols at night and reports incidents.
+REPORTS: security-supervisor
+HOME: My patrol route; Scan checkpoint; Report incident; Panic button
+PERMS: 45 VC own; 19 V all
+
+@@ cctv-operator | CCTV Operator | Frontline staff
+PURPOSE: Watches the cameras and raises incidents and alerts.
+REPORTS: security-manager
+HOME: Incidents today; Refused entries; Panic alerts
+PERMS: 45 VC all; 19 V all
+
+@@ health-safety-officer | Health and Safety Officer | Supervisors and officers
+PURPOSE: Runs safety inspections, fire drills and incident follow-up.
+REPORTS: general-manager
+HOME: Inspections due; Incidents open; Open faults by urgency
+PERMS: 39 VCEA all; 45 VEA all; 40 VC all; 34 VC all
+
+@@ first-aider | Nurse / First Aider | Frontline staff
+PURPOSE: Gives first aid to guests and staff and records each case.
+REPORTS: hr-manager
+HOME: Report incident; Incidents today; Panic alerts
+PERMS: 45 VC all
+
+@@ procurement-officer | Procurement Officer | Supervisors and officers
+PURPOSE: Buys for the hotel: quotes, purchase orders and supplier follow-up.
+REPORTS: finance-manager
+HOME: Low stock; Deliveries expected today; Quotes waiting
+PERMS: 84 VCEX all; 37 V all
+
+@@ credit-controller | Credit Controller | Supervisors and officers
+PURPOSE: Follows up corporate balances, invoices and deposits.
+REPORTS: finance-manager
+HOME: Overdue invoices; Corporate accounts; Deposits due
+PERMS: 55 VE all; 78 VCX all; 77 V all
+
+@@ social-media-officer | Social Media and Content Officer | Supervisors and officers
+PURPOSE: Posts on social media, answers reviews and runs campaigns.
+REPORTS: sales-marketing-manager
+HOME: Campaign results; Review scores; Active promotions
+PERMS: 58 VCE all; 56 VE all; 59 V all; 83 VE all; 75 VE all
+
+@@ photographer | Photographer | Frontline staff
+PURPOSE: Takes photos and videos of events, rooms and food for marketing.
+REPORTS: sales-marketing-manager
+HOME: Events this week; Tasks
+PERMS: 11 VC all; 69 V all
+
+@@ office-assistant | Office Assistant / Messenger | Frontline staff
+PURPOSE: Runs errands, delivers documents and helps offices.
+REPORTS: general-manager
+HOME: My tasks today; Notice board
+PERMS: 42 VE assigned
+
+@@ personal-assistant | Personal Assistant to the GM | Supervisors and officers
+PURPOSE: Manages the GM's diary, meetings and correspondence.
+REPORTS: general-manager
+HOME: Board meeting papers; Approvals waiting for me; Tasks
+PERMS: 51 VCE all; 53 VCE all; 42 VCE all; 49 VC all
+
+@@ company-secretary | Board Secretary | Supervisors and officers
+PURPOSE: Prepares board papers, minutes and resolutions.
+REPORTS: board-of-directors
+HOME: Board meeting papers; Decisions awaiting the board
+PERMS: 51 VCE all; 11 VCE all; 53 VC all
+
+@@ kids-club-attendant | Kids Club Attendant | Frontline staff
+PURPOSE: Looks after children in the play area and kids' activities.
+REPORTS: guest-relations-officer
+HOME: My schedule; Report incident; Panic button
+PERMS: 45 C all; 54 V assigned
+
+@@ tour-coordinator | Tours and Experiences Coordinator | Supervisors and officers
+PURPOSE: Plans tours and cultural experiences and books guides and performers.
+REPORTS: museum-manager
+HOME: Tours booked; Group and school bookings; Guides on duty
+PERMS: 68 VCEA dept; 26 VCE dept; 54 V dept
+
+@@ volunteer | Volunteer | Frontline staff
+PURPOSE: A short-term helper with access only to assigned tasks and events.
+REPORTS: department-supervisor
+HOME: My tasks today; Notice board
+PERMS: 42 VE assigned
+RULES: Access ends on the last day of the engagement

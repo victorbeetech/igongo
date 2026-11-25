@@ -1,0 +1,463 @@
+@@ 54 | crm-guests | CRM: Guest & Client Profiles | Guests and sales
+One profile for every guest and client, across rooms, food, events, museum, pool, spa and shop, so staff know who they are serving.
+
+## Features
+- Profile: name, phone, email, nationality, ID (if collected), photo, preferences, allergies and notes.
+- Full history: stays (from APEX), orders, bookings, visits, spend, feedback and complaints.
+- Tags and segments, such as VIP, regular, school, government, wedding client.
+- Duplicate detection and merge.
+- Consent records for SMS, WhatsApp and email marketing.
+- Birthday and anniversary reminders.
+- Staff notes, visible by role.
+- Guest's own view: my bookings, orders, receipts, points and saved details.
+- Data export and delete on request.
+
+## Super admin options
+- Profile fields and tags.
+- Who can see contact details and spend.
+- Segment rules.
+- Data retention for inactive guests.
+
+DEPENDS: 07
+EVENTS: guest.created, guest.updated, guest.merged, guest.tagged, guest.consent_changed
+
+@@ 55 | corporate-accounts | Corporate Accounts | Guests and sales
+Companies, NGOs, government offices and schools that book often or on credit.
+
+## Features
+- Company profile with contacts, TIN and agreed terms.
+- Approved bookers who can book on the company's behalf in the app.
+- Credit limit and balance, with statements.
+- Negotiated rates and packages.
+- Booking and spend history.
+- Contract and LPO documents.
+
+## Super admin options
+- Who can approve credit and set limits.
+- Whether corporate bookers can book without staff confirmation.
+
+DEPENDS: 54 09
+EVENTS: corporate.created, corporate.credit_exceeded, corporate.statement_sent
+
+@@ 56 | guest-feedback | Feedback, Complaints & Reviews | Guests and sales
+Collects guest feedback after every service, handles complaints to the end, and tracks reviews.
+
+## Features
+- Automatic feedback request after a stay, meal, event, tour, pool visit or spa treatment.
+- Star ratings and comments, per service and per staff member if wanted.
+- Complaint tickets with owner, deadline, actions and resolution.
+- Escalation of low ratings to the manager straight away.
+- Thank-you or apology messages, with an optional voucher.
+- Review link to Google and booking sites for happy guests.
+- Satisfaction scores by department over time.
+
+## Super admin options
+- Which services ask for feedback, and when.
+- Questions per service.
+- What rating counts as a complaint.
+- Who handles complaints per department.
+
+DEPENDS: 54 10
+EVENTS: feedback.received, complaint.opened, complaint.resolved, rating.low
+
+@@ 57 | loyalty | Loyalty & Membership | Guests and sales
+Rewards returning guests with points, tiers and memberships across every outlet.
+
+## Features
+- Earn points on rooms, food, events, museum, pool, spa and shop.
+- Tiers, such as Silver, Gold and Platinum, with benefits.
+- Redeem points for food, passes or discounts.
+- Memberships for pool, spa or gym, with renewal.
+- Digital membership card with QR code in the app.
+- Points statement and expiry.
+
+## Super admin options
+- Earn and redeem rules per outlet.
+- Tiers and benefits.
+- Point expiry.
+
+DEPENDS: 54
+EVENTS: points.earned, points.redeemed, tier.changed, membership.renewed
+
+@@ 58 | campaigns | Marketing Campaigns | Guests and sales
+Sends targeted offers and news to guests by SMS, WhatsApp, email and push, to people who agreed to receive them.
+
+## Features
+- Campaign builder with audience segment, message, channel and schedule.
+- Personalised messages with names and offers.
+- Automatic journeys, such as "welcome", "we miss you" or "birthday offer".
+- Opt-out link in every message.
+- Results: sent, delivered, opened, clicked, booked and revenue.
+
+## Super admin options
+- Who can create and send campaigns.
+- Whether campaigns need approval.
+- Monthly sending limits.
+
+DEPENDS: 54 10
+EVENTS: campaign.sent, campaign.completed, guest.opted_out
+
+@@ 59 | promotions-vouchers | Promotions, Vouchers & Gift Cards | Guests and sales
+Promo codes, discounts, vouchers and gift cards that work across outlets.
+
+## Features
+- Promo codes with rules: dates, outlets, items, minimum spend and usage limits.
+- Happy hour and time-based offers.
+- Vouchers for complaints, prizes and staff rewards.
+- Gift cards bought in the app, with a QR code and balance.
+- Redeem by scanning at any till.
+- Fraud checks for overuse.
+
+## Super admin options
+- Who can create promotions.
+- Maximum discount without approval.
+- Which outlets accept which vouchers.
+
+DEPENDS: 54
+EVENTS: promo.created, voucher.issued, voucher.redeemed, giftcard.sold
+
+@@ 60 | guest-requests | Guest Requests & Help Desk | Guests and sales
+Guests ask for anything from the app, WhatsApp or front desk, and the request goes to the right team and is tracked until done.
+
+## Features
+- Request types: towels, cleaning, wake-up call, maintenance, transport, extra bed, information and more.
+- Routing to the right department automatically.
+- Target times, with alerts when late.
+- Guest sees the status live.
+- Staff update status and add notes.
+- Rate the service when done.
+
+## Super admin options
+- Request types, routing rules and target times.
+- Which requests guests can make in the app.
+
+DEPENDS: 54 15 10
+EVENTS: guestrequest.created, guestrequest.assigned, guestrequest.completed, guestrequest.late
+
+@@ 61 | menu-catalogue | Menus & Catalogue | Guests and sales
+The master list of everything the kitchen, bars and coffee shops sell, kept separate from ordering so menus can be changed without touching orders.
+
+## Features
+- Menus per outlet and time (breakfast, lunch, dinner, room service, staff canteen, events).
+- Items with photos, description, portion sizes and options (such as "1 kg", "half kg", "well done").
+- Extras and add-ons.
+- Allergens and dietary tags (vegetarian, halal, spicy).
+- Out of stock switch for today, from the kitchen.
+- Event and buffet menus and set packages.
+- Prep time per item, used for pre-orders.
+
+## Super admin options
+- Who can edit menus and prices.
+- Which menus show in the client view.
+- Menu schedules.
+
+DEPENDS: 15 11 76
+EVENTS: menu.published, item.updated, item.out_of_stock, item.back_in_stock
+
+@@ 62 | food-ordering | Food Ordering | Guests and sales
+Takes every food and drink order, from any channel and of any type: delivery, room service, dine-in, takeaway and pre-order for a set arrival time, such as "fry 1 kg of beef, we arrive at 4 PM".
+
+## Features
+
+### Order types
+- Delivery to an address or a spot on the grounds.
+- Room service.
+- Dine-in at a table.
+- Takeaway and pickup.
+- Pre-order with arrival time: the guest orders and pays a deposit or in full, and the kitchen starts so the food is ready when they arrive.
+- Group and event orders.
+
+### Channels
+- The app (client view), WhatsApp, the website, phone call (staff enters it) and the waiter's phone at the table.
+
+### The order
+- Cart with options, notes and allergies.
+- Ready-time estimate from item prep times and kitchen load.
+- Pay now, pay a deposit, pay on arrival or charge to room (through APEX) or to a corporate account.
+- Order tracking for the guest: received, preparing, ready, on the way, delivered.
+- Change or cancel within the allowed time.
+- Reorder from history.
+
+### Staff tools
+- Waiter order taking on a phone, with table and seat.
+- Split and merge bills.
+- Void and discount with reasons and approval.
+
+## Super admin options
+- Order types on or off per outlet.
+- Minimum notice for pre-orders, and the deposit rule.
+- Cancel and change windows.
+- Which payment options each order type allows.
+- Who can void or discount, and up to what tier.
+
+DEPENDS: 61 76 77
+EVENTS: order.placed, order.confirmed, order.changed, order.cancelled, order.ready, order.completed, preorder.due
+
+@@ 63 | kitchen-display | Kitchen Display & Production | Guests and sales
+Shows orders to the kitchen and bar on screens or printers, by station, in the right order and at the right time.
+
+## Features
+- Kitchen screens per station (grill, fryer, pastry, bar, coffee).
+- Order tickets with time, type, table or room and notes.
+- Pre-orders appear at the right moment before the guest's arrival time.
+- Bump items as started and ready.
+- Colour alerts for late orders.
+- Kitchen printer fallback.
+- Expo screen for the pass, to check complete orders.
+- Daily production list for big events and buffets.
+- Food waste recording with reasons.
+
+## Super admin options
+- Stations and which items go to each.
+- Target times and late alert thresholds.
+- How early pre-orders appear.
+
+DEPENDS: 62 18
+EVENTS: ticket.started, ticket.ready, ticket.late, waste.recorded
+
+@@ 64 | tables-dinein | Tables & Dine-in | Guests and sales
+Restaurant floor plans, table reservations and the waiter's view of the dining room.
+
+## Features
+- Floor plan editor per restaurant, with tables and seats.
+- Table reservations from the app, WhatsApp or the front desk, with deposit if needed.
+- Table status: free, reserved, seated, ordered, bill asked, paid.
+- Assign waiters to sections.
+- Waiting list with SMS when a table is ready.
+- QR code on every table: scan to see the menu, order and pay.
+- Call waiter button.
+
+## Super admin options
+- Floor plans and table sizes.
+- Reservation rules, time slots and deposits.
+- Whether guests can order from the table QR without a waiter.
+
+DEPENDS: 15 54
+EVENTS: table.reserved, table.seated, table.freed, waiter.called
+
+@@ 65 | buffet | Buffet Service | Guests and sales
+Runs buffets for guests, events and staff bonuses: who may eat, how many times, and how many were served.
+
+## Features
+- Buffet sessions with date, time, menu and capacity.
+- Entry by ticket QR, wristband, staff card (for buffet bonuses) or payment at the door.
+- Headcount live and at close.
+- Event buffets linked to the event's wristband range.
+- Forecast for the kitchen from bookings.
+
+## Super admin options
+- Buffet sessions and who can enter.
+- Whether re-entry is allowed.
+
+DEPENDS: 61 17 16
+EVENTS: buffet.entry, buffet.denied, buffet.closed
+
+@@ 66 | delivery-riders | Delivery & Riders | Guests and sales
+Delivers orders to guests on the grounds and in town, with a rider interface in the same Igongo app.
+
+## Features
+
+### Dispatch
+- Delivery zones drawn on a map, with fees and times per zone.
+- Assign orders to riders automatically or by a dispatcher.
+- Batch several orders for one rider.
+
+### Rider interface
+- Go online or offline.
+- Accept order, navigate with Google Maps, call the guest.
+- Pickup confirmation at the kitchen pass.
+- Proof of delivery: photo, signature or the guest's code.
+- Cash collection recorded, with end-of-shift hand-in.
+- Earnings and trips history.
+
+### Guest side
+- Live rider location on a map and arrival time.
+- Rate the rider.
+
+## Super admin options
+- Zones, delivery hours and fees.
+- Assignment mode (automatic or dispatcher).
+- Proof of delivery type.
+- Whether riders can carry cash, and the cash limit.
+
+DEPENDS: 62 77
+EVENTS: delivery.assigned, delivery.picked_up, delivery.delivered, delivery.failed, rider.online, rider.offline
+
+@@ 67 | room-bookings | Room Bookings | Guests and sales
+Lets guests see and book rooms in the app and website. APEX stays the system of record for rooms, so this module checks availability with APEX and sends bookings to it.
+
+## Features
+- Room types with photos, amenities and capacity.
+- Availability and rates read from APEX through [APEX Integration](82-apex-integration.md).
+- Book, pay a deposit or in full, and get a confirmation.
+- Change and cancel within the policy.
+- Pre-arrival: arrival time, requests, airport pickup and pre-ordered food.
+- Packages, such as room plus museum tour plus dinner.
+- Digital check-in form, sent to front desk.
+- Booking history in the guest profile.
+
+## Super admin options
+- Which room types are sold in the app.
+- Deposit and cancellation policies.
+- Packages.
+- What to do when APEX is offline (stop sales, or take requests to confirm later).
+
+DEPENDS: 82 77 54
+EVENTS: roombooking.requested, roombooking.confirmed, roombooking.cancelled, roombooking.sync_failed
+
+@@ 68 | museum | Museum & Cultural Visits | Guests and sales
+Tickets, tours and group visits for the Eriijukiro Museum, the cultural village and the monuments.
+
+## Features
+- Ticket types: adult, child, student, resident, foreigner and group.
+- Timed entry slots and capacity.
+- Guided tour booking with language and guide assignment.
+- School and group bookings with lists, deposit and invoice.
+- QR tickets scanned at the entrance.
+- Audio guide content in the app, per exhibit, with QR codes on exhibits.
+- Cultural performances and experiences (such as cooking, dance, crafts) as bookable activities.
+- Visitor numbers and trends.
+
+## Super admin options
+- Ticket types, slots and capacity.
+- Group booking rules.
+- Exhibit content and languages.
+
+DEPENDS: 77 54
+EVENTS: museum.ticket_sold, museum.entry, tour.booked, tour.completed
+
+@@ 69 | events-conferences | Events & Conferences | Guests and sales
+Plans and sells weddings, introductions, conferences, parties and company retreats, from enquiry to the final invoice.
+
+## Features
+- Enquiry form in the app, WhatsApp and website.
+- Event pipeline: enquiry, site visit, quote, confirmed, in progress, completed.
+- Packages with venue, food, decor, equipment and wristbands.
+- Quotes and contracts from templates, with e-signature.
+- Deposits and payment schedule.
+- Event timeline and run sheet with tasks for each department.
+- Guest list with RSVP and QR invites.
+- Wristband ranges linked from [Event Wristbands](17-wristbands.md).
+- Staffing needs sent to [Shifts & Rosters](26-shifts-rosters.md).
+- Post-event report and feedback.
+
+## Super admin options
+- Event types, pipeline stages and packages.
+- Deposit rules and contract templates.
+- Who can confirm and discount events.
+
+DEPENDS: 70 77 54
+EVENTS: event.enquiry, event.quoted, event.confirmed, event.started, event.completed, event.cancelled
+
+@@ 70 | venues-equipment | Venues & Equipment Hire | Guests and sales
+A shared calendar of halls, gardens, tents, chairs, sound systems and projectors, so nothing is double-booked.
+
+## Features
+- Venues with capacity per layout (theatre, banquet, classroom) and photos.
+- Equipment items with quantity.
+- Availability calendar with holds and confirmed bookings.
+- Setup and cleanup time around each booking.
+- Hire to outside clients if wanted.
+- Damage records.
+
+## Super admin options
+- Venues, layouts and equipment.
+- How long a hold lasts before it is released.
+
+DEPENDS: 15
+EVENTS: venue.held, venue.booked, venue.released, equipment.damaged
+
+@@ 71 | pool | Swimming Pool | Guests and sales
+Day passes, memberships and safety for the adult and children's pools.
+
+## Features
+- Day passes, session passes and family passes, sold in the app or at the gate.
+- Memberships with QR card.
+- Entry by QR, wristband or room guest check.
+- Capacity limit with a live count.
+- Lifeguard duty log and incident reports.
+- Water quality tests (chlorine, pH) with times and readings.
+- Swimming lessons booking.
+- Pool closed notice in the app.
+
+## Super admin options
+- Pass types and opening hours.
+- Capacity limits.
+- Water test schedule.
+
+DEPENDS: 77 54
+EVENTS: pool.pass_sold, pool.entry, pool.capacity_reached, pool.water_test_failed, pool.closed
+
+@@ 72 | spa | Spa / Humura | Guests and sales
+Treatments, therapists and appointments for the Humura spa, sauna and steam room.
+
+## Features
+- Treatment menu with time and description.
+- Appointment booking in the app or at the desk, matched to therapist and room.
+- Therapist schedules and breaks.
+- Health questions before treatment.
+- Packages and memberships.
+- Reminders and no-show records.
+
+## Super admin options
+- Treatments, rooms and therapists.
+- Booking and cancellation rules.
+
+DEPENDS: 77 54
+EVENTS: spa.booked, spa.completed, spa.cancelled, spa.no_show
+
+@@ 73 | crafts-bookshop | Crafts & Bookshop | Guests and sales
+Sells crafts, books and souvenirs at the shop and online.
+
+## Features
+- Product catalogue with photos, barcodes and categories.
+- Point of sale on a phone or tablet, with barcode scan.
+- Online shop in the app, with pickup or delivery.
+- Artisan and consignment records: who made it and what they are owed.
+- Simple item counts for the shop only.
+- Sales reports by product and artisan.
+
+## Super admin options
+- Categories and which products show online.
+- Consignment terms.
+
+DEPENDS: 77 15
+EVENTS: shop.sale, shop.online_order, shop.item_low
+
+@@ 74 | whatsapp-concierge | WhatsApp Concierge | Guests and sales
+Guests talk to the hotel on WhatsApp to book, order, ask questions and get help, with a smooth hand-off to a staff member.
+
+## Features
+- Menu-driven chat: book a room, order food, book a table, museum tickets, pool passes and events.
+- Answers to common questions from the knowledge base.
+- Hand-off to a staff agent with the full chat history.
+- Shared inbox for front desk agents, with assignment.
+- Payment links sent in the chat.
+- Booking and order confirmations and reminders.
+- Opening hours auto-reply.
+
+## Super admin options
+- Chat menu and answers.
+- Agent working hours and routing.
+- Message templates.
+
+DEPENDS: 14 54
+EVENTS: whatsapp.chat_started, whatsapp.handoff, whatsapp.chat_closed
+
+@@ 75 | public-website | Public Website & Online Booking | Guests and sales
+The public face of the system on the web: information, booking and ordering for people without the app.
+
+## Features
+- Pages for rooms, dining, museum, events, pool, spa and shop, managed by the super admin.
+- Booking and ordering using the same modules as the app.
+- Photo galleries and virtual tours.
+- Blog and news.
+- Contact and enquiry forms.
+- Search engine friendly pages and fast loading on mobile networks.
+
+## Super admin options
+- Pages, menus and content.
+- Which booking types are open on the web.
+
+DEPENDS: 11 12
+EVENTS: website.enquiry

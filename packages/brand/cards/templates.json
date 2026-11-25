@@ -1,0 +1,390 @@
+[
+  {
+    "id": "portrait-black",
+    "name": "Black",
+    "orientation": "portrait",
+    "default": true,
+    "card_type": "cr80-ntag213",
+    "suits": "The default card for every role, until the super admin picks another design for a role.",
+    "print": {
+      "width_mm": 54.0,
+      "height_mm": 85.6,
+      "dpi": 300,
+      "margins_mm": 0,
+      "duplex": true,
+      "scale": "actual size"
+    },
+    "files": {
+      "front": {
+        "svg": "portrait-black/portrait-black-front.svg",
+        "pdf": "portrait-black/portrait-black-front-print.pdf"
+      },
+      "back": {
+        "svg": "portrait-black/portrait-black-back.svg",
+        "pdf": "portrait-black/portrait-black-back-print.pdf"
+      }
+    },
+    "fields": [
+      "card_label",
+      "card_no",
+      "expiry_date",
+      "full_name",
+      "hotel_phone",
+      "issue_date",
+      "photo",
+      "qr",
+      "role",
+      "staff_no"
+    ]
+  },
+  {
+    "id": "portrait-wave",
+    "name": "Wave",
+    "orientation": "portrait",
+    "default": false,
+    "card_type": "cr80-ntag213",
+    "suits": "Light alternative for all staff.",
+    "print": {
+      "width_mm": 54.0,
+      "height_mm": 85.6,
+      "dpi": 300,
+      "margins_mm": 0,
+      "duplex": true,
+      "scale": "actual size"
+    },
+    "files": {
+      "front": {
+        "svg": "portrait-wave/portrait-wave-front.svg",
+        "pdf": "portrait-wave/portrait-wave-front-print.pdf"
+      },
+      "back": {
+        "svg": "portrait-wave/portrait-wave-back.svg",
+        "pdf": "portrait-wave/portrait-wave-back-print.pdf"
+      }
+    },
+    "fields": [
+      "card_no",
+      "department",
+      "expiry_date",
+      "full_name",
+      "hotel_phone",
+      "issue_date",
+      "phone",
+      "photo",
+      "qr",
+      "role",
+      "staff_no"
+    ]
+  },
+  {
+    "id": "portrait-diagonal",
+    "name": "Diagonal",
+    "orientation": "portrait",
+    "default": false,
+    "card_type": "cr80-ntag213",
+    "suits": "Guest-facing staff: front office, restaurant, events, sales.",
+    "print": {
+      "width_mm": 54.0,
+      "height_mm": 85.6,
+      "dpi": 300,
+      "margins_mm": 0,
+      "duplex": true,
+      "scale": "actual size"
+    },
+    "files": {
+      "front": {
+        "svg": "portrait-diagonal/portrait-diagonal-front.svg",
+        "pdf": "portrait-diagonal/portrait-diagonal-front-print.pdf"
+      },
+      "back": {
+        "svg": "portrait-diagonal/portrait-diagonal-back.svg",
+        "pdf": "portrait-diagonal/portrait-diagonal-back-print.pdf"
+      }
+    },
+    "fields": [
+      "card_no",
+      "department",
+      "expiry_date",
+      "full_name",
+      "hotel_phone",
+      "issue_date",
+      "photo",
+      "qr",
+      "role",
+      "staff_no"
+    ]
+  },
+  {
+    "id": "portrait-sidebar",
+    "name": "Sidebar",
+    "orientation": "portrait",
+    "default": false,
+    "card_type": "cr80-ntag213",
+    "suits": "Operations: maintenance, housekeeping, security, grounds. The bar label can show the department.",
+    "print": {
+      "width_mm": 54.0,
+      "height_mm": 85.6,
+      "dpi": 300,
+      "margins_mm": 0,
+      "duplex": true,
+      "scale": "actual size"
+    },
+    "files": {
+      "front": {
+        "svg": "portrait-sidebar/portrait-sidebar-front.svg",
+        "pdf": "portrait-sidebar/portrait-sidebar-front-print.pdf"
+      },
+      "back": {
+        "svg": "portrait-sidebar/portrait-sidebar-back.svg",
+        "pdf": "portrait-sidebar/portrait-sidebar-back-print.pdf"
+      }
+    },
+    "fields": [
+      "card_label",
+      "card_no",
+      "department",
+      "expiry_date",
+      "full_name",
+      "hotel_phone",
+      "issue_date",
+      "phone",
+      "photo",
+      "qr",
+      "role",
+      "staff_no"
+    ]
+  },
+  {
+    "id": "portrait-minimal",
+    "name": "Minimal",
+    "orientation": "portrait",
+    "default": false,
+    "card_type": "cr80-ntag213",
+    "suits": "Museum, cultural centre and spa staff.",
+    "print": {
+      "width_mm": 54.0,
+      "height_mm": 85.6,
+      "dpi": 300,
+      "margins_mm": 0,
+      "duplex": true,
+      "scale": "actual size"
+    },
+    "files": {
+      "front": {
+        "svg": "portrait-minimal/portrait-minimal-front.svg",
+        "pdf": "portrait-minimal/portrait-minimal-front-print.pdf"
+      },
+      "back": {
+        "svg": "portrait-minimal/portrait-minimal-back.svg",
+        "pdf": "portrait-minimal/portrait-minimal-back-print.pdf"
+      }
+    },
+    "fields": [
+      "card_no",
+      "department",
+      "expiry_date",
+      "full_name",
+      "hotel_phone",
+      "issue_date",
+      "photo",
+      "qr",
+      "role",
+      "staff_no"
+    ]
+  },
+  {
+    "id": "portrait-visitor",
+    "name": "Visitor",
+    "orientation": "portrait",
+    "default": false,
+    "card_type": "cr80-ntag213",
+    "suits": "Visitors, suppliers and day passes, with no photo.",
+    "print": {
+      "width_mm": 54.0,
+      "height_mm": 85.6,
+      "dpi": 300,
+      "margins_mm": 0,
+      "duplex": true,
+      "scale": "actual size"
+    },
+    "files": {
+      "front": {
+        "svg": "portrait-visitor/portrait-visitor-front.svg",
+        "pdf": "portrait-visitor/portrait-visitor-front-print.pdf"
+      },
+      "back": {
+        "svg": "portrait-visitor/portrait-visitor-back.svg",
+        "pdf": "portrait-visitor/portrait-visitor-back-print.pdf"
+      }
+    },
+    "fields": [
+      "card_label",
+      "card_no",
+      "expiry_date",
+      "host",
+      "hotel_phone",
+      "issue_date",
+      "qr",
+      "valid_on"
+    ]
+  },
+  {
+    "id": "landscape-classic",
+    "name": "Classic",
+    "orientation": "landscape",
+    "default": false,
+    "card_type": "cr80-ntag213",
+    "suits": "Default landscape card for all staff.",
+    "print": {
+      "width_mm": 85.6,
+      "height_mm": 54.0,
+      "dpi": 300,
+      "margins_mm": 0,
+      "duplex": true,
+      "scale": "actual size"
+    },
+    "files": {
+      "front": {
+        "svg": "landscape-classic/landscape-classic-front.svg",
+        "pdf": "landscape-classic/landscape-classic-front-print.pdf"
+      },
+      "back": {
+        "svg": "landscape-classic/landscape-classic-back.svg",
+        "pdf": "landscape-classic/landscape-classic-back-print.pdf"
+      }
+    },
+    "fields": [
+      "card_label",
+      "card_no",
+      "department",
+      "expiry_date",
+      "full_name",
+      "hotel_phone",
+      "issue_date",
+      "phone",
+      "photo",
+      "qr",
+      "role",
+      "staff_no"
+    ]
+  },
+  {
+    "id": "landscape-curves",
+    "name": "Curves",
+    "orientation": "landscape",
+    "default": false,
+    "card_type": "cr80-ntag213",
+    "suits": "Front office, sales and guest relations.",
+    "print": {
+      "width_mm": 85.6,
+      "height_mm": 54.0,
+      "dpi": 300,
+      "margins_mm": 0,
+      "duplex": true,
+      "scale": "actual size"
+    },
+    "files": {
+      "front": {
+        "svg": "landscape-curves/landscape-curves-front.svg",
+        "pdf": "landscape-curves/landscape-curves-front-print.pdf"
+      },
+      "back": {
+        "svg": "landscape-curves/landscape-curves-back.svg",
+        "pdf": "landscape-curves/landscape-curves-back-print.pdf"
+      }
+    },
+    "fields": [
+      "card_label",
+      "card_no",
+      "department",
+      "expiry_date",
+      "full_name",
+      "hotel_phone",
+      "issue_date",
+      "phone",
+      "photo",
+      "qr",
+      "role",
+      "staff_no"
+    ]
+  },
+  {
+    "id": "landscape-split",
+    "name": "Split",
+    "orientation": "landscape",
+    "default": false,
+    "card_type": "cr80-ntag213",
+    "suits": "Kitchen, restaurant, bars and coffee shops.",
+    "print": {
+      "width_mm": 85.6,
+      "height_mm": 54.0,
+      "dpi": 300,
+      "margins_mm": 0,
+      "duplex": true,
+      "scale": "actual size"
+    },
+    "files": {
+      "front": {
+        "svg": "landscape-split/landscape-split-front.svg",
+        "pdf": "landscape-split/landscape-split-front-print.pdf"
+      },
+      "back": {
+        "svg": "landscape-split/landscape-split-back.svg",
+        "pdf": "landscape-split/landscape-split-back-print.pdf"
+      }
+    },
+    "fields": [
+      "card_no",
+      "department",
+      "expiry_date",
+      "full_name",
+      "hotel_phone",
+      "issue_date",
+      "phone",
+      "photo",
+      "qr",
+      "role",
+      "staff_no"
+    ]
+  },
+  {
+    "id": "landscape-banner",
+    "name": "Banner",
+    "orientation": "landscape",
+    "default": false,
+    "card_type": "cr80-ntag213",
+    "suits": "Casual workers, contractors and interns. The label shows the card type.",
+    "print": {
+      "width_mm": 85.6,
+      "height_mm": 54.0,
+      "dpi": 300,
+      "margins_mm": 0,
+      "duplex": true,
+      "scale": "actual size"
+    },
+    "files": {
+      "front": {
+        "svg": "landscape-banner/landscape-banner-front.svg",
+        "pdf": "landscape-banner/landscape-banner-front-print.pdf"
+      },
+      "back": {
+        "svg": "landscape-banner/landscape-banner-back.svg",
+        "pdf": "landscape-banner/landscape-banner-back-print.pdf"
+      }
+    },
+    "fields": [
+      "card_label",
+      "card_no",
+      "department",
+      "expiry_date",
+      "full_name",
+      "hotel_phone",
+      "issue_date",
+      "phone",
+      "photo",
+      "qr",
+      "role",
+      "staff_no"
+    ]
+  }
+]

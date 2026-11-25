@@ -27,9 +27,9 @@ Every feature in every module uses the same permission actions, so the role buil
 
 ## Scope note
 
-Stock management and bar management were removed from the signed scope. Drinks can still be sold as menu items through [Menus & Catalogue](61-menu-catalogue.md) and [Food Ordering](62-food-ordering.md), and the Crafts & Bookshop keeps simple item counts for the shop only. A full stock module can be added later as a separate module without changing any other module.
+Stock and event wristbands were taken out of the signed scope on 24 Nov 2026 and put back in on 25 Nov 2026, at the hotel's request. Stock is its own module, [Stock & Inventory](84-stock-inventory.md), configured entirely by the super admin. Bar management is still out of scope: drinks are sold as menu items through [Menus & Catalogue](61-menu-catalogue.md) and [Food Ordering](62-food-ordering.md), and bar stores are run as stores in Stock & Inventory.
 
-## The 83 modules
+## The 84 modules
 
 ### Core platform
 
@@ -98,6 +98,7 @@ Stock management and bar management were removed from the signed scope. Drinks c
 | 46 | [Lost & Found](46-lost-found.md) | Records items found and claimed, for guests and staff. |
 | 47 | [Fleet & Transport](47-fleet-transport.md) | Hotel vehicles, drivers, trips and guest transfers, such as airport or town pickups. |
 | 48 | [SOPs & Knowledge Base](48-knowledge-base.md) | The hotel's standard operating procedures, policies, manuals and how-to guides, in one searchable place. |
+| 84 | [Stock & Inventory](84-stock-inventory.md) | Tracks everything the hotel buys, stores and uses: food, drinks, cleaning supplies, linen, amenities, stationery, craft and shop items, fuel and spare parts. |
 
 ### Communication
 

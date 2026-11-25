@@ -37,6 +37,7 @@ Includes everything in the [Every Staff Member (base role)](staff-base.md) role,
 | [Leave Management](../modules/27-leave.md) | view, approve | Own department |
 | [Daily Reports](../modules/38-daily-reports.md) | view, approve, comment | Own department |
 | [Reports & Analytics](../modules/81-reports-analytics.md) | view, export | Own department |
+| [Stock & Inventory](../modules/84-stock-inventory.md) | view, create | Own department |
 
 ## Approval limits
 

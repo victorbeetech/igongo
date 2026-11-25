@@ -1,0 +1,251 @@
+@@ 22
+Staff directory | AW | Everyone with photo, role, department and contact, by permission
+Staff profile | AW | One person's record: personal, job, pay, documents, cards and history
+Add staff | W | Personal details, job, pay, next of kin, documents and photo
+Edit staff | W | Change any field, with the reason kept in history
+Staff documents | AW | IDs, contracts, certificates and expiry dates
+Job history | AW | Roles, departments, pay changes and promotions over time
+Expiring documents | W | IDs, permits and contracts about to expire
+My profile at work | A | What HR holds about me, with change requests
+HR records settings | W | Required fields per employment type, and extra fields through [Custom Fields](07-custom-fields.md); Staff number format; Which fields staff can update...
+! Change request | Ask HR to correct my details
+! Confirm pay change | Approve a salary change with effective date
+
+@@ 23
+Vacancies | W | Open jobs with applicants count
+Vacancy editor | W | Job details, requirements and where it is advertised
+Jobs page | P | Public list of open jobs
+Apply for job | P | Application form with CV upload
+Applicants | W | Applicants per vacancy, with stages
+Applicant detail | W | CV, answers, notes, scores and interview history
+Interview schedule | AW | Interviews by date with panel
+Interview score | AW | Scoring form for each panel member
+! Move stage | Shortlist, interview, offer or reject
+! Send offer | Offer letter with start date and pay
+! Reject applicant | Reason and message
+
+@@ 24
+Onboarding list | W | New starters and their onboarding progress
+Onboarding checklist | AW | Tasks for HR, IT, the department and the new starter
+My first days | A | The new starter's checklist and welcome
+Exit list | W | People leaving and their exit progress
+Exit checklist | AW | Return card, keys, assets and uniform, final pay and interview
+Exit interview | A | Questions for the person leaving
+Onboarding and exit settings | W | Checklist items per role and exit type; Probation length per employment type; What former staff can still see
+! Start onboarding | Pick the template and start date
+! Start exit | Reason, last day and who is told
+! Clearance missing | Items not returned before final pay
+
+@@ 28
+Payroll home | W | Current run status, totals and deadlines
+Pay runs | W | Every run, open, approved and paid
+Pay run detail | W | Every person's gross, deductions and net, with changes from last month
+Pay run review | W | Variances, new starters, leavers and warnings
+Hours to import | W | Approved attendance and overtime to bring into the pay run
+Pay items | W | Earnings and deductions with their rules
+Statutory settings | W | PAYE, NSSF and LST rules as data
+Bank and mobile money file | W | Payment files for the bank or mobile money
+Payroll reports | W | Totals by department, cost centre and period
+! Start pay run | Choose the month and the people
+! Approve pay run | Approve with second approver if required
+! Lock pay run | Confirm no more changes
+! Reverse pay run | Reason and approval
+
+@@ 29
+My payslips | A | Every payslip, opened with PIN or fingerprint
+Payslip | AW | One payslip with earnings, deductions and net
+Lifetime earnings | AW | Everything earned since joining, by year and type
+Earnings statement | AW | Downloadable statement for a period
+Payslip settings | W | What a payslip shows, and the template; Whether staff can download PDFs, or only view; Whether former staff keep access, and for how long; Who can produce...
+! Unlock payslips | PIN or fingerprint before showing pay
+! Download statement | Pick period and format
+
+@@ 30
+My advances | A | Balances, requests and repayments
+Request advance | A | Amount, reason and repayment plan, within the limit
+Advance requests | AW | Requests waiting for approval
+Loans | W | Staff loans with balances and schedules
+Loan detail | AW | One loan with repayments
+Advance rules | W | Limits, repayment rules and approval tiers
+! Approve advance | Approve with amount and repayment months
+! Over limit | Explain the limit and options
+
+@@ 31
+My rewards | A | Cash bonuses and buffet access earned
+Give reward | AW | Pick people, type (cash or buffet) and reason
+Rewards list | AW | Rewards given, by person, department and type
+Buffet passes | AK | Staff buffet access passes and their use
+Reward rules | W | Types, limits and approvals
+! Confirm reward | Confirm reward and who is told
+! Use buffet pass | Tap card to use a buffet reward
+
+@@ 33
+My appraisals | A | My goals, reviews and scores
+Appraisal form | AW | Self, manager and peer review
+Appraisals list | W | Appraisals by cycle, department and status
+Goals | AW | Goals for a person or team
+Probation reviews | W | New staff with probation reviews due
+Appraisal cycles | W | Cycles, forms and deadlines
+! Submit appraisal | Confirm and send for review
+! Sign appraisal | Employee signs to agree or disagree
+
+@@ 34
+My training | A | Courses, certificates and what is due
+Courses | AW | Courses and materials
+Course player | A | Lessons, videos and quiz
+Training sessions | AW | Classroom sessions with attendance by card tap
+Certificates | AW | Certificates with expiry dates
+Training matrix | W | Who has which training, by role
+! Enrol | Add people to a course or session
+! Certificate expiring | Remind and book a refresher
+
+@@ 35
+Cases | W | Disciplinary cases by status
+Case detail | W | Incident, evidence, hearings, outcome and appeal
+Open case | W | Person, incident, evidence and witnesses
+My cases | A | Letters and outcomes addressed to me
+Warnings | W | Active warnings and their expiry
+Discipline settings | W | Offence categories and suggested actions; Case steps and letter templates; Who can open, see and close cases; Warning expiry periods
+! Issue warning | Type, reason and expiry
+! Schedule hearing | Date, panel and notice to the person
+! Record outcome | Outcome, letter and appeal window
+
+@@ 36
+My requests | A | Requests to HR and welfare, with status
+New request | A | Type, details and attachment
+Requests inbox | AW | Requests to handle, by type and age
+Welfare fund | W | Contributions and support given
+Requests and welfare settings | W | Request types and who handles each; Whether anonymous grievances are allowed; Welfare fund rules
+! Close request | Outcome and message
+
+@@ 37
+My claims | A | Expense claims and petty cash requests
+New claim | A | Amount, category, receipt photo and cost centre
+Claims to approve | AW | Claims waiting for approval
+Petty cash box | AW | Float, payments, top-ups and balance
+Cash count | AW | Count the box and record any difference
+Petty cash settings | W | Floats and spending limits per department; Approval tiers; Expense categories
+! Approve claim | Approve or return with comment
+! Pay claim | Pay from petty cash or payroll
+
+@@ 39
+Inspections due | A | Checklists due today for me
+Run inspection | AK | Fill the checklist with photos, scores and signature
+Inspection result | AW | Score, failed items and actions raised
+Inspections list | AW | Inspections by area, person and score
+Inspection schedule | W | Which checklist, where, how often and by whom
+! Failed item | Raise a fault or task from a failed item
+
+@@ 40
+Report fault | A | Photo, place or asset, description and urgency
+My faults | A | Faults I reported and their progress
+Fault board | AW | All faults by status, area and priority
+Fault detail | AW | Photos, comments, likes, work done and cost
+Work orders | AW | Jobs assigned to maintenance staff
+Planned maintenance | W | Scheduled servicing by asset
+Maintenance settings | W | Fault categories, urgency levels and target fix times; Who sees each category's feed, and who can comment or like; Who assigns and who closes; Whether the...
+! Assign fault | Pick technician and due date
+! Close fault | Work done, parts used and photo after
+! Reopen fault | Reason the fix did not hold
+
+@@ 41
+Assets list | AW | Equipment and property with QR tags
+Asset detail | AW | Location, holder, value, faults and service history
+Scan asset | AK | Scan a QR tag to see the asset or report a fault
+Add asset | W | Details, photo, value and QR label print
+Asset count | AK | Scan assets to confirm what is where
+Asset settings | W | Asset categories and required fields; Who can add, move and dispose of assets; Audit schedule
+! Move asset | New location or holder
+! Dispose asset | Reason, value and approval
+
+@@ 42
+My tasks | A | Tasks assigned to me, due today first
+Task detail | AW | Steps, photos, comments and due date
+New task | AW | Who, what, when and how often
+Team tasks | AW | Tasks by person, status and due date
+Task settings | W | Who can assign tasks to whom (for example, only within the department); Priority levels and default reminders
+! Complete task | Photo or note as proof
+! Reassign task | Pick someone else and the reason
+
+@@ 43
+Room board | AW | Every room with clean, dirty, inspected, out of order
+Room detail | AW | Status, assigned attendant, minibar and amenity checks
+My rooms | A | Rooms assigned to me today
+Clean room | A | Checklist, minibar count, amenities and photos
+Housekeeping assignment | AW | Assign rooms to attendants
+Rooms to inspect | A | Cleaned rooms waiting for the supervisor to inspect
+Housekeeping settings | W | Room statuses and their colours; Cleaning standards and time per room type; Whether inspection is required before release
+! Mark out of order | Reason and expected return
+! Minibar charge | Items used, sent to the guest bill
+
+@@ 44
+Laundry orders | AW | Guest laundry orders and status
+Guest laundry request | A | Guest asks for pickup with items
+Linen stock | AW | Linen in rooms, in laundry and in store
+Uniforms | AW | Uniforms issued, returned and due
+Laundry settings | W | Item list and turnaround times; Whether guests can order laundry in the app
+! Laundry ready | Notify the guest or department
+
+@@ 45
+Security home | AW | Patrols, incidents and alerts today
+Patrol route | AK | Scan checkpoints in order
+Incidents | AW | Incidents by type and status
+Report incident | A | What, where, who, photos and witnesses
+Incident detail | AW | Full report with follow-up
+Panic alert | A | Live alert with location for security
+Security settings | W | Patrol routes and checkpoints; Incident types and who is alerted for each; Who can use the panic button
+! Send panic alert | Hold to send, with location
+! Missed checkpoint | Explain the missed point
+
+@@ 46
+Lost and found | AW | Items found, with photos and where
+Log found item | A | Photo, place and finder
+Claim item | AW | Match an owner, check ID and hand over
+Lost item report | AP | Guest reports something lost
+Lost and found settings | W | Holding periods per item type; Who can hand over items
+! Hand over item | Owner signs or taps
+! Dispose item | Donate or dispose after the holding time
+
+@@ 47
+Vehicles | AW | Hotel vehicles with status and documents
+Trip requests | AW | Requests to approve and assign
+Trip | A | Start, end, mileage and route for the driver
+Book transfer | AP | Guest books an airport or town pickup
+Fuel and repairs | AW | Fuel and repair records per vehicle
+Fleet settings | W | Vehicles and who can drive each; Trip approval rules; Whether guests can book transfers in the app
+! Assign driver | Pick driver and vehicle
+! Document expiring | Insurance or licence reminder
+
+@@ 48
+Knowledge base | AW | Articles by department and category
+Article | AW | Text, photos and videos, with acknowledge
+Article editor | W | Write, version and publish
+Must read | A | Articles I must acknowledge
+! Acknowledge article | Confirm I have read it
+
+@@ 84
+Stock home | AW | Stock value, low stock, expiring and requests waiting, per store
+Stores | W | Stores and sub-stores with their keepers
+Items | AW | Items with photo, code, units, levels and suppliers
+Item detail | AW | Stock per store, batches, movements and suppliers
+Item editor | W | Category, units and conversions, tracking type and levels
+Units and conversions | W | Units such as crate, sack, kg and how they convert
+Receive goods | AW | Count a delivery against the order, with photos
+Requisitions | AW | Requests from departments, waiting and issued
+New requisition | A | Department asks for items from a store
+Issue stock | AK | Keeper issues items, receiver confirms with a card tap
+Transfers | AW | Moves between stores with both sides confirming
+Purchase requests | AW | Requests raised from low stock or by hand
+Purchase orders | W | Orders to suppliers with expected dates
+Suppliers | W | Contacts, items supplied, lead times and performance
+Stock count | AK | Count by store, category or spot check, blind if set
+Count variances | W | Differences found and adjustments waiting for approval
+Wastage | AW | Breakage, spoilage and expiry with photo and reason
+Recipes | W | Ingredients per menu item for usage tracking
+Stock reports | W | On hand, value, consumption, slow moving and variance
+Stock settings | W | Valuation, approvals, reorder rules, count schedules and switches
+! Approve requisition | Approve, part approve or reject
+! Approve adjustment | Approve a count variance with reason
+! Short delivery | Record short, damaged or rejected items
+! Below minimum | Raise a purchase request now or later
+! Expiring stock | Use first, move or write off

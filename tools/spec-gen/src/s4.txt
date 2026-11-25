@@ -1,0 +1,352 @@
+@@ 50
+Chats | A | Direct and group chats, unread first
+Chat room | A | Messages, photos, voice notes, files and read receipts
+New chat | A | Pick people or a group
+Group info | A | Members, media and settings
+Chat settings | W | Who can chat with whom, groups allowed and message retention
+! Delete message | Delete for me or for everyone
+! Report message | Flag a message to HR
+
+@@ 51
+Meetings | AW | Upcoming and past meetings
+Meeting detail | AW | Agenda, attendees, minutes and action items
+Schedule meeting | AW | Date, place or link, agenda and attendees
+Take minutes | AW | Minutes, decisions and action items during the meeting
+My action items | A | Actions assigned to me from meetings
+! Sign attendance | Tap card or confirm attendance
+! Approve minutes | Approve and share the minutes
+
+@@ 52
+Surveys | AW | Open and closed surveys and polls
+Answer survey | A | Questions, anonymous if set
+Survey builder | W | Questions, audience and dates
+Survey results | AW | Answers and charts
+! Submit answers | Confirm, with anonymity note
+
+@@ 53
+Calendar | AW | Company events, holidays, meetings, events and shifts in one view
+Calendar event | AW | One entry with details and who is invited
+Add calendar entry | AW | Title, time, audience and reminders
+Calendar settings | W | Which layers each role can see; Who can add company events
+! RSVP | Going, maybe or not going
+
+@@ 54
+Guests list | W | Guests and clients with tags, segments and spend
+Guest profile | AW | Details, preferences, stays, orders, bookings, feedback and notes
+Segments | W | Saved segments such as VIP, regular or wedding clients
+Duplicates | W | Possible duplicate guests to merge
+My account | A | The guest's own profile, bookings, orders, receipts and points
+Edit my details | A | Name, phone, email, photo and preferences
+Consent | A | SMS, WhatsApp and email marketing choices
+CRM settings | W | Profile fields and tags; Who can see contact details and spend; Segment rules; Data retention for inactive guests
+! Merge guests | Confirm which record to keep
+! Delete my account | Explain what is removed and confirm
+
+@@ 55
+Corporate accounts | W | Companies with credit limits and balances
+Corporate detail | W | Contacts, bookings, charges, invoices and statements
+Add company | W | Details, contacts, terms and credit limit
+Company portal | P | The company booker's view of bookings and invoices
+Corporate account settings | W | Who can approve credit and set limits; Whether corporate bookers can book without staff confirmation
+! Over credit limit | Warn and ask for approval
+
+@@ 56
+Feedback inbox | AW | Ratings, complaints and reviews from every channel
+Feedback detail | AW | The comment, guest, assigned person and replies
+Give feedback | AP | Guest rates a stay, meal, visit or service
+Complaints | AW | Open complaints with target times
+Online reviews | W | Google and TripAdvisor reviews with replies
+Feedback reports | W | Scores by outlet, staff and period
+Feedback settings | W | Which services ask for feedback, and when; Questions per service; What rating counts as a complaint; Who handles complaints per department
+! Assign complaint | Pick who handles it and by when
+! Resolve complaint | Outcome, voucher if any and message to guest
+
+@@ 57
+My points | A | Points balance, tier and history
+Membership card | A | Digital membership card with QR
+Rewards catalogue | A | What points can buy
+Members | W | Members, tiers and points
+Loyalty settings | W | Earn and redeem rules, tiers and expiry
+! Redeem points | Confirm the reward and points used
+
+@@ 58
+Campaigns | W | Campaigns by status and channel
+Campaign editor | W | Audience, message, channel, schedule and offer
+Campaign results | W | Sent, opened, clicked and bookings made
+! Send campaign | Confirm audience size and cost
+! Test send | Send to myself first
+
+@@ 59
+Promotions | W | Promo codes, offers and happy hours
+Promotion editor | W | Rules, dates, outlets, items and limits
+Vouchers | AW | Vouchers issued and redeemed
+Buy gift card | AP | Guest buys a gift card for someone
+My vouchers | A | Gift cards and vouchers with QR and balance
+Redeem voucher | AK | Scan a voucher at a till
+! Invalid code | Expired, used up or not valid here
+
+@@ 60
+Request help | A | Guest picks a request type: towels, cleaning, wake-up call and more
+My requests | A | Guest's requests with live status
+Requests board | AW | Staff view of requests by department and target time
+Request detail | AW | Notes, status and who is handling it
+Guest request settings | W | Request types, routing rules and target times; Which requests guests can make in the app
+! Rate service | Guest rates the request when done
+! Late request | Alert when a request is past its target time
+
+@@ 61
+Menus | AW | Menus per outlet and time
+Menu editor | W | Sections, items, prices and schedule
+Item editor | W | Photos, description, portions, options, extras, allergens and prep time
+Out of stock today | AK | Kitchen switches items off and on for today
+! Publish menu | Confirm and choose when it goes live
+
+@@ 62
+Food home | AP | Outlets, menus and offers for the guest
+Outlet menu | AP | Items by section with photos and prices
+Item detail | AP | Options, portion, extras, notes and allergies
+Cart | AP | Items, notes, order type and ready time estimate
+Order type | AP | Delivery, room service, dine-in, takeaway or pre-order
+Pre-order arrival time | AP | Pick arrival time and what is paid now
+Delivery address | AP | Address or a spot on the grounds, on a map
+Checkout | AP | Payment choice, deposit, charge to room or corporate account
+Order placed | AP | Confirmation with order number and ready time
+Track order | AP | Received, preparing, ready, on the way, delivered
+My orders | A | Past and current orders, with reorder
+Orders board | AW | Staff view of all orders by status, type and outlet
+Order detail | AW | Items, payments, timeline and notes
+Take order | AK | Staff enters a phone or walk-in order
+Waiter order | A | Waiter orders for a table from the phone
+Ordering settings | W | Order types on or off per outlet; Minimum notice for pre-orders, and the deposit rule; Cancel and change windows; Which payment options each order type...
+! Edit cart item | Change options or quantity
+! Cancel order | Reason, and refund rules shown
+! Void item | Staff voids an item with reason and approval
+! Kitchen busy | Show a later ready time before paying
+
+@@ 63
+Kitchen display | K | Tickets per station, oldest first, with late colours
+Expo screen | K | Complete orders waiting at the pass
+Production list | AW | Today's buffet and event production
+Food waste | AK | Record waste with reason and quantity
+Kitchen settings | W | Stations, routing, target times and pre-order timing
+! Bump ticket | Mark items started or ready
+! Recall ticket | Bring back a bumped ticket
+
+@@ 64
+Floor plan | AK | Tables with live status
+Floor plan editor | W | Tables, seats and sections
+Reservations | AW | Table bookings by time
+Book a table | AP | Guest picks date, time, people and notes
+Table QR menu | P | Scan the table QR to see the menu, order and pay
+Waiting list | AK | Walk-ins waiting, with SMS when ready
+Table detail | AK | Guests, waiter, orders and bill
+Open bills | AK | Tables and tabs with open bills, bills asked and waiter calls
+! Seat guests | Pick table and waiter
+! Call waiter | Guest asks for a waiter or the bill
+! Split bill | Split by item, seat or amount
+
+@@ 65
+Buffet sessions | AW | Sessions with menu, capacity and headcount
+Buffet entry | AK | Scan ticket, band or staff card, or take payment at the door
+Buffet live | AW | Headcount now and at close
+Buy buffet ticket | AP | Guest buys a buffet ticket
+Buffet settings | W | Buffet sessions and who can enter; Whether re-entry is allowed
+! Entry refused | Already entered, full or not valid
+
+@@ 66
+Dispatch board | AW | Orders to assign, riders online and live map
+Delivery zones | W | Zones on a map with fees and times
+Rider home | A | Go online, current order and today's earnings
+New delivery offer | A | Accept or decline an assigned order
+Pickup | A | Confirm pickup at the kitchen pass
+Navigate | A | Map and route to the guest, with call button
+Proof of delivery | A | Photo, signature or guest code
+Cash hand-in | A | Cash collected and handed in at shift end
+Rider earnings | A | Trips and earnings history
+Live rider map | AP | Guest sees the rider and arrival time
+Riders | W | Riders, status, ratings and documents
+! Assign rider | Pick a rider or let the system choose
+! Rate rider | Guest rates the delivery
+! Delivery problem | Guest not found, wrong address or refused
+
+@@ 67
+Rooms | AP | Room types with photos, amenities and prices
+Room type detail | AP | Photos, amenities, capacity and availability
+Pick dates | AP | Check-in, check-out, guests and availability from APEX
+Booking summary | AP | Room, dates, extras, packages and total
+Booking confirmed | AP | Confirmation with booking number
+My bookings | A | Upcoming and past stays
+Booking detail | AW | One booking with payments and requests
+Pre-arrival | A | Arrival time, requests, pickup and pre-ordered food
+Digital check-in | AP | Check-in form sent to the front desk
+Front desk bookings | AW | Bookings from the app, with APEX sync status
+Arrivals and departures | AW | Today's arrivals and departures from APEX, with requests and pre-orders
+In-house guests | AW | Guests staying now, with VIPs, birthdays and requests flagged
+Packages | W | Room and experience packages
+Booking settings | W | Which room types are sold in the app; Deposit and cancellation policies; Packages; What to do when APEX is offline (stop sales, or take requests to confirm...
+! Change booking | New dates within the policy
+! Cancel booking | Show the policy and refund
+! APEX offline | Booking taken as a request to confirm
+
+@@ 68
+Museum home | AP | Visits, tours, experiences and opening hours
+Buy tickets | AP | Ticket types, date and time slot
+Book a tour | AP | Tour, language, date and group size
+Group booking | AP | School and group booking with list and deposit
+My tickets | A | QR tickets
+Ticket scanner | AK | Scan tickets at the entrance
+Audio guide | AP | Exhibit content by QR, in the chosen language
+Exhibit content | W | Exhibits, text, audio and QR codes
+Experiences | AP | Cooking, dance and craft experiences to book
+Museum bookings | AW | Visits, tours and groups by day
+My performances | A | A performer's shows and experiences today and this week
+Museum settings | W | Ticket types, slots and capacity; Group booking rules; Exhibit content and languages
+! Slot full | Suggest the next free slot
+
+@@ 69
+Events home | AP | Event types, venues and packages
+Event enquiry | AP | Date, type, guests and needs
+Enquiries | AW | New enquiries to answer
+Event pipeline | W | Enquiry, site visit, quote, confirmed, in progress, completed
+Event detail | AW | Client, package, payments, run sheet, guests and bands
+Quote builder | W | Venue, food, decor, equipment and bands
+Contract | AWP | Contract with e-signature
+Run sheet | AW | Timeline and tasks per department
+Guest list | AW | Invites, RSVPs and QR check-in
+Event check-in | AK | Scan QR invites at the door
+Post-event report | AW | Numbers, feedback and costs
+My event | A | The client's view of their event
+! Send quote | Preview and send
+! Confirm event | Deposit received and event confirmed
+
+@@ 70
+Venues | AW | Venues with layouts and capacity
+Venue calendar | AW | Holds and bookings with setup times
+Equipment | W | Items and quantities
+Book venue | AW | Venue, layout, time and equipment
+Venue settings | W | Venues, layouts and equipment; How long a hold lasts before it is released
+! Hold expiring | Release or confirm a hold
+! Record damage | Item, damage and charge
+
+@@ 71
+Pool home | AP | Opening hours, passes and today's status
+Buy pool pass | AP | Day, session or family pass
+Pool entry | AK | Scan pass, band, membership or room guest
+Pool live | AW | Count inside against capacity
+Water tests | AK | Chlorine and pH readings with times
+Lifeguard log | AK | Duty and incidents
+Swimming lessons | AP | Book lessons
+Pool settings | W | Pass types and opening hours; Capacity limits; Water test schedule
+! Pool closed | Notice with reason and reopening time
+! Pool full | Wait or come back later
+
+@@ 72
+Spa home | AP | Treatments and packages
+Treatment detail | AP | Description, time and price
+Book treatment | AP | Date, time and therapist
+Health questions | AP | Questions before the treatment
+My spa bookings | A | Upcoming and past treatments
+Spa schedule | AW | Therapists, rooms and bookings by day
+My therapist day | A | A therapist's appointments today with health notes
+! No-show | Record a no-show and the fee rule
+
+@@ 73
+Shop | AP | Crafts, books and souvenirs online
+Product detail | AP | Photos, maker, price and stock
+Shop cart | AP | Items, pickup or delivery
+Shop till | AK | Point of sale with barcode scan
+Products | W | Catalogue with photos, barcodes and categories
+Artisans | W | Makers, consignment items and what they are owed
+Shop sales | W | Sales by product and artisan
+Shop settings | W | Categories and which products show online; Consignment terms
+! Product sold out | Notify me when back
+
+@@ 74
+WhatsApp inbox | AW | Shared inbox of guest chats, with assignment
+Conversation | AW | Full chat with booking and order shortcuts
+Chat with Igongo | A | The guest's chat with the hotel, answered by the bot first, then staff
+Bot menu editor | W | Chat menu, answers and hand-off rules
+Message templates | W | Approved WhatsApp templates
+! Take over chat | Agent takes over from the bot
+! Send payment link | Amount and what it is for
+
+@@ 75
+Website home | P | Rooms, dining, museum, events, pool, spa and shop
+Website page | P | Any content page managed by the super admin
+Website booking | P | Booking and ordering using the same flows as the app
+Gallery | P | Photos and virtual tours
+News | P | Blog and news posts
+Contact | P | Contact form, map and details
+Pages editor | W | Pages, menus, content and photos
+Cookie consent | P | Consent banner and settings
+! Enquiry sent | Confirmation with what happens next
+
+@@ 76
+Price lists | W | Prices per item, outlet, season and guest type
+Taxes | W | VAT and other taxes with rules
+Discounts | W | Discount rules and limits
+Price change history | W | Every price change with who and when
+! Approve price change | Approve with effective date
+
+@@ 77
+Pay | AP | Choose MoMo, Airtel, card or other methods switched on
+Mobile money prompt | AP | Waiting for the payer to confirm on their phone
+Payment result | AP | Paid, failed or pending, with next steps
+Payments list | W | Every payment with method, status and link
+Payment detail | W | One payment with provider reference and refunds
+Payment methods | W | Every method with its on and off switch, per outlet and module
+Settlements | W | Provider settlements and differences
+Record cash payment | AK | Staff records cash or bank transfer
+Payment link | AW | Create and send a payment link by WhatsApp, SMS or email
+Till | AK | Take payment for a bill, order or walk-in sale
+! Refund | Full or part, with approval
+! Payment failed | Try again or choose another method
+
+@@ 78
+Documents | W | Receipts, invoices, quotes and credit notes
+Document view | AWP | One document with QR check
+Document templates | W | Designs per document type and outlet
+Number series | W | Prefixes and counters per document type
+Check a receipt | P | Scan the QR to confirm a receipt is real
+My receipts | A | The guest's receipts and invoices
+! Send document | Email, WhatsApp or print
+! Credit note | Reason and amount
+
+@@ 79
+Cash-up | AK | Count cash by note, with expected totals
+Cash-ups | W | Cash-ups by cashier, rider and outlet with variances
+Cash-up detail | W | Counts, expected, variance and sign-off
+Open till | AK | Start a till shift with an opening float
+Cash-up settings | W | Allowed variance before an alert; Who signs off cash-ups; Whether a cashier can see expected totals before counting (blind cash-up)
+! Submit cash-up | Confirm the count and sign
+! Variance found | Reason required above the limit
+
+@@ 80
+Exports | W | Accounting exports by period and status
+Export mapping | W | Accounts and codes for each item
+! Run export | Pick period and confirm
+
+@@ 81
+Dashboards | AW | Dashboards for my role
+Dashboard | AW | Charts and numbers with drill-down
+Report builder | W | Module, fields, filters, groups and chart
+Saved reports | AW | My and shared reports
+Scheduled reports | W | Reports sent by email or WhatsApp on a schedule
+Targets and alerts | W | Targets with alerts
+! Export report | PDF or Excel
+! Share report | Pick people or roles
+
+@@ 82
+APEX status | W | Connection, last sync and errors
+Sync log | W | Every sync with errors and retries
+Fix sync error | W | Match or correct a record by hand
+APEX settings | W | What syncs, direction, frequency and offline rules
+! Retry sync | Retry one or all failed items
+
+@@ 83
+SEO home | W | Search, maps, listings and tracking health
+Page SEO | W | Titles, descriptions, addresses and structured data per page
+Redirects | W | Redirects and broken links
+Listings | W | Google Business, Apple Maps, Bing and TripAdvisor status
+Tracking | W | Analytics, pixels and consent settings
+Search reports | W | Keywords, clicks and indexing

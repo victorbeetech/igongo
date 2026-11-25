@@ -1,0 +1,23 @@
+@@ guest | Guest / Client | Guests and clients
+PURPOSE: Any visitor or customer: hotel guests, diners, museum visitors, swimmers, spa clients, shoppers and event guests. This is the client view that staff can also switch to.
+APP: The Igongo app (same app and same entry point as staff), the website and WhatsApp
+HOME: Book a room; Order food (delivery, dine-in, takeaway or pre-order); Book a table; Museum and tours; Events; Pool passes; Spa; Shop; My bookings and orders; Chat with us; My receipts; My points
+PERMS: 54 VE own; 56 C own; 57 V own; 59 V own; 60 VC own; 61 V public; 62 VCE own; 64 VC own; 66 V own; 67 VCE own; 68 VC own; 69 VC own; 71 VC own; 72 VC own; 73 VC own; 74 VC own; 77 VC own; 78 VX own; 46 C own
+SCREENS: Home, Explore, Food menu and cart, Order tracking, Bookings, Tickets with QR, Membership card, Receipts, Profile and privacy
+LIMITS: None
+RULES: Can browse public screens without logging in; Must log in to pay or book; Can download or delete their data on request
+
+@@ corporate-client | Corporate Booker | Guests and clients
+PURPOSE: A person who books for a company, NGO, government office or school, using the company's account and agreed terms.
+APP: The Igongo app and the web portal
+HOME: Book for my company; Company bookings; Event enquiries; Invoices and statements; Company balance
+PERMS: 55 V own; 67 VCE own; 69 VC own; 68 VC own; 62 VC own; 78 VX own; 77 VC own; 54 VE own
+LIMITS: Books on credit up to the company's credit limit
+RULES: Only approved bookers named by the company can use the company account
+
+@@ event-organiser | Event Client / Organiser | Guests and clients
+PURPOSE: The client who booked an event, such as a wedding or conference, who manages their own guest list and follows the plan.
+APP: The Igongo app and the web portal
+HOME: My event; Run sheet; Guest list and invites; Payments due; Chat with the events team
+PERMS: 69 VE own; 17 V own; 77 VC own; 78 VX own
+RULES: Sees only their own event; Access ends 30 days after the event, unless changed

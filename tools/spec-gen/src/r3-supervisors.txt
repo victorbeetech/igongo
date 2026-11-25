@@ -1,0 +1,105 @@
+@@ department-supervisor | Department Supervisor (template) | Supervisors and officers
+PURPOSE: A starting point for any shift or section supervisor. Clone it and set the department to make, for example, Restaurant Supervisor or Night Supervisor.
+REPORTS: general-manager
+APP: Igongo app
+HOME: My team on duty; Late and absent today; Daily reports to sign; Tasks overdue; Shift swaps to approve
+PERMS: 25 VE team; 26 VCEA team; 27 VA team; 38 VAM team; 39 VC dept; 40 VCM dept; 42 VC team
+LIMITS: Shift swaps and attendance corrections for the team
+
+@@ sous-chef | Sous Chef | Supervisors and officers
+PURPOSE: Runs the kitchen on a shift and stands in for the Executive Chef.
+REPORTS: executive-chef
+HOME: Kitchen tickets now; Pre-orders due; Items out today; Kitchen staff on shift; Waste today
+PERMS: 63 VCE dept; 61 VE dept; 62 V dept; 65 V dept; 25 V team; 26 VA team; 38 VCAM team
+LIMITS: Shift swaps for kitchen staff
+
+@@ restaurant-supervisor | Restaurant Supervisor | Supervisors and officers
+PURPOSE: Runs the dining room on a shift: tables, waiters, voids and guest issues.
+REPORTS: fnb-manager
+HOME: Table map; Orders waiting; Bills asked; Waiters on shift; Reservations next 2 hours
+PERMS: 64 VCE dept; 62 VEA dept; 65 V dept; 56 VM dept; 25 V team; 26 VA team; 79 VA dept
+LIMITS: Voids and discounts up to Tier 1; Signs off waiter and cashier cash-ups
+
+@@ housekeeping-supervisor | Housekeeping Supervisor | Supervisors and officers
+PURPOSE: Assigns rooms to attendants and inspects rooms before they are released.
+REPORTS: housekeeping-manager
+HOME: Rooms to inspect; Attendant progress; Guest requests (housekeeping); Out of order rooms
+PERMS: 43 VEA dept; 60 VE dept; 39 VC dept; 40 VC dept; 25 V team; 26 VA team
+LIMITS: Releases inspected rooms
+
+@@ security-supervisor | Security Supervisor | Supervisors and officers
+PURPOSE: Runs a security shift: guards, patrols, gate and incidents.
+REPORTS: security-manager
+HOME: Guards on shift; Patrol progress; Visitors inside; Incidents today; Refused entries
+PERMS: 45 VCE all; 20 VCE all; 19 V all; 21 VE all; 25 V team; 26 VA team
+LIMITS: Can override a zone refusal with a reason; Can block a lost card or wristband
+
+@@ events-coordinator | Events Coordinator | Supervisors and officers
+PURPOSE: Runs individual events on the day: setup, run sheet, wristbands, guest list and teams.
+REPORTS: events-manager
+HOME: My events; Run sheet today; Guest list check-in; Wristband scans; Event tasks
+PERMS: 69 VE assigned; 70 V all; 17 VCE assigned; 65 V assigned; 42 VC assigned
+LIMITS: Can assign and reset wristband ranges for their own events
+
+@@ hr-officer | HR Officer | Supervisors and officers
+PURPOSE: Does daily HR work: enrolling staff, documents, cards, leave records and attendance corrections.
+REPORTS: hr-manager
+APP: Web portal and Igongo app
+HOME: New staff to enrol; Documents expiring; Leave requests; Attendance corrections; Card requests
+PERMS: 22 VCE all; 24 VCE all; 25 VE all; 27 VE all; 16 VC all; 34 VCE all; 36 VE all; 23 VE all
+LIMITS: None. Approvals go to the HR Manager
+RULES: Cannot see salaries or discipline cases unless given access
+
+@@ payroll-officer | Payroll Officer | Supervisors and officers
+PURPOSE: Prepares payroll, advances and statements, for review and approval by others.
+REPORTS: finance-manager
+APP: Web portal
+HOME: Pay run status; Approved hours to import; Advances to pay; Statement requests
+PERMS: 28 VCEX all; 29 VCX all; 30 VE all; 31 V all; 22 V all; 25 V all
+LIMITS: Cannot approve a pay run they prepared
+RULES: 2FA required; Every view of salary data is logged
+
+@@ accountant | Accountant | Supervisors and officers
+PURPOSE: Records and checks money: receipts, invoices, credit accounts, petty cash and exports.
+REPORTS: finance-manager
+APP: Web portal
+HOME: Invoices due; Cash-ups to check; Petty cash claims; Settlement reports; Exports
+PERMS: 77 VX all; 78 VCEX all; 79 VEX all; 80 VCX all; 37 VEX all; 55 VE all
+LIMITS: Petty cash up to Tier 1
+RULES: 2FA required
+
+@@ reservations-officer | Reservations Officer | Supervisors and officers
+PURPOSE: Handles room, table, museum, pool, spa and event bookings from all channels.
+REPORTS: front-office-manager
+HOME: New bookings; Bookings waiting for APEX; Deposits due; Enquiries; WhatsApp chats
+PERMS: 67 VCE all; 64 VC all; 68 VC all; 71 VC all; 72 VC all; 69 VC all; 54 VCE all; 74 VE all; 77 VC all
+LIMITS: Booking changes within policy
+
+@@ guest-relations-officer | Guest Relations Officer | Supervisors and officers
+PURPOSE: Looks after guests' happiness: VIPs, feedback, complaints and loyalty.
+REPORTS: front-office-manager
+HOME: VIPs in house; Complaints open; Low ratings today; Birthdays this week; Loyalty sign-ups
+PERMS: 54 VE all; 56 VEM all; 57 VE all; 59 VC all; 60 VE all; 74 VE all
+LIMITS: Complaint vouchers up to Tier 1
+
+@@ it-support | IT Support Officer | Supervisors and officers
+PURPOSE: Sets up devices and printers, prints cards and helps staff with app problems.
+REPORTS: it-manager
+HOME: Devices offline; Card print queue; IT faults; Printer status
+PERMS: 18 VCE all; 16 VC all; 40 VE dept; 04 V all
+LIMITS: None
+RULES: Can reset a staff PIN after checking identity
+
+@@ dispatcher | Delivery Dispatcher | Supervisors and officers
+PURPOSE: Assigns deliveries to riders and watches them until delivered.
+REPORTS: logistics-manager
+HOME: Orders ready for pickup; Live rider map; Late deliveries; Riders online
+PERMS: 66 VCE all; 62 V all; 79 V dept
+LIMITS: None
+
+@@ sales-executive | Sales Executive | Supervisors and officers
+PURPOSE: Finds and looks after corporate, event and group clients.
+REPORTS: sales-marketing-manager
+HOME: My leads; My corporate accounts; Quotes waiting; Events I sold
+PERMS: 55 VCE assigned; 54 VCE assigned; 69 VC assigned; 68 VC assigned; 78 VC assigned
+LIMITS: None. Discounts go to the Sales & Marketing Manager

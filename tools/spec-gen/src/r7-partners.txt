@@ -1,0 +1,31 @@
+@@ supplier | Supplier | Partners and suppliers
+PURPOSE: An outside supplier who sees their purchase orders, deliveries and payments, and books deliveries.
+APP: Igongo app and web portal, partner view
+HOME: Deliveries expected today; Payments due
+PERMS: 84 V own; 77 V own; 78 V own
+RULES: Sees only their own orders and payments
+
+@@ contractor | Contractor | Partners and suppliers
+PURPOSE: An outside company or worker doing a job on site, with a pass, work orders and safety briefing.
+APP: Igongo app, partner view
+HOME: My jobs; Report incident
+PERMS: 40 VE assigned; 20 V own; 45 C all
+RULES: Access only while the contract and pass are valid
+
+@@ event-vendor | Event Vendor | Partners and suppliers
+PURPOSE: A caterer, decorator, DJ or photographer working at an event booked at Igongo.
+APP: Igongo app, partner view
+HOME: Run sheet today; Event tasks
+PERMS: 69 V assigned; 42 VE assigned
+
+@@ artisan-partner | Artisan / Consignor | Partners and suppliers
+PURPOSE: A maker who sells through the crafts shop and sees their sales and balance.
+APP: Igongo app, partner view
+HOME: Artisan balances
+PERMS: 73 V own
+
+@@ delivery-partner | Delivery Partner Rider | Partners and suppliers
+PURPOSE: A rider from an outside delivery company, with the same rider screens limited to assigned orders.
+APP: Igongo app
+HOME: Go online; My deliveries; Navigate; Proof of delivery
+PERMS: 66 VE assigned; 62 V assigned

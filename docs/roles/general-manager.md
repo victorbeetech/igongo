@@ -60,6 +60,7 @@ Includes everything in the [Every Staff Member (base role)](staff-base.md) role,
 | [Payments](../modules/77-payments.md) | view, approve | Everything |
 | [Receipts & Invoicing](../modules/78-receipts-invoicing.md) | view | Everything |
 | [Cash-up & Reconciliation](../modules/79-cash-up.md) | view, approve | Everything |
+| [Stock & Inventory](../modules/84-stock-inventory.md) | view, approve | Everything |
 
 ## Approval limits
 
