@@ -1,7 +1,7 @@
 // The Igongo API Worker. Secrets are NOT here: they are set in Cloudflare
 // (Workers > igongo-api > Settings > Variables and Secrets):
 //   BETTER_AUTH_SECRET, SETTINGS_ENCRYPTION_KEY, GOOGLE_CLIENT_SECRET,
-//   BOOTSTRAP_ADMIN_EMAIL, SENTRY_DSN, and later FCM_SERVICE_ACCOUNT.
+//   BOOTSTRAP_ADMIN_EMAIL, SENTRY_DSN, APNS_PRIVATE_KEY, and later FCM_SERVICE_ACCOUNT.
 // See apps/api/README.md.
 {
   "$schema": "../../node_modules/wrangler/config-schema.json",
@@ -21,6 +21,9 @@
     "API_BASE_URL": "https://igongo-api.victorbee.com",
     "WEB_ORIGINS": "https://igongo.victorbee.com,http://localhost:3000",
     // Public by design (it is in every Google sign-in link).
-    "GOOGLE_CLIENT_ID": "707707727967-gdpm3r7q6ckrlorrmoq9a2obchqkm4a7.apps.googleusercontent.com"
+    "GOOGLE_CLIENT_ID": "707707727967-gdpm3r7q6ckrlorrmoq9a2obchqkm4a7.apps.googleusercontent.com",
+    // Apple push (APNs) key ID and team; the key itself is the secret APNS_PRIVATE_KEY.
+    "APNS_KEY_ID": "J52S98JL2W",
+    "APPLE_TEAM_ID": "UNNDMY45JR"
   }
 }

@@ -19,12 +19,17 @@ export interface Env extends PushEnv {
   /** Comma-separated web addresses allowed to call with cookies. */
   WEB_ORIGINS?: string;
   GOOGLE_CLIENT_ID?: string;
+  /** Apple push key ID and team ID (the key itself is APNS_PRIVATE_KEY). */
+  APNS_KEY_ID?: string;
+  APPLE_TEAM_ID?: string;
   // --- Secrets ---
   BETTER_AUTH_SECRET?: string;
   SETTINGS_ENCRYPTION_KEY?: string;
   GOOGLE_CLIENT_SECRET?: string;
   BOOTSTRAP_ADMIN_EMAIL?: string;
   SENTRY_DSN?: string;
+  /** The Apple push .p8 key, for iPhone pushes. */
+  APNS_PRIVATE_KEY?: string;
 }
 
 /** The checked settings. */

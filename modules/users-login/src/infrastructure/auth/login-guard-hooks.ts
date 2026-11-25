@@ -69,6 +69,13 @@ export function loginGuardHooks(deps: AuthDeps): Pick<BetterAuthOptions, "hooks"
             await deps.audit.record({ actorId: user.id, actorName: user.name, action: "account.created", module: "users-login", recordType: "user", recordId: user.id, summary: `Account created for ${user.name}` });
           },
         },
+        delete: {
+          after: async (user) => {
+            // A deleted account keeps its Audit Trail history but loses its roles.
+            await deps.access.removeAllFor(user.id);
+            await deps.audit.record({ actorId: user.id, action: "account.deleted", module: "users-login", recordType: "user", recordId: user.id, summary: `Account deleted for ${user.name}` });
+          },
+        },
       },
       session: {
         create: {

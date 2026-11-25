@@ -3,8 +3,12 @@
 
 import type { ScreenOverrides } from "@/shared/catalog/types";
 import { m00Overrides } from "@/modules/m00-app-shell/overrides";
+import { m01Overrides } from "@/modules/m01-super-admin/overrides";
+import { m02Overrides } from "@/modules/m02-roles-permissions/overrides";
+import { m04Overrides } from "@/modules/m04-users-login/overrides";
+import { m05Overrides } from "@/modules/m05-audit-trail/overrides";
 import { m14Overrides } from "@/modules/m14-integrations-hub/overrides";
 import { m77Overrides } from "@/modules/m77-payments/overrides";
 
 /** Hand-made screens by screen number. Every other screen uses a shared layout. */
-export const allOverrides: ScreenOverrides = {...m00Overrides, ...m14Overrides, ...m77Overrides};
+export const allOverrides: ScreenOverrides = {...m00Overrides, ...m01Overrides, ...m02Overrides, ...m04Overrides, ...m05Overrides, ...m14Overrides, ...m77Overrides};

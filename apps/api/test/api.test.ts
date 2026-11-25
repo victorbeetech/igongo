@@ -75,6 +75,9 @@ describe("the super admin's first day", () => {
     await guest("POST", "/api/auth/sign-up/email", { name: "Ann", email: "ann@example.com", password: "Ann pass 1234" });
     expect((await guest("GET", "/api/admin/modules")).body).toMatchObject({ error: "permission_denied" });
     expect(((await guest("GET", "/api/users/me")).body["account"] as { kind: string }).kind).toBe("client");
+    // Clients can delete their own account (the staging check does this too).
+    expect((await guest("POST", "/api/auth/delete-user", {})).status).toBe(200);
+    expect((await guest("GET", "/api/users/me")).status).toBe(401);
   });
 });
 

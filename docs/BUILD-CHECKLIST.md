@@ -95,10 +95,13 @@ The branded designs are built straight in code (approved 25 Nov 2026): the Flutt
 
 - [ ] Monorepo set up: pnpm and Turborepo, Melos, and the folder layout in the README.
 - [ ] Strict lint and type check settings, with warnings as errors, and automatic formatting.
-- [ ] CI on every pull request: lint, type check, tests and build.
+- [x] CI for the API back end on every pull request (`.github/workflows/api.yml`): lint, type check, tests, bundled migrations up to date.
+- [ ] CI for the app and the web.
 - [ ] Shared packages: core, contracts, design tokens, brand and UI components.
-- [ ] Database: Neon project, one schema per module, Drizzle migrations, and development, staging and production branches.
-- [ ] Error tracking with Sentry in the app, web and API.
+- [x] Database: Neon project `igongo` (Frankfurt), reached through Hyperdrive `igongo-db`; one Postgres schema per module (`audit`, `roles`, `users_login`, `super_admin`, `notifications`); Drizzle migrations bundled into the API and applied by its migrator (`public.igongo_migrations`).
+- [ ] Staging and development database branches on Neon.
+- [x] Error tracking with Sentry in the API (`igongo-api`, every unexpected error with its request ID).
+- [ ] Sentry in the app and the web.
 
 ## Phase 6: Code the UI and connect every screen
 
@@ -120,7 +123,14 @@ The whole app and web portal are built as a clickable product first, with sample
 
 ## Phase 7: Build the modules
 
-- [ ] Core modules first: Users & Login, Roles & Permissions, App Layout & Navigation, Audit Trail, Super Admin Console.
+- [x] Core modules first (25 Nov 2026), each its own folder, schema, routes and tests, live at igongo-api.victorbee.com:
+  - [x] Users & Login (`modules/users-login`): Better Auth; email and password, Google, Apple (on once its keys are saved), phone codes by SMS or WhatsApp, email link and code, PIN, biometric, card tap and QR, each with a super admin switch per system and per role; 2FA; sessions and remote sign-out; account approve, lock and suspend; one-time first super admin set-up.
+  - [x] Roles & Permissions (`modules/roles-permissions`): runtime roles, `module.feature.action` permissions with data scope, several and temporary roles per person, included roles, the 121 pre-made roles seeded from docs, `GET /api/access/me` for menus, the "who can do X" report.
+  - [x] Audit Trail (`modules/audit-trail`): append-only, hash-chained, searchable, tamper check.
+  - [x] Super Admin Console (`modules/super-admin`): module switches and maintenance, hotel, branding and regional settings, encrypted integration and gateway keys.
+  - [ ] App Layout & Navigation (module 3): server-driven menus and layouts per role.
+  - [x] Web portal connected for these: sign-in, first set-up, active sessions, accounts, create account, login methods, roles list, role builder, permissions matrix, role holders, permission report, audit search, modules list and settings.
+  - [ ] Connect the app's sign-in and the console keys screen (S14-02) to the API.
 - [ ] Event bus (Queues and outbox), Notifications, Files & Media.
 - [ ] Build each module's back end (domain, use cases, database, API and events), in the agreed order.
 - [ ] Connect each module's screens to its API.
@@ -134,7 +144,8 @@ The whole app and web portal are built as a clickable product first, with sample
 - [ ] Push notifications (FCM) and email.
   - [x] Push code, built ahead (25 Nov 2026) and tested with fakes: the app side in `apps/igongo/lib/modules/m10_notifications/` (permission explainer, token, topics, foreground, background and tap handling, Android channels) and the API side in `modules/notifications/` (device tokens table and migration, register and remove routes, test push and broadcast routes, FCM HTTP v1 sender with a mock, and the notification rules hook).
   - [ ] Firebase apps, APNs key and service-account key: waiting on the steps in [NEEDS-YOU](NEEDS-YOU.md).
-  - [ ] Call `PushModule.start` after sign-in and `stop` at sign-out (Users & Login, Phase 7), mount the router in the gateway, and connect the rule editor and the Firebase "Send test" button.
+  - [x] Router mounted in the gateway at `/api/notifications` (behind its module switch), with roles turned into people by Roles & Permissions.
+  - [ ] Call `PushModule.start` after sign-in and `stop` at sign-out in the app, and connect the rule editor and the Firebase "Send test" button.
   - [ ] Test on a real Android phone and iPhone.
   - [ ] Later: move to Firebase's newer installation-ID "direct send" on both sides once it is documented for the HTTP v1 send API (the app uses the token calls marked deprecated in firebase_messaging 17).
   - [ ] Email.

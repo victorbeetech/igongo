@@ -32,6 +32,7 @@ export function memoryAccess(): AccessReader & RoleAssigner & { held: Map<string
     held,
     profileFor: async (userId) => profile(userId),
     anyoneHolds: async (roleKey) => [...held.values()].some((keys) => keys.includes(roleKey)),
+    removeAllFor: async (userId) => void held.delete(userId),
     holdersOf: async (roleKeys) => [...held].filter(([, keys]) => keys.some((k) => roleKeys.includes(k))).map(([id]) => id),
     assignByKey: async ({ userId, roleKey }) => void held.set(userId, [...(held.get(userId) ?? []), roleKey]),
   };

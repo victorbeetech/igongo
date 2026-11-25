@@ -30,6 +30,9 @@ export function accessService(
       const active = (await deps.assignments.ofRoles(ids)).filter((a) => isActive(a, ctx.now));
       return [...new Set(active.map((a) => a.userId))];
     },
+    async removeAllFor(userId) {
+      for (const a of await deps.assignments.ofUser(userId)) await deps.assignments.remove(userId, a.roleId);
+    },
     async assignByKey({ userId, roleKey, assignedBy }) {
       const role = await deps.roles.getByKey(roleKey);
       if (!role) throw new AppError("not_found", `The role ${roleKey} does not exist.`);

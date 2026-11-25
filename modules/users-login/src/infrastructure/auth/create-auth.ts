@@ -46,6 +46,8 @@ export async function createAuth(config: AuthConfig, deps: AuthDeps) {
       schema: { user: schema.user, session: schema.session, account: schema.account, verification: schema.verification, twoFactor: schema.twoFactor, rateLimit: schema.rateLimit },
     }),
     user: {
+      // Clients may delete their own account (Data Protection and Privacy Act).
+      deleteUser: { enabled: true },
       additionalFields: {
         status: { type: "string", required: false, defaultValue: "active", input: false },
         kind: { type: "string", required: false, defaultValue: "client", input: false },

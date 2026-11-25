@@ -5,6 +5,7 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { tokens } from "@igongo/design-tokens/tokens";
 import { Analytics } from "@/shared/analytics/Analytics";
+import { QueryProvider } from "@/shared/api/QueryProvider";
 import { ConsentBanner } from "@/shared/analytics/ConsentBanner";
 import { THEME_SCRIPT } from "@/shared/preferences/themeScript";
 import { SITE } from "@/shared/seo/siteConfig";
@@ -43,7 +44,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
       </head>
       <body>
-        {children}
+        {/* The live data cache for pages connected to the API. */}
+        <QueryProvider>{children}</QueryProvider>
         <Toaster />
         <ConsentBanner />
         <Analytics />

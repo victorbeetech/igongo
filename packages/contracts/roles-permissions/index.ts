@@ -48,6 +48,8 @@ export interface AccessReader {
 /** Gives roles from other modules (such as the first super admin set-up). */
 export interface RoleAssigner {
   assignByKey(input: { userId: string; roleKey: string; assignedBy: string | null }): Promise<void>;
+  /** Removes every role of a person whose account was deleted. */
+  removeAllFor(userId: string): Promise<void>;
 }
 
 /** The role key of the all-powerful Super Admin. */
