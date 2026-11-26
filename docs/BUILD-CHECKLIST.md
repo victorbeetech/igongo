@@ -204,13 +204,13 @@ The whole app and web portal are built as a clickable product first, with sample
     - [ ] The list of sign-in methods, and every link and unlink, show in the audit log and send the person an email alert.
   - [x] A CI step that fails on skipped tests, secrets in code, passwords or tokens in logs, and TODO in auth code (see [Quality rules](QUALITY-RULES.md)). Done 26 Nov: `tools/quality-check/check.mjs` in the Quality workflow, which also runs the web lint.
   - [ ] Real-user hardening, each item with its own test:
-    - [ ] A double-tapped pay or submit never charges or creates twice (idempotency keys, and the button is disabled while sending).
+    - [x] A double-tapped pay or submit never charges or creates twice (idempotency keys, and the button is disabled while sending). Tests: `modules/payments/test/pay-once.test.ts`, `apps/api/test/food-day.test.ts`.
     - [x] Emails are lowercased and trimmed everywhere: sign-up, sign-in and the staff match.
     - [x] Apostrophes and unicode in names are safe (parameterised queries, escaped output).
     - [x] iPhone photo uploads (HEIC, large files, rotation) are converted and size-limited: the app re-encodes to JPEG at 1600 px, and the server refuses raw HEIC with a clear message and anything over the limit.
     - [ ] Password reset email works end to end; tokens expire and work once. Tested with a stand-in mailbox; the real email waits on an email provider (see [NEEDS-YOU](NEEDS-YOU.md)), and until then resets are refused the same way for every address.
     - [ ] Times are stored in UTC and shown in Africa/Kampala or the viewer's time zone.
-    - [ ] Signal lost after paying: the payment status is settled by the gateway webhook and a "check status" retry, never lost or charged twice.
+    - [x] Signal lost after paying: the payment status is settled by the gateway webhook and a "check status" retry, never lost or charged twice (the provider is always asked directly; a short payment counts as failed). Test: `modules/payments/test/pay-once.test.ts`.
     - [x] A delete my account button in the guest app (also an App Store rule). The data policy text comes with the legal phase.
     - [ ] Apple "Hide My Email" relay addresses are accepted and used for the staff match.
     - [ ] Load and abuse: rate limits per user and IP, queues, and a test with thousands of requests at once.
