@@ -21,6 +21,18 @@ See the real app, as it is today, in the **iPhone 16 Pro Max** simulator on your
    ```
    If you have another Flutter version, `flutter downgrade` / `flutter upgrade` won't pick an exact version; instead run `cd "$(dirname $(which flutter))/.." && git fetch --tags && git checkout 3.50.1 && flutter --version`.
 
+## Quick start: one block to paste
+
+The app is in `apps/igongo` inside the repository, and its `ios` and `android` folders are already in git (nothing to generate). If you cloned to `~/igongo`, paste this in Terminal:
+
+```bash
+cd ~/igongo && git fetch origin && git checkout main && git pull origin main \
+  && cd apps/igongo && flutter pub get \
+  && open -a Simulator && flutter run -d "iPhone 16 Pro Max"
+```
+
+If it says "Expected to find project root", you are not in `apps/igongo`, or your copy is old: the `git pull` above fixes an old copy. If `~/igongo` is not a copy of this repository at all, clone it fresh with `git clone https://github.com/victorbeetech/igongo.git ~/igongo-app` and use `~/igongo-app` in the block instead.
+
 ## Each time: get the latest work and run it
 
 The app lives in `apps/igongo` inside the repository. If you already have a copy of the repository (for example in `~/Developer` or on your Desktop), use that one and skip the clone.
