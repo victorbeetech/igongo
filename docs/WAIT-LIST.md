@@ -31,3 +31,9 @@ Design sheets: guest home, food shop (with search and an add-to-cart bar), cart 
 - Build in one screen at a time, with our theme tokens and our font sizes (not the sheets' sizes), in light and dark.
 - Real API data only. Screens without a live API (room booking, tracking, my bookings) wait until the API exists.
 - Extras not yet built: a payment screen (Mobile Money, card, pay on arrival, secure checkout) and an optional hotel brand splash screen.
+
+## 7. Order customisation and notes (client side)
+- Before a client places an order, they can customise each item: options such as extra or less on each dish.
+- A free-text note per item, for example "no tomatoes".
+- The customisation and notes are saved on the order, and show in the cart, the checkout and the kitchen view.
+- Not built yet: saved with the order and shown to the kitchen once the order flow is live.
