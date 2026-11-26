@@ -2,13 +2,14 @@
 // Module 27: Leave Management. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm27_leave_overrides.dart';
 
 /// Module 27, Leave Management: every screen and dialog, with its sample data.
-const m27LeaveModule = ModuleSpec(
+final m27LeaveModule = ModuleSpec(
   code: '27',
   name: 'Leave Management',
   slug: 'leave',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S27-01',
       name: 'My leave',
@@ -65,7 +66,8 @@ const m27LeaveModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m27Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D27-01',
       name: 'Cancel leave',
@@ -83,7 +85,7 @@ const m27LeaveModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Annual leave · Kyomuhendo Sarah',
       'Sick leave · Mugisha Brian',

@@ -2,13 +2,14 @@
 // Module 80: Accounting Export. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm80_accounting_export_overrides.dart';
 
 /// Module 80, Accounting Export: every screen and dialog, with its sample data.
-const m80AccountingExportModule = ModuleSpec(
+final m80AccountingExportModule = ModuleSpec(
   code: '80',
   name: 'Accounting Export',
   slug: 'accounting-export',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S80-01',
       name: 'Exports',
@@ -32,7 +33,8 @@ const m80AccountingExportModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m80Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D80-01',
       name: 'Run export',
@@ -42,7 +44,7 @@ const m80AccountingExportModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'November 2026 journal',
       'October 2026 journal',

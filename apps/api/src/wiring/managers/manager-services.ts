@@ -39,6 +39,7 @@ import { poolKpis } from "@igongo/pool";
 import type { RecordsDeps } from "@igongo/records-search";
 import { SettingsDashboardStore, type ReportsDeps } from "@igongo/reports-analytics";
 import { roomBookingsKpis } from "@igongo/room-bookings";
+import { RECORD_MODULES } from "../operations/record-modules";
 import type { StaffServices } from "../staff/staff-services";
 
 /** Every module with dashboard numbers: module key, and how to build its source. */
@@ -58,6 +59,8 @@ const KPI_SOURCES: Record<string, (db: Database) => KpiSource> = {
   "advances-loans": advanceKpis,
   "bonuses-rewards": bonusKpis,
   chat: chatKpis,
+  // Every records-kit module (operations, HR extras, guest service, money desks).
+  ...Object.fromEntries(RECORD_MODULES.map((m) => [m.key, m.kpis])),
 };
 
 /** The deps that need an `await` (they ask which other modules are on), loaded once per request. */

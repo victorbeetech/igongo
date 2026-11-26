@@ -2,13 +2,14 @@
 // Module 20: Visitors & Contractors. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm20_visitor_management_overrides.dart';
 
 /// Module 20, Visitors & Contractors: every screen and dialog, with its sample data.
-const m20VisitorManagementModule = ModuleSpec(
+final m20VisitorManagementModule = ModuleSpec(
   code: '20',
   name: 'Visitors & Contractors',
   slug: 'visitor-management',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S20-01',
       name: 'Visitors today',
@@ -109,7 +110,8 @@ const m20VisitorManagementModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m20Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D20-01',
       name: 'Host confirmation',
@@ -135,7 +137,7 @@ const m20VisitorManagementModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Kansiime Doreen · Supplier',
       'Nuwagaba Peter · Contractor',

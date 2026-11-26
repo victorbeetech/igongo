@@ -6,5 +6,6 @@ packages:
   - modules/*
   - packages/core
   - packages/bookings-kit
+  - packages/records-kit
   - packages/design-tokens
   - packages/contracts

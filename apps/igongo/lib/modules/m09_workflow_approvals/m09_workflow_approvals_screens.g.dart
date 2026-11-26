@@ -2,13 +2,14 @@
 // Module 09: Workflow & Approvals. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm09_workflow_approvals_overrides.dart';
 
 /// Module 09, Workflow & Approvals: every screen and dialog, with its sample data.
-const m09WorkflowApprovalsModule = ModuleSpec(
+final m09WorkflowApprovalsModule = ModuleSpec(
   code: '09',
   name: 'Workflow & Approvals',
   slug: 'workflow-approvals',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S09-01',
       name: 'Workflows list',
@@ -65,7 +66,8 @@ const m09WorkflowApprovalsModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m09Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D09-01',
       name: 'Approve',
@@ -91,7 +93,7 @@ const m09WorkflowApprovalsModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Advance request: Mugisha Brian',
       'Leave: Kyomuhendo Sarah',

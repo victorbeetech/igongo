@@ -2,13 +2,14 @@
 // Module 34: Training & Certificates. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm34_training_overrides.dart';
 
 /// Module 34, Training & Certificates: every screen and dialog, with its sample data.
-const m34TrainingModule = ModuleSpec(
+final m34TrainingModule = ModuleSpec(
   code: '34',
   name: 'Training & Certificates',
   slug: 'training',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S34-01',
       name: 'My training',
@@ -76,7 +77,8 @@ const m34TrainingModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m34Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D34-01',
       name: 'Enrol',
@@ -94,7 +96,7 @@ const m34TrainingModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Food hygiene · Level 1',
       'First aid',

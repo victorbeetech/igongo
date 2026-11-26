@@ -1,0 +1,32 @@
+{
+  "name": "@igongo/security-incidents",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Security, Patrols & Incidents (module 45): incident reports, patrol rounds and panic alerts.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint --max-warnings 0 . && tsc --noEmit",
+    "test": "vitest run --testTimeout=30000",
+    "db:generate": "drizzle-kit generate"
+  },
+  "dependencies": {
+    "@igongo/contracts": "workspace:*",
+    "@igongo/core": "workspace:*",
+    "@igongo/records-kit": "workspace:*",
+    "drizzle-orm": "0.45.4",
+    "hono": "4.13.22"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "5.20261125.1",
+    "@electric-sql/pglite": "0.6.0",
+    "@types/node": "24.19.4",
+    "drizzle-kit": "0.31.11",
+    "eslint": "9.39.5",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.74.0",
+    "vitest": "5.1.2"
+  }
+}

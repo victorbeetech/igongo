@@ -2,13 +2,14 @@
 // Module 43: Housekeeping & Room Status. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm43_housekeeping_overrides.dart';
 
 /// Module 43, Housekeeping & Room Status: every screen and dialog, with its sample data.
-const m43HousekeepingModule = ModuleSpec(
+final m43HousekeepingModule = ModuleSpec(
   code: '43',
   name: 'Housekeeping & Room Status',
   slug: 'housekeeping',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S43-01',
       name: 'Room board',
@@ -87,7 +88,8 @@ const m43HousekeepingModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m43Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D43-01',
       name: 'Mark out of order',
@@ -105,7 +107,7 @@ const m43HousekeepingModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Room 101 · Clean',
       'Room 104 · Dirty',

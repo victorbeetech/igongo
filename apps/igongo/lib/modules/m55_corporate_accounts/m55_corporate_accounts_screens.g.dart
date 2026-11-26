@@ -2,13 +2,14 @@
 // Module 55: Corporate Accounts. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm55_corporate_accounts_overrides.dart';
 
 /// Module 55, Corporate Accounts: every screen and dialog, with its sample data.
-const m55CorporateAccountsModule = ModuleSpec(
+final m55CorporateAccountsModule = ModuleSpec(
   code: '55',
   name: 'Corporate Accounts',
   slug: 'corporate-accounts',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S55-01',
       name: 'Corporate accounts',
@@ -65,7 +66,8 @@ const m55CorporateAccountsModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m55Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D55-01',
       name: 'Over credit limit',
@@ -75,7 +77,7 @@ const m55CorporateAccountsModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'MTN Uganda',
       'Bank of Uganda · Mbarara',

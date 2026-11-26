@@ -2,13 +2,14 @@
 // Module 79: Cash-up & Reconciliation. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm79_cash_up_overrides.dart';
 
 /// Module 79, Cash-up & Reconciliation: every screen and dialog, with its sample data.
-const m79CashUpModule = ModuleSpec(
+final m79CashUpModule = ModuleSpec(
   code: '79',
   name: 'Cash-up & Reconciliation',
   slug: 'cash-up',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S79-01',
       name: 'Cash-up',
@@ -65,7 +66,8 @@ const m79CashUpModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m79Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D79-01',
       name: 'Submit cash-up',
@@ -83,7 +85,7 @@ const m79CashUpModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Till 1 · Restaurant',
       'Till 2 · Reception',

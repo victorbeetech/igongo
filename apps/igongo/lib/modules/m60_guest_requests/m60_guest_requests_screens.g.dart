@@ -2,13 +2,14 @@
 // Module 60: Guest Requests & Help Desk. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm60_guest_requests_overrides.dart';
 
 /// Module 60, Guest Requests & Help Desk: every screen and dialog, with its sample data.
-const m60GuestRequestsModule = ModuleSpec(
+final m60GuestRequestsModule = ModuleSpec(
   code: '60',
   name: 'Guest Requests & Help Desk',
   slug: 'guest-requests',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S60-01',
       name: 'Request help',
@@ -65,7 +66,8 @@ const m60GuestRequestsModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m60Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D60-01',
       name: 'Rate service',
@@ -83,7 +85,7 @@ const m60GuestRequestsModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Extra towels · Room 104',
       'Taxi to town · Room 210',

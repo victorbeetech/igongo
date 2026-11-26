@@ -2,13 +2,14 @@
 // Module 36: Staff Requests & Welfare. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm36_staff_welfare_overrides.dart';
 
 /// Module 36, Staff Requests & Welfare: every screen and dialog, with its sample data.
-const m36StaffWelfareModule = ModuleSpec(
+final m36StaffWelfareModule = ModuleSpec(
   code: '36',
   name: 'Staff Requests & Welfare',
   slug: 'staff-welfare',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S36-01',
       name: 'My requests',
@@ -65,7 +66,8 @@ const m36StaffWelfareModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m36Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D36-01',
       name: 'Close request',
@@ -75,7 +77,7 @@ const m36StaffWelfareModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Uniform request',
       'Salary letter',

@@ -2,13 +2,14 @@
 // Module 15: Locations & Departments. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm15_locations_departments_overrides.dart';
 
 /// Module 15, Locations & Departments: every screen and dialog, with its sample data.
-const m15LocationsDepartmentsModule = ModuleSpec(
+final m15LocationsDepartmentsModule = ModuleSpec(
   code: '15',
   name: 'Locations & Departments',
   slug: 'locations-departments',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S15-01',
       name: 'Organisation chart',
@@ -65,8 +66,9 @@ const m15LocationsDepartmentsModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [],
-  mock: ModuleMock(
+  overrides: m15Overrides,
+  dialogs: const [],
+  mock: const ModuleMock(
     items: ['Main building', 'Kitchen', 'Front office', 'Museum', 'Swimming pool', 'Conference hall'],
     statuses: ['Open', 'Closed', 'Under repair', 'Seasonal'],
     kpis: [('Locations', '24'), ('Departments', '16'), ('Rooms', '52'), ('Zones', '18')],

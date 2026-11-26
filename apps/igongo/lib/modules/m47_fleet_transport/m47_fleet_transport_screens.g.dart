@@ -2,13 +2,14 @@
 // Module 47: Fleet & Transport. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm47_fleet_transport_overrides.dart';
 
 /// Module 47, Fleet & Transport: every screen and dialog, with its sample data.
-const m47FleetTransportModule = ModuleSpec(
+final m47FleetTransportModule = ModuleSpec(
   code: '47',
   name: 'Fleet & Transport',
   slug: 'fleet-transport',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S47-01',
       name: 'Vehicles',
@@ -76,7 +77,8 @@ const m47FleetTransportModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m47Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D47-01',
       name: 'Assign driver',
@@ -94,7 +96,7 @@ const m47FleetTransportModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Toyota Hiace UAX 123B',
       'Land Cruiser UBA 456K',

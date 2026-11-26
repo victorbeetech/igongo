@@ -23,6 +23,6 @@ jobs:
       - name: Bundled migrations are up to date
         run: pnpm --filter @igongo/api gen:migrations && git diff --exit-code apps/api/src/migrations
       - name: Lint and type check
-        run: pnpm --filter "@igongo/core" --filter "@igongo/bookings-kit" --filter "./modules/*" --filter "@igongo/api" lint
+        run: pnpm --filter "@igongo/core" --filter "@igongo/bookings-kit" --filter "@igongo/records-kit" --filter "./modules/*" --filter "@igongo/api" lint
       - name: Tests
-        run: pnpm --filter "@igongo/core" --filter "@igongo/bookings-kit" --filter "./modules/*" --filter "@igongo/api" test
+        run: pnpm --filter "@igongo/core" --filter "@igongo/bookings-kit" --filter "@igongo/records-kit" --filter "./modules/*" --filter "@igongo/api" test

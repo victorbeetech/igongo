@@ -2,13 +2,14 @@
 // Module 76: Prices, Taxes & Discounts. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm76_pricing_tax_overrides.dart';
 
 /// Module 76, Prices, Taxes & Discounts: every screen and dialog, with its sample data.
-const m76PricingTaxModule = ModuleSpec(
+final m76PricingTaxModule = ModuleSpec(
   code: '76',
   name: 'Prices, Taxes & Discounts',
   slug: 'pricing-tax',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S76-01',
       name: 'Price lists',
@@ -54,7 +55,8 @@ const m76PricingTaxModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m76Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D76-01',
       name: 'Approve price change',
@@ -64,7 +66,7 @@ const m76PricingTaxModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: ['Rack rate · Deluxe', 'Weekend rate', 'Corporate rate', 'VAT 18%', 'Service charge', 'Staff discount'],
     statuses: ['Active', 'Scheduled', 'Expired', 'Draft'],
     kpis: [('Price lists', '12'), ('Taxes', '3'), ('Discounts', '9'), ('Changes waiting', '1')],

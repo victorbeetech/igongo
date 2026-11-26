@@ -2,13 +2,14 @@
 // Module 46: Lost & Found. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm46_lost_found_overrides.dart';
 
 /// Module 46, Lost & Found: every screen and dialog, with its sample data.
-const m46LostFoundModule = ModuleSpec(
+final m46LostFoundModule = ModuleSpec(
   code: '46',
   name: 'Lost & Found',
   slug: 'lost-found',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S46-01',
       name: 'Lost and found',
@@ -65,7 +66,8 @@ const m46LostFoundModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m46Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D46-01',
       name: 'Hand over item',
@@ -83,7 +85,7 @@ const m46LostFoundModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Black wallet · Pool deck',
       'Phone · Restaurant',

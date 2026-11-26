@@ -2,13 +2,14 @@
 // Module 58: Marketing Campaigns. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm58_campaigns_overrides.dart';
 
 /// Module 58, Marketing Campaigns: every screen and dialog, with its sample data.
-const m58CampaignsModule = ModuleSpec(
+final m58CampaignsModule = ModuleSpec(
   code: '58',
   name: 'Marketing Campaigns',
   slug: 'campaigns',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S58-01',
       name: 'Campaigns',
@@ -43,7 +44,8 @@ const m58CampaignsModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m58Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D58-01',
       name: 'Send campaign',
@@ -61,7 +63,7 @@ const m58CampaignsModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'December stays offer',
       'Wedding season',

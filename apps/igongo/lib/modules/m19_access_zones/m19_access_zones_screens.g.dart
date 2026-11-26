@@ -2,13 +2,14 @@
 // Module 19: Access Control & Zones. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm19_access_zones_overrides.dart';
 
 /// Module 19, Access Control & Zones: every screen and dialog, with its sample data.
-const m19AccessZonesModule = ModuleSpec(
+final m19AccessZonesModule = ModuleSpec(
   code: '19',
   name: 'Access Control & Zones',
   slug: 'access-zones',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S19-01',
       name: 'Zones list',
@@ -87,7 +88,8 @@ const m19AccessZonesModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m19Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D19-01',
       name: 'Override refusal',
@@ -113,7 +115,7 @@ const m19AccessZonesModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: ['Main gate', 'Kitchen', 'Server room', 'Pool deck', 'Museum store', 'Staff canteen'],
     statuses: ['Open', 'Restricted', 'Locked', 'Alarm'],
     kpis: [('Zones', '18'), ('Entries today', '642'), ('Refused', '7'), ('Alarms', '0')],

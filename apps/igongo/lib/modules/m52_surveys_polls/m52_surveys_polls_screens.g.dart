@@ -2,13 +2,14 @@
 // Module 52: Surveys & Polls. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm52_surveys_polls_overrides.dart';
 
 /// Module 52, Surveys & Polls: every screen and dialog, with its sample data.
-const m52SurveysPollsModule = ModuleSpec(
+final m52SurveysPollsModule = ModuleSpec(
   code: '52',
   name: 'Surveys & Polls',
   slug: 'surveys-polls',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S52-01',
       name: 'Surveys',
@@ -54,7 +55,8 @@ const m52SurveysPollsModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m52Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D52-01',
       name: 'Submit answers',
@@ -64,7 +66,7 @@ const m52SurveysPollsModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Staff canteen survey',
       'Uniform choice poll',

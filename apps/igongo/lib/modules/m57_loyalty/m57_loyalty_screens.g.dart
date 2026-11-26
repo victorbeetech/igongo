@@ -2,13 +2,14 @@
 // Module 57: Loyalty & Membership. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm57_loyalty_overrides.dart';
 
 /// Module 57, Loyalty & Membership: every screen and dialog, with its sample data.
-const m57LoyaltyModule = ModuleSpec(
+final m57LoyaltyModule = ModuleSpec(
   code: '57',
   name: 'Loyalty & Membership',
   slug: 'loyalty',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S57-01',
       name: 'My points',
@@ -65,7 +66,8 @@ const m57LoyaltyModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m57Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D57-01',
       name: 'Redeem points',
@@ -75,7 +77,7 @@ const m57LoyaltyModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Gold · Kansiime Doreen',
       'Silver · Okello James',

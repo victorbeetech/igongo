@@ -2,13 +2,14 @@
 // Module 42: Tasks. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm42_tasks_overrides.dart';
 
 /// Module 42, Tasks: every screen and dialog, with its sample data.
-const m42TasksModule = ModuleSpec(
+final m42TasksModule = ModuleSpec(
   code: '42',
   name: 'Tasks',
   slug: 'tasks',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S42-01',
       name: 'My tasks',
@@ -65,7 +66,8 @@ const m42TasksModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m42Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D42-01',
       name: 'Complete task',
@@ -83,7 +85,7 @@ const m42TasksModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Set up Hall A for wedding',
       'Restock minibar 104',

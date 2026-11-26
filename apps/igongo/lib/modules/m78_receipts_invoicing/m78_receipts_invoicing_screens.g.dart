@@ -2,13 +2,14 @@
 // Module 78: Receipts & Invoicing. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm78_receipts_invoicing_overrides.dart';
 
 /// Module 78, Receipts & Invoicing: every screen and dialog, with its sample data.
-const m78ReceiptsInvoicingModule = ModuleSpec(
+final m78ReceiptsInvoicingModule = ModuleSpec(
   code: '78',
   name: 'Receipts & Invoicing',
   slug: 'receipts-invoicing',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S78-01',
       name: 'Documents',
@@ -76,7 +77,8 @@ const m78ReceiptsInvoicingModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m78Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D78-01',
       name: 'Send document',
@@ -94,7 +96,7 @@ const m78ReceiptsInvoicingModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Receipt R-10231',
       'Receipt R-10232',

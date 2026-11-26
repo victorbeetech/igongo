@@ -2,13 +2,14 @@
 // Module 21: Key Control. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm21_key_control_overrides.dart';
 
 /// Module 21, Key Control: every screen and dialog, with its sample data.
-const m21KeyControlModule = ModuleSpec(
+final m21KeyControlModule = ModuleSpec(
   code: '21',
   name: 'Key Control',
   slug: 'key-control',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S21-01',
       name: 'Keys register',
@@ -77,7 +78,8 @@ const m21KeyControlModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m21Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D21-01',
       name: 'Restricted key approval',
@@ -95,7 +97,7 @@ const m21KeyControlModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Key 12 · Store room',
       'Key 07 · Pool pump house',

@@ -2,13 +2,14 @@
 // Module 26: Shifts & Rosters. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm26_shifts_rosters_overrides.dart';
 
 /// Module 26, Shifts & Rosters: every screen and dialog, with its sample data.
-const m26ShiftsRostersModule = ModuleSpec(
+final m26ShiftsRostersModule = ModuleSpec(
   code: '26',
   name: 'Shifts & Rosters',
   slug: 'shifts-rosters',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S26-01',
       name: 'Roster',
@@ -65,7 +66,8 @@ const m26ShiftsRostersModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m26Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D26-01',
       name: 'Publish roster',
@@ -91,7 +93,7 @@ const m26ShiftsRostersModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Kitchen · Morning',
       'Front office · Night',

@@ -2,13 +2,14 @@
 // Module 48: SOPs & Knowledge Base. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm48_knowledge_base_overrides.dart';
 
 /// Module 48, SOPs & Knowledge Base: every screen and dialog, with its sample data.
-const m48KnowledgeBaseModule = ModuleSpec(
+final m48KnowledgeBaseModule = ModuleSpec(
   code: '48',
   name: 'SOPs & Knowledge Base',
   slug: 'knowledge-base',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S48-01',
       name: 'Knowledge base',
@@ -54,7 +55,8 @@ const m48KnowledgeBaseModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m48Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D48-01',
       name: 'Acknowledge article',
@@ -64,7 +66,7 @@ const m48KnowledgeBaseModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'How to clock in',
       'Food safety SOP',

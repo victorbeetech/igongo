@@ -5,6 +5,8 @@
  * through their contracts.
  */
 
+import type { RecordsDeps } from "@igongo/records-kit";
+import type { RecordModuleEntry } from "./operations/record-modules";
 import { auditRecorder, DrizzleAuditStore } from "@igongo/audit-trail";
 import { memoryBlobStore, r2BlobStore, type BlobStore } from "@igongo/files-media";
 import type { AuditRecorder } from "@igongo/contracts/audit-trail";
@@ -103,6 +105,12 @@ export class RequestServices {
   /** The manager modules for [actor]'s change context; one per request, so loaded deps are kept. */
   managerModules(actor: { userId: string; name: string } | undefined): ManagerServices {
     return (this.managers ??= new ManagerServices(this.db, this.changeContext(actor), this.modules(), this.staffModules(), this.blobs(), this.auditStore()));
+  }
+
+  // --- Records-kit modules (operations, HR extras, guest service and money desks) ---
+  /** [entry]'s deps for [actor], with the HR staff directory for assignees. */
+  recordModule(entry: RecordModuleEntry, actor: { userId: string; name: string } | undefined): RecordsDeps {
+    return entry.deps(this.db, this.changeContext(actor), this.staffModules().staff());
   }
 
   /** The change context for the signed-in caller, for audited use cases. */
