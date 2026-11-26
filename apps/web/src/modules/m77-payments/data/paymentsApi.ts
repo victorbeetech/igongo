@@ -28,3 +28,18 @@ export const usePay = () =>
 /** Staff record a till payment. */
 export const useRecordPayment = () =>
   useApiMutation((b: { module: string; recordId: string; method: string; amount?: number; reference?: string }) => api<Payment>("/api/payments/record", { method: "POST", body: b }), { done: "Payment recorded", refresh: [["payments"]] });
+
+/** One settlement line: money in for a day, method, module and outlet. */
+export interface SettlementRow {
+  day: string;
+  method: string;
+  module: string;
+  outlet: string | null;
+  count: number;
+  amount: number;
+  refunded: number;
+  net: number;
+}
+
+export const useSettlement = (from: string, to: string) =>
+  useQuery({ queryKey: ["payments", "settlement", from, to], queryFn: () => api<{ from: string; to: string; items: SettlementRow[]; total: number }>(`/api/payments/settlement?from=${from}&to=${to}`), enabled: !!from && !!to && from <= to });
