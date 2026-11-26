@@ -6,7 +6,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { testApi, testEnv } from "./helpers";
+import { testApi, testEnv, totpCode } from "./helpers";
 
 describe("the app shell", () => {
   it("answers health with the database status and a request ID", async () => {
@@ -35,8 +35,11 @@ describe("the app shell", () => {
 
 describe("the super admin's first day", () => {
   it("sets up the owner, then manages roles, settings and keys, all audited", async () => {
-    const { browser, client } = await testApi();
+    const { browser, client, phone } = await testApi();
     const owner = browser();
+    // A guest's sign-up on the web portal is refused; the app is the place.
+    expect((await browser()("POST", "/api/auth/sign-up/email", { name: "Ann", email: "ann@example.com", password: "Ann pass 1234" })).body).toMatchObject({ code: "STAFF_ONLY" });
+    expect((await phone()("POST", "/api/auth/sign-up/email", { name: "Ann", email: "ann@example.com", password: "Ann pass 1234" })).status).toBe(200);
     // Public: the login screen's methods, and the set-up is needed.
     expect(((await owner("GET", "/api/login-methods")).body["methods"] as unknown[]).length).toBeGreaterThan(0);
     expect((await owner("GET", "/api/setup/status")).body).toEqual({ needed: true });
@@ -45,6 +48,12 @@ describe("the super admin's first day", () => {
     await client.exec(`update users_login."user" set email_verified = true where email = 'owner@example.com'`);
     expect((await owner("POST", "/api/setup/claim")).status).toBe(200);
     expect((await owner("GET", "/api/setup/status")).body).toEqual({ needed: false });
+    // The console waits for 2-step; turning it on gives recovery codes.
+    expect((await owner("GET", "/api/access/roles")).body).toMatchObject({ error: "two_factor_required" });
+    const enabled = (await owner("POST", "/api/auth/two-factor/enable", { password: "Owner pass 123" })).body as { totpURI: string; backupCodes: string[] };
+    expect(enabled.backupCodes.length).toBeGreaterThanOrEqual(10);
+    const secret = new URL(enabled.totpURI).searchParams.get("secret") ?? "";
+    expect((await owner("POST", "/api/auth/two-factor/verify-totp", { code: await totpCode(secret) })).status).toBe(200);
     // My access now includes the console.
     const me = (await owner("GET", "/api/access/me")).body as { menu: string[] };
     expect(me.menu).toEqual(expect.arrayContaining(["roles-permissions", "audit-trail", "super-admin"]));
@@ -70,8 +79,8 @@ describe("the super admin's first day", () => {
   });
 
   it("refuses the console to a signed-in client", async () => {
-    const { browser } = await testApi();
-    const guest = browser();
+    const { phone } = await testApi();
+    const guest = phone();
     await guest("POST", "/api/auth/sign-up/email", { name: "Ann", email: "ann@example.com", password: "Ann pass 1234" });
     expect((await guest("GET", "/api/admin/modules")).body).toMatchObject({ error: "permission_denied" });
     expect(((await guest("GET", "/api/users/me")).body["account"] as { kind: string }).kind).toBe("client");

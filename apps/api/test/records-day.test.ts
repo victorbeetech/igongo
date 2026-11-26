@@ -13,10 +13,8 @@ import { testApi } from "./helpers";
 /** A hotel with a super admin, HR, and a way to add enrolled staff with pre-made roles. */
 async function hotel() {
   const t = await testApi();
-  const owner = t.browser();
-  await owner("POST", "/api/auth/sign-up/email", { name: "Owner", email: "owner@example.com", password: "Owner pass 123" });
-  await t.client.exec(`update users_login."user" set email_verified = true where email = 'owner@example.com'`);
-  expect((await owner("POST", "/api/setup/claim")).status).toBe(200);
+  // The owner: set-up claimed and 2-step on, as the console requires.
+  const owner = await t.owner();
 
   /** A signed-in account holding [roleIds]. */
   async function account(name: string, roleIds: string[]) {
@@ -35,7 +33,8 @@ async function hotel() {
     const staff = (await hr.call("POST", "/api/hr/staff", { name, department, jobTitle: "Staff", userId })).body as { staffId: string };
     return { call, userId, staffId: staff.staffId };
   }
-  const guest = t.browser();
+  // Guests sign up in the app, never on the staff web portal.
+  const guest = t.phone();
   expect((await guest("POST", "/api/auth/sign-up/email", { name: "Grace", email: "grace@example.com", password: "Grace pass 123" })).status).toBe(200);
   return { ...t, owner, person, guest };
 }

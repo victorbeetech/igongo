@@ -6,7 +6,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { accessProfile, DrizzleAssignmentRepository, DrizzleRoleRepository } from "../src";
 import { deleteRole, setRoleArchived } from "../src/application/use-cases/archive-role";
-import { assignRole } from "../src/application/use-cases/assign-role";
+import { assignRole, unassignRole } from "../src/application/use-cases/assign-role";
 import { createRole } from "../src/application/use-cases/create-role";
 import { updateRole } from "../src/application/use-cases/update-role";
 import { whoCan } from "../src/application/use-cases/who-can";
@@ -15,12 +15,13 @@ import { freshDb, memoryAudit } from "./helpers";
 const now = new Date("2026-11-25T10:00:00Z");
 
 describe("Roles & Permissions", () => {
-  let deps: { roles: DrizzleRoleRepository; assignments: DrizzleAssignmentRepository };
+  let deps: { roles: DrizzleRoleRepository; assignments: DrizzleAssignmentRepository; staffAccounts: { isStaffAccount: (id: string) => Promise<boolean> } };
   let audit: ReturnType<typeof memoryAudit>;
   let ctx: { actorId: string; audit: ReturnType<typeof memoryAudit>; now: Date };
   beforeEach(async () => {
     const { db } = await freshDb();
-    deps = { roles: new DrizzleRoleRepository(db), assignments: new DrizzleAssignmentRepository(db) };
+    // Everyone but "gina" is a staff account in these tests.
+    deps = { roles: new DrizzleRoleRepository(db), assignments: new DrizzleAssignmentRepository(db), staffAccounts: { isStaffAccount: async (id) => id !== "gina" } };
     audit = memoryAudit();
     ctx = { actorId: "admin", audit, now };
   });
@@ -67,5 +68,17 @@ describe("Roles & Permissions", () => {
     await assignRole(deps, ctx, { userId: "sam", roleId: "role_super-admin" });
     const rows = await whoCan(deps, "audit-trail.entries.view", now);
     expect(rows.find((r) => r.roleId === "role_super-admin")?.holders).toEqual(["sam"]);
+  });
+
+  it("gives staff roles only to staff accounts, and never removes the last super admin", async () => {
+    // Gina signed up in the app as a guest: no staff role without the staff match.
+    await expect(assignRole(deps, ctx, { userId: "gina", roleId: "role_waiter" })).rejects.toThrow(/staff accounts/);
+    // Guest-side roles (not staff) are fine.
+    await assignRole(deps, ctx, { userId: "gina", roleId: "role_guest" });
+    // One super admin cannot be removed; with a second one it can.
+    await assignRole(deps, ctx, { userId: "sam", roleId: "role_super-admin" });
+    await expect(unassignRole(deps, ctx, "sam", "role_super-admin")).rejects.toThrow(/last super admin/);
+    await assignRole(deps, ctx, { userId: "sue", roleId: "role_super-admin" });
+    await unassignRole(deps, ctx, "sam", "role_super-admin");
   });
 });

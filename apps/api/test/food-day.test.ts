@@ -12,10 +12,8 @@ import { testApi } from "./helpers";
 /** A hotel with a restaurant, a dish, a delivery zone, staff with pre-made roles, and two guests. */
 async function hotel() {
   const t = await testApi();
-  const owner = t.browser();
-  await owner("POST", "/api/auth/sign-up/email", { name: "Owner", email: "owner@example.com", password: "Owner pass 123" });
-  await t.client.exec(`update users_login."user" set email_verified = true where email = 'owner@example.com'`);
-  expect((await owner("POST", "/api/setup/claim")).status).toBe(200);
+  // The owner: set-up claimed and 2-step on, as the console requires.
+  const owner = await t.owner();
 
   /** A signed-in staff account holding [roleIds]. */
   async function staff(name: string, roleIds: string[]) {
@@ -29,7 +27,8 @@ async function hotel() {
 
   /** A guest who signed up in the app. */
   async function guest(name: string) {
-    const call = t.browser();
+    // Guests use the app.
+    const call = t.phone();
     const res = await call("POST", "/api/auth/sign-up/email", { name, email: `${name.toLowerCase()}@example.com`, password: `${name} pass 123` });
     expect(res.status).toBe(200);
     return { call, userId: String((res.body["user"] as { id: string }).id) };

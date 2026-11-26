@@ -21,8 +21,18 @@ export interface ClaimDeps {
 }
 
 /** True while the set-up can still be done. */
-export async function setupNeeded(deps: Pick<ClaimDeps, "access">): Promise<boolean> {
+export async function setupNeeded(deps: { access: AccessReader }): Promise<boolean> {
   return !(await deps.access.anyoneHolds(SUPER_ADMIN_ROLE_KEY));
+}
+
+/**
+ * True while the set-up is still open and [email] is the owner's. Lets the
+ * owner create the first account on the web portal and claim the role;
+ * nobody else can sign up or in there before they are staff.
+ */
+export async function isOwnerSettingUp(deps: { access: AccessReader; bootstrapEmail: string | undefined }, email: string): Promise<boolean> {
+  const owner = deps.bootstrapEmail?.trim().toLowerCase();
+  return !!owner && email.trim().toLowerCase() === owner && (await setupNeeded(deps));
 }
 
 /** @throws AppError `conflict` once done, `permission_denied` for anyone but the owner */

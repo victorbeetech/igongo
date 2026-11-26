@@ -52,6 +52,15 @@ export interface RoleAssigner {
   removeAllFor(userId: string): Promise<void>;
 }
 
+/**
+ * Says whether an account is a staff account. Staff roles may only be given
+ * to staff accounts, and a guest account becomes staff only when the super
+ * admin matches it to a staff record (Users & Login implements this).
+ */
+export interface StaffAccountCheck {
+  isStaffAccount(userId: string): Promise<boolean>;
+}
+
 /** The role key of the all-powerful Super Admin. */
 export const SUPER_ADMIN_ROLE_KEY = "super-admin";
 /** The role every new client account gets. */

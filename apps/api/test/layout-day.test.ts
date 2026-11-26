@@ -13,10 +13,8 @@ describe("app layout", () => {
   it("draws each person's menu from the role layouts the super admin publishes", async () => {
     // A hotel with a super admin and one pool attendant.
     const t = await testApi();
-    const owner = t.browser();
-    await owner("POST", "/api/auth/sign-up/email", { name: "Owner", email: "owner@example.com", password: "Owner pass 123" });
-    await t.client.exec(`update users_login."user" set email_verified = true where email = 'owner@example.com'`);
-    expect((await owner("POST", "/api/setup/claim")).status).toBe(200);
+    // The owner: set-up claimed and 2-step on, as the console requires.
+    const owner = await t.owner();
     const created = (await owner("POST", "/api/users", { name: "Leo", email: "leo@example.com", password: "Leo pass 1234" })).body as { id: string };
     expect((await owner("POST", `/api/access/users/${created.id}/roles`, { roleId: "role_pool-attendant" })).status).toBe(204);
     const leo = t.browser();

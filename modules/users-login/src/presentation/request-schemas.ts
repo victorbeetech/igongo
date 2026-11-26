@@ -16,7 +16,7 @@ export const searchQuery = z.object({
 /** `POST /users`: a staff account made by an admin. */
 export const createAccountBody = z.object({
   name: z.string().trim().min(2).max(120),
-  email: z.email().max(200),
+  email: z.string().trim().toLowerCase().pipe(z.email().max(200)),
   /** Optional: staff can also sign in with Google, a PIN or a card. */
   password: z.string().min(8).max(128).optional(),
 });
@@ -40,4 +40,23 @@ export const policyBody = z.object({
   newAccountsNeedApproval: z.boolean().optional(),
   sessionDays: z.number().int().min(1).max(365).optional(),
   firstMethod: z.enum(LOGIN_METHODS).optional(),
+  passwordMinLength: z.number().int().min(8).max(64).optional(),
+  passwordNeedsLetterAndNumber: z.boolean().optional(),
+  maxFailedAttempts: z.number().int().min(3).max(20).optional(),
+  lockoutMinutes: z.number().int().min(1).max(1440).optional(),
+  staffWebSessionHours: z.number().int().min(1).max(72).optional(),
+  webIdleMinutes: z.number().int().min(2).max(240).optional(),
+  twoFactorForSensitiveRoles: z.boolean().optional(),
+  sensitiveRoleKeys: z.array(z.string().max(60)).max(200).optional(),
+  newDeviceAlerts: z.boolean().optional(),
 });
+
+/** `POST /security/staff-match`: the guest account, and what the person tells the super admin. */
+export const staffMatchBody = z.object({
+  userId: z.string().min(1).max(80),
+  staffNumber: z.string().trim().min(3).max(20),
+  phone: z.string().trim().min(9).max(20),
+});
+
+/** `POST /security/me/password`: the first password for an account made with Google or Apple. */
+export const firstPasswordBody = z.object({ newPassword: z.string().min(8).max(128) });

@@ -3,7 +3,7 @@
  * gateway are given. A thin wrapper over the use cases above.
  */
 
-import type { AccessReader, RoleAssigner } from "@igongo/contracts/roles-permissions";
+import type { AccessReader, RoleAssigner, StaffAccountCheck } from "@igongo/contracts/roles-permissions";
 import { AppError } from "@igongo/core";
 import { isActive } from "../../domain/role-assignment";
 import type { ChangeContext } from "../change-context";
@@ -14,7 +14,7 @@ import { assignRole } from "./assign-role";
 
 /** Builds both contracts over the same repositories. */
 export function accessService(
-  deps: { roles: RoleRepository; assignments: AssignmentRepository },
+  deps: { roles: RoleRepository; assignments: AssignmentRepository; staffAccounts: StaffAccountCheck },
   ctx: Omit<ChangeContext, "actorId">,
 ): AccessReader & RoleAssigner {
   return {

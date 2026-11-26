@@ -19,7 +19,7 @@ import * as schema from "../db/schema";
 import { appleClientSecret } from "./apple-client-secret";
 import type { AuthConfig, AuthDeps } from "./auth-deps";
 import { deviceSignInPlugin } from "./device-sign-in-plugin";
-import { loginGuardHooks } from "./login-guard-hooks";
+import { FRESH_SIGN_IN_SECONDS, loginGuardHooks } from "./login-guard-hooks";
 
 /** The route prefix: Google's redirect URI is `<baseURL>/api/auth/callback/google`. */
 export const AUTH_BASE_PATH = "/api/auth";
@@ -53,17 +53,28 @@ export async function createAuth(config: AuthConfig, deps: AuthDeps) {
         kind: { type: "string", required: false, defaultValue: "client", input: false },
       },
     },
-    session: { expiresIn: policy.sessionDays * 24 * 3600, updateAge: 24 * 3600 },
+    // Adding or removing a sign-in method, or deleting the account, needs a sign-in from the last 10 minutes.
+    session: { expiresIn: policy.sessionDays * 24 * 3600, updateAge: 24 * 3600, freshAge: FRESH_SIGN_IN_SECONDS },
     emailAndPassword: {
       enabled: true,
+      // The policy's own rules (length, letter and number) are checked in the before hook.
       minPasswordLength: 8,
+      // Reset links work for one hour and only once (Better Auth deletes the token when used).
+      resetPasswordTokenExpiresIn: 3600,
+      // A reset signs the person out everywhere.
+      revokeSessionsOnPasswordReset: true,
       // PBKDF2 (native on Workers) instead of scrypt; see @igongo/core password-hasher.
       password: { hash: hashPassword, verify: ({ hash, password }) => verifyPassword(hash, password) },
       // Reset links go out by email once the email service is set up (Phase 8).
       sendResetPassword: async ({ user, url }) => send("email", user.email, `Reset your Igongo password: ${url}`),
     },
     socialProviders,
-    account: { accountLinking: { enabled: true, trustedProviders: ["google", "apple"] } },
+    // One person, one account: Google or Apple join an existing account only when the
+    // provider verified the email AND the account's own email is verified (no takeover by
+    // signing up with someone's email first). A different email (Apple "Hide My Email") is
+    // only linked from inside the signed-in account; the hooks check that. The last method
+    // can never be removed (Better Auth refuses it).
+    account: { accountLinking: { enabled: true, trustedProviders: [], requireLocalEmailVerified: true, allowDifferentEmails: true } },
     // Limits shared by every Worker instance, stored in Postgres.
     rateLimit: { enabled: true, storage: "database", window: 60, max: 60, customRules: { "/sign-in/*": { window: 60, max: 10 }, "/phone-number/*": { window: 60, max: 5 }, "/pin/sign-in": { window: 60, max: 10 } } },
     plugins: [
@@ -84,7 +95,7 @@ export async function createAuth(config: AuthConfig, deps: AuthDeps) {
       database: { generateId: ({ model }) => `${model.slice(0, 4)}_${crypto.randomUUID().replace(/-/g, "")}` },
       ipAddress: { ipAddressHeaders: ["cf-connecting-ip"] },
     },
-    ...loginGuardHooks(deps),
+    ...loginGuardHooks(deps, config.trustedOrigins),
     telemetry: { enabled: false },
   });
 }

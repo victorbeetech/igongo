@@ -141,3 +141,24 @@ export const rateLimit = usersLoginSchema.table("rate_limit", {
   count: integer("count").notNull(),
   lastRequest: bigint("last_request", { mode: "number" }).notNull(),
 });
+
+/** Wrong passwords in a row for one email, and until when it is locked. */
+export const failedLogins = usersLoginSchema.table("failed_logins", {
+  email: text("email").primaryKey(),
+  count: integer("count").notNull().default(0),
+  lockedUntil: timestamp("locked_until", { withTimezone: true }),
+  updatedAt: updated(),
+});
+
+/** Devices each account has signed in from, for new-device alerts. */
+export const knownDevices = usersLoginSchema.table(
+  "known_devices",
+  {
+    userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+    /** A hash of the device's browser or app name; never the raw text. */
+    deviceKey: text("device_key").notNull(),
+    label: text("label").notNull(),
+    firstSeenAt: created(),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.deviceKey] })],
+);
