@@ -235,13 +235,27 @@ The whole app and web portal are built as a clickable product first, with sample
     - [ ] 4. CSRF protection with a token check: a forged form from another site is rejected.
     - [ ] 5. Secure session cookies: HttpOnly, Secure, SameSite.
     - [ ] 6. Password reset links expire and work once.
-    - [ ] 7. Upload limits: images only, at most 5 MB, checked on the server by the real file type.
+    - [ ] 7. Safe uploads (asked by the user, 26 Nov 2026). Each rule has a proving test and a result in `docs/SECURITY-AUDIT.md`:
+      - [ ] Check the real content of every file (magic bytes and a real decode); never trust the extension or the declared type.
+      - [ ] A strict size limit for each file type.
+      - [ ] Re-encode images, which strips hidden code and metadata, and reject anything that does not decode.
+      - [ ] Rename every upload at once to a random name that cannot be guessed (a UUID); the original name is never kept.
+      - [ ] Store uploads only in object storage (Cloudflare R2), never on the app server. No public listing. Files are served with the correct content type and `nosniff`, and anything that is not an image is download only.
+      - [ ] Uploads are never executed.
+      - [ ] Upload rate limits per person.
+      - [ ] Tests: a fake jpg that is really a script, a file that is too big, and a double extension (`photo.jpg.php`) are all rejected.
     - [ ] 8. Admin pages locked: a normal user gets 403.
     - [ ] 9. Every price and total rechecked on the server; the browser is never trusted.
     - [ ] 10. Debug mode off in production: people see only "Something went wrong, reference A12F", with the details in private logs.
     - [ ] 11. Risky packages updated and unused ones deleted.
     - [ ] 12. The whole git history scanned for leaked keys, and any found are rotated.
-    - [ ] HTTPS everywhere.
+    - [ ] A real sign-in, with no shortcuts.
+    - [ ] Every password hashed (bcrypt or stronger, never plain text).
+    - [ ] People see only their own data: another person's order returns 403.
+    - [ ] API keys and gateway secrets only on the server, never in browser or app code.
+    - [ ] HTTPS forced everywhere.
+    - [ ] Database access locked down: not reachable from the internet except through the API.
+    - [ ] Every form is checked on the server too, not only on the page (for example, quantity must be 1 to 10 and anything else is rejected).
 - [ ] Last phase before TestFlight, premium animations and transitions (asked by the user, 26 Nov 2026; do after the basics, not started): booking flows, menu scroll effects and modern TikTok-style motion, mostly in the guest app and the public websites, all of premium quality.
 - [ ] Legal and compliance for Uganda, right before App Store readiness (asked by the user, 26 Nov 2026; not started). Each item has a check, and everything here is to be confirmed by a Ugandan lawyer before launch. Apple and Google store rules stay as listed under App Store readiness:
   - [ ] Data Protection and Privacy Act 2019: privacy policy and consent texts written for it; a docs note on registering with the Personal Data Protection Office (under NITA-U); a data-subject rights page (access, correct, delete); and the steps to report a data breach.
