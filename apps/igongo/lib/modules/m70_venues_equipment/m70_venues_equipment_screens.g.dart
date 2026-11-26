@@ -2,13 +2,14 @@
 // Module 70: Venues & Equipment Hire. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm70_venues_equipment_overrides.dart';
 
 /// Module 70, Venues & Equipment Hire: every screen and dialog, with its sample data.
-const m70VenuesEquipmentModule = ModuleSpec(
+final m70VenuesEquipmentModule = ModuleSpec(
   code: '70',
   name: 'Venues & Equipment Hire',
   slug: 'venues-equipment',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S70-01',
       name: 'Venues',
@@ -65,7 +66,8 @@ const m70VenuesEquipmentModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m70Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D70-01',
       name: 'Hold expiring',
@@ -83,7 +85,7 @@ const m70VenuesEquipmentModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: ['Hall A · 400 guests', 'Garden · 600 guests', 'Boardroom · 20', 'Projector', 'PA system', 'Tent 20 x 40'],
     statuses: ['Free', 'Booked', 'Hired out', 'Under repair'],
     kpis: [('Venues', '6'), ('Bookings this week', '8'), ('Equipment out', '14'), ('Late returns', '1')],

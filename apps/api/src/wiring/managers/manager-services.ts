@@ -39,6 +39,10 @@ import { poolKpis } from "@igongo/pool";
 import type { RecordsDeps } from "@igongo/records-search";
 import { SettingsDashboardStore, type ReportsDeps } from "@igongo/reports-analytics";
 import { roomBookingsKpis } from "@igongo/room-bookings";
+import { spaKpis } from "@igongo/spa";
+import { stockKpis } from "@igongo/stock-inventory";
+import { tablesDineinKpis } from "@igongo/tables-dinein";
+import { venuesEquipmentKpis } from "@igongo/venues-equipment";
 import { RECORD_MODULES } from "../operations/record-modules";
 import type { StaffServices } from "../staff/staff-services";
 
@@ -59,6 +63,10 @@ const KPI_SOURCES: Record<string, (db: Database) => KpiSource> = {
   "advances-loans": advanceKpis,
   "bonuses-rewards": bonusKpis,
   chat: chatKpis,
+  spa: spaKpis,
+  "venues-equipment": venuesEquipmentKpis,
+  "tables-dinein": tablesDineinKpis,
+  "stock-inventory": stockKpis,
   // Every records-kit module (operations, HR extras, guest service, money desks).
   ...Object.fromEntries(RECORD_MODULES.map((m) => [m.key, m.kpis])),
 };

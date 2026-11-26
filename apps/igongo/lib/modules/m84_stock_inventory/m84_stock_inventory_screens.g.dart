@@ -2,13 +2,14 @@
 // Module 84: Stock & Inventory. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm84_stock_inventory_overrides.dart';
 
 /// Module 84, Stock & Inventory: every screen and dialog, with its sample data.
-const m84StockInventoryModule = ModuleSpec(
+final m84StockInventoryModule = ModuleSpec(
   code: '84',
   name: 'Stock & Inventory',
   slug: 'stock-inventory',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S84-01',
       name: 'Stock home',
@@ -230,7 +231,8 @@ const m84StockInventoryModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m84Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D84-01',
       name: 'Approve requisition',
@@ -272,7 +274,7 @@ const m84StockInventoryModule = ModuleSpec(
       opens: ['S84-17'],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: ['Rice (50 kg bags)', 'Cooking oil (20 L)', 'Beef (kg)', 'Bed sheets', 'Chlorine (pool)', 'Printer paper'],
     statuses: ['In stock', 'Low', 'Out', 'On order'],
     kpis: [('Items', '1,860'), ('Low stock', '14'), ('Orders open', '6'), ('Stock value', 'UGX 86M')],

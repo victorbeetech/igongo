@@ -82,6 +82,11 @@ export const MODULES = [
   "receipts-invoicing",
   "cash-up",
   "accounting-export",
+  // Stock and the last booking modules.
+  "stock-inventory",
+  "spa",
+  "venues-equipment",
+  "tables-dinein",
 ];
 
 /** Every migration file as { module, name, path }, in apply order. */

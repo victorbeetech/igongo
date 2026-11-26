@@ -2,13 +2,14 @@
 // Module 64: Tables & Dine-in. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm64_tables_dinein_overrides.dart';
 
 /// Module 64, Tables & Dine-in: every screen and dialog, with its sample data.
-const m64TablesDineinModule = ModuleSpec(
+final m64TablesDineinModule = ModuleSpec(
   code: '64',
   name: 'Tables & Dine-in',
   slug: 'tables-dinein',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S64-01',
       name: 'Floor plan',
@@ -98,7 +99,8 @@ const m64TablesDineinModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m64Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D64-01',
       name: 'Seat guests',
@@ -124,7 +126,7 @@ const m64TablesDineinModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Table 1 · 2 seats',
       'Table 4 · 4 seats',

@@ -26,6 +26,9 @@ import { museumDeps } from "@igongo/museum";
 import { DrizzlePaymentRepository, paymentProviders, SettingsMethodStore, type PaymentsDeps } from "@igongo/payments";
 import { poolDeps } from "@igongo/pool";
 import { roomBookingsDeps } from "@igongo/room-bookings";
+import { spaDeps } from "@igongo/spa";
+import { tablesDineinDeps } from "@igongo/tables-dinein";
+import { venuesEquipmentDeps } from "@igongo/venues-equipment";
 
 /** The booking modules: module key, and how to build its deps. */
 export const BOOKING_MODULES = {
@@ -34,6 +37,9 @@ export const BOOKING_MODULES = {
   "events-conferences": eventsConferencesDeps,
   pool: poolDeps,
   "crafts-bookshop": craftsBookshopDeps,
+  spa: spaDeps,
+  "venues-equipment": venuesEquipmentDeps,
+  "tables-dinein": tablesDineinDeps,
 } as const;
 export type BookingModuleKey = keyof typeof BOOKING_MODULES;
 
