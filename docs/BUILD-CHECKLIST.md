@@ -195,13 +195,13 @@ The whole app and web portal are built as a clickable product first, with sample
   - [ ] Biometric sign-in, and offline clock-in at the gate.
   - [x] Sidebar: one collapse button, and Preview moved to the bottom of the sidebar for the super admin only.
   - [x] Tests proving a guest cannot reach any staff data.
-  - [ ] One person is one account, with several sign-in methods linked to it (email and password, Google, Apple). The same verified email never makes a second account. Each rule below has a test:
-    - [ ] Link automatically only when the provider has verified the email (Google verified, Apple verified).
-    - [ ] An email and password sign-up must verify its email before it can be linked or used, which blocks takeover by registering someone's email first.
-    - [ ] Apple "Hide My Email" relay addresses are linked only by hand, from inside a signed-in account, after a confirmation.
-    - [ ] Adding or removing a method needs a fresh sign-in, and the last method can never be removed.
-    - [ ] The staff match and the roles belong to the account, so every linked method gets the same roles.
-    - [ ] The list of sign-in methods, and every link and unlink, show in the audit log and send the person an email alert.
+  - [x] One person is one account, with several sign-in methods linked to it (email and password, Google, Apple). The same verified email never makes a second account. Each rule below has a test (`modules/users-login/test/account-linking.test.ts`):
+    - [x] Link automatically only when the provider has verified the email (Google verified, Apple verified).
+    - [x] An email and password sign-up must verify its email before it can be linked or used, which blocks takeover by registering someone's email first.
+    - [x] Apple "Hide My Email" relay addresses are linked only by hand, from inside a signed-in account, after a confirmation.
+    - [x] Adding or removing a method needs a fresh sign-in, and the last method can never be removed.
+    - [x] The staff match and the roles belong to the account, so every linked method gets the same roles.
+    - [x] The list of sign-in methods, and every link and unlink, show in the audit log and send the person an email alert (the email goes out once an email provider is set up; until then a push).
   - [x] A CI step that fails on skipped tests, secrets in code, passwords or tokens in logs, and TODO in auth code (see [Quality rules](QUALITY-RULES.md)). Done 26 Nov: `tools/quality-check/check.mjs` in the Quality workflow, which also runs the web lint.
   - [ ] Real-user hardening, each item with its own test:
     - [x] A double-tapped pay or submit never charges or creates twice (idempotency keys, and the button is disabled while sending). Tests: `modules/payments/test/pay-once.test.ts`, `apps/api/test/food-day.test.ts`.

@@ -8,13 +8,14 @@
  *   until email is set up, a locked email is refused, and linking a
  *   new sign-in method needs a fresh sign-in;
  * - after each request: wrong passwords are counted (lockout), failed
- *   sign-ins and unlinked methods are recorded;
+ *   sign-ins are recorded;
  * - before each new account: never on the web portal (guests sign up in the
  *   app), and `pending` when approval is needed;
  * - after each new account: the default guest role, and an audit entry;
  * - before a linked method: Google or Apple must give the same email, except
  *   Apple "Hide My Email" relay addresses linked from inside the account;
  * - after a linked method: an audit entry and an email to the person;
+ * - after a removed method: an audit entry and an email to the person;
  * - before each new session: account status, staff-only web, per-role
  *   method check, and no skipping 2-step;
  * - after each new session: an audit entry, the lockout count cleared and
@@ -117,13 +118,6 @@ export function loginGuardHooks(deps: AuthDeps, webOrigins: string[]): Pick<Bett
       after: createAuthMiddleware(async (ctx) => {
         const returned = ctx.context.returned;
         const failed = returned instanceof APIError;
-        // A removed sign-in method: record it and tell the person.
-        if (ctx.path === "/unlink-account" && !failed && ctx.context.session) {
-          const { user } = ctx.context.session;
-          const provider = String((ctx.body as { providerId?: string } | undefined)?.providerId ?? "a method");
-          await deps.audit.record({ actorId: user.id, actorName: user.name, action: "login_method.unlinked", module: "users-login", recordType: "user", recordId: user.id, summary: `Removed the sign-in method ${provider}` });
-          await deps.alerts.toPerson({ userId: user.id, email: user.email }, `The sign-in method ${provider} was removed from your Igongo account. If this was not you, contact the hotel.`);
-        }
         // Record failed sign-ins (wrong password, wrong code) without the secret.
         const method = methodOf(ctx);
         if (!method || !failed || ctx.path.startsWith("/sign-up")) return;
@@ -187,6 +181,15 @@ export function loginGuardHooks(deps: AuthDeps, webOrigins: string[]): Pick<Bett
             if (!owner || owner.providers.length < 2) return;
             await deps.audit.record({ actorId: owner.id, actorName: owner.name, action: "login_method.linked", module: "users-login", recordType: "user", recordId: owner.id, summary: `Linked the sign-in method ${account.providerId}` });
             await deps.alerts.toPerson({ userId: owner.id, email: owner.email }, `${account.providerId} was linked to your Igongo account. If this was not you, contact the hotel.`);
+          },
+        },
+        delete: {
+          after: async (account) => {
+            // A removed sign-in method: record it and tell the person (not when the whole account is deleted).
+            const owner = await deps.accounts.get(account.userId);
+            if (!owner) return;
+            await deps.audit.record({ actorId: owner.id, actorName: owner.name, action: "login_method.unlinked", module: "users-login", recordType: "user", recordId: owner.id, summary: `Removed the sign-in method ${account.providerId}` });
+            await deps.alerts.toPerson({ userId: owner.id, email: owner.email }, `The sign-in method ${account.providerId} was removed from your Igongo account. If this was not you, contact the hotel.`);
           },
         },
       },

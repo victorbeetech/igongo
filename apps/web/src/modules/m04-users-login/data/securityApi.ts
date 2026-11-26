@@ -43,7 +43,16 @@ export async function linkProvider(provider: "google" | "apple", returnTo: strin
 
 /** Removes a linked method (never the last one; the server refuses). */
 export const useUnlinkProvider = () =>
-  useApiMutation((providerId: string) => api("/api/auth/unlink-account", { method: "POST", body: { providerId } }), { done: "Sign-in method removed", refresh: [ME_KEY] });
+  useApiMutation(
+    async (providerId: string) => {
+      // The server removes a method by its own account ID, so find the one for [providerId].
+      const accounts = await api<{ id: string; providerId: string }[]>("/api/auth/list-accounts");
+      const account = accounts.find((a) => a.providerId === providerId);
+      if (!account) throw new Error("That sign-in method is not linked to your account.");
+      return api("/api/auth/unlink-account", { method: "POST", body: { accountId: account.id } });
+    },
+    { done: "Sign-in method removed", refresh: [ME_KEY] },
+  );
 
 /** The portal's own rules for this person: idle sign-out minutes and the password length. */
 export const useMySecuritySettings = () =>

@@ -137,7 +137,11 @@ describe("real-user details", () => {
   it("lets a guest delete their account, but not staff, and never removes the last sign-in method", async () => {
     const t = await testAuth();
     const up = await t.call("/sign-up/email", ann);
-    expect((await t.call("/unlink-account", { providerId: "credential" }, cookieOf(up))).status).toBe(400);
+    const { user } = (await up.clone().json()) as { user: { id: string } };
+    const [password] = await (await t.auth.$context).internalAdapter.findAccounts(user.id);
+    const last = await t.call("/unlink-account", { accountId: password?.id }, cookieOf(up));
+    expect(last.status).toBe(400);
+    expect(((await last.json()) as { code: string }).code).toMatch(/LAST_ACCOUNT|last/i);
     expect((await t.call("/delete-user", {}, cookieOf(up))).status).toBe(200);
     await staff(t);
     const sam = await t.call("/sign-in/email", { email: "sam@igongo.test", password: "Kitchen pass 9" });
