@@ -228,6 +228,20 @@ The whole app and web portal are built as a clickable product first, with sample
   - [ ] Security headers (CSP, HSTS and the rest).
   - [ ] Secure database access: a least-privilege database user and no public access.
   - [ ] A final full security audit report.
+  - [ ] The 12-check security pass. Each check has a test that proves it and a result line in `docs/SECURITY-AUDIT.md`. Every fix is tested after it is made. The pass ends with `security-report.pdf` showing 12 of 12 passed and 0 open holes:
+    - [ ] 1. Safe database queries only (parameterised). Test: `' OR 1=1 --` returns 0 rows.
+    - [ ] 2. XSS: text people write (comments, names) is always shown as plain text, never run as script.
+    - [ ] 3. Sign-in rate limit: slowed or blocked after repeated wrong passwords.
+    - [ ] 4. CSRF protection with a token check: a forged form from another site is rejected.
+    - [ ] 5. Secure session cookies: HttpOnly, Secure, SameSite.
+    - [ ] 6. Password reset links expire and work once.
+    - [ ] 7. Upload limits: images only, at most 5 MB, checked on the server by the real file type.
+    - [ ] 8. Admin pages locked: a normal user gets 403.
+    - [ ] 9. Every price and total rechecked on the server; the browser is never trusted.
+    - [ ] 10. Debug mode off in production: people see only "Something went wrong, reference A12F", with the details in private logs.
+    - [ ] 11. Risky packages updated and unused ones deleted.
+    - [ ] 12. The whole git history scanned for leaked keys, and any found are rotated.
+    - [ ] HTTPS everywhere.
 - [ ] Last phase before TestFlight, premium animations and transitions (asked by the user, 26 Nov 2026; do after the basics, not started): booking flows, menu scroll effects and modern TikTok-style motion, mostly in the guest app and the public websites, all of premium quality.
 - [ ] Legal and compliance for Uganda, right before App Store readiness (asked by the user, 26 Nov 2026; not started). Each item has a check, and everything here is to be confirmed by a Ugandan lawyer before launch. Apple and Google store rules stay as listed under App Store readiness:
   - [ ] Data Protection and Privacy Act 2019: privacy policy and consent texts written for it; a docs note on registering with the Personal Data Protection Office (under NITA-U); a data-subject rights page (access, correct, delete); and the steps to report a data breach.
