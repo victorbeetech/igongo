@@ -15,3 +15,8 @@ Items the user asked to keep, to build after the current work is confirmed worki
 
 ## 3. Presets and role preview
 - See [PLAN-presets-and-role-preview.md](PLAN-presets-and-role-preview.md).
+
+## 4. Super admin on the app only; staff roles on web and app
+- The super admin signs in on the phone app only. The web is for staff roles, which keep web and app access.
+- Move the super admin's web sign-in, screens and routes out of the web portal when this is built.
+- When removing anything (screen, route, role, test, doc), remove it completely: code, routes, tests, imports, docs and unused files. See [QUALITY-RULES.md](QUALITY-RULES.md), rule 11.

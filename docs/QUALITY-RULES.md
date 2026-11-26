@@ -18,3 +18,4 @@ comment inside saying why nothing else is needed.
 8. **Least privilege by default.** Nobody is an admin by default. Every admin action is checked on the server.
 9. **Never change the live database destructively without a backup.** Do not wipe it, reset it or run a destructive migration without a backup and the user's approval.
 10. **Never say done without evidence.** Show the passing checks, and list what was tried but not finished.
+11. **When something is removed, uproot it completely.** Delete its code, routes, tests, imports, docs and unused files in the same change, so nothing is left to break later.
