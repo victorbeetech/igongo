@@ -71,6 +71,12 @@ export const MIGRATIONS: Migration[] = [
   "sql": "-- Full check of the super admin's screens (26 Nov 2026): like every other\n--> statement-breakpoint\n-- module, the super admin sees the main records of the staff and money\n--> statement-breakpoint\n-- modules it configures, so their overview and settings screens open\n--> statement-breakpoint\n-- (faults and payroll settings were refused before). Daily work, such as\n--> statement-breakpoint\n-- dispatching riders or running a checkup, stays with the hotel's own roles.\n--> statement-breakpoint\nINSERT INTO \"roles\".\"role_permissions\" (\"role_id\",\"permission_key\",\"scope\") SELECT r.\"id\", p.key, 'all' FROM \"roles\".\"roles\" r CROSS JOIN (VALUES ('attendance.records.view'), ('crm-guests.profiles.view'), ('daily-reports.reports.view'), ('faults-maintenance.faults.view'), ('hr-records.staff.view'), ('payments.reports.view'), ('payroll.runs.view'), ('payroll.profiles.view'), ('staff-meals.claims.view'), ('wristbands.bands.view')) AS p(key) WHERE r.\"id\" = 'role_super-admin' ON CONFLICT DO NOTHING;\n"
  },
  {
+  "module": "roles-permissions",
+  "name": "0009_super_admin_staff_create",
+  "checksum": "d95a62be47450045",
+  "sql": "-- The super admin enrols staff from the web (Add staff, S22-03), which needs\n-- hr-records.staff.create. Granted here through the roles tables, like every\n-- other role permission, so the super admin role can be changed in the app\n-- later. ON CONFLICT DO NOTHING keeps any change the super admin already made.\n--> statement-breakpoint\nINSERT INTO \"roles\".\"role_permissions\" (\"role_id\",\"permission_key\",\"scope\") SELECT r.\"id\", 'hr-records.staff.create', 'all' FROM \"roles\".\"roles\" r WHERE r.\"id\" = 'role_super-admin' ON CONFLICT DO NOTHING;\n"
+ },
+ {
   "module": "users-login",
   "name": "0000_users_login",
   "checksum": "26c20af258cc84a8",

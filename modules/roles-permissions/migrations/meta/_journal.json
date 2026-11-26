@@ -64,6 +64,13 @@
       "when": 1796300000000,
       "tag": "0008_super_admin_overview_views",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1796400000000,
+      "tag": "0009_super_admin_staff_create",
+      "breakpoints": true
     }
   ]
 }
