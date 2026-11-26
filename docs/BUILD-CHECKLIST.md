@@ -211,6 +211,18 @@ The whole app and web portal are built as a clickable product first, with sample
     - [ ] Apple "Hide My Email" relay addresses are accepted and used for the staff match.
     - [ ] Load and abuse: rate limits per user and IP, queues, and a test with thousands of requests at once.
 - [ ] Last phase before TestFlight, premium animations and transitions (asked by the user, 26 Nov 2026; do after the basics, not started): booking flows, menu scroll effects and modern TikTok-style motion, mostly in the guest app and the public websites, all of premium quality.
+- [ ] App Store readiness, right before TestFlight (asked by the user, 26 Nov 2026; not started). Each item has a check:
+  - [ ] No crash on open, tested on the built iOS app.
+  - [ ] A reviewer demo login: a guest reviewer account with working sample bookings, written into [MAC-STEPS](MAC-STEPS.md) for the App Store Connect review notes.
+  - [ ] Payments: bookings and food are physical goods and services, so the gateways are allowed. Anything digital is avoided or uses in-app purchase.
+  - [ ] Browsing without signing up (rooms, menu, museum); sign-up only when booking or ordering.
+  - [ ] No "Coming soon" or dead buttons in release builds; unfinished modules are hidden.
+  - [ ] Clear permission texts for NFC, location, camera, notifications and photos.
+  - [ ] Report and block for anything users write (chat, reviews).
+  - [ ] Sign in with Apple wherever Google is offered.
+  - [ ] Store screenshots with nothing from Android in them.
+  - [ ] Real native value (NFC, push, tracking, offline), not just a website.
+  - [ ] Delete my account in the app, a privacy policy URL and a support URL.
 - [ ] Event bus (Queues and outbox) and Notifications. Files & Media is done.
 - [ ] Build each module's back end (domain, use cases, database, API and events), in the agreed order.
 - [ ] Connect each module's screens to its API.
