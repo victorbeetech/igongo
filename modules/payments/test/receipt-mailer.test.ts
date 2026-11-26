@@ -32,7 +32,7 @@ function payment(over: Partial<Payment> = {}): Payment {
 
 /** A fetch that answers with [status]; the test can read its calls. */
 function fakeFetch(status: number) {
-  return vi.fn(async (_input: RequestInfo | URL, _init?: RequestInit) => new Response("{}", { status }));
+  return vi.fn(async (...args: Parameters<typeof fetch>) => new Response(String(args.length), { status }));
 }
 
 describe("receipt email", () => {
@@ -104,9 +104,7 @@ describe("Resend receipt mailer", () => {
       apiKey: async () => "test-key",
       from: async () => sender,
       emailOf,
-      fetch: vi.fn(async (_input: RequestInfo | URL, _init?: RequestInit): Promise<Response> => {
-        throw new Error("offline");
-      }),
+      fetch: vi.fn((): Promise<Response> => Promise.reject(new Error("offline"))),
     });
     expect(await mailer.sendReceipt(payment())).toEqual({ sent: false, reason: "Resend could not be reached: offline" });
   });
