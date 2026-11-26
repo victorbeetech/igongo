@@ -15,6 +15,7 @@ import { absoluteUrl } from "@/shared/navigation/absoluteUrl";
 import { hrefFor } from "@/shared/navigation/hrefFor";
 import { useAddress } from "@/shared/navigation/useAddress";
 import { ME_KEY } from "@/shared/session/useMe";
+import { MY_LAYOUT_KEY } from "@/shared/session/useMyLayout";
 import { Button } from "@/shared/ui/button/Button";
 import { TextInput } from "@/shared/ui/field/TextInput";
 import { SkeletonList } from "@/shared/ui/skeleton/SkeletonList";
@@ -41,6 +42,7 @@ export function SignInPage({ screen }: { screen: ScreenContext }) {
     try {
       const result = await signInEmail(email, password);
       await client.invalidateQueries({ queryKey: ME_KEY });
+      await client.invalidateQueries({ queryKey: MY_LAYOUT_KEY });
       address.push(result.twoFactorRedirect ? hrefFor("S00-16", here) : "/home");
     } catch (e) {
       setError(e instanceof ApiError ? e.message : "Sign-in failed. Please try again.");

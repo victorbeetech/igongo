@@ -8,6 +8,7 @@
 import type { RecordsDeps } from "@igongo/records-kit";
 import { stockDeps, stockDeskDeps, type StockDeps } from "@igongo/stock-inventory";
 import type { RecordModuleEntry } from "./operations/record-modules";
+import { SettingsLayoutStore } from "@igongo/app-builder";
 import { auditRecorder, DrizzleAuditStore } from "@igongo/audit-trail";
 import { memoryBlobStore, r2BlobStore, type BlobStore } from "@igongo/files-media";
 import type { AuditRecorder } from "@igongo/contracts/audit-trail";
@@ -55,6 +56,9 @@ export class RequestServices {
   readonly roles = once(() => new DrizzleRoleRepository(this.db));
   readonly assignments = once(() => new DrizzleAssignmentRepository(this.db));
   readonly access = once(() => accessService({ roles: this.roles(), assignments: this.assignments() }, { audit: this.audit(), now: this.now, requestId: this.requestId }));
+
+  // --- App Layout & Navigation (core: menus, tabs and home tiles per role) ---
+  readonly layoutStore = once(() => new SettingsLayoutStore(this.db));
 
   // --- Super Admin Console ---
   readonly console = once(() => new DrizzleConsoleStore(this.db));

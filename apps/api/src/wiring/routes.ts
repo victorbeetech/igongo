@@ -18,10 +18,12 @@
  *   /api/files, /faults, /inspections, /payroll, /advances, /bonuses,
  *   /earnings, /reports, /chat, /records  manager and money modules (see managers/manager-routes.ts)
  *   /api/lost-found, /tasks, /leave, /visitors ...  the records-kit modules (see operations/record-modules.ts)
+ *   /api/layout                   App Layout & Navigation: menus, tabs and tiles per role (core)
  *   /api/stock, /api/stock/desk   Stock & Inventory (see operations/stock-routes.ts)
  *   /api/spa, /venues, /tables    more booking modules (see guests/guest-routes.ts)
  */
 
+import { layoutRouter } from "@igongo/app-builder";
 import { auditRouter } from "@igongo/audit-trail";
 import type { ActorEnv } from "@igongo/core";
 import { createNotificationsRouter } from "./notifications-mount";
@@ -57,6 +59,14 @@ export function mountRoutes(app: Hono<ApiEnv>) {
     rolesRouter((c) => {
       const s = api(c).var.services;
       return { roles: s.roles(), assignments: s.assignments(), change: s.changeContext(c.var.actor) };
+    }),
+  );
+  // App Layout is core, so menus never switch off.
+  app.route(
+    "/api/layout",
+    layoutRouter((c) => {
+      const s = api(c).var.services;
+      return { store: s.layoutStore(), change: s.changeContext(c.var.actor) };
     }),
   );
   app.route("/api/audit", auditRouter((c) => api(c).var.services.auditStore()));

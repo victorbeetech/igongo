@@ -87,6 +87,8 @@ export const MODULES = [
   "spa",
   "venues-equipment",
   "tables-dinein",
+  "app-builder",
+  "card-designs",
 ];
 
 /** Every migration file as { module, name, path }, in apply order. */
