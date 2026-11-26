@@ -15,7 +15,7 @@ import '../../../shared/ui/photo/photo_slot.dart';
 import '../application/cart_controller.dart';
 import '../application/orders_providers.dart';
 import '../domain/menu_item.dart';
-import 'item_sheet.dart';
+import 'item_page.dart';
 
 /// An auto-sliding carousel of the first outlet's available dishes.
 class MenuCarousel extends ConsumerStatefulWidget {
@@ -57,14 +57,10 @@ class _MenuCarouselState extends ConsumerState<MenuCarousel> {
     super.dispose();
   }
 
-  /// Opens [item]'s page (its options sheet) for [outlet].
+  /// Opens [item]'s page (preview, add-ons, note) for [outlet].
   void _open(String outlet, MenuItem item) {
     ref.read(cartProvider.notifier).useOutlet(outlet);
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      builder: (_) => ItemSheet(item: item),
-    );
+    openItemPage(context, item);
   }
 
   @override

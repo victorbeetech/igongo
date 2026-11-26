@@ -27,7 +27,7 @@ import '../domain/order_type.dart';
 import '../domain/outlet.dart';
 import 'checkout_sheet.dart';
 import 'demo_notice.dart';
-import 'item_sheet.dart';
+import 'item_page.dart';
 
 /// The guest's food ordering screen.
 class OrderFoodScreen extends ConsumerWidget {
@@ -133,27 +133,25 @@ class OrderFoodScreen extends ConsumerWidget {
                           padding: EdgeInsets.all(IgongoSpace.lg),
                           child: Text('No dish matches your search.'),
                         ),
-                      // Step 6: the dishes as a grid, one block per section.
-                      for (final section in {for (final i in onToday) i.section}) ...[
-                        SectionHeader(section),
+                      // Step 6: the dishes as one grid, two to a row (sections are the chips above).
+                      if (onToday.isNotEmpty)
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
+                          padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, IgongoSpace.md, IgongoSpace.lg, 0),
                           child: TileGrid(
                             children: [
-                              for (final i in onToday.where((i) => i.section == section))
+                              for (final i in onToday)
                                 GuestProductCard(
                                   name: i.name,
                                   price: ugx(i.price),
                                   note: stars[i.id]?.words,
                                   onTap: () {
                                     ref.read(cartProvider.notifier).useOutlet(outlet);
-                                    _open(context, ItemSheet(item: i));
+                                    openItemPage(context, i);
                                   },
                                 ),
                             ],
                           ),
                         ),
-                      ],
                       // Out-of-stock dishes: dimmed, last, in a "Not available" card.
                       if (outToday.isNotEmpty) ...[
                         const SectionHeader('Not available'),

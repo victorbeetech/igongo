@@ -12,6 +12,8 @@
 // Delete this whole file when the hotel's real menus are live.
 
 import '../domain/menu_item.dart';
+import '../domain/option_choice.dart';
+import '../domain/option_group.dart';
 import '../domain/outlet.dart';
 
 /// Switch for the demo menu. Set to false to hide it everywhere.
@@ -26,6 +28,18 @@ const List<Outlet> demoOutlets = [Outlet(key: demoOutletKey, name: 'Demo restaur
 /// Whether [outlet] is the demo outlet and the demo is switched on.
 bool isDemoOutlet(String outlet) => demoMenuOn && outlet == demoOutletKey;
 
+/// A demo add-on: a drink with the meal (optional).
+const _drinkAddOn = OptionGroup(
+  key: 'drink',
+  name: 'Add a drink',
+  required: false,
+  multiple: false,
+  choices: [
+    OptionChoice(key: 'passion', name: 'Passion juice', priceDelta: 6000),
+    OptionChoice(key: 'soda', name: 'Soda', priceDelta: 3000),
+  ],
+);
+
 /// The demo dishes. The last one is out today, so the "Not available" card shows.
 const List<MenuItem> demoMenuItems = [
   MenuItem(
@@ -34,7 +48,7 @@ const List<MenuItem> demoMenuItems = [
     name: 'Grilled tilapia',
     price: 28000,
     available: true,
-    options: [],
+    options: [_drinkAddOn],
     allergens: ['fish'],
     description: 'Whole tilapia on the grill with greens.',
   ),
@@ -44,7 +58,7 @@ const List<MenuItem> demoMenuItems = [
     name: 'Rolex',
     price: 5000,
     available: true,
-    options: [],
+    options: [_drinkAddOn],
     allergens: ['egg', 'gluten'],
   ),
   MenuItem(
@@ -53,7 +67,7 @@ const List<MenuItem> demoMenuItems = [
     name: 'Matooke and groundnut sauce',
     price: 15000,
     available: true,
-    options: [],
+    options: [_drinkAddOn],
     allergens: ['nuts'],
   ),
   MenuItem(

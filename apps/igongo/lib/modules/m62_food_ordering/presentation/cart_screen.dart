@@ -51,6 +51,8 @@ class CartScreen extends ConsumerWidget {
                                 '${cart.lines[i].quantity} × ${ugx(cart.lines[i].unitPrice)}',
                                 style: context.text.bodySmall,
                               ),
+                              if (cart.lines[i].note case final note?)
+                                Text('Note: $note', style: context.text.bodySmall),
                             ],
                           ),
                         ),

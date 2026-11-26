@@ -144,4 +144,39 @@ void main() {
     await _settle(tester);
     expect(find.byType(BackButton), findsOneWidget);
   });
+
+  testWidgets('the item page previews the dish, offers optional add-ons and a note, and adds them to the cart', (tester) async {
+    usePhoneWindow(tester);
+    await openApp(
+      tester,
+      '/food-ordering/food-home',
+      preview: false,
+      overrides: [
+        sessionProvider.overrideWith(_Guest.new),
+        ordersApiProvider.overrideWithValue(_NoOutletsApi()),
+      ],
+    );
+    await _settle(tester);
+    // Two dishes sit side by side in the grid (same row).
+    final a = tester.getTopLeft(find.text('Grilled tilapia')).dy;
+    final b = tester.getTopLeft(find.text('Rolex')).dy;
+    expect(a, b);
+    // The item page has a Back arrow, optional add-ons and an optional note.
+    await tester.tap(find.text('Grilled tilapia'));
+    await _settle(tester);
+    expect(find.byType(BackButton), findsOneWidget);
+    expect(find.text('Add a drink (optional)'), findsOneWidget);
+    expect(find.text('Make it yours (optional)'), findsOneWidget);
+    // Nothing is compulsory: add with an add-on and a note.
+    await tester.tap(find.textContaining('Passion juice'));
+    await tester.enterText(find.byType(TextField), 'no tomatoes');
+    await _settle(tester);
+    await tester.tap(find.textContaining('Add UGX'));
+    await _settle(tester);
+    await tester.tap(find.text('Cart').last);
+    await _settle(tester);
+    expect(find.text('Grilled tilapia'), findsOneWidget);
+    expect(find.text('Note: no tomatoes'), findsOneWidget);
+    expect(find.textContaining('UGX 34,000'), findsWidgets);
+  });
 }

@@ -39,20 +39,24 @@ class GuestProductCard extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(IgongoRadius.lg),
           onTap: onTap,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: IgongoSpace.xs,
-            children: [
-              // Step 1: the picture, full tile width.
-              ClipRRect(
-                borderRadius: BorderRadius.circular(IgongoRadius.lg),
-                child: PhotoSlot(width: double.infinity, height: 112, asset: photo, icon: Icons.restaurant_outlined),
-              ),
-              // Step 2: price under the picture, then the name and note.
-              Text(price, style: context.text.titleMedium?.copyWith(color: p.text)),
-              Text(name, maxLines: 2, overflow: TextOverflow.ellipsis, style: context.text.bodySmall),
-              if (note != null) Text(note!, style: context.text.labelSmall?.copyWith(color: p.textMuted)),
-            ],
+          // Every tile has the same height (text sizes included), so rows line up.
+          child: SizedBox(
+            height: 112 + IgongoSpace.xs * 3 + MediaQuery.textScalerOf(context).scale(72),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: IgongoSpace.xs,
+              children: [
+                // Step 1: the picture, full tile width.
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(IgongoRadius.lg),
+                  child: PhotoSlot(width: double.infinity, height: 112, asset: photo, icon: Icons.restaurant_outlined),
+                ),
+                // Step 2: price under the picture, then the name and note.
+                Text(price, style: context.text.titleMedium?.copyWith(color: p.text)),
+                Text(name, maxLines: 2, overflow: TextOverflow.ellipsis, style: context.text.bodySmall),
+                if (note != null) Text(note!, style: context.text.labelSmall?.copyWith(color: p.textMuted)),
+              ],
+            ),
           ),
         ),
       ),
