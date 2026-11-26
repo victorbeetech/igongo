@@ -60,10 +60,6 @@ class BookingsApi {
   Future<Booking> approve(String id) async =>
       Booking.fromJson(await _api.post('${place.path}/bookings/$id/approve', const <String, dynamic>{}));
 
-  /// Staff: checks in the booking with [code] (typed, or the QR text).
-  Future<Booking> checkIn(String code) async =>
-      Booking.fromJson(await _api.post('${place.path}/check-in', {'code': code}));
-
   /// Staff: scans the [ticket] text (the QR text, or the code) and returns the server's verdict.
   Future<TicketScan> verifyTicket(String ticket) async {
     // Step 1: ask the server for the verdict.

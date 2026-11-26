@@ -18,7 +18,6 @@ import '../../theme/theme.dart';
 import '../../ui/button/igongo_button.dart';
 import '../../ui/card/igongo_card.dart';
 import '../../ui/chip/status_chip.dart';
-import '../../ui/field/igongo_field.dart';
 import '../../ui/toast/igongo_toast.dart';
 import '../application/bookings_providers.dart';
 import '../domain/booking.dart';
@@ -57,15 +56,8 @@ class BookingsDeskScreen extends ConsumerStatefulWidget {
 
 class _BookingsDeskScreenState extends ConsumerState<BookingsDeskScreen> {
   late String? _status = widget.status;
-  final _code = TextEditingController();
 
   DeskFilter get _filter => (place: widget.place, status: _status, date: widget.todayOnly ? hotelToday() : null);
-
-  @override
-  void dispose() {
-    _code.dispose();
-    super.dispose();
-  }
 
   /// Runs a desk action, shows [done] or the server's reason, and reloads.
   Future<void> _run(Future<Booking> Function() action, String Function(Booking) done) async {
@@ -84,15 +76,6 @@ class _BookingsDeskScreenState extends ConsumerState<BookingsDeskScreen> {
     if (mounted) ref.invalidate(deskBookingsProvider(_filter));
   }
 
-  /// Checks in the code typed in the field.
-  Future<void> _checkInCode() async {
-    final code = _code.text.trim();
-    if (code.length < 4) return showIgongoToast(context, 'Type the code on the ticket.');
-    final api = ref.read(bookingsApiProvider(widget.place));
-    await _run(() => api.checkIn(code), (b) => 'Checked in: ${b.offeringName} ${b.code}');
-    _code.clear();
-  }
-
   @override
   Widget build(BuildContext context) {
     final api = ref.read(bookingsApiProvider(widget.place));
@@ -106,25 +89,7 @@ class _BookingsDeskScreenState extends ConsumerState<BookingsDeskScreen> {
         child: ScreenListView(
           children: [
             PurposeText(widget.screen.spec.purpose),
-            // Step 1: check in by the code on the ticket.
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
-              child: Row(
-                spacing: IgongoSpace.sm,
-                children: [
-                  Expanded(
-                    child: IgongoField(
-                      label: 'Ticket code',
-                      icon: Icons.qr_code,
-                      controller: _code,
-                      onSubmitted: (_) => _checkInCode(),
-                    ),
-                  ),
-                  IgongoButton(label: 'Check in', onPressed: _checkInCode),
-                ],
-              ),
-            ),
-            // Step 1b: scan or paste a ticket to see whether it is valid, used or forged.
+            // Step 1: only a signed ticket QR can check a guest in. Scan or paste it here.
             Padding(
               padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, 0, IgongoSpace.lg, IgongoSpace.sm),
               child: IgongoButton(
@@ -180,11 +145,6 @@ class _BookingsDeskScreenState extends ConsumerState<BookingsDeskScreen> {
                         IgongoButton(
                           label: 'Approve',
                           onPressed: () => _run(() => api.approve(b.id), (x) => 'Approved: ${x.code}'),
-                        ),
-                      if (b.status == 'confirmed')
-                        IgongoButton(
-                          label: 'Check in',
-                          onPressed: () => _run(() => api.checkIn(b.code), (x) => 'Checked in: ${x.code}'),
                         ),
                     ],
                   ),

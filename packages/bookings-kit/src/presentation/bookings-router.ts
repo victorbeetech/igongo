@@ -15,7 +15,7 @@
  *   GET   /bookings/:id                 one booking
  *   POST  /bookings/:id/cancel          cancel
  *   POST  /bookings/:id/approve         approve a request or quote an enquiry (staff)
- *   POST  /check-in                     scan a ticket QR or type its code (staff)
+ *   POST  /check-in                     scan a signed ticket QR (staff); typed codes are refused
  */
 
 import { zValidator } from "@hono/zod-validator";
@@ -118,10 +118,8 @@ export function bookingsRouter(moduleKey: string, deps: (c: Context<ActorEnv>) =
         if (scan.verdict !== "valid" || !scan.booking) throw new AppError("conflict", ticketMessage(scan.verdict));
         return c.json(await present(c, await checkIn(d, scan.booking)));
       }
-      // Step 2: a bare code typed by the desk from the booking, found by its code.
-      const b = await d.bookings.byCode(text.replace(BOOKING_QR_PREFIX, ""));
-      if (!b) throw new AppError("not_found", "No booking has that code.");
-      return c.json(await present(c, await checkIn(d, b)));
+      // Step 2: anything else is refused. Only a signed ticket can check a guest in, so a code read off a ticket cannot be used.
+      throw new AppError("conflict", "Scan the signed ticket QR. A typed booking code cannot check a guest in.");
     })
     // Scan a ticket: the verdict (valid, used, forged, cancelled or unpaid) and the booking details when the signature matches.
     .post("/tickets/verify", requireStaffPermission(P.edit), zValidator("json", ticketBody), async (c) => {
