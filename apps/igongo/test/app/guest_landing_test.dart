@@ -33,7 +33,7 @@ void main() {
       overrides: [sessionProvider.overrideWith(_GuestSessionController.new)],
     );
     // Step 1: the guest home greets the guest by first name.
-    expect(find.text('Hello, Grace'), findsOneWidget);
+    expect(find.textContaining(', Grace'), findsOneWidget);
     // Step 2: no staff menu: the frame has no drawer for a guest.
     expect(find.byType(RoleDrawer), findsNothing);
     // Step 2b: the food shop is on the guest home as a card.

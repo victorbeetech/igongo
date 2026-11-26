@@ -45,3 +45,15 @@ class MenuSearch extends Notifier<String> {
 
 /// The food shop's search text.
 final menuSearchProvider = NotifierProvider<MenuSearch, String>(MenuSearch.new);
+
+/// The menu section chosen in the food shop's chips (null shows every section).
+class MenuCategory extends Notifier<String?> {
+  @override
+  String? build() => null;
+
+  /// Chooses [section]; null means all.
+  void set(String? section) => state = section;
+}
+
+/// The food shop's chosen section.
+final menuCategoryProvider = NotifierProvider<MenuCategory, String?>(MenuCategory.new);

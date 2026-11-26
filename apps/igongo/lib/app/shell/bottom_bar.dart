@@ -9,6 +9,8 @@ import 'package:material_ui/material_ui.dart';
 import '../../modules/m62_food_ordering/application/cart_controller.dart';
 import '../../shared/layout/application/layout_providers.dart';
 import '../../shared/session/session_controller.dart';
+import '../../shared/theme/theme.dart';
+import '../../shared/ui/bar/wavy_top_clipper.dart';
 import '../../shared/ui/icons/module_icons.dart';
 import '../catalog/catalog_index.dart';
 import '../navigation/open_target.dart';
@@ -46,7 +48,7 @@ class BottomBar extends ConsumerWidget {
     // Step 1: a food screen keeps the Food tab lit; any other screen not in the bar keeps Home.
     final activeId = _foodFlow.contains(currentId) ? _food.$1 : currentId;
     final selected = tabs.indexWhere((t) => t.$1 == activeId).clamp(0, tabs.length - 1);
-    return NavigationBar(
+    final bar = NavigationBar(
       selectedIndex: selected,
       onDestinationSelected: (i) => openTarget(context, tabs[i].$1),
       destinations: [
@@ -59,6 +61,36 @@ class BottomBar extends ConsumerWidget {
             label: t.$2,
           ),
       ],
+    );
+    // Step 3: guests get the dark red bar (cream pill on the open tab); staff keep the plain one.
+    if (!isGuest) return bar;
+    final p = context.palette;
+    final text = Theme.of(context).textTheme.labelSmall;
+    return ClipPath(
+      clipper: const WavyTopClipper(),
+      // The wave needs a little room above the tabs; the page's cream shows above it.
+      child: ColoredBox(
+        color: p.primaryDark,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: Theme(
+            data: Theme.of(context).copyWith(
+              navigationBarTheme: NavigationBarThemeData(
+                backgroundColor: p.primaryDark,
+                indicatorColor: p.brandCream,
+                height: 64,
+                labelTextStyle: WidgetStateProperty.resolveWith(
+                  (s) => text?.copyWith(color: s.contains(WidgetState.selected) ? p.primary : p.onPrimary),
+                ),
+                iconTheme: WidgetStateProperty.resolveWith(
+                  (s) => IconThemeData(color: s.contains(WidgetState.selected) ? p.primary : p.onPrimary),
+                ),
+              ),
+            ),
+            child: bar,
+          ),
+        ),
+      ),
     );
   }
 

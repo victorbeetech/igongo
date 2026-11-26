@@ -21,6 +21,8 @@ import '../../../shared/ui/field/igongo_field.dart';
 import '../../../shared/ui/toast/igongo_toast.dart';
 import '../application/cart_controller.dart';
 import '../application/orders_providers.dart';
+import '../demo/demo_menu.dart';
+import '../demo/demo_orders.dart';
 import '../domain/cart_quote.dart';
 import '../domain/order_type.dart';
 
@@ -89,6 +91,7 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
 
   /// Asks the server for the price with the code (and the delivery fee).
   Future<void> _applyCode(String outlet) async {
+    if (isDemoOutlet(outlet)) return showIgongoToast(context, 'Codes are not used in the demo menu.');
     final type = _type;
     if (type == null) return showIgongoToast(context, 'Choose how you want it first.');
     if (type == 'delivery' && _zone == null) return showIgongoToast(context, 'Choose the zone first.');
@@ -116,6 +119,14 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
     }
     if ((type == 'room_service' || type == 'dine_in') && _text(_place) == null) {
       return showIgongoToast(context, type == 'dine_in' ? 'Type your table.' : 'Type your room.');
+    }
+    // Demo menu: a local demo order only; nothing is sent or charged (demo/demo_orders.dart).
+    if (isDemoOutlet(outlet)) {
+      final order = ref.read(demoOrdersProvider.notifier).place(cart.lines, type);
+      ref.read(cartProvider.notifier).clear();
+      ref.invalidate(myOrdersProvider);
+      Navigator.of(context).pop();
+      return showIgongoToast(context, 'Demo order ${order.number} placed. Nothing was sent or charged.');
     }
     // A visitor signs in first; their choices stay on screen.
     if (!signedInOrAsk(context, ref)) return;
@@ -154,7 +165,9 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
     final outlet = cart.outlet ?? '';
     final rules = ref.watch(orderingRulesProvider).valueOrNull;
     final zones = ref.watch(zonesProvider).valueOrNull ?? const [];
-    final types = rules?.typesAt(outlet) ?? const <String>[];
+    final demo = isDemoOutlet(outlet);
+    // The demo outlet has its own order types; real outlets follow the server's rules.
+    final types = demo ? demoOrderTypes : (rules?.typesAt(outlet) ?? const <String>[]);
     final total = cart.lines.fold(0, (sum, l) => sum + l.unitPrice * l.quantity);
     return Padding(
       padding: EdgeInsets.fromLTRB(
@@ -183,8 +196,8 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
                 ],
               ),
             Text('About ${ugx(total)} before delivery', style: context.text.bodySmall),
-            if (rules == null) const LinearProgressIndicator(),
-            if (rules != null && types.isEmpty) const Text('This outlet takes no app orders right now.'),
+            if (rules == null && !demo) const LinearProgressIndicator(),
+            if (!demo && rules != null && types.isEmpty) const Text('This outlet takes no app orders right now.'),
             Wrap(
               spacing: IgongoSpace.sm,
               children: [

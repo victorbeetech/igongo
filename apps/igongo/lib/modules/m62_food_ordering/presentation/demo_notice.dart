@@ -23,7 +23,7 @@ class DemoNotice extends StatelessWidget {
           const SizedBox(width: IgongoSpace.sm),
           Expanded(
             child: Text(
-              'Demo menu: sample dishes only. They cannot be ordered until the kitchen sets up its menu.',
+              'Demo menu: sample dishes. You can order them to try the flow, but nothing is sent to the kitchen or charged.',
               style: context.text.bodySmall,
             ),
           ),

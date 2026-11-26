@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../shared/session/session_controller.dart';
 import '../data/orders_api.dart';
 import '../demo/demo_menu.dart';
+import '../demo/demo_orders.dart';
 import '../domain/delivery_track.dart';
 import '../domain/delivery_zone.dart';
 import '../domain/item_stars.dart';
@@ -45,9 +46,11 @@ final zonesProvider = FutureProvider.autoDispose<List<DeliveryZone>>((ref) {
 });
 
 /// My orders.
-final myOrdersProvider = FutureProvider.autoDispose<List<Order>>((ref) {
+// Demo orders (demo/demo_orders.dart) are listed first while the demo is on.
+final myOrdersProvider = FutureProvider.autoDispose<List<Order>>((ref) async {
   ref.watch(sessionProvider);
-  return ref.watch(ordersApiProvider).mine();
+  final demo = demoMenuOn ? ref.watch(demoOrdersProvider) : const <Order>[];
+  return [...demo, ...await ref.watch(ordersApiProvider).mine()];
 });
 
 /// Where the delivery of one order is.

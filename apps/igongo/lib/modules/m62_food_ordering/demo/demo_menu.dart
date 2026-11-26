@@ -4,7 +4,9 @@
 // How it works:
 //  * It shows only when the server has NO outlets for guests yet (a real
 //    menu always wins), and only while [demoMenuOn] is true.
-//  * Demo dishes cannot be added to the cart or ordered; the screen says so.
+//  * Demo dishes can be added to the cart and ordered to try the whole flow,
+//    but the order stays on the phone (see demo_orders.dart): nothing is sent
+//    to a kitchen and nothing is charged.
 //  * To switch it off, set [demoMenuOn] to false. Nothing else changes.
 //
 // Delete this whole file when the hotel's real menus are live.

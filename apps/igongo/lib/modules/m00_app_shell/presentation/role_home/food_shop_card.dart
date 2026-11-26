@@ -1,8 +1,12 @@
-// The food shop entry on the guest home: a large card that opens the food
-// home (menus, outlets and ordering, S62-01). Shown first, above the text tiles.
+// The food shop entry on the guest home: a cream card with a red icon disc,
+// the title, a food photo and a red arrow. It opens the food home (S62-01).
 
-import 'package:material_ui/material_ui.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
+import 'package:material_ui/material_ui.dart';
+
+import '../../../../shared/theme/theme.dart';
+import '../../../../shared/ui/photo/guest_photos.dart';
+import '../../../../shared/ui/photo/photo_slot.dart';
 
 /// A large, tappable card that opens the food shop.
 class FoodShopCard extends StatelessWidget {
@@ -14,42 +18,57 @@ class FoodShopCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Step 1: the theme's colours, so light and dark both read well.
-    final scheme = Theme.of(context).colorScheme;
+    final p = context.palette;
+    final radius = BorderRadius.circular(IgongoRadius.lg);
     return Semantics(
       button: true,
-      label: 'Food shop: order food for delivery, dine-in, takeaway or pre-order',
+      label: 'Food shop: order delicious meals, delivered or dine-in',
       child: Material(
-        color: scheme.primary,
-        borderRadius: BorderRadius.circular(IgongoSpace.lg),
+        color: p.surfaceAlt,
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: radius, side: BorderSide(color: p.border)),
+        clipBehavior: Clip.antiAlias,
         child: InkWell(
-          // Step 2: the whole card opens the food home.
-          borderRadius: BorderRadius.circular(IgongoSpace.lg),
+          // The whole card opens the food home.
           onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(IgongoSpace.lg),
-            child: Row(
-              children: [
-                // Step 3: the title and what it offers, then the icon.
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Food shop',
-                        style: TextStyle(color: scheme.onPrimary, fontSize: 22, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: IgongoSpace.xs),
-                      Text(
-                        'Order for delivery, dine-in, takeaway or pre-order',
-                        style: TextStyle(color: scheme.onPrimary),
-                      ),
-                    ],
-                  ),
+          child: Row(
+            children: [
+              // Step 1: the red icon disc and the words.
+              Padding(
+                padding: const EdgeInsets.all(IgongoSpace.md),
+                child: CircleAvatar(
+                  radius: 24,
+                  backgroundColor: p.primary,
+                  foregroundColor: p.onPrimary,
+                  child: const Icon(Icons.restaurant),
                 ),
-                Icon(Icons.restaurant_menu, color: scheme.onPrimary, size: 36),
-              ],
-            ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Food shop', style: context.text.titleMedium?.copyWith(color: p.text)),
+                    Text('Order delicious meals, delivered or dine-in', style: context.text.bodySmall),
+                  ],
+                ),
+              ),
+              // Step 2: the food photo with the red arrow over its corner.
+              Stack(
+                alignment: Alignment.centerRight,
+                children: [
+                  const PhotoSlot(width: 96, height: 80, asset: GuestPhotos.food, icon: Icons.ramen_dining_outlined),
+                  Padding(
+                    padding: const EdgeInsets.only(right: IgongoSpace.sm),
+                    child: CircleAvatar(
+                      radius: 14,
+                      backgroundColor: p.primary,
+                      foregroundColor: p.onPrimary,
+                      child: const Icon(Icons.chevron_right, size: 20),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
