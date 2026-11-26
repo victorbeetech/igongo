@@ -1,5 +1,6 @@
-// The top of the guest home: Igongo red with one small greeting line (time of
-// day and first name), the alerts bell, and the promotions slideshow below. The
+// The top of the guest home: the promotions slideshow fills the whole header edge to edge, and the
+// greeting line (time of day and first name) and the alerts bell sit on top of a red
+// gradient at its top. The
 // slides come from one place (GuestPhotos.promos) so they can be changed later.
 // Igongo red is the same in light and dark mode.
 
@@ -21,47 +22,63 @@ class GuestHeader extends StatelessWidget {
   /// Called when the bell is tapped.
   final VoidCallback onBell;
 
+  /// The banner's height below the phone's clock.
+  static const _bannerHeight = 240.0;
+
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
-    return Container(
-      padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, IgongoSpace.xs, IgongoSpace.sm, IgongoSpace.lg),
-      decoration: BoxDecoration(
-        color: p.primary,
-        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(IgongoSpace.xl)),
-      ),
-      // SafeArea keeps the greeting below the phone's clock when there is no app bar above.
-      child: SafeArea(
-        bottom: false,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    final top = MediaQuery.paddingOf(context).top;
+    return ClipRRect(
+      borderRadius: const BorderRadius.vertical(bottom: Radius.circular(IgongoSpace.xl)),
+      child: SizedBox(
+        height: _bannerHeight + top,
+        child: Stack(
+          fit: StackFit.expand,
           children: [
-            // Step 1: one small greeting line, cut with an ellipsis if too long; the bell at the right.
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    greetingFor(DateTime.now(), name),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: false,
-                    style: context.text.titleSmall?.copyWith(color: p.onPrimary),
+            // Step 1: the promotions slideshow, with no margins, over the whole red header.
+            ColoredBox(
+              color: p.primary,
+              child: const PromoSlides(height: double.infinity),
+            ),
+            // Step 2: a red gradient at the top keeps the greeting readable on any photo.
+            Positioned(
+              left: 0,
+              right: 0,
+              top: 0,
+              height: top + 90,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [p.primary, p.primary.withValues(alpha: 0)],
                   ),
                 ),
-                IconButton(
-                  tooltip: 'Notifications',
-                  icon: Icon(Icons.notifications_none, color: p.onPrimary),
-                  onPressed: onBell,
-                ),
-              ],
+              ),
             ),
-            // Step 2: the promotions slideshow, full width.
-            Padding(
-              padding: const EdgeInsets.only(right: IgongoSpace.md),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(IgongoRadius.lg),
-                // Three business promotions (the super admin changes them later).
-                child: const PromoSlides(),
+            // Step 3: one small greeting line (cut with an ellipsis if too long) and the bell.
+            Positioned(
+              left: IgongoSpace.lg,
+              right: IgongoSpace.sm,
+              top: top + IgongoSpace.xs,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      greetingFor(DateTime.now(), name),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
+                      style: context.text.titleSmall?.copyWith(color: p.onPrimary),
+                    ),
+                  ),
+                  IconButton(
+                    tooltip: 'Notifications',
+                    icon: Icon(Icons.notifications_none, color: p.onPrimary),
+                    onPressed: onBell,
+                  ),
+                ],
               ),
             ),
           ],
