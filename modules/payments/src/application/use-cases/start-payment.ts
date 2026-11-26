@@ -51,7 +51,7 @@ export async function startPayment(deps: PaymentsDeps, input: StartInput): Promi
   try {
     const started = await provider.start({
       paymentId: id, amount, label: bill.label, msisdn, payerName: input.payer.name, payerEmail: input.payer.email,
-      callbackUrl: `${deps.apiBase}/api/payments/callbacks/${input.method}/${id}`, returnUrl: `${deps.webBase}/payments/payment-result?payment=${id}`,
+      callbackUrl: `${deps.apiBase}/api/payments/callbacks/${input.method}/${id}`, returnUrl: `${deps.webBase}/payments/payment-result/${id}`,
     });
     Object.assign(payment, { providerRef: started.providerRef, redirectUrl: started.redirectUrl, message: started.message });
     await deps.payments.update(payment);

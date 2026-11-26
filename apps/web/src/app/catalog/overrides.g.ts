@@ -15,7 +15,16 @@ import { m25Overrides } from "@/modules/m25-attendance/overrides";
 import { m32Overrides } from "@/modules/m32-staff-meals/overrides";
 import { m38Overrides } from "@/modules/m38-daily-reports/overrides";
 import { m49Overrides } from "@/modules/m49-notice-board/overrides";
+import { m54Overrides } from "@/modules/m54-crm-guests/overrides";
+import { m61Overrides } from "@/modules/m61-menu-catalogue/overrides";
+import { m62Overrides } from "@/modules/m62-food-ordering/overrides";
+import { m66Overrides } from "@/modules/m66-delivery-riders/overrides";
+import { m67Overrides } from "@/modules/m67-room-bookings/overrides";
+import { m68Overrides } from "@/modules/m68-museum/overrides";
+import { m69Overrides } from "@/modules/m69-events-conferences/overrides";
+import { m71Overrides } from "@/modules/m71-pool/overrides";
+import { m73Overrides } from "@/modules/m73-crafts-bookshop/overrides";
 import { m77Overrides } from "@/modules/m77-payments/overrides";
 
 /** Hand-made screens by screen number. Every other screen uses a shared layout. */
-export const allOverrides: ScreenOverrides = {...m00Overrides, ...m01Overrides, ...m02Overrides, ...m04Overrides, ...m05Overrides, ...m14Overrides, ...m16Overrides, ...m17Overrides, ...m22Overrides, ...m25Overrides, ...m32Overrides, ...m38Overrides, ...m49Overrides, ...m77Overrides};
+export const allOverrides: ScreenOverrides = {...m00Overrides, ...m01Overrides, ...m02Overrides, ...m04Overrides, ...m05Overrides, ...m14Overrides, ...m16Overrides, ...m17Overrides, ...m22Overrides, ...m25Overrides, ...m32Overrides, ...m38Overrides, ...m49Overrides, ...m54Overrides, ...m61Overrides, ...m62Overrides, ...m66Overrides, ...m67Overrides, ...m68Overrides, ...m69Overrides, ...m71Overrides, ...m73Overrides, ...m77Overrides};

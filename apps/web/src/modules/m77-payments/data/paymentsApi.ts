@@ -1,0 +1,30 @@
+"use client";
+// Queries and changes for the Payments pages (S77-01 to S77-10).
+
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/shared/api/apiClient";
+import { useApiMutation } from "@/shared/api/useApiMutation";
+import type { MethodInfo, MethodSettings } from "../domain/methodInfo";
+import type { Payment } from "../domain/payment";
+
+/** Methods switched on for [module] (and [outlet]). */
+export const useMethods = (module: string, outlet?: string) =>
+  useQuery({ queryKey: ["payments", "methods", module, outlet], queryFn: () => api<{ items: MethodInfo[] }>(`/api/payments/methods?module=${module}${outlet ? `&outlet=${outlet}` : ""}`), enabled: !!module });
+
+/** One payment; while pending, asks every 4 s (the API re-checks with the provider). */
+export const usePayment = (id: string) =>
+  useQuery({ queryKey: ["payments", id], queryFn: () => api<Payment>(`/api/payments/${id}`), enabled: !!id, refetchInterval: (q) => (q.state.data?.status === "pending" ? 4000 : false) });
+
+export const usePayments = (mine: boolean) => useQuery({ queryKey: ["payments", "list", mine], queryFn: () => api<{ items: Payment[] }>(`/api/payments${mine ? "?mine=1" : ""}`) });
+
+export const useMethodSettings = () => useQuery({ queryKey: ["payments", "settings"], queryFn: () => api<MethodSettings>("/api/payments/settings") });
+
+export const useSaveMethodSettings = () => useApiMutation((s: MethodSettings) => api<MethodSettings>("/api/payments/settings", { method: "PUT", body: s }), { done: "Payment methods saved", refresh: [["payments"]] });
+
+/** Pays in the app. */
+export const usePay = () =>
+  useApiMutation((b: { module: string; recordId: string; method: string; phone?: string; amount?: number }) => api<Payment>("/api/payments/pay", { method: "POST", body: b }), { done: "Payment started", refresh: [["payments"]] });
+
+/** Staff record a till payment. */
+export const useRecordPayment = () =>
+  useApiMutation((b: { module: string; recordId: string; method: string; amount?: number; reference?: string }) => api<Payment>("/api/payments/record", { method: "POST", body: b }), { done: "Payment recorded", refresh: [["payments"]] });
