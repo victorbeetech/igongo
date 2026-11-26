@@ -45,7 +45,9 @@ class BookingPaymentScreen extends ConsumerWidget {
     if (!paid || !context.mounted) return;
     // Step 1: paid, so the receipt is generated and replaces this step.
     await Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(builder: (_) => BookingConfirmedScreen(booking: booking, place: place)),
+      MaterialPageRoute<void>(
+        builder: (_) => BookingConfirmedScreen(booking: booking, place: place),
+      ),
     );
   }
 

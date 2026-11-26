@@ -34,7 +34,9 @@ class BookingConfirmedScreen extends StatelessWidget {
         padding: const EdgeInsets.all(IgongoSpace.lg),
         children: [
           // Step 1: the tick and the headline.
-          Center(child: Icon(Icons.check_circle, size: IgongoSpace.xxl * 2, color: p.success)),
+          Center(
+            child: Icon(Icons.check_circle, size: IgongoSpace.xxl * 2, color: p.success),
+          ),
           const SizedBox(height: IgongoSpace.md),
           Text(
             requested ? 'Request sent!' : 'Booking Confirmed!',
@@ -43,9 +45,7 @@ class BookingConfirmedScreen extends StatelessWidget {
           ),
           const SizedBox(height: IgongoSpace.xs),
           Text(
-            requested
-                ? 'Our team will confirm your request soon.'
-                : 'Your booking has been successfully made.',
+            requested ? 'Our team will confirm your request soon.' : 'Your booking has been successfully made.',
             textAlign: TextAlign.center,
             style: context.text.bodyMedium?.copyWith(color: p.textMuted),
           ),
@@ -58,7 +58,9 @@ class BookingConfirmedScreen extends StatelessWidget {
             label: 'View my booking',
             expand: true,
             onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(builder: (_) => BookingStatusScreen(booking: booking, place: place)),
+              MaterialPageRoute<void>(
+                builder: (_) => BookingStatusScreen(booking: booking, place: place),
+              ),
             ),
           ),
           const SizedBox(height: IgongoSpace.sm),

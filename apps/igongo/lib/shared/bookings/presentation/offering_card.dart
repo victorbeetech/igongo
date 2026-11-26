@@ -43,10 +43,7 @@ class OfferingCard extends StatelessWidget {
             width: IgongoTouch.preferred * 1.5,
             height: IgongoTouch.preferred * 1.5,
             alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: p.primaryContainer,
-              borderRadius: BorderRadius.circular(IgongoRadius.md),
-            ),
+            decoration: BoxDecoration(color: p.primaryContainer, borderRadius: BorderRadius.circular(IgongoRadius.md)),
             child: Icon(Icons.hotel_outlined, color: p.primaryText),
           ),
           // Step 3: the words, and the arrow.

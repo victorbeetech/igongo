@@ -8,11 +8,7 @@ Offering _room(String name, int price) =>
     Offering(id: name, kind: 'nights', name: name, price: price, capacity: 1, slots: const []);
 
 void main() {
-  final rooms = [
-    _room('Standard Room', 180000),
-    _room('Deluxe Room', 250000),
-    _room('Executive Suite', 350000),
-  ];
+  final rooms = [_room('Standard Room', 180000), _room('Deluxe Room', 250000), _room('Executive Suite', 350000)];
 
   test('an empty filter keeps every offering', () {
     expect(const OfferingFilter().isEmpty, isTrue);

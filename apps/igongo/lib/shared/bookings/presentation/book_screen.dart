@@ -99,13 +99,7 @@ class _BookScreenState extends ConsumerState<BookScreen> {
         final stays = all.any((o) => o.kind == 'nights');
         return IgongoScaffold(
           title: 'Available ${place.unit}s',
-          actions: [
-            IconButton(
-              tooltip: 'Filters',
-              icon: const Icon(Icons.tune),
-              onPressed: () => _filters(all),
-            ),
-          ],
+          actions: [IconButton(tooltip: 'Filters', icon: const Icon(Icons.tune), onPressed: () => _filters(all))],
           body: RefreshIndicator(
             onRefresh: () => ref.refresh(offeringsProvider(place).future),
             child: ScreenListView(

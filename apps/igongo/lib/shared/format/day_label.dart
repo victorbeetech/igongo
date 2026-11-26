@@ -10,8 +10,18 @@ String shortDay(DateTime d) => '${_weekdays[d.weekday - 1]}, ${d.day} ${_months[
 /// [d] as "April 2025", for the calendar heading.
 String monthTitle(DateTime d) {
   const names = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December',
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
   return '${names[d.month - 1]} ${d.year}';
 }

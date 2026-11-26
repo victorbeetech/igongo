@@ -48,10 +48,7 @@ class BookingStatusSteps extends StatelessWidget {
                   : Text('${i + 1}', style: context.text.labelLarge?.copyWith(color: p.textMuted)),
             ),
             const SizedBox(height: IgongoSpace.xs),
-            Text(
-              bookingStepWords[i],
-              style: context.text.labelMedium?.copyWith(color: done ? p.text : p.textMuted),
-            ),
+            Text(bookingStepWords[i], style: context.text.labelMedium?.copyWith(color: done ? p.text : p.textMuted)),
           ],
         ),
       );

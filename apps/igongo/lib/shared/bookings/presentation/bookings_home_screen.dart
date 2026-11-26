@@ -46,8 +46,7 @@ class BookingsHomeScreen extends StatelessWidget {
           mainAxisSpacing: IgongoSpace.md,
           childAspectRatio: 1.3,
           children: [
-            for (final c in bookingCategories)
-              BookingCategoryCard(category: c, onTap: () => screen.open(c.screenId)),
+            for (final c in bookingCategories) BookingCategoryCard(category: c, onTap: () => screen.open(c.screenId)),
           ],
         ),
       ],

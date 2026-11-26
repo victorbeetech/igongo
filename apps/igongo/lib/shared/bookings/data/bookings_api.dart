@@ -4,6 +4,7 @@ import '../../api/api_client.dart';
 import '../domain/booking.dart';
 import '../domain/booking_place.dart';
 import '../domain/offering.dart';
+import '../domain/ticket_scan.dart';
 
 /// Calls one booking module's API.
 class BookingsApi {
@@ -62,4 +63,17 @@ class BookingsApi {
   /// Staff: checks in the booking with [code] (typed, or the QR text).
   Future<Booking> checkIn(String code) async =>
       Booking.fromJson(await _api.post('${place.path}/check-in', {'code': code}));
+
+  /// Staff: scans the [ticket] text (the QR text, or the code) and returns the server's verdict.
+  Future<TicketScan> verifyTicket(String ticket) async {
+    // Step 1: ask the server for the verdict.
+    final json = await _api.post('${place.path}/tickets/verify', {'ticket': ticket});
+    // Step 2: the booking is only present when the signature matched.
+    final raw = json['booking'];
+    return TicketScan(verdict: json['verdict'] as String, booking: raw == null ? null : Booking.fromJson(raw as Json));
+  }
+
+  /// Staff: checks in a [ticket] the server has verified as valid; the server refuses any other.
+  Future<Booking> checkInTicket(String ticket) async =>
+      Booking.fromJson(await _api.post('${place.path}/tickets/check-in', {'ticket': ticket}));
 }

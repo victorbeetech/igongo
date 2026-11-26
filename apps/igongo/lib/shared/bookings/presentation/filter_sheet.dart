@@ -88,12 +88,7 @@ class _FilterSheetState extends State<FilterSheet> {
           Text('Filters', style: context.text.titleLarge),
           // Step 1: the price range, with the two ends written out.
           Text('Price range', style: context.text.titleSmall),
-          RangeSlider(
-            values: _range,
-            min: 0,
-            max: _ceiling,
-            onChanged: (v) => setState(() => _range = v),
-          ),
+          RangeSlider(values: _range, min: 0, max: _ceiling, onChanged: (v) => setState(() => _range = v)),
           Row(
             children: [
               Expanded(child: Text(ugx(_range.start.round()), style: context.text.bodySmall)),

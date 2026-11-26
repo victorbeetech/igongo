@@ -71,7 +71,9 @@ class _CalendarMonthViewState extends State<CalendarMonthView> {
         Row(
           children: [
             IconButton(tooltip: 'Previous month', icon: const Icon(Icons.chevron_left), onPressed: () => _shift(-1)),
-            Expanded(child: Text(monthTitle(_month), textAlign: TextAlign.center, style: t.titleMedium)),
+            Expanded(
+              child: Text(monthTitle(_month), textAlign: TextAlign.center, style: t.titleMedium),
+            ),
             IconButton(tooltip: 'Next month', icon: const Icon(Icons.chevron_right), onPressed: () => _shift(1)),
           ],
         ),
@@ -80,7 +82,11 @@ class _CalendarMonthViewState extends State<CalendarMonthView> {
           children: [
             for (final w in _weekLabels)
               Expanded(
-                child: Text(w, textAlign: TextAlign.center, style: t.labelMedium?.copyWith(color: p.textMuted)),
+                child: Text(
+                  w,
+                  textAlign: TextAlign.center,
+                  style: t.labelMedium?.copyWith(color: p.textMuted),
+                ),
               ),
           ],
         ),

@@ -104,13 +104,7 @@ class _DateSelectScreenState extends State<DateSelectScreen> {
       body: ListView(
         padding: const EdgeInsets.all(IgongoSpace.lg),
         children: [
-          CalendarMonthView(
-            today: t,
-            selectedFrom: from,
-            selectedTo: to,
-            initialMonth: from ?? t,
-            onPick: _pick,
-          ),
+          CalendarMonthView(today: t, selectedFrom: from, selectedTo: to, initialMonth: from ?? t, onPick: _pick),
           const SizedBox(height: IgongoSpace.md),
           // Step 2: the summary of the picks, in words.
           Text(
@@ -127,8 +121,7 @@ class _DateSelectScreenState extends State<DateSelectScreen> {
             spacing: IgongoSpace.sm,
             runSpacing: IgongoSpace.sm,
             children: [
-              for (final (label, a, b) in chips)
-                ActionChip(label: Text(label), onPressed: () => _quick(a, b)),
+              for (final (label, a, b) in chips) ActionChip(label: Text(label), onPressed: () => _quick(a, b)),
             ],
           ),
           const SizedBox(height: IgongoSpace.xl),

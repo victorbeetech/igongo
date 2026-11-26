@@ -10,11 +10,7 @@ void main() {
     DateTime? picked;
     await pumpComponent(
       tester,
-      CalendarMonthView(
-        today: DateTime(2026, 11, 1),
-        initialMonth: DateTime(2026, 11),
-        onPick: (d) => picked = d,
-      ),
+      CalendarMonthView(today: DateTime(2026, 11, 1), initialMonth: DateTime(2026, 11), onPick: (d) => picked = d),
       dark: dark,
     );
     await tester.tap(find.text('15'));
@@ -26,11 +22,7 @@ void main() {
     DateTime? picked;
     await pumpComponent(
       tester,
-      CalendarMonthView(
-        today: DateTime(2026, 11, 20),
-        initialMonth: DateTime(2026, 11),
-        onPick: (d) => picked = d,
-      ),
+      CalendarMonthView(today: DateTime(2026, 11, 20), initialMonth: DateTime(2026, 11), onPick: (d) => picked = d),
       dark: dark,
     );
     await tester.tap(find.text('3'));

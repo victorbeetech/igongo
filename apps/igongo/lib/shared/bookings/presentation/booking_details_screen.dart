@@ -110,13 +110,17 @@ class _BookingDetailsScreenState extends ConsumerState<BookingDetailsScreen> {
     // Step 2: nothing to pay, so the receipt is ready at once.
     if (booking.owed <= 0) {
       await nav.pushReplacement(
-        MaterialPageRoute<void>(builder: (_) => BookingConfirmedScreen(booking: booking, place: widget.place)),
+        MaterialPageRoute<void>(
+          builder: (_) => BookingConfirmedScreen(booking: booking, place: widget.place),
+        ),
       );
       return;
     }
     // Step 3: money is owed, so the payment screen opens next.
     await nav.pushReplacement(
-      MaterialPageRoute<void>(builder: (_) => BookingPaymentScreen(booking: booking, place: widget.place)),
+      MaterialPageRoute<void>(
+        builder: (_) => BookingPaymentScreen(booking: booking, place: widget.place),
+      ),
     );
   }
 

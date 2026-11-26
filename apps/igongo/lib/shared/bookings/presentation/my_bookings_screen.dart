@@ -79,7 +79,10 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
       builder: (context, bookings, _) {
         // Step 1: split the list by the two tabs.
         final today = dayOnly(DateTime.now());
-        final shown = [for (final b in bookings) if (isPastBooking(b, today) != _upcoming) b];
+        final shown = [
+          for (final b in bookings)
+            if (isPastBooking(b, today) != _upcoming) b,
+        ];
         return RefreshIndicator(
           onRefresh: () => ref.refresh(myBookingsProvider(place).future),
           child: ScreenListView(
@@ -110,7 +113,9 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
                     booking: b,
                     place: place,
                     onOpen: () => Navigator.of(context).push(
-                      MaterialPageRoute<void>(builder: (_) => BookingStatusScreen(booking: b, place: place)),
+                      MaterialPageRoute<void>(
+                        builder: (_) => BookingStatusScreen(booking: b, place: place),
+                      ),
                     ),
                     onPaid: () => ref.invalidate(myBookingsProvider(place)),
                     onCancel: () => _cancel(b),

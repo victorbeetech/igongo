@@ -28,7 +28,11 @@ Booking _stay() => const Booking(
 
 void main() {
   bothModes('shows the reference, the stay dates, the QR and the barcode', (tester, dark) async {
-    await pumpComponent(tester, BookingTicketCard(booking: _stay(), place: _rooms), dark: dark);
+    await pumpComponent(
+      tester,
+      BookingTicketCard(booking: _stay(), place: _rooms),
+      dark: dark,
+    );
     expect(find.text('Standard Room'), findsOneWidget);
     expect(find.text('IGH20250428-001'), findsOneWidget);
     expect(find.text('Check-in'), findsOneWidget);
@@ -52,7 +56,11 @@ void main() {
       status: 'confirmed',
       date: '2025-05-03',
     );
-    await pumpComponent(tester, const BookingTicketCard(booking: b, place: _rooms), dark: dark);
+    await pumpComponent(
+      tester,
+      const BookingTicketCard(booking: b, place: _rooms),
+      dark: dark,
+    );
     expect(find.text('Time'), findsOneWidget);
     expect(find.text('All day'), findsOneWidget);
   });

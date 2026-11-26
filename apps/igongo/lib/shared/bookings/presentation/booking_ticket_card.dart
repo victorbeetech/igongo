@@ -55,7 +55,9 @@ class BookingTicketCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Expanded(child: Text('Igongo', style: t.titleLarge?.copyWith(color: p.primaryText))),
+                    Expanded(
+                      child: Text('Igongo', style: t.titleLarge?.copyWith(color: p.primaryText)),
+                    ),
                     Text('Booking receipt', style: t.labelMedium?.copyWith(color: p.textMuted)),
                   ],
                 ),
@@ -69,7 +71,10 @@ class BookingTicketCard extends StatelessWidget {
                     ),
                     if (to != null) _TicketField(label: 'Check-out', value: shortDay(to)),
                     if (to == null) _TicketField(label: 'Time', value: booking.slot ?? 'All day'),
-                    _TicketField(label: 'Guests', value: '${booking.units} ${place.unit}${booking.units == 1 ? '' : 's'}'),
+                    _TicketField(
+                      label: 'Guests',
+                      value: '${booking.units} ${place.unit}${booking.units == 1 ? '' : 's'}',
+                    ),
                   ],
                 ),
                 Column(

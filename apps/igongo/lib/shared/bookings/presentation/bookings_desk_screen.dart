@@ -23,6 +23,7 @@ import '../../ui/toast/igongo_toast.dart';
 import '../application/bookings_providers.dart';
 import '../domain/booking.dart';
 import '../domain/booking_place.dart';
+import 'ticket_verify_screen.dart';
 
 /// The statuses staff can filter by, with their words.
 const _filters = {
@@ -77,6 +78,12 @@ class _BookingsDeskScreenState extends ConsumerState<BookingsDeskScreen> {
     ref.invalidate(deskBookingsProvider(_filter));
   }
 
+  /// Opens the ticket check screen, then reloads the desk so any check-in shows.
+  Future<void> _openVerify() async {
+    await Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => TicketVerifyScreen(place: widget.place)));
+    if (mounted) ref.invalidate(deskBookingsProvider(_filter));
+  }
+
   /// Checks in the code typed in the field.
   Future<void> _checkInCode() async {
     final code = _code.text.trim();
@@ -115,6 +122,17 @@ class _BookingsDeskScreenState extends ConsumerState<BookingsDeskScreen> {
                   ),
                   IgongoButton(label: 'Check in', onPressed: _checkInCode),
                 ],
+              ),
+            ),
+            // Step 1b: scan or paste a ticket to see whether it is valid, used or forged.
+            Padding(
+              padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, 0, IgongoSpace.lg, IgongoSpace.sm),
+              child: IgongoButton(
+                label: 'Check a ticket',
+                icon: Icons.verified_outlined,
+                variant: ButtonVariant.secondary,
+                expand: true,
+                onPressed: _openVerify,
               ),
             ),
             // Step 2: the status filters.
