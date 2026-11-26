@@ -7,6 +7,7 @@ import '../../../shared/session/session_controller.dart';
 import '../data/orders_api.dart';
 import '../domain/delivery_track.dart';
 import '../domain/delivery_zone.dart';
+import '../domain/item_stars.dart';
 import '../domain/menu_item.dart';
 import '../domain/order.dart';
 import '../domain/ordering_rules.dart';
@@ -49,4 +50,10 @@ final myOrdersProvider = FutureProvider.autoDispose<List<Order>>((ref) {
 final trackProvider = FutureProvider.autoDispose.family<DeliveryTrack, String>((ref, orderId) {
   ref.watch(sessionProvider);
   return ref.watch(ordersApiProvider).track(orderId);
+});
+
+/// Each dish's average stars, for the menu (by item ID).
+final starsProvider = FutureProvider.autoDispose<Map<String, ItemStars>>((ref) {
+  ref.watch(sessionProvider);
+  return ref.watch(ordersApiProvider).stars();
 });

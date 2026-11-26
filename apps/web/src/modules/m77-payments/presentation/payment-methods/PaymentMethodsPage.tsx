@@ -6,7 +6,7 @@
 
 import { KeyRound } from "lucide-react";
 import { useState } from "react";
-import { useMethodSettings, useSaveMethodSettings } from "@/modules/m77-payments/data/paymentsApi";
+import { useConnections, useMethodSettings, useSaveMethodSettings } from "@/modules/m77-payments/data/paymentsApi";
 import { METHOD_NAMES, type MethodSettings } from "@/modules/m77-payments/domain/methodInfo";
 import { LiveData } from "@/shared/api/LiveData";
 import type { ScreenContext } from "@/shared/catalog/types";
@@ -14,6 +14,7 @@ import { PurposeText } from "@/shared/screens/parts/PurposeText";
 import { Button } from "@/shared/ui/button/Button";
 import { SelectInput } from "@/shared/ui/field/SelectInput";
 import { TextInput } from "@/shared/ui/field/TextInput";
+import { StatusChip } from "@/shared/ui/chip/StatusChip";
 import { SwitchRow } from "@/shared/ui/switch/SwitchRow";
 
 // The Connection settings page (module 14) by its address, not its code: modules never import each other.
@@ -34,6 +35,7 @@ export function PaymentMethodsPage({ screen }: { screen: ScreenContext }) {
 /** The switches, saved together. */
 function MethodsForm({ initial }: { initial: MethodSettings }) {
   const save = useSaveMethodSettings();
+  const connections = useConnections();
   const [s, setS] = useState(initial);
   const set = (method: string, patch: Partial<MethodSettings["methods"][string]>) => {
     const current = s.methods[method] ?? { enabled: false, outlets: [], modules: [] };
@@ -44,6 +46,7 @@ function MethodsForm({ initial }: { initial: MethodSettings }) {
     <>
       <SelectInput label="Providers" value={s.environment} onChange={(environment) => setS({ ...s, environment: environment as MethodSettings["environment"] })} options={[["sandbox", "Sandbox (testing)"], ["live", "Live (real money)"]]} />
       <SwitchRow label="Staff may record payments by hand" on={s.allowManual} onChange={(allowManual) => setS({ ...s, allowManual })} />
+      <SwitchRow label="Preview mode: show gateways without keys, greyed out, on pay screens" hint="Turn off before the App Store release" on={s.showPreview} onChange={(showPreview) => setS({ ...s, showPreview })} />
       {Object.entries(METHOD_NAMES).map(([method, info]) => {
         const m = s.methods[method] ?? { enabled: false, outlets: [], modules: [] };
         return (
@@ -54,7 +57,8 @@ function MethodsForm({ initial }: { initial: MethodSettings }) {
               <TextInput label="Only for modules (empty: all)" value={m.modules.join(", ")} onChange={(t) => set(method, { modules: list(t) })} />
             </div>
             {info.provider && (
-              <div className="px-3 pb-3">
+              <div className="flex items-center gap-2 px-3 pb-3">
+                <StatusChip status={connections.data?.[method] ? "Connected" : "Preview: no keys yet"} />
                 <Button variant="text" href={`${CONNECTION_SETTINGS}?provider=${info.provider}`} icon={<KeyRound size={16} aria-hidden />}>Add keys</Button>
               </div>
             )}

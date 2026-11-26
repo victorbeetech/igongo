@@ -14,7 +14,8 @@ export class SettingsRulesStore implements RulesStore {
 
   async read(): Promise<OrderingRules> {
     const saved = await this.store.read("rules", DEFAULT_ORDERING_RULES);
-    return { ...saved, types: { ...DEFAULT_ORDERING_RULES.types, ...saved.types } };
+    // Rules saved before a setting existed get its default.
+    return { ...DEFAULT_ORDERING_RULES, ...saved, types: { ...DEFAULT_ORDERING_RULES.types, ...saved.types } };
   }
 
   write(rules: OrderingRules, by: string | null, now: Date): Promise<void> {

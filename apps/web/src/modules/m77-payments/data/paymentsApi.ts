@@ -9,7 +9,7 @@ import type { Payment } from "../domain/payment";
 
 /** Methods switched on for [module] (and [outlet]). */
 export const useMethods = (module: string, outlet?: string) =>
-  useQuery({ queryKey: ["payments", "methods", module, outlet], queryFn: () => api<{ items: MethodInfo[] }>(`/api/payments/methods?module=${module}${outlet ? `&outlet=${outlet}` : ""}`), enabled: !!module });
+  useQuery({ queryKey: ["payments", "methods", module, outlet], queryFn: () => api<{ items: MethodInfo[]; preview: MethodInfo[] }>(`/api/payments/methods?module=${module}${outlet ? `&outlet=${outlet}` : ""}`), enabled: !!module });
 
 /** One payment; while pending, asks every 4 s (the API re-checks with the provider). */
 export const usePayment = (id: string) =>
@@ -43,3 +43,6 @@ export interface SettlementRow {
 
 export const useSettlement = (from: string, to: string) =>
   useQuery({ queryKey: ["payments", "settlement", from, to], queryFn: () => api<{ from: string; to: string; items: SettlementRow[]; total: number }>(`/api/payments/settlement?from=${from}&to=${to}`), enabled: !!from && !!to && from <= to });
+
+/** Which gateways have their keys saved (super admin). */
+export const useConnections = () => useQuery({ queryKey: ["payments", "connections"], queryFn: () => api<Record<string, boolean>>("/api/payments/connections") });

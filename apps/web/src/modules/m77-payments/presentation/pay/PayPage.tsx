@@ -37,13 +37,19 @@ export function PayPage({ screen }: { screen: ScreenContext }) {
       <div className="grid gap-3 p-4">
         {!recordId && <p className="text-body">Open Pay from an order or a booking.</p>}
         {recordId && !payment && (
-          <LiveData query={methods} name="Payment methods" isEmpty={(d) => d.items.length === 0}>
+          <LiveData query={methods} name="Payment methods" isEmpty={(d) => d.items.length === 0 && d.preview.length === 0}>
             {(d) => (
               <>
                 <TextInput label="Mobile money number (for MoMo or Airtel)" type="tel" value={phone} onChange={setPhone} hint="0772 123456" />
                 {d.items.map((m) => (
                   <Button key={m.method} block disabled={pay.isPending} onClick={() => pay.mutate({ module: moduleKey, recordId, method: m.method, ...(phone ? { phone } : {}) })}>
                     Pay with {m.name}
+                  </Button>
+                ))}
+                {/* Preview mode: gateways waiting for their keys, visible but never payable. */}
+                {d.preview.map((m) => (
+                  <Button key={m.method} block variant="secondary" disabled>
+                    {m.name} · Preview: not connected yet
                   </Button>
                 ))}
               </>

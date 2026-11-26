@@ -15,7 +15,7 @@ export class SettingsMethodStore implements MethodSettingsStore {
   async read(): Promise<MethodSettings> {
     const saved = await this.store.read("methods", DEFAULT_METHOD_SETTINGS);
     // A method added in a later version gets its default switch.
-    return { ...saved, methods: { ...DEFAULT_METHOD_SETTINGS.methods, ...saved.methods } };
+    return { ...DEFAULT_METHOD_SETTINGS, ...saved, methods: { ...DEFAULT_METHOD_SETTINGS.methods, ...saved.methods } };
   }
 
   write(value: MethodSettings, by: string | null, now: Date): Promise<void> {

@@ -30,6 +30,7 @@ export const settingsBody = z.object({
   methods: z.object(recordOf(PAYMENT_METHODS, () => methodSwitch)),
   allowManual: z.boolean(),
   environment: z.enum(["sandbox", "live"]),
+  showPreview: z.boolean().default(true),
 });
 
 /** `GET /payments/settlement`: hotel days, `to` included. */

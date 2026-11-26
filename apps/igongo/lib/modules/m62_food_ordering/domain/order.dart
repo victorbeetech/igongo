@@ -17,6 +17,9 @@ class Order {
     required this.paid,
     required this.readyAt,
     this.arriveAt,
+    this.discount = 0,
+    this.promoCode,
+    this.rated = false,
   });
 
   /// Reads one from the API's JSON.
@@ -31,6 +34,9 @@ class Order {
     paid: (json['paid'] as num?)?.toInt() ?? 0,
     readyAt: '${json['readyAt']}',
     arriveAt: json['arriveAt'] as String?,
+    discount: (json['discount'] as num?)?.toInt() ?? 0,
+    promoCode: json['promoCode'] as String?,
+    rated: json['rated'] == true,
   );
 
   /// The order's ID.
@@ -60,8 +66,20 @@ class Order {
   /// When the kitchen expects it ready (ISO time).
   final String readyAt;
 
-  /// When the guest arrives, for pre-orders (ISO time).
+  /// When the guest arrives (pre-orders) or wants it (scheduled orders), ISO time.
   final String? arriveAt;
+
+  /// Shillings a promo or voucher code took off.
+  final int discount;
+
+  /// The code used, or null.
+  final String? promoCode;
+
+  /// True once the guest rated it.
+  final bool rated;
+
+  /// True when the guest may rate it (delivered and not rated yet).
+  bool get canRate => status == 'delivered' && !rated;
 
   /// What is still owed.
   int get owed => status == 'cancelled' ? 0 : total - paid;

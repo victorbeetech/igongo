@@ -46,6 +46,8 @@ class OrderFoodScreen extends ConsumerWidget {
       final outlet = outlets.any((o) => o.key == cart.outlet) ? cart.outlet! : outlets.first.key;
       final menu = ref.watch(menuProvider(outlet));
       final count = cart.lines.fold(0, (n, l) => n + l.quantity);
+      // Guests' average stars per dish (none until the first ratings come in).
+      final stars = ref.watch(starsProvider).valueOrNull ?? const {};
       return Column(
         children: [
           Expanded(
@@ -77,7 +79,7 @@ class OrderFoodScreen extends ConsumerWidget {
                       for (final i in items.where((i) => i.section == section))
                         IgongoListRow(
                           title: i.name,
-                          subtitle: ugx(i.price),
+                          subtitle: [ugx(i.price), ?stars[i.id]?.words].join(' · '),
                           status: i.available ? null : 'Out today',
                           onTap: i.available
                               ? () {

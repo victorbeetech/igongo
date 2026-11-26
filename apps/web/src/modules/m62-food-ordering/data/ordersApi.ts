@@ -33,12 +33,16 @@ export interface CartBody {
   lines: { itemId: string; quantity: number; options: string[] }[];
   arriveAt?: string;
   deliverTo?: { label: string; zone: string | null; lat: null; lng: null };
+  /** A promo or voucher code; the server works out the discount. */
+  promoCode?: string;
+  /** One random key per checkout, so a double click never orders twice. */
+  requestKey?: string;
   notes?: string;
   allergies?: string;
   table?: string;
 }
 
-export const useQuote = () => useApiMutation((b: CartBody) => api<{ total: number; deliveryFee: number; readyAt: string }>("/api/orders/quote", { method: "POST", body: b }), { done: "Price checked", refresh: [] });
+export const useQuote = () => useApiMutation((b: CartBody) => api<{ subtotal: number; discount: number; total: number; deliveryFee: number; readyAt: string; promo: { label: string } | null }>("/api/orders/quote", { method: "POST", body: b }), { done: "Price checked", refresh: [] });
 
 export const usePlaceOrder = () => useApiMutation((b: CartBody) => api<Order>("/api/orders", { method: "POST", body: b }), { done: "Order placed", refresh: [["orders"]] });
 
@@ -47,3 +51,20 @@ export const useMoveOrder = () => useApiMutation((v: { id: string; status: Order
 export const useCancelOrder = () => useApiMutation((v: { id: string; reason: string }) => api<Order>(`/api/orders/${v.id}/cancel`, { method: "POST", body: { reason: v.reason } }), { done: "Order cancelled", refresh: [["orders"]] });
 
 export const useSaveOrderingRules = () => useApiMutation((r: OrderingRules) => api<OrderingRules>("/api/orders/rules", { method: "PUT", body: r }), { done: "Ordering rules saved", refresh: [["orders", "rules"]] });
+
+/** A review as staff see it (with the order and whether it is hidden). */
+export interface StaffReview {
+  orderId: string;
+  name: string;
+  outlet: string;
+  food: number;
+  delivery: number | null;
+  comment: string | null;
+  hidden: boolean;
+  createdAt: string;
+}
+
+/** Every review, hidden ones too (staff). */
+export const useStaffReviews = (outlet: string) => useQuery({ queryKey: ["orders", "reviews", outlet], queryFn: () => api<{ items: StaffReview[] }>(`/api/orders/reviews?all=1${outlet ? `&outlet=${outlet}` : ""}`) });
+
+export const useHideReview = () => useApiMutation((v: { orderId: string; hidden: boolean }) => api<null>(`/api/orders/reviews/${v.orderId}/hide`, { method: "POST", body: { hidden: v.hidden } }), { done: "Review updated", refresh: [["orders", "reviews"]] });

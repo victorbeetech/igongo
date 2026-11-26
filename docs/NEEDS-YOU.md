@@ -136,3 +136,10 @@ The cloud cannot download the Android SDK or run Xcode, so the native builds wer
 1. On your Mac, in `apps/igongo`: `flutter pub get`, then `flutter build apk --debug --dart-define-from-file=config/firebase-app.json`. Tell Claude about any error.
 2. For iPhone: `cd ios && pod install`, open `ios/Runner.xcworkspace` in Xcode > **Runner** target > **Signing & Capabilities**. Check that **Push Notifications** and **Background Modes > Remote notifications** are listed (the files for them are already in the repo). Pick your team, then run on a real iPhone (pushes do not reach the simulator).
 3. Sign in on the phone, allow notifications, then use **Integrations > Firebase > Send test** as the super admin (or `POST /notifications/push/test`). A notification should arrive within seconds.
+
+## Food and delivery tracker: before go-live (26 Nov 2026)
+
+1. **Google Maps key** (`google_maps.api_key`, see above). Until it is in, the guest's tracker shows the rider's last position as numbers and a "Preview" note instead of a live map.
+2. **Turn preview mode off before the App Store build.** Payment methods page (S77-06), switch "Preview mode" off. Apple rejects greyed-out buttons that do nothing; preview mode is for showing the screens before the gateway keys arrive.
+3. **Promotions and vouchers.** A voucher only works at checkout once someone with the approve permission (Sales & Marketing Manager by default) moves it to **Issued**. Promo codes need status **Live**, a Discount (%), and "Where it works" empty, "all", "food" or an outlet key.
+

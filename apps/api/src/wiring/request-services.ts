@@ -30,6 +30,7 @@ import { authConfigFrom } from "./auth-config";
 import { GuestServices } from "./guests/guest-services";
 import { ManagerServices } from "./managers/manager-services";
 import { noticeAnnouncer } from "./staff/notice-announcer";
+import { userNotifier } from "./user-notifier";
 import { StaffServices } from "./staff/staff-services";
 
 /** Remembers the first result of [make]. */
@@ -95,11 +96,14 @@ export class RequestServices {
   // --- Staff modules (HR, cards, wristbands, attendance, reports, meals, notices) ---
   readonly staffModules = once(() => new StaffServices(this.db, noticeAnnouncer(this.db, this.env, (roles) => this.access().holdersOf(roles))));
 
+  /** Pushes to people's own phones, for orders, deliveries and chat. */
+  readonly notifier = once(() => userNotifier(this.db, this.env, this.logger()));
+
   // --- Guests and riders (CRM, menus, orders, delivery, payments, bookings) ---
   /** The guest modules for [actor]'s change context. */
   guestModules(actor: { userId: string; name: string } | undefined): GuestServices {
     const cfg = this.config;
-    return new GuestServices(this.db, this.changeContext(actor), this.modules(), this.secrets(), { api: cfg.baseURL, web: cfg.webOrigins[0] ?? cfg.baseURL });
+    return new GuestServices(this.db, this.changeContext(actor), this.modules(), this.secrets(), { api: cfg.baseURL, web: cfg.webOrigins[0] ?? cfg.baseURL }, this.notifier());
   }
 
   // --- Managers and money (files, faults, checkups, payroll, advances, bonuses, earnings, reports, chat, records) ---
@@ -109,7 +113,7 @@ export class RequestServices {
 
   /** The manager modules for [actor]'s change context; one per request, so loaded deps are kept. */
   managerModules(actor: { userId: string; name: string } | undefined): ManagerServices {
-    return (this.managers ??= new ManagerServices(this.db, this.changeContext(actor), this.modules(), this.staffModules(), this.blobs(), this.auditStore()));
+    return (this.managers ??= new ManagerServices(this.db, this.changeContext(actor), this.modules(), this.staffModules(), this.blobs(), this.auditStore(), this.notifier()));
   }
 
   // --- Records-kit modules (operations, HR extras, guest service and money desks) ---

@@ -6,6 +6,7 @@
 import type { DeliveryPlace } from "@igongo/contracts/food-ordering";
 import { moduleSettingsTable } from "@igongo/core";
 import { boolean, doublePrecision, index, integer, jsonb, pgSchema, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
+import { DELIVERY_SOURCES } from "@igongo/contracts/delivery-riders";
 import { JOB_STATUSES } from "../../domain/delivery-job";
 
 export const deliverySchema = pgSchema("delivery");
@@ -15,8 +16,10 @@ export const jobs = deliverySchema.table(
   "jobs",
   {
     id: text("id").primaryKey(),
+    source: text("source", { enum: DELIVERY_SOURCES }).notNull().default("food"),
     orderId: text("order_id").notNull(),
     orderNumber: text("order_number").notNull(),
+    what: text("what"),
     customerUserId: text("customer_user_id"),
     customerName: text("customer_name").notNull(),
     customerPhone: text("customer_phone"),
@@ -36,8 +39,13 @@ export const jobs = deliverySchema.table(
     pickedUpAt: timestamp("picked_up_at", { withTimezone: true }),
     finishedAt: timestamp("finished_at", { withTimezone: true }),
   },
-  // One job per order; riders and the board read by status.
-  (t) => [uniqueIndex("jobs_order_key").on(t.orderId), index("jobs_status_idx").on(t.status, t.openedAt), index("jobs_rider_idx").on(t.riderUserId, t.openedAt)],
+  // One job per record of each source; riders, guests and the board read by person and status.
+  (t) => [
+    uniqueIndex("jobs_source_order_key").on(t.source, t.orderId),
+    index("jobs_status_idx").on(t.status, t.openedAt),
+    index("jobs_rider_idx").on(t.riderUserId, t.openedAt),
+    index("jobs_customer_idx").on(t.customerUserId, t.openedAt),
+  ],
 );
 
 /** Each rider's live status and last location. */

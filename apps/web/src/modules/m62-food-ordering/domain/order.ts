@@ -28,15 +28,21 @@ export interface Order {
   table: string | null;
   deliverTo: { label: string; zone: string | null } | null;
   subtotal: number;
+  /** Taken off by a promo or voucher code. */
+  discount: number;
+  promoCode: string | null;
   deliveryFee: number;
   total: number;
   paid: number;
+  /** Arrival (pre-order) or the wanted time (scheduled order); null for "as soon as possible". */
   arriveAt: string | null;
   readyAt: string;
   history: { status: OrderStatus; at: string; note: string | null }[];
   /** The statuses staff may set next. */
   next: OrderStatus[];
   createdAt: string;
+  /** In "my orders" only: true once the guest rated it. */
+  rated?: boolean;
 }
 
 /** Words for each order type. */

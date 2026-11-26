@@ -3,9 +3,11 @@
 // an outlet, add items with their options, choose how to get it (delivery,
 // room service, dine-in, takeaway, or pre-order with an arrival time, such
 // as "1 kg fried beef, we arrive at 4 PM"), check the price and ready time,
-// place the order, and pay when the order type needs money first.
+// place the order, and pay when the order type needs money first. Staff
+// taking a phone order can add a promo or voucher code and schedule it for
+// later; the server works out every price and discount.
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useClientOutlets, useOrderingRules, useOutletMenu, usePlaceOrder, useQuote, useZones, type CartBody } from "@/modules/m62-food-ordering/data/ordersApi";
 import type { CartLine } from "@/modules/m62-food-ordering/domain/cartLine";
 import { TYPE_WORDS, type OrderType } from "@/modules/m62-food-ordering/domain/order";
@@ -31,7 +33,10 @@ export function OrderFoodPage({ screen }: { screen: ScreenContext }) {
   const quote = useQuote();
   const place = usePlaceOrder();
   const [cart, setCart] = useState<CartLine[]>([]);
-  const [d, setD] = useState({ type: "dine_in" as OrderType, arriveAt: "", zone: "", address: "", table: "", notes: "", allergies: "" });
+  const [d, setD] = useState({ type: "dine_in" as OrderType, arriveAt: "", zone: "", address: "", table: "", notes: "", allergies: "", promoCode: "" });
+  // One key for this checkout: a double click on "Place order" gets the same order back.
+  const requestKey = useMemo(() => crypto.randomUUID(), []);
+  const schedulable = d.type === "pre_order" || ((d.type === "delivery" || d.type === "takeaway" || d.type === "room_service") && (rules.data?.scheduleAheadDays ?? 0) > 0);
   // Order types switched on at this outlet.
   const types = (Object.keys(TYPE_WORDS) as OrderType[]).filter((t) => {
     const r = rules.data?.types[t];
@@ -39,7 +44,8 @@ export function OrderFoodPage({ screen }: { screen: ScreenContext }) {
   });
   const body = (): CartBody => ({
     outlet, type: d.type, lines: cart.map((l) => ({ itemId: l.itemId, quantity: l.quantity, options: l.options })),
-    ...(d.type === "pre_order" && d.arriveAt ? { arriveAt: new Date(d.arriveAt).toISOString() } : {}),
+    ...(schedulable && d.arriveAt ? { arriveAt: new Date(d.arriveAt).toISOString() } : {}),
+    ...(d.promoCode.trim() ? { promoCode: d.promoCode.trim() } : {}),
     ...(d.type === "delivery" ? { deliverTo: { label: d.address, zone: d.zone || null, lat: null, lng: null } } : {}),
     ...(d.table ? { table: d.table } : {}), ...(d.notes ? { notes: d.notes } : {}), ...(d.allergies ? { allergies: d.allergies } : {}),
   });
@@ -83,6 +89,7 @@ export function OrderFoodPage({ screen }: { screen: ScreenContext }) {
             {/* Step 3: how to get it. */}
             <SelectInput label="How" value={d.type} onChange={(type) => setD({ ...d, type: type as OrderType })} options={types.map((t) => [t, TYPE_WORDS[t]])} />
             {d.type === "pre_order" && <TextInput label={`Arrival time (at least ${rules.data?.preorderMinNoticeMinutes ?? 0} minutes from now)`} type="datetime-local" value={d.arriveAt} onChange={(arriveAt) => setD({ ...d, arriveAt })} />}
+            {schedulable && d.type !== "pre_order" && <TextInput label={`For later (empty: as soon as possible; up to ${rules.data?.scheduleAheadDays ?? 0} days ahead)`} type="datetime-local" value={d.arriveAt} onChange={(arriveAt) => setD({ ...d, arriveAt })} />}
             {d.type === "delivery" && (
               <>
                 <SelectInput label="Area" value={d.zone} onChange={(zone) => setD({ ...d, zone })} options={[["", "Choose an area"], ...(zones.data?.items ?? []).map((z): [string, string] => [z.zone, `${z.name} (${ugx(z.fee)}, about ${z.minutes} min)`])]} />
@@ -92,11 +99,18 @@ export function OrderFoodPage({ screen }: { screen: ScreenContext }) {
             {(d.type === "dine_in" || d.type === "room_service") && <TextInput label={d.type === "dine_in" ? "Table" : "Room"} value={d.table} onChange={(table) => setD({ ...d, table })} />}
             <TextInput label="Notes for the kitchen" value={d.notes} onChange={(notes) => setD({ ...d, notes })} />
             <TextInput label="Allergies" value={d.allergies} onChange={(allergies) => setD({ ...d, allergies })} />
+            <TextInput label="Promo or voucher code" value={d.promoCode} onChange={(promoCode) => setD({ ...d, promoCode })} />
             {/* Step 4: price, then order. */}
-            {quote.data && <p className="text-body" role="status">{ugx(quote.data.total)}{quote.data.deliveryFee ? ` with ${ugx(quote.data.deliveryFee)} delivery` : ""} · ready about {dayTimeOf(quote.data.readyAt)}</p>}
+            {quote.data && (
+              <p className="text-body" role="status">
+                {ugx(quote.data.total)}
+                {quote.data.discount ? ` after ${ugx(quote.data.discount)} off (${quote.data.promo?.label ?? "code"})` : ""}
+                {quote.data.deliveryFee ? ` with ${ugx(quote.data.deliveryFee)} delivery` : ""} · ready about {dayTimeOf(quote.data.readyAt)}
+              </p>
+            )}
             <div className="flex flex-wrap gap-2">
               <Button variant="secondary" onClick={() => quote.mutate(body())} disabled={quote.isPending}>Check price and time</Button>
-              <Button onClick={() => place.mutate(body())} disabled={place.isPending}>Place order</Button>
+              <Button onClick={() => place.mutate({ ...body(), requestKey })} disabled={place.isPending}>Place order</Button>
             </div>
           </Card>
         )}

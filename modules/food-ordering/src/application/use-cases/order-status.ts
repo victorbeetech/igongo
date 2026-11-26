@@ -3,9 +3,10 @@
 import type { OrderStatus } from "@igongo/contracts/food-ordering";
 import { recordChange } from "@igongo/core";
 import { orderNumber, type Order } from "../../domain/order";
+import { statusMessage } from "../../domain/order-messages";
 import type { OrderingDeps } from "../ordering-deps";
 
-/** Saves [order] as [status], with [note], and records it. */
+/** Saves [order] as [status], with [note], records it, and tells the guest. */
 export async function moveTo(deps: OrderingDeps, order: Order, status: OrderStatus, note: string | null = null): Promise<Order> {
   const now = deps.change.now;
   const moved: Order = { ...order, status, updatedAt: now, history: [...order.history, { status, at: now.toISOString(), by: deps.change.actorId, note }] };
@@ -13,6 +14,11 @@ export async function moveTo(deps: OrderingDeps, order: Order, status: OrderStat
   await recordChange(deps.change, { module: "food-ordering", action: `order.${status}`, recordType: "order", recordId: order.id, summary: `Order ${orderNumber(order.seq)} is ${status.replace(/_/g, " ")}${note ? `: ${note}` : ""}` });
   // A delivery that is ready goes to the riders.
   if (status === "ready" && moved.type === "delivery") await deps.delivery?.open(toRef(moved));
+  // A cancelled order gives its voucher back.
+  if (status === "cancelled" && moved.promoCode) await deps.promos?.release(moved.promoCode, moved.id);
+  // The guest's phone hears about it (an order with an account only).
+  const message = statusMessage(moved, status);
+  if (message && moved.userId) await deps.notify([moved.userId], message);
   return moved;
 }
 

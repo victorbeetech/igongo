@@ -15,6 +15,11 @@ export class DrizzleOrderRepository implements OrderRepository {
     return row ?? null;
   }
 
+  async byRequestKey(userId: string, requestKey: string): Promise<Order | null> {
+    const [row] = await this.db.select().from(orders).where(and(eq(orders.userId, userId), eq(orders.requestKey, requestKey)));
+    return row ?? null;
+  }
+
   async nextSeq(): Promise<number> {
     const [row] = await this.db.select({ max: sql<number>`coalesce(max(${orders.seq}), 0)` }).from(orders);
     return Number(row?.max ?? 0) + 1;

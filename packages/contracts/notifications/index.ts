@@ -51,3 +51,20 @@ export interface DomainEvent {
   /** The app screen the notification opens, such as `/faults/42`. */
   link?: string;
 }
+
+/** A short push to some people's phones, such as "Your order F-0042 is ready". */
+export interface UserMessage {
+  title: string;
+  body: string;
+  /** The notification channel (sound and importance on the phone). */
+  channel: PushChannelId;
+  /** The app screen it opens, such as `/orders/ord_123`. */
+  link?: string;
+}
+
+/**
+ * Sends a push to people by user ID. Given by the gateway to modules that
+ * tell people about their own things (orders, deliveries, chat). It never
+ * fails the caller: with no Firebase keys yet it quietly sends nothing.
+ */
+export type UserNotifier = (userIds: string[], message: UserMessage) => Promise<void>;

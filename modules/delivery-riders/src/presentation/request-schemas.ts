@@ -1,5 +1,6 @@
 /** Zod schemas for Delivery & Riders request bodies. */
 
+import { DELIVERY_SOURCES } from "@igongo/contracts/delivery-riders";
 import { z } from "zod";
 
 const key = z.string().regex(/^[a-z0-9-]{2,40}$/);
@@ -28,4 +29,18 @@ export const rulesBody = z.object({
   ridersCarryCash: z.boolean(),
   cashLimit: money,
   payPerTrip: money,
+});
+
+/** `POST /delivery/jobs`: the dispatcher sends anything that is not a food order. */
+export const manualJobBody = z.object({
+  source: z.enum(DELIVERY_SOURCES).exclude(["food"]),
+  what: z.string().trim().min(2).max(200),
+  customer: z.object({
+    name: z.string().trim().min(1).max(120),
+    phone: z.string().trim().regex(/^\+?[0-9 ]{7,20}$/).optional(),
+    /** The guest's account, so they can follow it in the app (from the CRM guest list). */
+    userId: z.string().min(3).max(80).optional(),
+  }),
+  place: z.object({ label: z.string().trim().min(2).max(200), zone: key.nullable(), lat: z.number().min(-90).max(90).nullable(), lng: z.number().min(-180).max(180).nullable() }),
+  cashToCollect: money.default(0),
 });

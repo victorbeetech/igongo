@@ -22,6 +22,13 @@ export interface MethodSettings {
   allowManual: boolean;
   /** `sandbox` while testing with the providers, `live` after go-live. */
   environment: "sandbox" | "live";
+  /**
+   * Preview mode: show the gateway methods that have no keys yet on the pay
+   * screens, greyed out and labelled "Preview: not connected yet", so the
+   * screens can be seen before the hotel's keys arrive. Turned off before
+   * the App Store release (no dead buttons there).
+   */
+  showPreview: boolean;
 }
 
 /** Every method is built; only cash is on until the hotel agrees each provider. */
@@ -29,6 +36,7 @@ export const DEFAULT_METHOD_SETTINGS: MethodSettings = {
   methods: recordOf(PAYMENT_METHODS, (m): MethodSwitch => ({ enabled: m === "cash", outlets: [], modules: [] })),
   allowManual: true,
   environment: "sandbox",
+  showPreview: true,
 };
 
 /** True when [method] may be used for [module] at [outlet]. */

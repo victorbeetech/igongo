@@ -8,4 +8,6 @@ export interface OrderingRules {
   depositPercent: number;
   cancelWindowMinutes: number;
   minutesPerQueuedOrder: number;
+  /** How many days ahead guests may schedule delivery, takeaway or room service (0: off). */
+  scheduleAheadDays: number;
 }

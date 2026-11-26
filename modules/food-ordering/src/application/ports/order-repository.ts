@@ -5,6 +5,8 @@ import type { Order } from "../../domain/order";
 
 export interface OrderRepository {
   byId(id: string): Promise<Order | null>;
+  /** The order [userId] already placed with checkout key [requestKey], if any (double-tap guard). */
+  byRequestKey(userId: string, requestKey: string): Promise<Order | null>;
   /** The next running number (the database refuses a repeat). */
   nextSeq(): Promise<number>;
   /** Orders in the kitchen now at [outlet] (received or preparing), for ready times. */

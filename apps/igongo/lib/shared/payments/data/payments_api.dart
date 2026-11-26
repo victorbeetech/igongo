@@ -11,11 +11,15 @@ class PaymentsApi {
 
   final ApiClient _api;
 
-  /// The methods switched on for [module] (and [outlet]).
+  /// The methods switched on for [module] (and [outlet]), then, in preview
+  /// mode, the gateways still waiting for their keys (marked `preview`).
   Future<List<PayMethod>> methods(String module, {String? outlet}) async {
     final query = outlet == null ? '' : '&outlet=$outlet';
     final json = await _api.get('/api/payments/methods?module=$module$query');
-    return [for (final m in json['items'] as List<dynamic>) PayMethod.fromJson(m as Json)];
+    return [
+      for (final m in json['items'] as List<dynamic>) PayMethod.fromJson(m as Json),
+      for (final m in json['preview'] as List<dynamic>? ?? const []) PayMethod.fromJson(m as Json),
+    ];
   }
 
   /// Starts paying record [recordId] of [module] by [method].

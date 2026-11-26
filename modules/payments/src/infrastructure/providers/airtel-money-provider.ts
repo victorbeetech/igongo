@@ -11,7 +11,7 @@
 import type { SecretReader } from "@igongo/contracts/super-admin";
 import type { PaymentProvider } from "../../application/ports/payment-provider";
 import type { EnvironmentOf } from "./mtn-momo-provider";
-import { at, callJson, keysFor, type Fetch } from "./provider-http";
+import { at, callJson, hasKeys, keysFor, type Fetch } from "./provider-http";
 
 const NAME = "Airtel Money";
 const KEYS = ["airtel_money.client_id", "airtel_money.client_secret"] as const;
@@ -32,6 +32,7 @@ export function airtelMoneyProvider(secrets: SecretReader, environment: Environm
   }
 
   return {
+    connected: () => hasKeys(secrets, KEYS),
     async start(charge) {
       const { base, headers } = await session();
       await callJson(fetchFn, NAME, `${base}/merchant/v1/payments/`, {

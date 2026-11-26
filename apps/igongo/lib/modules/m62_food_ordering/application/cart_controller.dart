@@ -24,6 +24,9 @@ class CartController extends Notifier<Cart> {
   /// Removes line number [index].
   void removeAt(int index) => state = (outlet: state.outlet, lines: [...state.lines]..removeAt(index));
 
+  /// Fills the cart with [lines] from [outlet] (order again).
+  void refill(String outlet, List<CartLine> lines) => state = (outlet: outlet, lines: lines);
+
   /// Empties the cart after an order.
   void clear() => state = (outlet: state.outlet, lines: const []);
 }

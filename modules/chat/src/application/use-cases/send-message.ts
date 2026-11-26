@@ -1,6 +1,8 @@
 /**
  * Use case: send a message (S50-02). A desk answerer joins the chat on their
- * first reply, so the guest sees who answered and read markers work.
+ * first reply, so the guest sees who answered and read markers work. The
+ * others in the chat get a push at once ("New message from Sam"); the words
+ * themselves never go in the push, so nothing private shows on a lock screen.
  */
 
 import { AppError, newId } from "@igongo/core";
@@ -23,5 +25,8 @@ export async function sendMessage(deps: ChatDeps, c: Conversation, me: ChatViewe
   const message: Message = { id: newId("msg"), conversationId: c.id, senderId: me.userId, senderName: me.name, body: body.trim(), fileIds, at: now };
   await deps.chats.addMessage(message);
   await deps.chats.markRead(c.id, me.userId, now);
+  // 4. Everyone else in the chat hears about it.
+  const others = (await deps.chats.members(c.id)).map((m) => m.userId).filter((id) => id !== me.userId);
+  await deps.notify(others, { title: "Chat", body: `New message from ${me.name}`, channel: "messages", link: `/chat/${c.id}` });
   return message;
 }
