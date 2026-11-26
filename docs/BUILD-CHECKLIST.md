@@ -210,6 +210,24 @@ The whole app and web portal are built as a clickable product first, with sample
     - [ ] A delete my account button in the guest app (also an App Store rule), with a clear data policy.
     - [ ] Apple "Hide My Email" relay addresses are accepted and used for the staff match.
     - [ ] Load and abuse: rate limits per user and IP, queues, and a test with thousands of requests at once.
+- [ ] Full security audit, right after the access and security phase and again just before TestFlight (asked by the user, 26 Nov 2026; not started). Each item has a check and a written result in `docs/SECURITY-AUDIT.md`:
+  - [ ] Scan the git history for secrets.
+  - [ ] Rate limits on every public endpoint.
+  - [ ] Access checks: each person sees only their own data.
+  - [ ] Passwords hashed properly.
+  - [ ] API keys and settings only as Worker secrets; none in the app or the repo.
+  - [ ] Proper authentication on every route that needs it.
+  - [ ] Dependencies updated and unused packages removed.
+  - [ ] Every form and input sanitised.
+  - [ ] XSS protection.
+  - [ ] Debug mode and detailed errors off in production.
+  - [ ] No exposed files or routes.
+  - [ ] Every admin route protected.
+  - [ ] Every API endpoint secured.
+  - [ ] Strict CORS, to our own hosts only.
+  - [ ] Security headers (CSP, HSTS and the rest).
+  - [ ] Secure database access: a least-privilege database user and no public access.
+  - [ ] A final full security audit report.
 - [ ] Last phase before TestFlight, premium animations and transitions (asked by the user, 26 Nov 2026; do after the basics, not started): booking flows, menu scroll effects and modern TikTok-style motion, mostly in the guest app and the public websites, all of premium quality.
 - [ ] Legal and compliance for Uganda, right before App Store readiness (asked by the user, 26 Nov 2026; not started). Each item has a check, and everything here is to be confirmed by a Ugandan lawyer before launch. Apple and Google store rules stay as listed under App Store readiness:
   - [ ] Data Protection and Privacy Act 2019: privacy policy and consent texts written for it; a docs note on registering with the Personal Data Protection Office (under NITA-U); a data-subject rights page (access, correct, delete); and the steps to report a data breach.
@@ -231,6 +249,7 @@ The whole app and web portal are built as a clickable product first, with sample
   - [ ] Store screenshots with nothing from Android in them.
   - [ ] Real native value (NFC, push, tracking, offline), not just a website.
   - [ ] Delete my account in the app, a privacy policy URL and a support URL.
+- [ ] Run the full security audit again, just before TestFlight, and update `docs/SECURITY-AUDIT.md`.
 - [ ] Event bus (Queues and outbox) and Notifications. Files & Media is done.
 - [ ] Build each module's back end (domain, use cases, database, API and events), in the agreed order.
 - [ ] Connect each module's screens to its API.

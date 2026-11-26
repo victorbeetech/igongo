@@ -65,6 +65,12 @@ export const MIGRATIONS: Migration[] = [
   "sql": "-- Saved and scheduled reports: the super admin can download the dashboard\n--> statement-breakpoint\n-- and saved report runs as spreadsheets, like the managers already can.\n--> statement-breakpoint\nINSERT INTO \"roles\".\"role_permissions\" (\"role_id\",\"permission_key\",\"scope\") SELECT r.\"id\", 'reports-analytics.dashboard.export', 'all' FROM \"roles\".\"roles\" r WHERE r.\"id\" = 'role_super-admin' ON CONFLICT DO NOTHING;\n"
  },
  {
+  "module": "roles-permissions",
+  "name": "0008_super_admin_overview_views",
+  "checksum": "01dd529d46dca3ba",
+  "sql": "-- Full check of the super admin's screens (26 Nov 2026): like every other\n--> statement-breakpoint\n-- module, the super admin sees the main records of the staff and money\n--> statement-breakpoint\n-- modules it configures, so their overview and settings screens open\n--> statement-breakpoint\n-- (faults and payroll settings were refused before). Daily work, such as\n--> statement-breakpoint\n-- dispatching riders or running a checkup, stays with the hotel's own roles.\n--> statement-breakpoint\nINSERT INTO \"roles\".\"role_permissions\" (\"role_id\",\"permission_key\",\"scope\") SELECT r.\"id\", p.key, 'all' FROM \"roles\".\"roles\" r CROSS JOIN (VALUES ('attendance.records.view'), ('crm-guests.profiles.view'), ('daily-reports.reports.view'), ('faults-maintenance.faults.view'), ('hr-records.staff.view'), ('payments.reports.view'), ('payroll.runs.view'), ('payroll.profiles.view'), ('staff-meals.claims.view'), ('wristbands.bands.view')) AS p(key) WHERE r.\"id\" = 'role_super-admin' ON CONFLICT DO NOTHING;\n"
+ },
+ {
   "module": "users-login",
   "name": "0000_users_login",
   "checksum": "26c20af258cc84a8",
