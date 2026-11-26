@@ -211,6 +211,14 @@ The whole app and web portal are built as a clickable product first, with sample
     - [ ] Apple "Hide My Email" relay addresses are accepted and used for the staff match.
     - [ ] Load and abuse: rate limits per user and IP, queues, and a test with thousands of requests at once.
 - [ ] Last phase before TestFlight, premium animations and transitions (asked by the user, 26 Nov 2026; do after the basics, not started): booking flows, menu scroll effects and modern TikTok-style motion, mostly in the guest app and the public websites, all of premium quality.
+- [ ] Legal and compliance, right before App Store readiness (asked by the user, 26 Nov 2026; not started). Each item has a check. The legal texts must be reviewed by the hotel or a lawyer before launch:
+  - [ ] A privacy policy page, in the app and on the website, covering Uganda's Data Protection and Privacy Act.
+  - [ ] Terms of service, accepted at sign-up.
+  - [ ] Images: only photos the hotel owns or that are licensed. `docs/ASSETS.md` lists the source and licence of every photo, icon and logo. No stock or web-scraped images.
+  - [ ] Fonts: confirm Cinzel and Lato are under the open font licence (OFL) and record it in `docs/ASSETS.md`. No personal-use fonts.
+  - [ ] Names and brands: no other company's name, logo or look (FoodPanda, APEX and others are references only). The Igongo name and logo are used with the hotel's written permission, recorded in the docs.
+  - [ ] Age: the app is for ages 13 and up, stated in the terms, with a date of birth or age check at sign-up.
+  - [ ] Cancellation: a clear booking, order and refund cancellation policy shown before paying, and delete my account always available.
 - [ ] App Store readiness, right before TestFlight (asked by the user, 26 Nov 2026; not started). Each item has a check:
   - [ ] No crash on open, tested on the built iOS app.
   - [ ] A reviewer demo login: a guest reviewer account with working sample bookings, written into [MAC-STEPS](MAC-STEPS.md) for the App Store Connect review notes.
