@@ -15,7 +15,8 @@ void usePhoneWindow(WidgetTester tester, {double width = 390, double height = 84
 }
 
 /// Opens the app at [location] and lets it draw its first frames. [role] picks
-/// the role whose home and menu show (the super admin when left out).
+/// the role whose home and menu show (the super admin when left out). [preview]
+/// is the super admin's design preview; off, the app draws as for a real person.
 Future<void> openApp(
   WidgetTester tester,
   String location, {
@@ -23,9 +24,11 @@ Future<void> openApp(
   TextSize size = TextSize.standard,
   ViewState state = ViewState.normal,
   String? role,
+  bool preview = true,
 }) async {
   // Step 1: the preferences for this run.
   final prefs = AppPreferences()
+    ..previewMode = preview
     ..themeMode = mode
     ..textSize = size
     ..state = state;

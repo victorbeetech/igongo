@@ -2,6 +2,8 @@
 // of the module uses a shared layout from its kind.
 
 import '../../shared/catalog/catalog.dart';
+import 'presentation/create_account/create_account_screen.dart';
+import 'presentation/my_profile/my_profile_screen.dart';
 import 'presentation/role_home/role_home_screen.dart';
 import 'presentation/sign_in/sign_in_screen.dart';
 import 'presentation/splash/splash_screen.dart';
@@ -14,7 +16,9 @@ final m00Overrides = <String, ScreenOverride>{
   'S00-01': (_, s) => SplashScreen(s),
   'S00-02': (_, s) => WelcomeScreen(s),
   'S00-05': (_, s) => SignInScreen(s),
+  'S00-18': (_, s) => CreateAccountScreen(s),
   'S00-21': (_, s) => RoleHomeScreen(s),
+  'S00-31': (_, s) => MyProfileScreen(s),
   'S00-33': (_, s) => TextSizeScreen(s),
   'S00-34': (_, s) => ThemeScreen(s),
 };

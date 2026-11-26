@@ -9,6 +9,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../format/ugx.dart';
 import '../../payments/presentation/pay_sheet.dart';
+import '../../session/sign_in_first.dart';
 import '../../theme/theme.dart';
 import '../../ui/button/igongo_button.dart';
 import '../../ui/toast/igongo_toast.dart';
@@ -68,6 +69,8 @@ class _BookSheetState extends ConsumerState<BookSheet> {
     if (needsDate && _date == null) return showIgongoToast(context, 'Pick a day first.');
     if (_o.kind == 'nights' && _endDate == null) return showIgongoToast(context, 'Pick the check-out day.');
     if (_o.slots.isNotEmpty && _slot == null) return showIgongoToast(context, 'Pick a time.');
+    // A visitor signs in first; their choices stay on screen.
+    if (!signedInOrAsk(context, ref)) return;
     setState(() => _busy = true);
     try {
       // Step 2: book; the API checks availability and prices it.

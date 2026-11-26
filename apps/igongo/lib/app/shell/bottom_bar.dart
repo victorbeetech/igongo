@@ -1,11 +1,12 @@
-// The bottom bar of the signed-in app: Home, Search, Alerts and Me, or Home,
-// the tabs the super admin set for the person's roles (module 3, up to
-// three), and Me.
+// The bottom bar of the signed-in app: Home, My bookings (guests) and Me, or
+// Home, the tabs the super admin set for the person's roles (module 3, up to
+// three), and Me. Search and Alerts join the defaults once they are live.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../shared/layout/application/layout_providers.dart';
+import '../../shared/session/session_controller.dart';
 import '../../shared/ui/icons/module_icons.dart';
 import '../catalog/catalog_index.dart';
 import '../navigation/open_target.dart';
@@ -21,12 +22,8 @@ class BottomBar extends ConsumerWidget {
   // Each tab: the screen it opens, its label and its icon.
   static const _home = ('home', 'Home', Icons.home_outlined);
   static const _me = ('S00-31', 'Me', Icons.person_outline);
-  static const _defaults = [
-    _home,
-    ('S00-25', 'Search', Icons.search),
-    ('S00-28', 'Alerts', Icons.notifications_none),
-    _me,
-  ];
+  static const _guestDefaults = [_home, ('S54-05', 'My bookings', Icons.receipt_long_outlined), _me];
+  static const _staffDefaults = [_home, _me];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,7 +34,7 @@ class BottomBar extends ConsumerWidget {
         .take(3)
         .toList();
     final tabs = set.isEmpty
-        ? _defaults
+        ? ((ref.watch(sessionProvider).valueOrNull?.isStaff ?? false) ? _staffDefaults : _guestDefaults)
         : [_home, for (final id in set) (id, index.nameOf(id), ModuleIcons.of(index.screens[id]!.module)), _me];
     // Step 2: the role home is S00-21; any other screen keeps Home selected.
     final selected = tabs.indexWhere((t) => t.$1 == currentId).clamp(0, tabs.length - 1);

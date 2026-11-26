@@ -1,17 +1,20 @@
 // S00-02 First-run welcome: three short slides about Igongo, then Get
-// started (language, then sign in) or Explore as a guest.
+// started (sign in or create an account) or Explore as a guest. Either way
+// the welcome is not shown again on this phone.
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../shared/catalog/catalog.dart';
+import '../../../../shared/session/session_controller.dart';
 import '../../../../shared/theme/theme.dart';
 import '../../../../shared/ui/button/igongo_button.dart';
 import '../../../../shared/ui/logo/igongo_logo.dart';
 import 'welcome_slide.dart';
 
 /// The first-run welcome slides.
-class WelcomeScreen extends StatefulWidget {
+class WelcomeScreen extends ConsumerStatefulWidget {
   /// Creates the welcome for [screen].
   const WelcomeScreen(this.screen, {super.key});
 
@@ -19,12 +22,18 @@ class WelcomeScreen extends StatefulWidget {
   final ScreenContext screen;
 
   @override
-  State<WelcomeScreen> createState() => _WelcomeScreenState();
+  ConsumerState<WelcomeScreen> createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> {
+class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
   // Which slide is showing, for the dots.
   int _page = 0;
+
+  /// Remembers the welcome was seen, then opens [id].
+  Future<void> _leave(String id) async {
+    await ref.read(firstRunStoreProvider).markWelcomeSeen();
+    if (mounted) widget.screen.open(id);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,14 +84,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ],
               ),
               const SizedBox(height: IgongoSpace.xl),
-              // Step 3: Get started picks the language first; Explore opens the guest home.
-              IgongoButton(label: 'Get started', expand: true, onPressed: () => widget.screen.open('S00-03')),
+              // Step 3: Get started opens sign-in; Explore opens the guest home.
+              IgongoButton(label: 'Get started', expand: true, onPressed: () => _leave('S00-05')),
               const SizedBox(height: IgongoSpace.sm),
               IgongoButton(
                 label: 'Explore as a guest',
                 variant: ButtonVariant.secondary,
                 expand: true,
-                onPressed: () => widget.screen.open('S00-04'),
+                onPressed: () => _leave('home'),
               ),
             ],
           ),

@@ -1,7 +1,7 @@
 // S00-05 Sign in: one entry point for everyone. Email and password sign in
 // for real against the Igongo API (the session is kept in the phone's secure
-// storage), then the other methods the super admin has switched on, and
-// guest sign-up.
+// storage). New guests create an account on S00-18. Google and Apple join
+// here once their app sign-in is set up (see docs/APP-WIRING.md).
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
@@ -15,7 +15,6 @@ import '../../../../shared/ui/button/igongo_button.dart';
 import '../../../../shared/ui/field/igongo_field.dart';
 import '../../../../shared/ui/logo/igongo_logo.dart';
 import '../../../../shared/ui/toast/igongo_toast.dart';
-import 'sign_in_method.dart';
 
 /// The sign-in screen.
 class SignInScreen extends ConsumerStatefulWidget {
@@ -75,7 +74,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
               const SizedBox(height: IgongoSpace.lg),
               Text('Sign in', textAlign: TextAlign.center, style: context.text.headlineSmall),
               Text(
-                'Staff, riders and guests all sign in here.',
+                'Guests and hotel staff sign in here with their own account.',
                 textAlign: TextAlign.center,
                 style: context.text.bodySmall,
               ),
@@ -99,39 +98,11 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
               const SizedBox(height: IgongoSpace.md),
               IgongoButton(label: _busy ? 'Signing in…' : 'Sign in', expand: true, onPressed: _busy ? null : _signIn),
               const SizedBox(height: IgongoSpace.lg),
-              Row(
-                children: [
-                  const Expanded(child: Divider()),
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Text('or', style: context.text.bodySmall),
-                  ),
-                  const Expanded(child: Divider()),
-                ],
-              ),
-              const SizedBox(height: IgongoSpace.sm),
-              // Step 3: the other methods, each its own screen.
-              for (final m in SignInMethod.all)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: IgongoSpace.sm),
-                  child: IgongoButton(
-                    label: m.label,
-                    icon: m.icon,
-                    variant: ButtonVariant.secondary,
-                    expand: true,
-                    onPressed: () => screen.open(m.screenId),
-                  ),
-                ),
-              // Step 4: guest sign-up, and the locked account case for review.
+              // Step 3: guest sign-up (staff accounts come from the hotel).
               IgongoButton(
-                label: 'New guest? Create an account',
+                label: 'New here? Create an account',
                 variant: ButtonVariant.text,
                 onPressed: () => screen.open('S00-18'),
-              ),
-              IgongoButton(
-                label: 'Prototype: show a locked account',
-                variant: ButtonVariant.text,
-                onPressed: () => screen.open('S00-20'),
               ),
             ],
           ),

@@ -14,6 +14,7 @@ import '../../../shared/api/api_client.dart';
 import '../../../shared/format/request_key.dart';
 import '../../../shared/format/ugx.dart';
 import '../../../shared/payments/presentation/pay_sheet.dart';
+import '../../../shared/session/sign_in_first.dart';
 import '../../../shared/theme/theme.dart';
 import '../../../shared/ui/button/igongo_button.dart';
 import '../../../shared/ui/field/igongo_field.dart';
@@ -116,6 +117,8 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
     if ((type == 'room_service' || type == 'dine_in') && _text(_place) == null) {
       return showIgongoToast(context, type == 'dine_in' ? 'Type your table.' : 'Type your room.');
     }
+    // A visitor signs in first; their choices stay on screen.
+    if (!signedInOrAsk(context, ref)) return;
     setState(() => _busy = true);
     try {
       // Step 2: place it; the API prices it again and applies the rules and the code.

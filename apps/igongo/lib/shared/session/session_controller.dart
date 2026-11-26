@@ -8,10 +8,14 @@ import '../api/api_client.dart';
 import '../api/api_config.dart';
 import '../api/api_exception.dart';
 import 'session.dart';
+import 'first_run_store.dart';
 import 'session_store.dart';
 
 /// Where the token is kept. Tests override it with a [MemorySessionStore].
 final sessionStoreProvider = Provider<SessionStore>((ref) => SecureSessionStore());
+
+/// Where "the welcome was seen" is kept. Tests override it.
+final firstRunStoreProvider = Provider<FirstRunStore>((ref) => SecureFirstRunStore());
 
 /// The API client, sending the current session's token.
 final apiClientProvider = Provider<ApiClient>((ref) {
@@ -41,15 +45,49 @@ class SessionController extends AsyncNotifier<Session?> {
   Future<void> signInWithEmail(String email, String password) async {
     // Better Auth's bearer plugin sends the session token in `set-auth-token`.
     final reply = await ref.read(apiClientProvider).post('/api/auth/sign-in/email', {
-      'email': email,
+      'email': email.trim().toLowerCase(),
       'password': password,
     });
+    await _start(reply);
+  }
+
+  /// Keeps the session token from a sign-in or sign-up reply.
+  Future<void> _start(Map<String, dynamic> reply) async {
+    // Accounts with 2-step on finish signing in on the web portal for now (the app's 2-step screen is not built yet).
+    if (reply['twoFactorRedirect'] == true) {
+      throw const ApiException(
+        403,
+        'two_factor_required',
+        'This account uses 2-step sign-in. Please sign in on the web portal.',
+      );
+    }
     final headers = reply['_headers'] as Map<String, String>? ?? const {};
     final token = headers['set-auth-token'] ?? '${reply['token'] ?? ''}';
     if (token.isEmpty) throw const ApiException(500, 'no_token', 'Sign-in worked but no session came back. Try again.');
     final session = await _load(token);
     await ref.read(sessionStoreProvider).write(token);
     state = AsyncData(session);
+  }
+
+  /// Creates a guest account in the app (the web portal is for staff only),
+  /// then signs in with it. The server makes every new account a guest
+  /// account; nobody can pick a role here.
+  /// @throws ApiException with the API's message (weak password, email taken...)
+  Future<void> signUpWithEmail(String name, String email, String password) async {
+    final reply = await ref.read(apiClientProvider).post('/api/auth/sign-up/email', {
+      'name': name.trim(),
+      'email': email.trim().toLowerCase(),
+      'password': password,
+    });
+    await _start(reply);
+  }
+
+  /// Deletes the person's own account on the server, then forgets it here.
+  /// Staff accounts are refused by the server (HR closes them).
+  Future<void> deleteMyAccount() async {
+    await ref.read(apiClientProvider).post('/api/auth/delete-user', const <String, dynamic>{});
+    await ref.read(sessionStoreProvider).clear();
+    state = const AsyncData(null);
   }
 
   /// Signs out here and on the server.
@@ -73,6 +111,7 @@ class SessionController extends AsyncNotifier<Session?> {
       token: token,
       userId: '${account['id'] ?? access['userId']}',
       name: '${account['name'] ?? ''}',
+      email: '${account['email'] ?? ''}',
       isStaff: access['isStaff'] == true,
       permissions: [
         for (final p in access['permissions'] as List<dynamic>? ?? const []) '${(p as Map<String, dynamic>)['key']}',

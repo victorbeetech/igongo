@@ -10,7 +10,7 @@
 
 import { zValidator } from "@hono/zod-validator";
 import type { RoleAssigner } from "@igongo/contracts/roles-permissions";
-import { actorOf, AppError, requirePermission, scopeReaches, staffScope, type ActorEnv, type ChangeContext } from "@igongo/core";
+import { actorOf, AppError, recordChange, requirePermission, scopeReaches, staffScope, type ActorEnv, type ChangeContext } from "@igongo/core";
 import { Hono, type Context } from "hono";
 import type { StaffRepository } from "../application/ports/staff-repository";
 import { enrolStaff } from "../application/use-cases/enrol-staff";
@@ -58,6 +58,10 @@ export function hrRouter(deps: (c: Context<ActorEnv>) => HrDeps) {
         const member = await deps(c).staff.get(c.req.param("id"));
         // Out of scope reads the same as missing, so nothing leaks.
         if (!member || !scopeReaches(scope, member)) throw new AppError("not_found", "Staff member not found.");
+        // Personal details (phone, email, emergency contact) seen by someone else are logged.
+        if (member.userId !== actorOf(c).userId) {
+          await recordChange(deps(c).change, { module: "hr-records", action: "staff.viewed", recordType: "staff", recordId: member.staffId, summary: `Viewed ${member.name}'s staff record` });
+        }
         return c.json(member);
       })
       .patch("/staff/:id", requirePermission(P.edit), zValidator("json", updateBody), async (c) => {

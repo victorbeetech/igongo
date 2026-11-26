@@ -1,7 +1,8 @@
 "use client";
 // S04-02 Account detail: one account's status, sign-in methods, roles and
 // signed-in devices, with approve, lock, unlock and sign-out-everywhere.
-// Roles are given on the Role holders page (Roles & Permissions).
+// Roles are given on the Role holders page (Roles & Permissions). A guest
+// account becomes staff only through the staff match panel.
 
 import { useQuery } from "@tanstack/react-query";
 import { useAccount, useAccountSessions, useSetStatus, useSignOutAccount, type Account } from "@/modules/m04-users-login/data/accountsApi";
@@ -10,10 +11,12 @@ import { LiveData } from "@/shared/api/LiveData";
 import type { ScreenContext } from "@/shared/catalog/types";
 import { recordIdOf } from "@/shared/navigation/recordId";
 import { useAddress } from "@/shared/navigation/useAddress";
+import { can, useMe } from "@/shared/session/useMe";
 import { Button } from "@/shared/ui/button/Button";
 import { Card } from "@/shared/ui/card/Card";
 import { StatusChip } from "@/shared/ui/chip/StatusChip";
 import { SectionHeader } from "@/shared/ui/section/SectionHeader";
+import { StaffMatchPanel } from "../staff-match/StaffMatchPanel";
 
 /** The account detail page; the account ID is the last part of the address. */
 export function AccountDetailPage({ screen }: { screen: ScreenContext }) {
@@ -32,6 +35,7 @@ function AccountBody({ account: a }: { account: Account }) {
   const roles = useQuery({ queryKey: ["user-roles", a.id], queryFn: () => api<{ items: { roleId: string; endsAt: string | null }[] }>(`/api/access/users/${a.id}/roles`) });
   const setStatus = useSetStatus(a.id);
   const signOut = useSignOutAccount(a.id);
+  const me = useMe();
   return (
     <div className="grid gap-4 p-4">
       <Card>
@@ -49,6 +53,7 @@ function AccountBody({ account: a }: { account: Account }) {
           <Button variant="secondary" onClick={() => signOut.mutate(undefined)}>Sign out everywhere</Button>
         </div>
       </Card>
+      {a.kind === "client" && can(me.data, "users-login.staff-match.approve") && <StaffMatchPanel userId={a.id} emailVerified={a.emailVerified} />}
       <SectionHeader title="Roles" />
       <LiveData query={roles} name="Roles" isEmpty={(d) => d.items.length === 0}>
         {(d) => <ul className="grid gap-1 text-body">{d.items.map((r) => <li key={r.roleId}>{r.roleId.replace(/^role_/, "")}{r.endsAt ? ` (until ${new Date(r.endsAt).toLocaleDateString()})` : ""}</li>)}</ul>}

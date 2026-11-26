@@ -14,6 +14,13 @@ class AppPreferences extends ChangeNotifier {
   String _roleKey = 'super-admin';
   ViewState _state = ViewState.normal;
   bool _clientView = false;
+  bool _previewMode = false;
+
+  /// Design review: the preview choices (role, screen state) apply without
+  /// signing in. Only tests and review builds turn it on; in the real app the
+  /// preview is for the super admin only (see ViewRules).
+  bool get previewMode => _previewMode;
+  set previewMode(bool value) => _update(() => _previewMode = value);
 
   /// Light, dark or follow the phone.
   ThemeMode get themeMode => _themeMode;

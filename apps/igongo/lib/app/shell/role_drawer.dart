@@ -1,7 +1,8 @@
 // The side menu: the modules the person's role can open, built from the role
 // at run time, never hard-coded. Signed in, it follows the layout the super
 // admin published for the person's roles (`/api/layout/me`); signed out or
-// offline, the preview role from the catalog. The super admin sees every module, so a long
+// offline, the person's own role from the catalog (the guest side when
+// signed out; any role only in the super admin's preview). The super admin sees every module, so a long
 // menu gets a search box at the top that filters it as the person types.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,10 +12,12 @@ import 'package:material_ui/material_ui.dart';
 import '../../shared/catalog/module_matches.dart';
 import '../../shared/layout/application/layout_providers.dart';
 import '../../shared/preferences/preferences.dart';
+import '../../shared/session/session_controller.dart';
 import '../../shared/theme/theme.dart';
 import '../../shared/ui/icons/module_icons.dart';
 import '../../shared/ui/logo/igongo_logo.dart';
 import '../catalog/catalog_index.dart';
+import '../router/view_rules.dart';
 import '../navigation/open_target.dart';
 
 /// The menu of modules for the current role.
@@ -37,7 +40,7 @@ class _RoleDrawerState extends ConsumerState<RoleDrawer> {
   Widget build(BuildContext context) {
     // Step 1: the role and the modules it reaches.
     final index = CatalogIndex.instance;
-    final role = index.roles[PreferencesScope.of(context).roleKey] ?? index.defaultRole;
+    final role = ViewRules.role(PreferencesScope.of(context), ref.watch(sessionProvider).valueOrNull);
     final layout = ref.watch(myLayoutProvider).valueOrNull;
     final everything = role.key == 'super-admin';
     final modules = layout == null

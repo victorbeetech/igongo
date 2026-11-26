@@ -19,8 +19,7 @@ class WebOnlyLayout extends StatelessWidget {
   Widget build(BuildContext context) => StateMessage(
     icon: Icons.desktop_windows_outlined,
     title: '${screen.spec.name} is on the web portal',
-    message:
-        '${screen.spec.purpose}.\nOpen portal.igongo.co.ug${screen.spec.route.replaceAll(':id', 'sample')} on a computer.',
+    message: '${screen.spec.purpose}.\nOpen igongo.victorbee.com on a computer and sign in with your staff account.',
     actions: [IgongoButton(label: 'Back to home', onPressed: () => screen.open('home'))],
   );
 }

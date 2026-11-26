@@ -82,6 +82,14 @@ flutter run -d "iPhone 16 Pro Max" --dart-define=IGONGO_API_URL=http://localhost
 - **"Xcode build failed" the first time:** run `flutter clean && flutter pub get` and try again. If it mentions a missing iOS platform, install the simulator runtime (step 2 above).
 - **"CocoaPods not installed" or Swift Package errors:** run `flutter doctor` and follow what it says (`brew install cocoapods` if it asks for it).
 - **Stuck on the splash screen or "cannot reach the server":** check the Mac has internet, and that `https://igongo-api.victorbee.com/health` opens in Safari.
+- **"Exited with status code 255" after a few seconds, or "Binary Flutter.framework/Flutter does not exist, cannot thin":** the Flutter engine files on the Mac are stale. Clear them and download them again (this fixed it on the Mac mini, 26 Nov):
+  ```bash
+  cd ~/igongo/apps/igongo
+  rm -rf ~/flutter/bin/cache/artifacts/engine/ios* ~/flutter/bin/cache/engine.stamp ios/Pods ios/Podfile.lock build ~/Library/Developer/Xcode/DerivedData/Runner-*
+  flutter precache --ios --force
+  flutter clean && flutter pub get && flutter run -d "iPhone 16 Pro Max"
+  ```
+  (If Flutter is not installed in `~/flutter`, use the folder `which flutter` shows, without `/bin/flutter`.)
 - **Old screens after a pull:** press **R** in the Terminal, or stop with **q** and run `flutter run` again.
 
 To put the app on a real iPhone or on TestFlight, see [MAC-STEPS](MAC-STEPS.md).

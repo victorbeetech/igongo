@@ -1,12 +1,17 @@
 "use client";
-// The web portal frame: the red top bar with the logo, title, search, alerts
-// and preview; the role's module menu at the side; banners; then the page.
+// The web portal frame: the red top bar with the logo, title, search and
+// alerts; the role's module menu at the side (with Preview at its foot, for
+// the super admin only); banners; then the page. It also follows the
+// server's access rules (2-step first, staff only) and signs out shared
+// computers after the super admin's idle minutes.
 
 import Link from "next/link";
-import { Bell, Menu, Search, SlidersHorizontal, UserRound } from "lucide-react";
+import { Bell, Menu, Search, UserRound } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import type { RoleSpec, ScreenSpec } from "@/shared/catalog/types";
 import { PreviewPanel } from "@/shared/preview/PreviewPanel";
+import { useAccessGuard } from "@/shared/session/useAccessGuard";
+import { useIdleSignOut } from "@/shared/session/useIdleSignOut";
 import { StatusBanner } from "@/shared/ui/banner/StatusBanner";
 import { Logo } from "@/shared/ui/logo/Logo";
 import { PortalSidebar } from "./sidebar/PortalSidebar";
@@ -26,6 +31,8 @@ interface PortalShellProps {
 export function PortalShell({ spec, role, offline, children }: PortalShellProps) {
   const [menu, setMenu] = useState(false);
   const [preview, setPreview] = useState(false);
+  useAccessGuard();
+  useIdleSignOut();
   // Icon links in the red bar; white on Igongo red keeps strong contrast in both modes.
   const barLink = "inline-flex size-11 items-center justify-center rounded-md hover:bg-primary-dark";
   return (
@@ -41,11 +48,10 @@ export function PortalShell({ spec, role, offline, children }: PortalShellProps)
         <Link className={barLink} href="/global-search" aria-label="Search"><Search size={20} /></Link>
         <Link className={barLink} href="/notification-inbox" aria-label="Alerts"><Bell size={20} /></Link>
         <Link className={barLink} href="/my-profile/sample" aria-label="My profile"><UserRound size={20} /></Link>
-        <button type="button" className={barLink} aria-label="Preview" onClick={() => setPreview(true)}><SlidersHorizontal size={20} /></button>
       </header>
       <div className="flex flex-1">
         {/* Step 2: the sidebar: the role's modules and the search; a drawer on small screens. */}
-        <PortalSidebar role={role} activeCode={spec.id.slice(1, 3)} drawerOpen={menu} onCloseDrawer={() => setMenu(false)} />
+        <PortalSidebar role={role} activeCode={spec.id.slice(1, 3)} drawerOpen={menu} onCloseDrawer={() => setMenu(false)} onPreview={() => setPreview(true)} />
         {/* Step 3: the banners and the page. */}
         <main className="min-w-0 flex-1 pb-12">
           {offline && <StatusBanner tone="offline" message="You're offline. Saved items show; new ones sync later." action="Sync status" href="/sync-status" />}
