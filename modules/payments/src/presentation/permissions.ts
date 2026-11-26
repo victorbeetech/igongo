@@ -9,6 +9,8 @@ export const PAYMENT_PERMISSIONS = {
   manual: "payments.manual.create",
   /** Refund a payment (S77-05). */
   refund: "payments.refunds.approve",
+  /** The settlement report (S77-07). */
+  reports: "payments.reports.view",
   /** The method switches (S77-06). */
   methods: "payments.methods.edit",
 } as const;

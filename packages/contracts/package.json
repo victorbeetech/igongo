@@ -17,6 +17,12 @@
     "./food-ordering": "./food-ordering/index.ts",
     "./delivery-riders": "./delivery-riders/index.ts",
     "./crm-guests": "./crm-guests/index.ts",
-    "./catalog/modules.json": "./catalog/modules.json"
+    "./catalog/modules.json": "./catalog/modules.json",
+    "./files-media": "./files-media/index.ts",
+    "./faults-maintenance": "./faults-maintenance/index.ts",
+    "./advances-loans": "./advances-loans/index.ts",
+    "./bonuses-rewards": "./bonuses-rewards/index.ts",
+    "./payroll": "./payroll/index.ts",
+    "./reports-analytics": "./reports-analytics/index.ts"
   }
 }

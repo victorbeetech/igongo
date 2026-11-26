@@ -6,6 +6,7 @@
  */
 
 import { auditRecorder, DrizzleAuditStore } from "@igongo/audit-trail";
+import { memoryBlobStore, r2BlobStore, type BlobStore } from "@igongo/files-media";
 import type { AuditRecorder } from "@igongo/contracts/audit-trail";
 import { createLogger, SecretBox, type ChangeContext, type Database } from "@igongo/core";
 import { accessService, DrizzleAssignmentRepository, DrizzleRoleRepository } from "@igongo/roles-permissions";
@@ -23,6 +24,7 @@ import type { Env } from "../shell/env";
 import { readConfig } from "../shell/env";
 import { authConfigFrom } from "./auth-config";
 import { GuestServices } from "./guests/guest-services";
+import { ManagerServices } from "./managers/manager-services";
 import { noticeAnnouncer } from "./staff/notice-announcer";
 import { StaffServices } from "./staff/staff-services";
 
@@ -91,6 +93,16 @@ export class RequestServices {
   guestModules(actor: { userId: string; name: string } | undefined): GuestServices {
     const cfg = this.config;
     return new GuestServices(this.db, this.changeContext(actor), this.modules(), this.secrets(), { api: cfg.baseURL, web: cfg.webOrigins[0] ?? cfg.baseURL });
+  }
+
+  // --- Managers and money (files, faults, checkups, payroll, advances, bonuses, earnings, reports, chat, records) ---
+  /** Files' bytes: the R2 bucket, memory for local runs, or null (uploads say "not set up"). */
+  private readonly blobs = once((): BlobStore | null => (this.env.FILES ? r2BlobStore(this.env.FILES) : this.config.environment === "development" ? memoryBlobStore() : null));
+  private managers: ManagerServices | null = null;
+
+  /** The manager modules for [actor]'s change context; one per request, so loaded deps are kept. */
+  managerModules(actor: { userId: string; name: string } | undefined): ManagerServices {
+    return (this.managers ??= new ManagerServices(this.db, this.changeContext(actor), this.modules(), this.staffModules(), this.blobs(), this.auditStore()));
   }
 
   /** The change context for the signed-in caller, for audited use cases. */

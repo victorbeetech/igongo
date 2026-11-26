@@ -12,6 +12,18 @@ import type { Env } from "../src/shell/env";
 import { MIGRATIONS } from "../src/migrations/migrations.g";
 import { runMigrations } from "../src/migrations/run-migrations";
 
+/** A pretend R2 bucket in memory, with the two calls Files & Media uses. */
+function fakeBucket(): R2Bucket {
+  const items = new Map<string, { body: Uint8Array; type: string }>();
+  return {
+    put: async (key: string, body: Uint8Array, opts?: { httpMetadata?: { contentType?: string } }) => void items.set(key, { body, type: opts?.httpMetadata?.contentType ?? "" }),
+    get: async (key: string) => {
+      const item = items.get(key);
+      return item ? { body: item.body, httpMetadata: { contentType: item.type } } : null;
+    },
+  } as unknown as R2Bucket;
+}
+
 /** The Worker environment for tests. */
 export const testEnv: Env = {
   ENVIRONMENT: "test",
@@ -21,6 +33,7 @@ export const testEnv: Env = {
   SETTINGS_ENCRYPTION_KEY: toBase64(crypto.getRandomValues(new Uint8Array(32))),
   BOOTSTRAP_ADMIN_EMAIL: "owner@example.com",
   PUSH_SENDER: "mock",
+  FILES: fakeBucket(),
 };
 
 /** A fresh API with every migration applied. */
@@ -50,6 +63,8 @@ function browser(app: ReturnType<typeof createApp>) {
     const set = res.headers.getSetCookie().map((c) => c.split(";")[0]);
     if (set.length) cookie = set.join("; ");
     const text = await res.text();
-    return { status: res.status, body: text ? (JSON.parse(text) as Record<string, unknown>) : {}, headers: res.headers };
+    // JSON replies are parsed; files and CSV come back as { text }.
+    const json = (res.headers.get("content-type") ?? "").includes("json");
+    return { status: res.status, body: text ? (json ? (JSON.parse(text) as Record<string, unknown>) : { text }) : {}, headers: res.headers };
   };
 }

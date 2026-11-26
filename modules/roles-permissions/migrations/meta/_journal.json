@@ -29,6 +29,13 @@
       "when": 1795800000000,
       "tag": "0003_guest_module_settings",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1795900000000,
+      "tag": "0004_manager_module_permissions",
+      "breakpoints": true
     }
   ]
 }

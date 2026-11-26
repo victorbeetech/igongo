@@ -3,7 +3,7 @@
  * file. See modules/museum/README.md.
  */
 
-import { bookingsDeps, bookingsRouter, type BookingsDeps } from "@igongo/bookings-kit";
+import { bookingKpis, bookingsDeps, bookingsRouter, type BookingsDeps } from "@igongo/bookings-kit";
 import type { ChangeContext, Database } from "@igongo/core";
 import { museumModule } from "./domain/museum-module";
 import { museumTables } from "./infrastructure/db/schema";
@@ -16,3 +16,6 @@ export const museumDeps = (db: Database, change: ChangeContext): BookingsDeps =>
 /** The routes, mounted at `/api/museum`. */
 export const museumRouter = (deps: Parameters<typeof bookingsRouter>[1]) => bookingsRouter(museumModule.key, deps);
 
+
+/** This module's numbers for the management dashboard. */
+export const museumKpis = (db: Database) => bookingKpis(museumModule, museumTables, db, "Museum");

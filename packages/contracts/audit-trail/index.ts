@@ -51,3 +51,30 @@ export const AUDIT_EVENTS = {
   alertRaised: "audit.alert_raised",
   exported: "audit.exported",
 } as const;
+
+/** Filters for reading the trail back (Records Archive & Search). Every filter is optional. */
+export interface AuditQuery {
+  actorId?: string;
+  module?: string;
+  action?: string;
+  recordType?: string;
+  recordId?: string;
+  from?: Date;
+  to?: Date;
+  /** Words to find in the summary and the person's name. */
+  text?: string;
+  beforeSeq?: number;
+  limit: number;
+}
+
+/** One entry read back. */
+export interface AuditRecord extends AuditEntryInput {
+  seq: number;
+  id: string;
+  occurredAt: Date;
+}
+
+/** Reads the trail. Nothing can change or delete an entry. */
+export interface AuditReader {
+  search(query: AuditQuery): Promise<{ items: AuditRecord[]; nextBeforeSeq: number | null }>;
+}

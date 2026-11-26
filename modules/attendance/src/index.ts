@@ -12,3 +12,4 @@ export { DrizzleClockEventRepository } from "./infrastructure/db/drizzle-clock-e
 export { SettingsRulesStore } from "./infrastructure/db/settings-rules-store";
 export { ATTENDANCE_PERMISSIONS } from "./presentation/permissions";
 export { attendanceRouter } from "./presentation/attendance-router";
+export { attendanceKpis } from "./infrastructure/attendance-kpis";

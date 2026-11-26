@@ -28,18 +28,11 @@ import { poolRouter } from "@igongo/pool";
 import { roomBookingsRouter } from "@igongo/room-bookings";
 import type { Context, Hono } from "hono";
 import type { ApiEnv } from "../../shell/api-env";
-import { moduleGate } from "../module-gate";
+import { mountModule as mount } from "../mount-module";
 import type { BookingModuleKey } from "./guest-services";
 
 /** The guest services for this request. */
 const guests = (c: Context<ActorEnv>) => (c as unknown as Context<ApiEnv>).var.services.guestModules(c.var.actor);
-
-/** Mounts [router] at `/api/[path]` behind the switch of module [key]. */
-function mount(app: Hono<ApiEnv>, path: string, key: string, router: Hono<ActorEnv>) {
-  app.use(`/api/${path}/*`, moduleGate(key));
-  app.use(`/api/${path}`, moduleGate(key));
-  app.route(`/api/${path}`, router as unknown as Hono<ApiEnv>);
-}
 
 /** A booking module's deps getter. */
 const booking = (key: BookingModuleKey) => (c: Context<ActorEnv>) => guests(c).booking(key);

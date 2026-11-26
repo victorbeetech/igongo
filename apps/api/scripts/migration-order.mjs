@@ -32,6 +32,15 @@ export const MODULES = [
   "events-conferences",
   "pool",
   "crafts-bookshop",
+  // Managers and money (build step 4).
+  "files-media",
+  "faults-maintenance",
+  "inspections",
+  "advances-loans",
+  "bonuses-rewards",
+  "payroll",
+  "reports-analytics",
+  "chat",
 ];
 
 /** Every migration file as { module, name, path }, in apply order. */

@@ -44,4 +44,11 @@ export interface PaymentProvider {
   trustCallback(headers: Headers): Promise<boolean>;
   /** Our payment ID inside a callback body, when the URL did not carry it. */
   paymentIdIn(body: unknown): string | null;
+  /**
+   * Sends [amount] back to the payer through the provider (S77-05). Missing
+   * for providers whose refund API needs keys the hotel has not got yet;
+   * those refunds are paid back by hand and only recorded.
+   * @throws AppError when the provider refuses
+   */
+  refund?(providerRef: string, paymentId: string, amount: number): Promise<{ message: string }>;
 }

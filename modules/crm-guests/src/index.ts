@@ -10,3 +10,4 @@ export { SettingsCrmStore } from "./infrastructure/db/settings-crm-store";
 export { guestDirectory } from "./infrastructure/guest-directory";
 export { CRM_PERMISSIONS } from "./presentation/permissions";
 export { crmRouter } from "./presentation/crm-router";
+export { guestKpis } from "./infrastructure/guest-kpis";

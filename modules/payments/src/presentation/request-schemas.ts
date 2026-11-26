@@ -31,3 +31,6 @@ export const settingsBody = z.object({
   allowManual: z.boolean(),
   environment: z.enum(["sandbox", "live"]),
 });
+
+/** `GET /payments/settlement`: hotel days, `to` included. */
+export const settlementQuery = z.object({ from: z.string().regex(/^\d{4}-\d{2}-\d{2}$/), to: z.string().regex(/^\d{4}-\d{2}-\d{2}$/) });
