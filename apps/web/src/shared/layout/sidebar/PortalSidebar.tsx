@@ -10,11 +10,14 @@
 // switcher: one account is one kind. Preview sits at the foot of the
 // sidebar, for the super admin only.
 
-import { PanelLeftClose, PanelLeftOpen, Search, SlidersHorizontal } from "lucide-react";
+import { LogOut, PanelLeftClose, PanelLeftOpen, Search, SlidersHorizontal } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { signOut } from "@/modules/m04-users-login/data/authApi";
 import { catalog } from "@/shared/catalog/catalogIndex";
 import type { RoleSpec } from "@/shared/catalog/types";
 import { useMe } from "@/shared/session/useMe";
+import { showToast } from "@/shared/ui/toast/toast";
 import { layoutModules, useMyLayout } from "@/shared/session/useMyLayout";
 import { SidebarModules } from "./SidebarModules";
 import { SidebarSearch } from "./SidebarSearch";
@@ -46,6 +49,16 @@ export function PortalSidebar({ role, activeCode, drawerOpen, onCloseDrawer, onP
   const me = useMe().data;
   const roleName = me?.access.roles[0]?.name ?? role.name;
   const canPreview = !!me?.access.roles.some((r) => r.key === "super-admin");
+  const router = useRouter();
+  // Signs out on the server, then opens the sign-in page; a failure is shown, never hidden.
+  const endSession = async () => {
+    try {
+      await signOut();
+      router.replace("/sign-in");
+    } catch (e) {
+      showToast(e instanceof Error ? e.message : "Could not sign out. Please try again.");
+    }
+  };
   const reach = new Set(role.tiles.map(([, id]) => id!.slice(1, 3)));
   const all = catalog.modules.filter((m) => m.code !== "00");
   const modules = layout ? layoutModules(layout, all) : all.filter((m) => role.key === "super-admin" || reach.has(m.code));
@@ -83,7 +96,17 @@ export function PortalSidebar({ role, activeCode, drawerOpen, onCloseDrawer, onP
       <nav aria-label="Modules" className={`min-h-0 flex-1 overflow-y-auto px-2 pb-4 ${searching && !folded ? "hidden" : ""}`}>
         <SidebarModules modules={modules} activeCode={activeCode} folded={folded} />
       </nav>
-      {/* Step 5: Preview at the foot, for the super admin only. */}
+      {/* Step 5: sign out, for everyone who is signed in; then the sign-in page. */}
+      {me && (
+        <div className="border-t border-line p-2">
+          <button type="button" onClick={() => void endSession()} title="Sign out" aria-label="Sign out"
+            className={`flex min-h-10 w-full items-center gap-3 rounded-md px-3 text-label text-muted hover:bg-surface-alt hover:text-ink ${folded ? "justify-center px-0" : ""}`}>
+            <LogOut size={18} aria-hidden />
+            {!folded && <span>Sign out</span>}
+          </button>
+        </div>
+      )}
+      {/* Step 6: Preview at the foot, for the super admin only. */}
       {canPreview && (
         <div className="border-t border-line p-2">
           <button type="button" onClick={onPreview} title="Preview" aria-label="Preview"

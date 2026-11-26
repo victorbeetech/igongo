@@ -4,7 +4,7 @@
 // Pages only write the "normal" view.
 
 import type { UseQueryResult } from "@tanstack/react-query";
-import { AlertCircle, Inbox, Lock, LogIn, RefreshCw } from "lucide-react";
+import { AlertCircle, Inbox, Lock, LogIn, RefreshCw, ShieldCheck } from "lucide-react";
 import type { ReactNode } from "react";
 import { Button } from "@/shared/ui/button/Button";
 import { StateMessage } from "@/shared/ui/message/StateMessage";
@@ -39,6 +39,14 @@ export function ErrorState({ error, name, retry }: { error: unknown; name: strin
     return (
       <StateMessage icon={<LogIn size={36} />} illustration="denied" tone="warning" title="Please sign in" message={`Sign in to see ${name}.`}>
         <Button href="/sign-in">Sign in</Button>
+      </StateMessage>
+    );
+  }
+  // Step 1: the super admin (and sensitive roles) must set up 2-step before anything opens.
+  if (e.code === "two_factor_required") {
+    return (
+      <StateMessage icon={<ShieldCheck size={36} />} illustration="denied" tone="warning" title="Set up 2-step sign-in first" message="Your role needs an authenticator app before these screens open. Set it up in Sign-in and 2-step.">
+        <Button href="/link-sign-in-methods">Set up 2-step</Button>
       </StateMessage>
     );
   }
