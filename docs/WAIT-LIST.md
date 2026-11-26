@@ -48,3 +48,10 @@ Design sheets: guest home, food shop (with search and an add-to-cart bar), cart 
 - Food shop: "Deals & Discounts" rows and a filter button need a public promotions list from the API (not available yet). The shop rows show real outlets and their order types; delivery time and fee per shop are not in the API yet.
 - The same shop-row, chip-row and product-grid widgets (`shared/ui/guest/`) are to be applied on the other guest screens (rooms, spa, events, shop) one at a time as their live data exists.
 - Demo food menu (`m62_food_ordering/demo/`): switch off with `demoMenuOn = false` and delete the folder before go-live.
+
+## 10. Ticket and booking screens (owner, 26 Nov; plan only, do after the guest screens are checked on the simulator)
+Reference images from the owner (ticket-ref-1 to 3). Three parts:
+1. **Book a table:** a date strip, time-of-day slots (with offer badges where an offer applies), the booking option, and a Proceed button.
+2. **Ticket card:** an upcoming booking or trip with a barcode and a Download PDF button.
+3. **Seat or ticket picker:** a grid of seats or ticket types, with the price and a total.
+- Build with our theme tokens and font sizes, light and dark, on real API data only (table, event and museum bookings use the shared bookings engine).
