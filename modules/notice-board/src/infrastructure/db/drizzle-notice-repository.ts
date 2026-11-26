@@ -1,6 +1,6 @@
-/** `NoticeRepository` on Postgres, with Drizzle. Counts come from sub-queries in one round trip. */
+/** `NoticeRepository` on Postgres, with Drizzle. Counts for a page of posts come from grouped queries. */
 
-import type { Database } from "@igongo/core";
+import { countByKey, type Database } from "@igongo/core";
 import { and, asc, count, desc, eq, isNull, sql } from "drizzle-orm";
 import type { NoticeRepository, NoticeViewer } from "../../application/ports/notice-repository";
 import type { Notice } from "../../domain/notice";
@@ -20,20 +20,22 @@ export class DrizzleNoticeRepository implements NoticeRepository {
     const roles = sql`ARRAY[${sql.join(viewer.roleKeys.length ? viewer.roleKeys.map((r) => sql`${r}`) : [sql`''`], sql`, `)}]::text[]`;
     const audience = viewer.isStaff ? sql`(cardinality(${notices.audienceRoles}) = 0 OR ${notices.audienceRoles} && ${roles})` : sql`${notices.audienceRoles} && ${roles}`;
     const rows = await this.db
-      .select({
-        notice: notices,
-        likes: sql<number>`(select count(*) from ${noticeLikes} where ${noticeLikes.noticeId} = ${notices.id})`,
-        comments: sql<number>`(select count(*) from ${noticeComments} where ${noticeComments.noticeId} = ${notices.id})`,
-        reads: sql<number>`(select count(*) from ${noticeReads} where ${noticeReads.noticeId} = ${notices.id})`,
-        likedByMe: sql<boolean>`exists(select 1 from ${noticeLikes} where ${noticeLikes.noticeId} = ${notices.id} and ${noticeLikes.userId} = ${viewer.userId})`,
-        readByMe: sql<boolean>`exists(select 1 from ${noticeReads} where ${noticeReads.noticeId} = ${notices.id} and ${noticeReads.userId} = ${viewer.userId})`,
-      })
+      .select()
       .from(notices)
       .where(and(isNull(notices.removedAt), audience))
       .orderBy(desc(notices.pinned), desc(notices.createdAt))
       .limit(limit)
       .offset(offset);
-    return rows.map((r) => ({ ...r.notice, likes: Number(r.likes), comments: Number(r.comments), reads: Number(r.reads), likedByMe: Boolean(r.likedByMe), readByMe: Boolean(r.readByMe) }));
+    // The counts for this page of posts, in grouped queries.
+    const ids = rows.map((r) => r.id);
+    const [likes, comments, reads, liked, read] = await Promise.all([
+      countByKey(this.db, noticeLikes, noticeLikes.noticeId, ids),
+      countByKey(this.db, noticeComments, noticeComments.noticeId, ids),
+      countByKey(this.db, noticeReads, noticeReads.noticeId, ids),
+      countByKey(this.db, noticeLikes, noticeLikes.noticeId, ids, eq(noticeLikes.userId, viewer.userId)),
+      countByKey(this.db, noticeReads, noticeReads.noticeId, ids, eq(noticeReads.userId, viewer.userId)),
+    ]);
+    return rows.map((r) => ({ ...r, likes: likes.get(r.id) ?? 0, comments: comments.get(r.id) ?? 0, reads: reads.get(r.id) ?? 0, likedByMe: liked.has(r.id), readByMe: read.has(r.id) }));
   }
 
   async save(notice: Notice): Promise<void> {

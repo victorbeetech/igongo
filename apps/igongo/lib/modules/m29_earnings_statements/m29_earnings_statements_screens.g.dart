@@ -2,13 +2,14 @@
 // Module 29: Payslips & Lifetime Earnings. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm29_earnings_statements_overrides.dart';
 
 /// Module 29, Payslips & Lifetime Earnings: every screen and dialog, with its sample data.
-const m29EarningsStatementsModule = ModuleSpec(
+final m29EarningsStatementsModule = ModuleSpec(
   code: '29',
   name: 'Payslips & Lifetime Earnings',
   slug: 'earnings-statements',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S29-01',
       name: 'My payslips',
@@ -65,7 +66,8 @@ const m29EarningsStatementsModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m29Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D29-01',
       name: 'Unlock payslips',
@@ -83,7 +85,7 @@ const m29EarningsStatementsModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Payslip · October 2026',
       'Payslip · September 2026',

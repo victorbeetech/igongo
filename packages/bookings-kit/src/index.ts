@@ -12,6 +12,7 @@ export { bookingCode, depositOf, nightsBetween, priceOf, startingStatus } from "
 export { DEFAULT_BOOKING_RULES, type BookingRules } from "./domain/booking-rules";
 export type { Offering, OfferingKind } from "./domain/offering";
 export { bookingTables, type BookingTables } from "./infrastructure/db/booking-tables";
+export { bookingKpis } from "./infrastructure/booking-kpis";
 export { bookingPayable } from "./infrastructure/booking-payable";
 export { bookingsDeps } from "./infrastructure/bookings-deps-factory";
 export { bookingPermissions } from "./presentation/booking-permissions";

@@ -3,7 +3,7 @@
  * file. See modules/room-bookings/README.md.
  */
 
-import { bookingsDeps, bookingsRouter, type BookingsDeps } from "@igongo/bookings-kit";
+import { bookingKpis, bookingsDeps, bookingsRouter, type BookingsDeps } from "@igongo/bookings-kit";
 import type { ChangeContext, Database } from "@igongo/core";
 import { roomBookingsModule } from "./domain/room-bookings-module";
 import { roomBookingsTables } from "./infrastructure/db/schema";
@@ -16,3 +16,6 @@ export const roomBookingsDeps = (db: Database, change: ChangeContext): BookingsD
 /** The routes, mounted at `/api/rooms`. */
 export const roomBookingsRouter = (deps: Parameters<typeof bookingsRouter>[1]) => bookingsRouter(roomBookingsModule.key, deps);
 
+
+/** This module's numbers for the management dashboard. */
+export const roomBookingsKpis = (db: Database) => bookingKpis(roomBookingsModule, roomBookingsTables, db, "Room bookings");

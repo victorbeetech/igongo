@@ -12,3 +12,4 @@ export { orderPayable } from "./infrastructure/order-payable";
 export { orderTracker } from "./infrastructure/order-tracker";
 export { ORDER_PERMISSIONS } from "./presentation/permissions";
 export { ordersRouter } from "./presentation/orders-router";
+export { orderKpis } from "./infrastructure/order-kpis";

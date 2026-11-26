@@ -19,6 +19,7 @@ class IgongoField extends StatelessWidget {
     this.controller,
     this.keyboardType,
     this.onSubmitted,
+    this.onChanged,
   });
 
   /// The label above the box.
@@ -45,6 +46,9 @@ class IgongoField extends StatelessWidget {
   /// Called when the person presses Done.
   final ValueChanged<String>? onSubmitted;
 
+  /// Called on every change, for forms without a controller.
+  final ValueChanged<String>? onChanged;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -56,6 +60,7 @@ class IgongoField extends StatelessWidget {
           controller: controller,
           keyboardType: keyboardType,
           onSubmitted: onSubmitted,
+          onChanged: onChanged,
           obscureText: obscure,
           maxLines: obscure ? 1 : lines,
           decoration: InputDecoration(hintText: hint ?? label, prefixIcon: icon == null ? null : Icon(icon, size: 18)),

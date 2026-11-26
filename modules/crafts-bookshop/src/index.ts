@@ -3,7 +3,7 @@
  * file. See modules/crafts-bookshop/README.md.
  */
 
-import { bookingsDeps, bookingsRouter, type BookingsDeps } from "@igongo/bookings-kit";
+import { bookingKpis, bookingsDeps, bookingsRouter, type BookingsDeps } from "@igongo/bookings-kit";
 import type { ChangeContext, Database } from "@igongo/core";
 import { craftsBookshopModule } from "./domain/crafts-bookshop-module";
 import { craftsBookshopTables } from "./infrastructure/db/schema";
@@ -16,3 +16,6 @@ export const craftsBookshopDeps = (db: Database, change: ChangeContext): Booking
 /** The routes, mounted at `/api/shop`. */
 export const craftsBookshopRouter = (deps: Parameters<typeof bookingsRouter>[1]) => bookingsRouter(craftsBookshopModule.key, deps);
 
+
+/** This module's numbers for the management dashboard. */
+export const craftsBookshopKpis = (db: Database) => bookingKpis(craftsBookshopModule, craftsBookshopTables, db, "Crafts and bookshop");

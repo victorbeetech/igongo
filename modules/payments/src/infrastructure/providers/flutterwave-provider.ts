@@ -9,6 +9,7 @@
  */
 
 import type { SecretReader } from "@igongo/contracts/super-admin";
+import { AppError } from "@igongo/core";
 import type { PaymentProvider } from "../../application/ports/payment-provider";
 import { at, callJson, keysFor, type Fetch } from "./provider-http";
 
@@ -49,6 +50,14 @@ export function flutterwaveProvider(secrets: SecretReader, fetchFn: Fetch): Paym
     async trustCallback(headers) {
       const hash = await secrets.get("flutterwave.secret_hash");
       return !!hash && headers.get("verif-hash") === hash;
+    },
+    async refund(providerRef, _paymentId, amount) {
+      // Flutterwave refunds by its own transaction ID, so look it up from our reference first.
+      const tx = await callJson(fetchFn, NAME, `${BASE}/transactions/verify_by_reference?tx_ref=${encodeURIComponent(providerRef)}`, { headers: await auth() });
+      const id = at(tx, "data", "id");
+      if (!id) throw new AppError("bad_request", "Flutterwave could not find this payment.");
+      await callJson(fetchFn, NAME, `${BASE}/transactions/${encodeURIComponent(String(id))}/refund`, { method: "POST", headers: await auth(), body: JSON.stringify({ amount }) });
+      return { message: "Sent back to the card through Flutterwave." };
     },
     paymentIdIn: (body) => (typeof at(body, "data", "tx_ref") === "string" ? String(at(body, "data", "tx_ref")) : null),
   };

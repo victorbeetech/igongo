@@ -150,8 +150,22 @@ The whole app and web portal are built as a clickable product first, with sample
   - [x] Payments (`modules/payments`): MTN MoMo, Airtel Money and Flutterwave adapters that read the keys the super admin saves, callbacks re-checked with the provider, cash, room charge and manual payments, method switches per outlet and module. Only the keys are missing (see [NEEDS-YOU](NEEDS-YOU.md)).
   - [x] Bookings, on one shared engine (`packages/bookings-kit`): rooms (nights), museum, events (slots and enquiries), pool (slots) and crafts and bookshop (stock). Clash and stock checks, deposits, approve, cancel, check-in by code or QR.
   - [x] Web portal pages on the real API for all of them, and app screens: book, my bookings, order food, my orders with tracking, the pay sheet, rider home and my account.
-  - [ ] Tried, not finished: refunds through the providers' own refund APIs (refunds are recorded, money goes back by hand for now), the settlement report, drawing delivery zones on a map, the rider's live location from the phone, and opening the card checkout page inside the app (the link is shown to copy).
-- [ ] Event bus (Queues and outbox), Notifications, Files & Media.
+  - [ ] Tried, not finished: drawing delivery zones on a map, the rider's live location from the phone, and opening the card checkout page inside the app (the link is shown to copy). Provider refunds and the settlement report were finished in the managers phase.
+- [x] Managers and money modules (26 Nov 2026), each its own folder, schema, routes, permissions, audit and tests:
+  - [x] Files & Media (`modules/files-media`): photo and file upload with size and type rules; only the uploader, holders of the module's photo permission and file managers can open a file.
+  - [x] Faults & Maintenance (`modules/faults-maintenance`): report with photos, categories that route to a department, assign, start, hold, fix, close, reopen, history, likes and comments (each switchable).
+  - [x] Inspections (`modules/inspections`): HOD daily and weekly checklists, run with OK, fault or N/A, photos on faults, a fault report opened by itself, score, likes and comments.
+  - [x] Payroll (`modules/payroll`): pay profiles, monthly pay runs, deductions as percent, fixed or tax bands (entered by the super admin, none built in), manual adjustments, maker and approver, mark paid, spreadsheet export.
+  - [x] Advances & Loans (`modules/advances-loans`): request, approve, pay out, repay by payroll instalments or cash, limits per kind.
+  - [x] Bonuses & Rewards (`modules/bonuses-rewards`): cash bonuses paid with payroll, buffet passes with expiry and one pass a day, the buffet station by card tap.
+  - [x] Earnings Statements (`modules/earnings-statements`): payslips and the lifetime statement (by year, bonuses, passes, advances), with a spreadsheet.
+  - [x] Reports & Analytics (`modules/reports-analytics`): the management dashboard from every module's numbers, failure-isolated, by role, with tile settings and a spreadsheet.
+  - [x] Chat (`modules/chat`): one-to-one, groups and guest desks (front desk and others), unread counts, switches per kind.
+  - [x] Records Archive & Search (`modules/records-search`): search the permanent record years back by words, module and dates, with a spreadsheet.
+  - [x] Payments: refunds through Flutterwave's refund API, and the settlement report by day, method, module and outlet.
+  - [x] Web portal pages on the real API for all of them, and app screens: report a fault with photos, my faults, checkups due and run, my payslips, lifetime earnings, my advances and request, my rewards, chat and the dashboard.
+  - [ ] Tried, not finished: live chat push (chat checks every few seconds until the realtime service), MTN MoMo and Airtel Money refunds (still paid back by hand; their refund APIs need the hotel's accounts), saved and scheduled reports, targets and alerts, and photo uploads on the live site until file storage is switched on (see [NEEDS-YOU](NEEDS-YOU.md)).
+- [ ] Event bus (Queues and outbox) and Notifications. Files & Media is done.
 - [ ] Build each module's back end (domain, use cases, database, API and events), in the agreed order.
 - [ ] Connect each module's screens to its API.
 - [ ] Unit and integration tests for each module.

@@ -1,9 +1,10 @@
 /** `PaymentRepository` on Postgres, with Drizzle. */
 
 import type { Database } from "@igongo/core";
-import { and, asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq, gte, inArray, lt, sql } from "drizzle-orm";
 import type { PaymentRepository } from "../../application/ports/payment-repository";
 import type { Payment, PaymentStatus } from "../../domain/payment";
+import type { SettlementRow } from "../../domain/settlement-row";
 import { payments } from "./schema";
 
 export class DrizzlePaymentRepository implements PaymentRepository {
@@ -40,5 +41,17 @@ export class DrizzlePaymentRepository implements PaymentRepository {
   async update(payment: Payment): Promise<void> {
     const { id, ...rest } = payment;
     await this.db.update(payments).set(rest).where(eq(payments.id, id));
+  }
+
+  async settlement(from: Date, to: Date): Promise<SettlementRow[]> {
+    // The hotel day in Kampala time, so late-night takings land on the right day.
+    const day = sql<string>`to_char(${payments.settledAt} at time zone 'Africa/Kampala', 'YYYY-MM-DD')`;
+    const rows = await this.db
+      .select({ day, method: payments.method, module: payments.module, outlet: payments.outlet, count: sql<number>`count(*)`, amount: sql<number>`sum(${payments.amount})`, refunded: sql<number>`sum(${payments.refundedAmount})` })
+      .from(payments)
+      .where(and(inArray(payments.status, ["succeeded", "refunded"]), gte(payments.settledAt, from), lt(payments.settledAt, to)))
+      .groupBy(day, payments.method, payments.module, payments.outlet)
+      .orderBy(day, payments.method);
+    return rows.map((r) => ({ ...r, count: Number(r.count), amount: Number(r.amount), refunded: Number(r.refunded), net: Number(r.amount) - Number(r.refunded) }));
   }
 }

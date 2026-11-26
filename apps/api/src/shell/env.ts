@@ -10,6 +10,8 @@ import type { PushEnv } from "@igongo/notifications";
 export interface Env extends PushEnv {
   /** Neon Postgres through Hyperdrive (pooled, close to the Worker). */
   HYPERDRIVE?: Hyperdrive;
+  /** The R2 bucket for photos and documents (Files & Media). */
+  FILES?: R2Bucket;
   /** Direct connection string, for local development only. */
   DATABASE_URL?: string;
   ENVIRONMENT?: string;

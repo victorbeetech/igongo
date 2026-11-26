@@ -1,6 +1,7 @@
 /** Where payments are kept. */
 
 import type { Payment, PaymentStatus } from "../../domain/payment";
+import type { SettlementRow } from "../../domain/settlement-row";
 
 export interface PaymentRepository {
   byId(id: string): Promise<Payment | null>;
@@ -14,4 +15,6 @@ export interface PaymentRepository {
    */
   settle(id: string, status: "succeeded" | "failed", message: string | null, at: Date): Promise<boolean>;
   update(payment: Payment): Promise<void>;
+  /** Paid money settled in [from, to), grouped by hotel day, method, module and outlet. */
+  settlement(from: Date, to: Date): Promise<SettlementRow[]>;
 }

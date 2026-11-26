@@ -3,7 +3,7 @@
  * file. See modules/pool/README.md.
  */
 
-import { bookingsDeps, bookingsRouter, type BookingsDeps } from "@igongo/bookings-kit";
+import { bookingKpis, bookingsDeps, bookingsRouter, type BookingsDeps } from "@igongo/bookings-kit";
 import type { ChangeContext, Database } from "@igongo/core";
 import { poolModule } from "./domain/pool-module";
 import { poolTables } from "./infrastructure/db/schema";
@@ -16,3 +16,6 @@ export const poolDeps = (db: Database, change: ChangeContext): BookingsDeps => b
 /** The routes, mounted at `/api/pool`. */
 export const poolRouter = (deps: Parameters<typeof bookingsRouter>[1]) => bookingsRouter(poolModule.key, deps);
 
+
+/** This module's numbers for the management dashboard. */
+export const poolKpis = (db: Database) => bookingKpis(poolModule, poolTables, db, "Swimming pool");

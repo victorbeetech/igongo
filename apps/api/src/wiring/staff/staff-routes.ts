@@ -22,19 +22,12 @@ import { mealsRouter } from "@igongo/staff-meals";
 import { wristbandsRouter } from "@igongo/wristbands";
 import type { Context, Hono } from "hono";
 import type { ApiEnv } from "../../shell/api-env";
-import { moduleGate } from "../module-gate";
+import { mountModule as mount } from "../mount-module";
 
 /** The shell's services and the caller's change context, from a module router's context. */
 function services(c: Context<ActorEnv>) {
   const s = (c as unknown as Context<ApiEnv>).var.services;
   return { staff: s.staffModules(), change: s.changeContext(c.var.actor), roles: s.access() };
-}
-
-/** Mounts [router] at `/api/[path]` behind the switch of module [key]. */
-function mount(app: Hono<ApiEnv>, path: string, key: string, router: Hono<ActorEnv>) {
-  app.use(`/api/${path}/*`, moduleGate(key));
-  app.use(`/api/${path}`, moduleGate(key));
-  app.route(`/api/${path}`, router as unknown as Hono<ApiEnv>);
 }
 
 export function mountStaffRoutes(app: Hono<ApiEnv>) {

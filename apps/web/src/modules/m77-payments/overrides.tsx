@@ -7,6 +7,7 @@ import { PayPage } from "./presentation/pay/PayPage";
 import { PaymentResultPage } from "./presentation/payment-result/PaymentResultPage";
 import { PaymentsListPage } from "./presentation/payments-list/PaymentsListPage";
 import { RecordPaymentPage } from "./presentation/record-payment/RecordPaymentPage";
+import { SettlementsPage } from "./presentation/settlements/SettlementsPage";
 
 /** Module 77's hand-made web pages. */
 export const m77Overrides: ScreenOverrides = {
@@ -15,6 +16,7 @@ export const m77Overrides: ScreenOverrides = {
   "S77-03": (s) => <PaymentResultPage screen={s} />,
   "S77-04": (s) => <PaymentsListPage screen={s} />,
   "S77-06": (s) => <PaymentMethodsPage screen={s} />,
+  "S77-07": (s) => <SettlementsPage screen={s} />,
   "S77-08": (s) => <RecordPaymentPage screen={s} />,
   "S77-10": (s) => <RecordPaymentPage screen={s} />,
 };

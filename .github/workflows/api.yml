@@ -1,6 +1,6 @@
 # Checks for the API back end on every pull request and push to main:
 # lint and type checks with warnings as errors, and every module's tests
-# (each on a real Postgres in memory). Also checks that the bundled
+# (each on a real Postgres in memory), for every module folder. Also checks that the bundled
 # migrations match the module migration files.
 name: API
 
@@ -23,6 +23,6 @@ jobs:
       - name: Bundled migrations are up to date
         run: pnpm --filter @igongo/api gen:migrations && git diff --exit-code apps/api/src/migrations
       - name: Lint and type check
-        run: pnpm --filter "@igongo/core" --filter "@igongo/audit-trail" --filter "@igongo/roles-permissions" --filter "@igongo/users-login" --filter "@igongo/super-admin" --filter "@igongo/bookings-kit" --filter "@igongo/crm-guests" --filter "@igongo/menu-catalogue" --filter "@igongo/payments" --filter "@igongo/food-ordering" --filter "@igongo/delivery-riders" --filter "@igongo/room-bookings" --filter "@igongo/museum" --filter "@igongo/events-conferences" --filter "@igongo/pool" --filter "@igongo/crafts-bookshop" --filter "@igongo/api" lint
+        run: pnpm --filter "@igongo/core" --filter "@igongo/bookings-kit" --filter "./modules/*" --filter "@igongo/api" lint
       - name: Tests
-        run: pnpm --filter "@igongo/core" --filter "@igongo/audit-trail" --filter "@igongo/roles-permissions" --filter "@igongo/users-login" --filter "@igongo/super-admin" --filter "@igongo/bookings-kit" --filter "@igongo/crm-guests" --filter "@igongo/menu-catalogue" --filter "@igongo/payments" --filter "@igongo/food-ordering" --filter "@igongo/delivery-riders" --filter "@igongo/room-bookings" --filter "@igongo/museum" --filter "@igongo/events-conferences" --filter "@igongo/pool" --filter "@igongo/crafts-bookshop" --filter "@igongo/api" test
+        run: pnpm --filter "@igongo/core" --filter "@igongo/bookings-kit" --filter "./modules/*" --filter "@igongo/api" test

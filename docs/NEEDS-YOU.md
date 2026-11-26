@@ -39,6 +39,12 @@ Built and switched off until the hotel agrees the providers (Africa's Talking, M
 
 ---
 
+## Managers and money: three things only you can do (26 Nov 2026)
+
+1. **Switch on file storage (2 minutes).** Photos on fault reports, checkups and chat need Cloudflare R2. In the Cloudflare dashboard open R2 Object Storage and click Enable (the free tier covers 10 GB). Then tell Claude, and it creates the bucket `igongo-files` and connects it to the API as `FILES`. Until then, uploads say "File storage is not set up yet" and everything else works.
+2. **Deduction rates from the hotel's accountant.** No tax or NSSF rates are built in. The super admin enters PAYE bands, NSSF and any other deductions on Payroll > Statutory settings, exactly as the accountant gives them, before the first pay run.
+3. **Mobile money refunds.** Card refunds go back through Flutterwave by themselves. MTN MoMo and Airtel Money refunds are recorded and paid back by hand until the hotel's own provider accounts are set up.
+
 ## Payments, food delivery and bookings: keys and first set-up (26 Nov 2026)
 
 Everything is built; only keys and the hotel's own settings are missing. Nothing below is needed for the preview, and cash payments already work.

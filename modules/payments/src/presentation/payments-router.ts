@@ -7,14 +7,16 @@
  *   GET   /payments?status&module&mine       payments list (S77-04), or mine
  *   GET   /payments/for/:module/:recordId    payments of one order or booking
  *   GET   /payments/:id                      one payment, re-checked with the provider (S77-03)
- *   POST  /payments/:id/refund               refund (S77-05)
+ *   POST  /payments/:id/refund               refund, through the provider when it can (S77-05)
+ *   GET   /payments/settlement?from&to       money in by day, method, module, outlet (S77-07)
+ *   GET   /payments/settlement.csv?from&to   the same as a spreadsheet
  *   POST  /payments/callbacks/:method/:id?   provider callbacks (no sign-in; verified)
  *   GET|PUT /payments/settings               method switches (S77-06)
  */
 
 import { zValidator } from "@hono/zod-validator";
 import { PAYMENT_METHODS, type PaymentMethod } from "@igongo/contracts/payments";
-import { actorOf, AppError, canForOthers, recordChange, requirePermission, requireSignIn, requireStaffPermission, type ActorEnv } from "@igongo/core";
+import { actorOf, AppError, canForOthers, recordChange, requirePermission, requireSignIn, requireStaffPermission, toCsv, type ActorEnv } from "@igongo/core";
 import { Hono, type Context } from "hono";
 import type { PaymentsDeps } from "../application/payments-deps";
 import { recordManualPayment } from "../application/use-cases/record-manual-payment";
@@ -25,7 +27,12 @@ import { METHOD_CATALOG } from "../domain/method-catalog";
 import { methodAllowed } from "../domain/method-settings";
 import type { Payment } from "../domain/payment";
 import { PAYMENT_PERMISSIONS as P } from "./permissions";
-import { listQuery, methodsQuery, payBody, recordBody, refundBody, settingsBody } from "./request-schemas";
+import { listQuery, methodsQuery, payBody, recordBody, refundBody, settingsBody, settlementQuery } from "./request-schemas";
+
+/** Hotel days [from] to [to] (included) as a time range; Kampala is UTC+3 all year. */
+function dayRange(from: string, to: string): [Date, Date] {
+  return [new Date(`${from}T00:00:00+03:00`), new Date(new Date(`${to}T00:00:00+03:00`).getTime() + 86_400_000)];
+}
 
 /** True when the caller holds [permission] beyond their own records (staff). */
 const isStaffFor = (c: Context<ActorEnv>, permission: string) => canForOthers(actorOf(c), permission);
@@ -69,6 +76,18 @@ export function paymentsRouter(deps: (c: Context<ActorEnv>) => PaymentsDeps) {
       const items = await deps(c).payments.forRecord(c.req.param("module"), c.req.param("recordId"));
       items.forEach((p) => mayRead(c, p));
       return c.json({ items });
+    })
+    .get("/settlement", requireStaffPermission(P.reports), zValidator("query", settlementQuery), async (c) => {
+      const { from, to } = c.req.valid("query");
+      const rows = await deps(c).payments.settlement(...dayRange(from, to));
+      return c.json({ from, to, items: rows, total: rows.reduce((n, r) => n + r.net, 0) });
+    })
+    .get("/settlement.csv", requireStaffPermission(P.reports), zValidator("query", settlementQuery), async (c) => {
+      const { from, to } = c.req.valid("query");
+      const rows = await deps(c).payments.settlement(...dayRange(from, to));
+      const csv = toCsv([["Day", "Method", "Module", "Outlet", "Payments", "Amount", "Refunded", "Net"], ...rows.map((r) => [r.day, r.method, r.module, r.outlet, r.count, r.amount, r.refunded, r.net])]);
+      await recordChange(deps(c).change, { module: "payments", action: "settlement.exported", recordType: "settlement", recordId: `${from}..${to}`, summary: `Downloaded the settlement report for ${from} to ${to}` });
+      return c.body(csv, 200, { "content-type": "text/csv; charset=utf-8", "content-disposition": `attachment; filename="settlement-${from}-${to}.csv"` });
     })
     .get("/settings", requireSignIn, async (c) => c.json(await deps(c).settings.read()))
     .put("/settings", requireStaffPermission(P.methods), zValidator("json", settingsBody), async (c) => {

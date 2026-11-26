@@ -2,13 +2,14 @@
 // Module 31: Bonuses & Rewards. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm31_bonuses_rewards_overrides.dart';
 
 /// Module 31, Bonuses & Rewards: every screen and dialog, with its sample data.
-const m31BonusesRewardsModule = ModuleSpec(
+final m31BonusesRewardsModule = ModuleSpec(
   code: '31',
   name: 'Bonuses & Rewards',
   slug: 'bonuses-rewards',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S31-01',
       name: 'My rewards',
@@ -65,7 +66,8 @@ const m31BonusesRewardsModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m31Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D31-01',
       name: 'Confirm reward',
@@ -83,7 +85,7 @@ const m31BonusesRewardsModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Staff of the month · Atuhaire Grace',
       'Buffet access · Kitchen team',
