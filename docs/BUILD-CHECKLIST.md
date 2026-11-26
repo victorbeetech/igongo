@@ -174,6 +174,7 @@ The whole app and web portal are built as a clickable product first, with sample
   - [x] Staff card designer (module 16): templates on an SVG canvas in brand colours only, card types, a template per role, printing at the exact card size. The black portrait card is the default.
   - [x] Saved and scheduled reports (module 81): save a pick of areas and days, run it by hand or every day, Monday or 1st of the month at 7 AM Kampala time; every run is kept to read or download. The API's daily 7 AM cron also applies new database tables.
   - [x] Web pages and app screens for all of them. The hosted site opens on sign-in; the previews stay at `/#/role-switcher`.
+  - [x] Full pass: every address the web and app call (211) exists on the API, and the super admin's screens open without a refusal (`apps/api/test/client-paths.test.ts`, run in CI). Fixing it gave the super admin a view of the staff and money modules it configures.
   - [ ] Tried, not finished: live chat push with Durable Objects (chat still refreshes every few seconds), the push notification rule editor (waits on the Firebase steps), drawing the staff card in the app from the saved designs (the app shows the default card), and sending scheduled reports by email or WhatsApp (runs are kept in the portal until those keys are in).
 - [ ] Next phase A, food side and tracking (asked by the user, 26 Nov 2026; not started):
   - [ ] Food ordering with all FoodPanda-style features: live tracking, promos, ratings, reorder, scheduled orders, rider assignment and the rest.
