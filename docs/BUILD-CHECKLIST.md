@@ -189,6 +189,7 @@ The whole app and web portal are built as a clickable product first, with sample
   - [ ] Biometric sign-in, and offline clock-in at the gate.
   - [ ] Sidebar: one collapse button, and Preview moved to the bottom of the sidebar for the super admin only.
   - [ ] Tests proving a guest cannot reach any staff data.
+- [ ] Last phase before TestFlight, premium animations and transitions (asked by the user, 26 Nov 2026; do after the basics, not started): booking flows, menu scroll effects and modern TikTok-style motion, mostly in the guest app and the public websites, all of premium quality.
 - [ ] Event bus (Queues and outbox) and Notifications. Files & Media is done.
 - [ ] Build each module's back end (domain, use cases, database, API and events), in the agreed order.
 - [ ] Connect each module's screens to its API.
