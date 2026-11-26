@@ -58,4 +58,31 @@ abstract final class GuestPhotos {
 
   /// A room bathroom (for a room slot).
   static const String roomBathroom = 'assets/photos/room-bathroom.jpg';
+
+  /// A grilled whole fish with chips (a real dish, for the Food list).
+  static const String foodFish = 'assets/photos/food-fish.jpg';
+
+  /// The Kaahwa Kanuzire restaurant (for the restaurant outlet).
+  static const String hotelKaahwaKanuzire = 'assets/photos/hotel-kaahwa-kanuzire.jpg';
+
+  /// The hotel entrance lit up at night (a home banner or Food option).
+  static const String hotelEntranceNight = 'assets/photos/hotel-entrance-night.jpg';
+
+  /// The city lights at night from the hotel (a home banner option).
+  static const String hotelNightCity = 'assets/photos/hotel-night-city.jpg';
+
+  /// The view from the terrace over the hills and the pool (a home banner option).
+  static const String hotelTerraceView = 'assets/photos/hotel-terrace-view.jpg';
+
+  /// The ring gate sign at the entrance.
+  static const String hotelGateSign = 'assets/photos/hotel-gate-sign.jpg';
+
+  /// The cattle statue on its lawn, seen from the path.
+  static const String hotelCattleStatueFar = 'assets/photos/hotel-cattle-statue-far.jpg';
+
+  /// The cottage court gate and its sign.
+  static const String hotelCottageGate = 'assets/photos/hotel-cottage-gate.jpg';
+
+  /// The Amaarwa beer museum display (cultural section).
+  static const String hotelBeerMuseum = 'assets/photos/hotel-beer-museum.jpg';
 }
