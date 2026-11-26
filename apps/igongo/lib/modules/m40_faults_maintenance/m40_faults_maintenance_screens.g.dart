@@ -2,13 +2,14 @@
 // Module 40: Faults & Maintenance. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm40_faults_maintenance_overrides.dart';
 
 /// Module 40, Faults & Maintenance: every screen and dialog, with its sample data.
-const m40FaultsMaintenanceModule = ModuleSpec(
+final m40FaultsMaintenanceModule = ModuleSpec(
   code: '40',
   name: 'Faults & Maintenance',
   slug: 'faults-maintenance',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S40-01',
       name: 'Report fault',
@@ -87,7 +88,8 @@ const m40FaultsMaintenanceModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m40Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D40-01',
       name: 'Assign fault',
@@ -113,7 +115,7 @@ const m40FaultsMaintenanceModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Pool pump leaking',
       'Room 210 AC not cooling',

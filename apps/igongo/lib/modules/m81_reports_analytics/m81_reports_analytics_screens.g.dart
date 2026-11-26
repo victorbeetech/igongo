@@ -2,13 +2,14 @@
 // Module 81: Reports & Analytics. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm81_reports_analytics_overrides.dart';
 
 /// Module 81, Reports & Analytics: every screen and dialog, with its sample data.
-const m81ReportsAnalyticsModule = ModuleSpec(
+final m81ReportsAnalyticsModule = ModuleSpec(
   code: '81',
   name: 'Reports & Analytics',
   slug: 'reports-analytics',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S81-01',
       name: 'Dashboards',
@@ -76,7 +77,8 @@ const m81ReportsAnalyticsModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m81Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D81-01',
       name: 'Export report',
@@ -94,7 +96,7 @@ const m81ReportsAnalyticsModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Revenue by outlet',
       'Occupancy trend',

@@ -2,13 +2,14 @@
 // Module 50: Chat. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm50_chat_overrides.dart';
 
 /// Module 50, Chat: every screen and dialog, with its sample data.
-const m50ChatModule = ModuleSpec(
+final m50ChatModule = ModuleSpec(
   code: '50',
   name: 'Chat',
   slug: 'chat',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S50-01',
       name: 'Chats',
@@ -65,7 +66,8 @@ const m50ChatModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m50Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D50-01',
       name: 'Delete message',
@@ -83,7 +85,7 @@ const m50ChatModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: ['Kitchen team', 'Front office', 'Mugisha Brian', 'Security night shift', 'Managers', 'Atuhaire Grace'],
     statuses: ['Online', 'Away', 'Typing', 'Muted'],
     kpis: [('Chats', '18'), ('Unread', '7'), ('Groups', '6'), ('Files shared', '42')],

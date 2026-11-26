@@ -2,13 +2,14 @@
 // Module 30: Advances & Loans. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm30_advances_loans_overrides.dart';
 
 /// Module 30, Advances & Loans: every screen and dialog, with its sample data.
-const m30AdvancesLoansModule = ModuleSpec(
+final m30AdvancesLoansModule = ModuleSpec(
   code: '30',
   name: 'Advances & Loans',
   slug: 'advances-loans',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S30-01',
       name: 'My advances',
@@ -76,7 +77,8 @@ const m30AdvancesLoansModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m30Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D30-01',
       name: 'Approve advance',
@@ -94,7 +96,7 @@ const m30AdvancesLoansModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Advance · Mugisha Brian',
       'Loan · Kyomuhendo Sarah',

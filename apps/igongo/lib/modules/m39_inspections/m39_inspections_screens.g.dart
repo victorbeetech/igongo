@@ -2,13 +2,14 @@
 // Module 39: Inspections & Checklists. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm39_inspections_overrides.dart';
 
 /// Module 39, Inspections & Checklists: every screen and dialog, with its sample data.
-const m39InspectionsModule = ModuleSpec(
+final m39InspectionsModule = ModuleSpec(
   code: '39',
   name: 'Inspections & Checklists',
   slug: 'inspections',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S39-01',
       name: 'Inspections due',
@@ -65,7 +66,8 @@ const m39InspectionsModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m39Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D39-01',
       name: 'Failed item',
@@ -75,7 +77,7 @@ const m39InspectionsModule = ModuleSpec(
       opens: ['S40-01'],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Room 104 inspection',
       'Kitchen hygiene check',
