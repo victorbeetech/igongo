@@ -33,3 +33,15 @@ class CartController extends Notifier<Cart> {
 
 /// The cart, kept while the app runs.
 final cartProvider = NotifierProvider<CartController, Cart>(CartController.new);
+
+/// What the guest typed in the food shop's search box (empty shows every dish).
+class MenuSearch extends Notifier<String> {
+  @override
+  String build() => '';
+
+  /// Sets the search text to [text].
+  void set(String text) => state = text;
+}
+
+/// The food shop's search text.
+final menuSearchProvider = NotifierProvider<MenuSearch, String>(MenuSearch.new);

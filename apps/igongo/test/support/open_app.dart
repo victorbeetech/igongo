@@ -3,6 +3,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:igongo/app/igongo_app.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:igongo/shared/preferences/preferences.dart';
 import 'package:igongo/shared/states/view_state.dart';
 import 'package:material_ui/material_ui.dart';
@@ -17,6 +18,7 @@ void usePhoneWindow(WidgetTester tester, {double width = 390, double height = 84
 /// Opens the app at [location] and lets it draw its first frames. [role] picks
 /// the role whose home and menu show (the super admin when left out). [preview]
 /// is the super admin's design preview; off, the app draws as for a real person.
+/// [overrides] swap providers, such as the signed-in session.
 Future<void> openApp(
   WidgetTester tester,
   String location, {
@@ -25,6 +27,7 @@ Future<void> openApp(
   ViewState state = ViewState.normal,
   String? role,
   bool preview = true,
+  List<Override> overrides = const [],
 }) async {
   // Step 1: the preferences for this run.
   final prefs = AppPreferences()
@@ -34,7 +37,9 @@ Future<void> openApp(
     ..state = state;
   if (role != null) prefs.roleKey = role;
   // Step 2: a fresh app each time, so nothing carries over between screens.
-  await tester.pumpWidget(IgongoApp(key: UniqueKey(), initialLocation: location, preferences: prefs));
+  await tester.pumpWidget(
+    IgongoApp(key: UniqueKey(), initialLocation: location, preferences: prefs, overrides: overrides),
+  );
   // Step 3: a few frames for the theme; animations are not waited for (they loop).
   await tester.pump(const Duration(milliseconds: 50));
   // Step 4: load every picture on screen (logos, the staff card) for real, so a
