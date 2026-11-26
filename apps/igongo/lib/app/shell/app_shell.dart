@@ -54,6 +54,8 @@ class AppShell extends ConsumerWidget {
       title: spec.id == 'S00-21' ? 'Home' : spec.name,
       banners: banners,
       showAppBar: !guestHome,
+      // Step 3: tab screens never show a Back arrow; pushed pages do.
+      isTab: signedIn && bottomBarTabIds(ref).contains(spec.id),
       body: body,
       drawer: signedIn && !guestOnly ? const RoleDrawer() : null,
       bottomBar: signedIn ? BottomBar(currentId: spec.id) : null,

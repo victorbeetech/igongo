@@ -22,7 +22,7 @@ class FoodShopCard extends StatelessWidget {
     final radius = BorderRadius.circular(IgongoRadius.lg);
     return Semantics(
       button: true,
-      label: 'Food shop: order delicious meals, delivered or dine-in',
+      label: 'Today\'s menu: dishes and drinks to order',
       child: Material(
         color: p.surfaceAlt,
         elevation: 0,
@@ -50,8 +50,8 @@ class FoodShopCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Food shop', style: context.text.titleMedium?.copyWith(color: p.text)),
-                    Text('Order delicious meals, delivered or dine-in', style: context.text.bodySmall),
+                    Text("Today's menu", style: context.text.titleMedium?.copyWith(color: p.text)),
+                    Text('Dishes and drinks, delivered or dine-in', style: context.text.bodySmall),
                   ],
                 ),
               ),

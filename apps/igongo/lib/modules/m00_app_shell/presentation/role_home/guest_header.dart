@@ -8,8 +8,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../../shared/format/greeting.dart';
 import '../../../../shared/theme/theme.dart';
-import '../../../../shared/ui/photo/guest_photos.dart';
-import '../../../../shared/ui/photo/photo_slot.dart';
+import '../../../m62_food_ordering/presentation/menu_carousel.dart';
 
 /// The guest home's header. [name] is the signed-in guest's, or null when signed out.
 class GuestHeader extends StatelessWidget {
@@ -56,17 +55,13 @@ class GuestHeader extends StatelessWidget {
                 ),
               ],
             ),
-            // Step 2: the banner, full width (a placeholder until a picture is set).
+            // Step 2: the dish slideshow, full width.
             Padding(
               padding: const EdgeInsets.only(right: IgongoSpace.md),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(IgongoRadius.lg),
-                child: const PhotoSlot(
-                  width: double.infinity,
-                  height: 140,
-                  asset: GuestPhotos.banner,
-                  icon: Icons.landscape_outlined,
-                ),
+                // The slideshow of today's dishes (the banner placeholder when there are none).
+                child: const MenuCarousel(),
               ),
             ),
           ],

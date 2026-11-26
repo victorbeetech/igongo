@@ -57,10 +57,7 @@ void main() {
       tester,
       '/food-ordering/food-home',
       preview: false,
-      overrides: [
-        sessionProvider.overrideWith(_Guest.new),
-        ordersApiProvider.overrideWithValue(_NoOutletsApi()),
-      ],
+      overrides: [sessionProvider.overrideWith(_Guest.new), ordersApiProvider.overrideWithValue(_NoOutletsApi())],
     );
     await tester.pump(const Duration(milliseconds: 500));
     // Step 1: the demo menu shows, labelled, with the guest bar (5 tabs).
@@ -96,10 +93,7 @@ void main() {
       tester,
       '/food-ordering/food-home',
       preview: false,
-      overrides: [
-        sessionProvider.overrideWith(_Guest.new),
-        ordersApiProvider.overrideWithValue(_NoOutletsApi()),
-      ],
+      overrides: [sessionProvider.overrideWith(_Guest.new), ordersApiProvider.overrideWithValue(_NoOutletsApi())],
     );
     await _settle(tester);
     // A chip narrows the grid to its section (Drinks has the passion juice only).
@@ -116,5 +110,38 @@ void main() {
     await tester.enterText(find.byType(TextField), 'luwombo');
     await _settle(tester);
     expect(find.text('NOT AVAILABLE'), findsOneWidget);
+  });
+
+  testWidgets('tabs show no Back arrow; a pushed page does', (tester) async {
+    usePhoneWindow(tester);
+    await openApp(
+      tester,
+      '/home',
+      preview: false,
+      overrides: [sessionProvider.overrideWith(_Guest.new), ordersApiProvider.overrideWithValue(_NoOutletsApi())],
+    );
+    await _settle(tester);
+    // Home is a tab: no app bar, so no arrow.
+    expect(find.byType(BackButton), findsNothing);
+    // The Food tab, opened from the bar: no arrow.
+    await tester.tap(find.text('Food').last);
+    await _settle(tester);
+    expect(find.text('Rolex'), findsOneWidget);
+    expect(find.byType(BackButton), findsNothing);
+    // The Cart tab: no arrow.
+    await tester.tap(find.text('Cart').last);
+    await _settle(tester);
+    expect(find.text('Your cart is empty'), findsOneWidget);
+    expect(find.byType(BackButton), findsNothing);
+    // A pushed page (Spa, opened from a home tile) keeps its Back arrow.
+    await tester.tap(find.text('Home').last);
+    await _settle(tester);
+    await tester.scrollUntilVisible(find.text('Spa'), 200, scrollable: find.byType(Scrollable).first);
+    // Lift it clear of the bottom bar before tapping.
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -150));
+    await _settle(tester);
+    await tester.tap(find.text('Spa'));
+    await _settle(tester);
+    expect(find.byType(BackButton), findsOneWidget);
   });
 }

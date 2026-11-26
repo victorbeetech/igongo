@@ -27,9 +27,9 @@ void main() {
   test('a demo order is kept on the phone with a DEMO number and the right total', () {
     final container = ProviderContainer();
     addTearDown(container.dispose);
-    final order = container
-        .read(demoOrdersProvider.notifier)
-        .place(const [CartLine(itemId: 'demo-rolex', name: 'Rolex', quantity: 2, options: [], unitPrice: 5000)], 'takeaway');
+    final order = container.read(demoOrdersProvider.notifier).place(const [
+      CartLine(itemId: 'demo-rolex', name: 'Rolex', quantity: 2, options: [], unitPrice: 5000),
+    ], 'takeaway');
     expect(order.number, 'DEMO-0001');
     expect(order.total, 10000);
     expect(container.read(demoOrdersProvider), [order]);

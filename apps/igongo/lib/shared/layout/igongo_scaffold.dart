@@ -18,6 +18,7 @@ class IgongoScaffold extends StatelessWidget {
     this.drawer,
     this.floatingAction,
     this.showAppBar = true,
+    this.isTab = false,
   });
 
   /// The title in the app bar.
@@ -43,6 +44,10 @@ class IgongoScaffold extends StatelessWidget {
 
   /// False hides the red app bar (the guest home draws its own header in that spot).
   final bool showAppBar;
+
+  /// True for a bottom-bar tab screen: no Back arrow (the bar is how people move
+  /// between tabs). Only pushed pages show one. A side menu button still shows.
+  final bool isTab;
 
   @override
   Widget build(BuildContext context) => Scaffold(

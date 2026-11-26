@@ -18,6 +18,8 @@ import '../../../../shared/ui/tile/home_tile.dart';
 import 'area_card.dart';
 import 'food_shop_card.dart';
 import 'guest_header.dart';
+import 'guest_home_tiles.dart';
+import 'guest_tile_list.dart';
 import 'role_header.dart';
 import 'role_shortcuts.dart';
 
@@ -64,24 +66,29 @@ class RoleHomeScreen extends ConsumerWidget {
         SectionHeader(role.isClient ? 'Explore Igongo' : 'Today'),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
-          child: TileGrid(
-            children: [
-              for (final tile in role.tiles)
-                // Step 2a: guests see area cards; staff keep the plain tiles.
-                if (role.isClient)
-                  AreaCard(
-                    label: tile.label,
-                    icon: ModuleIcons.of(tile.screenId.substring(1, 3)),
-                    onTap: () => screen.open(tile.screenId),
-                  )
-                else
-                  HomeTile(
-                    label: tile.label,
-                    icon: ModuleIcons.of(tile.screenId.substring(1, 3)),
-                    onTap: () => screen.open(tile.screenId),
-                  ),
-            ],
-          ),
+          child: role.isClient
+              // Guests: same-size one-line area cards, one column on a phone.
+              ? GuestTileList(
+                  children: [
+                    for (final tile in role.tiles)
+                      if (!hiddenGuestTileIds.contains(tile.screenId))
+                        AreaCard(
+                          label: shortTileLabel(tile.label),
+                          icon: ModuleIcons.of(tile.screenId.substring(1, 3)),
+                          onTap: () => screen.open(tile.screenId),
+                        ),
+                  ],
+                )
+              : TileGrid(
+                  children: [
+                    for (final tile in role.tiles)
+                      HomeTile(
+                        label: tile.label,
+                        icon: ModuleIcons.of(tile.screenId.substring(1, 3)),
+                        onTap: () => screen.open(tile.screenId),
+                      ),
+                  ],
+                ),
         ),
         // Step 3: the staff shortcuts; guests see the client app instead.
         if (!role.isClient) ...[

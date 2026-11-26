@@ -26,3 +26,14 @@ void openTarget(BuildContext context, String id) {
   final screen = index.screens[id];
   if (screen != null) context.push(index.locationOf(screen));
 }
+
+/// Opens a bottom-bar tab: it replaces the page instead of stacking on it, so a
+/// tab never has a Back to go to. [id] is `home` or a screen number.
+void openTab(BuildContext context, String id) {
+  final screen = CatalogIndex.instance.screens[id];
+  if (id == 'home' || screen == null) {
+    context.go('/home');
+  } else {
+    context.go(CatalogIndex.instance.locationOf(screen));
+  }
+}

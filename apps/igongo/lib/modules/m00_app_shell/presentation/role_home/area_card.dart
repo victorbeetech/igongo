@@ -38,8 +38,9 @@ class AreaCard extends StatelessWidget {
         child: InkWell(
           // The whole card opens the area.
           onTap: onTap,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 64),
+          // Every tile is the same height, with one line of text.
+          child: SizedBox(
+            height: 60,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.md, vertical: IgongoSpace.sm),
               // The red icon disc, the name, then the arrow.

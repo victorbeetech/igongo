@@ -50,7 +50,7 @@ class BottomBar extends ConsumerWidget {
     final selected = tabs.indexWhere((t) => t.$1 == activeId).clamp(0, tabs.length - 1);
     final bar = NavigationBar(
       selectedIndex: selected,
-      onDestinationSelected: (i) => openTarget(context, tabs[i].$1),
+      onDestinationSelected: (i) => openTab(context, tabs[i].$1),
       destinations: [
         for (final t in tabs)
           NavigationDestination(
@@ -80,7 +80,11 @@ class BottomBar extends ConsumerWidget {
                 indicatorColor: p.brandCream,
                 height: 64,
                 labelTextStyle: WidgetStateProperty.resolveWith(
-                  (s) => text?.copyWith(color: s.contains(WidgetState.selected) ? p.primary : p.onPrimary),
+                  // Labels sit on the dark red bar, so both states are white (the open tab bolder).
+                  (s) => text?.copyWith(
+                    color: p.onPrimary,
+                    fontWeight: s.contains(WidgetState.selected) ? FontWeight.w700 : FontWeight.w400,
+                  ),
                 ),
                 iconTheme: WidgetStateProperty.resolveWith(
                   (s) => IconThemeData(color: s.contains(WidgetState.selected) ? p.primary : p.onPrimary),
@@ -95,7 +99,7 @@ class BottomBar extends ConsumerWidget {
   }
 
   /// The staff tabs: the layout's tabs (only screens the app knows), else the defaults.
-  List<_Tab> _staffTabs(WidgetRef ref) {
+  static List<_Tab> _staffTabs(WidgetRef ref) {
     final index = CatalogIndex.instance;
     final set = (ref.watch(myLayoutProvider).valueOrNull?.tabs ?? const <String>[])
         .where(index.screens.containsKey)
@@ -104,4 +108,14 @@ class BottomBar extends ConsumerWidget {
     if (set.isEmpty) return const [_home, _me];
     return [_home, for (final id in set) (id, index.nameOf(id), ModuleIcons.of(index.screens[id]!.module)), _me];
   }
+}
+
+/// The screen numbers the bottom bar opens for the signed-in person (the tab
+/// screens). The role home counts as S00-21. The app shell uses this so a tab
+/// never shows a Back arrow; only pushed pages do.
+List<String> bottomBarTabIds(WidgetRef ref) {
+  final session = ref.watch(sessionProvider).valueOrNull;
+  final isGuest = session != null && !session.isStaff && !session.isSuperAdmin;
+  final tabs = isGuest ? BottomBar._guestTabs : BottomBar._staffTabs(ref);
+  return [for (final t in tabs) t.$1 == 'home' ? 'S00-21' : t.$1];
 }
