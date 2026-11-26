@@ -189,6 +189,13 @@ The whole app and web portal are built as a clickable product first, with sample
   - [ ] Biometric sign-in, and offline clock-in at the gate.
   - [ ] Sidebar: one collapse button, and Preview moved to the bottom of the sidebar for the super admin only.
   - [ ] Tests proving a guest cannot reach any staff data.
+  - [ ] One person is one account, with several sign-in methods linked to it (email and password, Google, Apple). The same verified email never makes a second account. Each rule below has a test:
+    - [ ] Link automatically only when the provider has verified the email (Google verified, Apple verified).
+    - [ ] An email and password sign-up must verify its email before it can be linked or used, which blocks takeover by registering someone's email first.
+    - [ ] Apple "Hide My Email" relay addresses are linked only by hand, from inside a signed-in account, after a confirmation.
+    - [ ] Adding or removing a method needs a fresh sign-in, and the last method can never be removed.
+    - [ ] The staff match and the roles belong to the account, so every linked method gets the same roles.
+    - [ ] The list of sign-in methods, and every link and unlink, show in the audit log and send the person an email alert.
   - [ ] Real-user hardening, each item with its own test:
     - [ ] A double-tapped pay or submit never charges or creates twice (idempotency keys, and the button is disabled while sending).
     - [ ] Emails are lowercased and trimmed everywhere: sign-up, sign-in and the staff match.
