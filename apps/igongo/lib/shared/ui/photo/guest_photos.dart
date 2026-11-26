@@ -22,7 +22,7 @@ abstract final class GuestPhotos {
   static const Alignment bannerAlignment = Alignment(0, -0.3);
 
   /// The photo on the Food shop card.
-  static const String food = 'assets/photos/food-dish.jpg';
+  static const String food = 'assets/photos/food-fish.jpg';
 
   /// Room photos for the room booking screens (not shown yet: the screens use
   /// placeholders until these are set and the screens read them).
@@ -36,7 +36,7 @@ abstract final class GuestPhotos {
 
   /// The restaurant outlet's photo (shown on the demo outlet's shop row; real
   /// outlets have no photo field yet).
-  static const String outletRestaurant = 'assets/photos/outlet-restaurant.jpg';
+  static const String outletRestaurant = 'assets/photos/hotel-kaahwa-kanuzire.jpg';
 
   /// The hotel building and its entrance steps.
   static const String hotelEntrance = 'assets/photos/hotel-entrance.jpg';
@@ -85,4 +85,37 @@ abstract final class GuestPhotos {
 
   /// The Amaarwa beer museum display (cultural section).
   static const String hotelBeerMuseum = 'assets/photos/hotel-beer-museum.jpg';
+
+  /// The cultural centre museum desk.
+  static const String hotelMuseumDesk = 'assets/photos/museum-desk.jpg';
+
+  /// The reception desk.
+  static const String hotelReception = 'assets/photos/hotel-reception.jpg';
+
+  /// A plated fish dish at night.
+  static const String foodFishPlated = 'assets/photos/food-fish-plated.jpg';
+
+  /// The hotel lit up with fairy lights at night.
+  static const String hotelNightLights = 'assets/photos/hotel-night-lights.jpg';
+
+  /// A bathroom with a glass shower.
+  static const String roomBathroomShower = 'assets/photos/room-bathroom-shower.jpg';
+
+  /// The lobby with the staircase and seating.
+  static const String hotelLobby = 'assets/photos/hotel-lobby.jpg';
+
+  /// The Kaahwa Kanuzire restaurant front, close up.
+  static const String hotelKaahwaFront = 'assets/photos/hotel-kaahwa-front.jpg';
+
+  /// A night view toward the hotel through the palms.
+  static const String hotelNightView = 'assets/photos/hotel-night-view.jpg';
+
+  /// The warrior statue in the cultural centre.
+  static const String hotelWarriorStatue = 'assets/photos/hotel-warrior-statue.jpg';
+
+  /// The hilltop monument arch.
+  static const String hotelMonument = 'assets/photos/hotel-monument.jpg';
+
+  /// The antelope statue in the garden.
+  static const String hotelAntelope = 'assets/photos/hotel-antelope.jpg';
 }
