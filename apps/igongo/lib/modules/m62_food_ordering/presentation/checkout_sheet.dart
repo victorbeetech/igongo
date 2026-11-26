@@ -23,7 +23,9 @@ import '../application/cart_controller.dart';
 import '../application/orders_providers.dart';
 import '../demo/demo_menu.dart';
 import '../demo/demo_orders.dart';
+import '../domain/cart_line.dart';
 import '../domain/cart_quote.dart';
+import '../domain/menu_item.dart';
 import '../domain/order_type.dart';
 
 /// The checkout sheet for the cart.
@@ -49,6 +51,12 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
   DateTime? _arriveAt;
   bool _busy = false;
 
+  /// Takeaway: the guest wants a container (when the restaurant sells one).
+  bool _container = false;
+
+  /// The zone and place the guest confirmed for delivery ("zone|place"); null until confirmed.
+  String? _confirmedFor;
+
   @override
   void dispose() {
     _place.dispose();
@@ -72,18 +80,40 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
   /// Text of [c], or null when empty.
   static String? _text(TextEditingController c) => c.text.trim().isEmpty ? null : c.text.trim();
 
+  /// The restaurant's takeaway container, if its menu sells one (it is an ordinary priced menu item).
+  MenuItem? _containerItem(String outlet) => (ref.read(menuProvider(outlet)).valueOrNull ?? const <MenuItem>[])
+      .where((i) => i.isContainer && i.available)
+      .firstOrNull;
+
+  /// The cart's lines, plus the container line when takeaway wants one.
+  List<CartLine> _lines(String outlet, String? type) {
+    final c = type == 'takeaway' && _container ? _containerItem(outlet) : null;
+    return [
+      ...ref.read(cartProvider).lines,
+      if (c != null) CartLine(itemId: c.id, name: c.name, quantity: 1, options: const [], unitPrice: c.price),
+    ];
+  }
+
+  /// True when the guest confirmed the zone and place now showing.
+  bool get _isConfirmed => _confirmedFor != null && _confirmedFor == '$_zone|${_text(_place)}';
+
   /// The cart and details as the API takes them.
   Json _body(String outlet, String type) {
     final place = _text(_place);
+    // Dine-in time goes to the kitchen in the notes (the API schedules deliveries, takeaways and pre-orders).
+    final dine = type == 'dine_in' && _arriveAt != null
+        ? 'Dine-in at ${TimeOfDay.fromDateTime(_arriveAt!).format(context)}'
+        : null;
+    final notes = [?dine, ?_text(_notes)].join('. ');
     return {
       'outlet': outlet,
       'type': type,
-      'lines': [for (final l in ref.read(cartProvider).lines) l.toJson()],
-      'arriveAt': ?_arriveAt?.toUtc().toIso8601String(),
+      'lines': [for (final l in _lines(outlet, type)) l.toJson()],
+      'arriveAt': ?(type == 'dine_in' ? null : _arriveAt?.toUtc().toIso8601String()),
       if (type == 'delivery') 'deliverTo': {'label': place ?? '', 'zone': _zone, 'lat': null, 'lng': null},
       if (type == 'room_service') 'deliverTo': {'label': 'Room $place', 'zone': null, 'lat': null, 'lng': null},
       if (type == 'dine_in') 'table': place,
-      'notes': ?_text(_notes),
+      'notes': ?(notes.isEmpty ? null : notes),
       'allergies': ?_text(_allergies),
       'promoCode': ?_text(_promo),
     };
@@ -114,15 +144,18 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
     // Step 1: check the form has what this order type needs.
     if (type == null) return showIgongoToast(context, 'Choose how you want it.');
     if (type == 'pre_order' && _arriveAt == null) return showIgongoToast(context, 'Choose when you are coming.');
+    if (type == 'dine_in' && _arriveAt == null) return showIgongoToast(context, 'Choose what time you are coming.');
     if (type == 'delivery' && (_zone == null || _text(_place) == null)) {
       return showIgongoToast(context, 'Choose the zone and type where to deliver.');
     }
     if ((type == 'room_service' || type == 'dine_in') && _text(_place) == null) {
       return showIgongoToast(context, type == 'dine_in' ? 'Type your table.' : 'Type your room.');
     }
+    if (type == 'delivery' && !_isConfirmed) return showIgongoToast(context, 'Confirm the delivery location.');
     // Demo menu: a local demo order only; nothing is sent or charged (demo/demo_orders.dart).
     if (isDemoOutlet(outlet)) {
-      final order = ref.read(demoOrdersProvider.notifier).place(cart.lines, type);
+      final order = ref.read(demoOrdersProvider.notifier).place(_lines(outlet, type), type);
+      if (type == 'delivery') ref.read(lastDeliveryProvider.notifier).set(_zone, _text(_place) ?? '');
       ref.read(cartProvider.notifier).clear();
       ref.invalidate(myOrdersProvider);
       Navigator.of(context).pop();
@@ -135,6 +168,7 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
       // Step 2: place it; the API prices it again and applies the rules and the code.
       final order = await ref.read(ordersApiProvider).place({..._body(outlet, type), 'requestKey': _requestKey});
       ref.read(cartProvider.notifier).clear();
+      if (type == 'delivery') ref.read(lastDeliveryProvider.notifier).set(_zone, _text(_place) ?? '');
       ref.invalidate(myOrdersProvider);
       if (!mounted) return;
       Navigator.of(context).pop();
@@ -164,11 +198,16 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
     final cart = ref.watch(cartProvider);
     final outlet = cart.outlet ?? '';
     final rules = ref.watch(orderingRulesProvider).valueOrNull;
-    final zones = ref.watch(zonesProvider).valueOrNull ?? const [];
     final demo = isDemoOutlet(outlet);
+    final zones = demo ? demoZones : (ref.watch(zonesProvider).valueOrNull ?? const []);
     // The demo outlet has its own order types; real outlets follow the server's rules.
     final types = demo ? demoOrderTypes : (rules?.typesAt(outlet) ?? const <String>[]);
-    final total = cart.lines.fold(0, (sum, l) => sum + l.unitPrice * l.quantity);
+    // Keep the menu loaded so the takeaway container (a menu item) can be found.
+    if (outlet.isNotEmpty) ref.watch(menuProvider(outlet));
+    // The container for takeaway, when the menu sells one.
+    final container = outlet.isEmpty ? null : _containerItem(outlet);
+    final containerCharge = _type == 'takeaway' && _container && container != null ? container.price : 0;
+    final total = cart.lines.fold(0, (sum, l) => sum + l.unitPrice * l.quantity) + containerCharge;
     return Padding(
       padding: EdgeInsets.fromLTRB(
         IgongoSpace.lg,
@@ -195,7 +234,10 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
                   ),
                 ],
               ),
-            Text('About ${ugx(total)} before delivery', style: context.text.bodySmall),
+            Text(
+              'About ${ugx(total)} before delivery${containerCharge > 0 ? ' (container included)' : ''}',
+              style: context.text.bodySmall,
+            ),
             if (rules == null && !demo) const LinearProgressIndicator(),
             if (!demo && rules != null && types.isEmpty) const Text('This outlet takes no app orders right now.'),
             Wrap(
@@ -205,7 +247,15 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
                   ChoiceChip(
                     label: Text(orderTypeWords(t)),
                     selected: _type == t,
-                    onSelected: (_) => setState(() => _type = t),
+                    onSelected: (_) => setState(() {
+                      _type = t;
+                      // Delivery: fill in last time's location (the guest must still confirm it).
+                      final last = ref.read(lastDeliveryProvider);
+                      if (t == 'delivery' && _zone == null && _place.text.isEmpty) {
+                        _zone = last.zone;
+                        _place.text = last.place;
+                      }
+                    }),
                   ),
               ],
             ),
@@ -229,17 +279,44 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
                   _ => 'Room number',
                 },
                 controller: _place,
+                // Redraw as the guest types, so the delivery confirmation always shows the current place.
+                onChanged: (_) => setState(() {}),
               ),
-            if (_type == 'pre_order' || _type == 'delivery' || _type == 'takeaway')
+            if (_type == 'pre_order' || _type == 'delivery' || _type == 'takeaway' || _type == 'dine_in')
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: const Icon(Icons.schedule),
                 title: Text(
                   _arriveAt == null
-                      ? (_type == 'pre_order' ? 'When are you coming?' : 'As soon as possible (tap to set a time)')
+                      ? (_type == 'pre_order' || _type == 'dine_in'
+                            ? 'What time are you coming?'
+                            : 'As soon as possible (tap to set a time)')
                       : TimeOfDay.fromDateTime(_arriveAt!).format(context),
                 ),
-                onTap: () => _pickTime(rules?.preorderMinNoticeMinutes ?? 60),
+                onTap: () => _pickTime(_type == 'dine_in' ? 15 : (rules?.preorderMinNoticeMinutes ?? 60)),
+              ),
+            // Takeaway: a container, when the restaurant sells one (its price joins the total).
+            if (_type == 'takeaway' && container != null)
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text('Add a container (+${ugx(container.price)})'),
+                value: _container,
+                onChanged: (v) => setState(() => _container = v),
+              ),
+            // Delivery: the guest confirms the location before ordering.
+            if (_type == 'delivery')
+              CheckboxListTile(
+                contentPadding: EdgeInsets.zero,
+                controlAffinity: ListTileControlAffinity.leading,
+                title: Text(
+                  _zone == null || _text(_place) == null
+                      ? 'Choose a zone and type where to deliver'
+                      : 'Confirm delivery to ${zones.where((z) => z.zone == _zone).firstOrNull?.name ?? ''}: ${_text(_place)}',
+                ),
+                value: _isConfirmed,
+                onChanged: _zone == null || _text(_place) == null
+                    ? null
+                    : (v) => setState(() => _confirmedFor = (v ?? false) ? '$_zone|${_text(_place)}' : null),
               ),
             IgongoField(label: 'Notes for the kitchen', controller: _notes),
             IgongoField(label: 'Allergies', controller: _allergies),

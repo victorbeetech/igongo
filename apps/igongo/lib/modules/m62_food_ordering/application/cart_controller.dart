@@ -57,3 +57,16 @@ class MenuCategory extends Notifier<String?> {
 
 /// The food shop's chosen section.
 final menuCategoryProvider = NotifierProvider<MenuCategory, String?>(MenuCategory.new);
+
+/// The delivery zone and place of the guest's last delivery, to fill in next time
+/// (the guest still confirms it each time). Kept in memory only.
+class LastDelivery extends Notifier<({String? zone, String place})> {
+  @override
+  ({String? zone, String place}) build() => (zone: null, place: '');
+
+  /// Remembers [zone] and [place].
+  void set(String? zone, String place) => state = (zone: zone, place: place);
+}
+
+/// The last delivery location.
+final lastDeliveryProvider = NotifierProvider<LastDelivery, ({String? zone, String place})>(LastDelivery.new);

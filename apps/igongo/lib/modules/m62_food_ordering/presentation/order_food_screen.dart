@@ -82,11 +82,16 @@ class OrderFoodScreen extends ConsumerWidget {
                   data: (all) {
                     // Step 3: the section chips, then only the dishes that match the chip and the search.
                     final sections = [
-                      for (final s in {for (final i in all) i.section}) s,
+                      for (final s in {
+                        for (final i in all)
+                          if (!i.isContainer) i.section,
+                      })
+                        s,
                     ];
                     final items = [
                       for (final i in all)
-                        if ((category == null || i.section == category) &&
+                        if (!i.isContainer &&
+                            (category == null || i.section == category) &&
                             (query.isEmpty || i.name.toLowerCase().contains(query)))
                           i,
                     ];

@@ -50,6 +50,34 @@ Future<void> _settle(WidgetTester tester, {int seconds = 1}) async {
   }
 }
 
+/// Opens the demo food shop as a guest, adds a Rolex, and opens checkout from the cart.
+Future<void> _openCheckout(WidgetTester tester) async {
+  usePhoneWindow(tester);
+  await openApp(
+    tester,
+    '/food-ordering/food-home',
+    preview: false,
+    overrides: [sessionProvider.overrideWith(_Guest.new), ordersApiProvider.overrideWithValue(_NoOutletsApi())],
+  );
+  await _settle(tester);
+  await tester.tap(find.text('Rolex'));
+  await _settle(tester);
+  await tester.tap(find.textContaining('Add UGX'));
+  await _settle(tester);
+  await tester.tap(find.text('Cart').last);
+  await _settle(tester);
+  await tester.tap(find.text('Check out'));
+  await _settle(tester);
+}
+
+/// Scrolls [finder] into view inside the checkout sheet, then taps it.
+Future<void> _tapVisible(WidgetTester tester, Finder finder) async {
+  await tester.ensureVisible(finder);
+  await tester.pump(const Duration(milliseconds: 200));
+  await tester.tap(finder);
+  await _settle(tester);
+}
+
 void main() {
   testWidgets('a guest adds a demo dish, checks out and the order is placed', (tester) async {
     usePhoneWindow(tester);
@@ -145,16 +173,15 @@ void main() {
     expect(find.byType(BackButton), findsOneWidget);
   });
 
-  testWidgets('the item page previews the dish, offers optional add-ons and a note, and adds them to the cart', (tester) async {
+  testWidgets('the item page previews the dish, offers optional add-ons and a note, and adds them to the cart', (
+    tester,
+  ) async {
     usePhoneWindow(tester);
     await openApp(
       tester,
       '/food-ordering/food-home',
       preview: false,
-      overrides: [
-        sessionProvider.overrideWith(_Guest.new),
-        ordersApiProvider.overrideWithValue(_NoOutletsApi()),
-      ],
+      overrides: [sessionProvider.overrideWith(_Guest.new), ordersApiProvider.overrideWithValue(_NoOutletsApi())],
     );
     await _settle(tester);
     // Two dishes sit side by side in the grid (same row).
@@ -178,5 +205,38 @@ void main() {
     expect(find.text('Grilled tilapia'), findsOneWidget);
     expect(find.text('Note: no tomatoes'), findsOneWidget);
     expect(find.textContaining('UGX 34,000'), findsWidgets);
+  });
+
+  testWidgets('dine-in must ask what time before ordering', (tester) async {
+    await _openCheckout(tester);
+    await _tapVisible(tester, find.text('Dine-in'));
+    expect(find.text('What time are you coming?'), findsOneWidget);
+    // A table is needed too; with it typed, the order still waits for a time.
+    await tester.enterText(find.widgetWithText(TextField, 'Table'), '4');
+    await _tapVisible(tester, find.text('Place order'));
+    expect(find.text('Choose what time you are coming.'), findsOneWidget);
+  });
+
+  testWidgets('takeaway offers a container and shows it in the total', (tester) async {
+    await _openCheckout(tester);
+    expect(find.textContaining('About UGX 5,000 before delivery'), findsOneWidget);
+    await _tapVisible(tester, find.text('Takeaway'));
+    await _tapVisible(tester, find.textContaining('Add a container'));
+    expect(find.textContaining('About UGX 6,000 before delivery (container included)'), findsOneWidget);
+  });
+
+  testWidgets('delivery asks the guest to confirm the location before ordering', (tester) async {
+    await _openCheckout(tester);
+    await _tapVisible(tester, find.text('Delivery'));
+    await _tapVisible(tester, find.textContaining('Lodge grounds'));
+    await tester.enterText(find.widgetWithText(TextField, 'Where to deliver'), 'Pool terrace');
+    await _settle(tester);
+    // Not confirmed yet: the order is refused.
+    await _tapVisible(tester, find.text('Place order'));
+    expect(find.text('Confirm the delivery location.'), findsOneWidget);
+    // Confirm the location, then the order goes through.
+    await _tapVisible(tester, find.textContaining('Confirm delivery to Lodge grounds: Pool terrace'));
+    await _tapVisible(tester, find.text('Place order'));
+    expect(find.textContaining('Demo order DEMO-0001 placed'), findsOneWidget);
   });
 }

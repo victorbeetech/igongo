@@ -11,6 +11,7 @@
 //
 // Delete this whole file when the hotel's real menus are live.
 
+import '../domain/delivery_zone.dart';
 import '../domain/menu_item.dart';
 import '../domain/option_choice.dart';
 import '../domain/option_group.dart';
@@ -27,6 +28,11 @@ const List<Outlet> demoOutlets = [Outlet(key: demoOutletKey, name: 'Demo restaur
 
 /// Whether [outlet] is the demo outlet and the demo is switched on.
 bool isDemoOutlet(String outlet) => demoMenuOn && outlet == demoOutletKey;
+
+/// The demo delivery zone (so delivery can be tried).
+const List<DeliveryZone> demoZones = [
+  DeliveryZone(zone: 'demo-grounds', name: 'Lodge grounds', fee: 3000, minutes: 20),
+];
 
 /// A demo add-on: a drink with the meal (optional).
 const _drinkAddOn = OptionGroup(
@@ -87,5 +93,15 @@ const List<MenuItem> demoMenuItems = [
     available: false,
     options: [],
     allergens: ['nuts'],
+  ),
+  // A takeaway container, sold as an extra (offered at takeaway checkout, not shown as a dish).
+  MenuItem(
+    id: 'demo-container',
+    section: 'Extras',
+    name: 'Takeaway container',
+    price: 1000,
+    available: true,
+    options: [],
+    allergens: [],
   ),
 ];

@@ -12,7 +12,7 @@ import '../domain/order_line.dart';
 import 'demo_menu.dart';
 
 /// The order types the demo outlet offers.
-const List<String> demoOrderTypes = ['dine_in', 'takeaway'];
+const List<String> demoOrderTypes = ['dine_in', 'takeaway', 'delivery'];
 
 /// The demo orders placed this run, newest first.
 class DemoOrders extends Notifier<List<Order>> {

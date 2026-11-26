@@ -71,7 +71,7 @@ class _MenuCarouselState extends ConsumerState<MenuCarousel> {
         ? const <MenuItem>[]
         : [
             for (final i in ref.watch(menuProvider(outlet.key)).valueOrNull ?? const <MenuItem>[])
-              if (i.available) i,
+              if (i.available && !i.isContainer) i,
           ];
     _count = items.length;
     if (outlet == null || items.isEmpty) {
