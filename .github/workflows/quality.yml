@@ -1,0 +1,27 @@
+# The quality rules (docs/QUALITY-RULES.md) that a machine can check, on
+# every pull request and push to main: no skipped tests, no swallowed
+# errors, no TODO in auth, payments or permissions, no logged secrets, no
+# unpinned packages. Also the web portal's lint and type checks (zero
+# warnings), which had no CI of their own.
+name: Quality
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  rules:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Quality rules
+        run: node tools/quality-check/check.mjs
+      - run: pnpm install --frozen-lockfile
+      - name: Web portal lint and type check
+        run: pnpm --filter @igongo/web lint
