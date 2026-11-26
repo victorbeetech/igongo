@@ -25,3 +25,9 @@ Items the user asked to keep, to build after the current work is confirmed worki
 - Each area on the guest home as a card with its own picture: rooms, food and shop, events, spa, pool, museum.
 - Hotel photo and the red and cream theme, with pictures from the brand package only.
 - The food shop card is in place already (it opens the food home); the picture cards follow.
+
+## 6. Guest app design sheets (from the user, 26 Nov)
+Design sheets: guest home, food shop (with search and an add-to-cart bar), cart and checkout (delivery, dine-in, takeaway, pre-order), order tracking with rider, room booking, my bookings (upcoming and past), me (account, points, receipts, sign out), dark variants, and a hotel brand screen.
+- Build in one screen at a time, with our theme tokens and our font sizes (not the sheets' sizes), in light and dark.
+- Real API data only. Screens without a live API (room booking, tracking, my bookings) wait until the API exists.
+- Extras not yet built: a payment screen (Mobile Money, card, pay on arrival, secure checkout) and an optional hotel brand splash screen.
