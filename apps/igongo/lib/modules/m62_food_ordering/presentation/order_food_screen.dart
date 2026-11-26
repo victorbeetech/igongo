@@ -150,6 +150,7 @@ class OrderFoodScreen extends ConsumerWidget {
                                 GuestProductCard(
                                   name: i.name,
                                   price: ugx(i.price),
+                                  description: i.description,
                                   note: stars[i.id]?.words,
                                   onTap: () {
                                     ref.read(cartProvider.notifier).useOutlet(outlet);
