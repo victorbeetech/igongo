@@ -84,6 +84,11 @@ class MyProfileScreen extends ConsumerWidget {
         // Step 4: the account actions.
         if (session != null) ...[
           const SectionHeader('Account'),
+          IgongoListRow(
+            title: 'Signed-in devices',
+            leading: const Icon(Icons.devices_outlined),
+            onTap: () => screen.open('S00-36'),
+          ),
           IgongoListRow(title: 'Sign out', leading: const Icon(Icons.logout), onTap: () => _signOut(context, ref)),
           if (!session.isStaff)
             IgongoListRow(

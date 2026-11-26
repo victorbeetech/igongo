@@ -2,6 +2,7 @@
 // and steps, and the guest's tracker for everything delivered to them.
 
 import '../../../shared/api/api_client.dart';
+import '../domain/dispatch_board.dart';
 import '../domain/rider_shift.dart';
 import '../domain/tracked_delivery.dart';
 
@@ -36,4 +37,11 @@ class DeliveryApi {
 
   /// Reports job [id] could not be delivered, and why.
   Future<void> fail(String id, String reason) => _api.post('/api/delivery/jobs/$id/fail', {'reason': reason});
+
+  /// Dispatch: waiting, active and finished jobs, and the riders online now.
+  Future<DispatchBoard> board() async => DispatchBoard.fromJson(await _api.get('/api/delivery/board'));
+
+  /// Dispatch: gives job [id] to rider [riderUserId].
+  Future<void> assign(String id, String riderUserId) =>
+      _api.post('/api/delivery/jobs/$id/assign', {'riderUserId': riderUserId});
 }

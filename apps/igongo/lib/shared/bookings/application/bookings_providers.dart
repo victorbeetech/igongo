@@ -24,3 +24,12 @@ final myBookingsProvider = FutureProvider.autoDispose.family<List<Booking>, Book
   ref.watch(sessionProvider);
   return ref.watch(bookingsApiProvider(place)).mine();
 });
+
+/// The staff desk's filter: a [status] (null for all) and a [date] (null for any day).
+typedef DeskFilter = ({BookingPlace place, String? status, String? date});
+
+/// Every booking at a place, for staff, with [DeskFilter].
+final deskBookingsProvider = FutureProvider.autoDispose.family<List<Booking>, DeskFilter>((ref, f) {
+  ref.watch(sessionProvider);
+  return ref.watch(bookingsApiProvider(f.place)).desk(status: f.status, date: f.date);
+});

@@ -28,6 +28,11 @@ Never paste a password, private key or secret into the chat. Where a secret is n
 1. Open https://igongo.victorbee.com/#/sign-in.
 2. In the **First set-up** box, click **Sign in with Google to start** and choose your own Google account (the one this project uses).
 3. Back on the sign-in page, click **Finish set-up**. You are now the super admin. Only your Google email can do this, and only once.
+4. (Since 26 Nov, once the new API is deployed) the portal then asks you to add a password and turn on 2-step sign-in with an authenticator app, and shows recovery codes to keep safe. Add a second super admin later so you can never be locked out.
+
+### Google and Apple sign-in inside the phone app (later)
+
+The phone app signs in with email and password today. Google and Apple inside the app need two more Google OAuth client IDs (iOS and Android, from Google Cloud console > Credentials) and the app's bundle ID added to Sign in with Apple. Claude will list the exact clicks when that step starts.
 
 ### Apple sign-in (when you have the values)
 

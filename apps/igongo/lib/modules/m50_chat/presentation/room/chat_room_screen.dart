@@ -94,7 +94,7 @@ class _ChatRoomScreenState extends ConsumerState<ChatRoomScreen> {
                 children: [
                   for (final m in messages.reversed)
                     Align(
-                      alignment: m.senderId == session.userId ? Alignment.centerRight : Alignment.centerLeft,
+                      alignment: m.senderId == session?.userId ? Alignment.centerRight : Alignment.centerLeft,
                       child: Card(
                         child: Padding(
                           padding: const EdgeInsets.all(IgongoSpace.sm),

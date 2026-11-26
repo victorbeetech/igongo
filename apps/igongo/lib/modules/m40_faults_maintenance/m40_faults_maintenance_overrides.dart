@@ -9,4 +9,6 @@ import 'presentation/report/report_fault_screen.dart';
 final m40Overrides = <String, ScreenOverride>{
   'S40-01': (_, s) => ReportFaultScreen(s),
   'S40-02': (_, s) => MyFaultsScreen(s),
+  // Details open inside the screen above, so their numbers lead there too.
+  'S40-04': (_, s) => MyFaultsScreen(s),
 };

@@ -1,19 +1,24 @@
 // Draws a live API screen with the app's designed states. Two rules:
-// - signed out: the screen's sample design shows (the clickable prototype,
-//   which the tests and store screenshots also use);
-// - signed in: loading, error, signed-out and denied use the same state
-//   screens as the prototype, and the screen only writes the normal view.
+// - the super admin's design preview (and the screen tests, signed out with
+//   the preview on): the screen's sample design shows;
+// - everyone else, signed in or not: the live data, with the designed
+//   loading, error and denied states. A screen that needs an account asks a
+//   signed-out visitor to sign in; public screens (rooms, menus) just load.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../api/api_exception.dart';
+import '../preferences/preferences.dart';
+import '../ui/button/igongo_button.dart';
+import '../ui/message/state_message.dart';
 import '../session/session.dart';
 import '../session/session_controller.dart';
 import '../states/state_view.dart';
 import '../states/view_state.dart';
 
-/// The sample design when signed out, else the live data of [value].
+/// The sample design in the design preview, else the live data of [value].
 class LiveView<T> extends ConsumerWidget {
   /// Creates the view. [sample] draws the prototype; [builder] draws loaded data.
   const LiveView({
@@ -31,11 +36,11 @@ class LiveView<T> extends ConsumerWidget {
   /// The live data, watched from a provider.
   final AsyncValue<T> value;
 
-  /// The prototype view, shown when nobody is signed in.
+  /// The sample view, shown only in the design preview.
   final WidgetBuilder sample;
 
-  /// The normal view, for loaded data and the signed-in person.
-  final Widget Function(BuildContext context, T data, Session session) builder;
+  /// The normal view, for loaded data and the person (null when signed out).
+  final Widget Function(BuildContext context, T data, Session? session) builder;
 
   /// Tries again after an error.
   final VoidCallback? onRetry;
@@ -43,13 +48,26 @@ class LiveView<T> extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final session = ref.watch(sessionProvider).valueOrNull;
-    // Step 1: signed out shows the prototype.
-    if (session == null) return sample(context);
-    // Step 2: signed in shows the live states.
+    // Step 1: the design preview shows the sample (only ever with nobody, or the super admin, signed in).
+    final preview = PreferencesScope.of(context).previewMode && (session == null || session.isSuperAdmin);
+    if (preview) return sample(context);
+    // Step 2: the live states; a screen that needs an account asks to sign in.
     return value.when(
       data: (data) => builder(context, data, session),
       loading: () => const StateView(state: ViewState.loading, screenName: ''),
-      error: (error, _) => StateView(state: stateOf(error), screenName: screenName, onRetry: onRetry),
+      error: (error, _) => error is ApiException && error.needsSignIn
+          ? StateMessage(
+              icon: Icons.lock_outline,
+              title: 'Sign in to see $screenName',
+              message: 'Browsing is open to everyone. Your bookings, orders and account need you to sign in.',
+              actions: [
+                IgongoButton(
+                  label: 'Sign in or create an account',
+                  onPressed: () => GoRouter.of(context).push('/sign-in'),
+                ),
+              ],
+            )
+          : StateView(state: stateOf(error), screenName: screenName, onRetry: onRetry),
     );
   }
 

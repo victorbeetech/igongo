@@ -80,7 +80,7 @@ class FaultDetailScreen extends ConsumerWidget {
                     if (f.description.isNotEmpty) Text(f.description),
                     Text(f.assignedTo == null ? 'Not assigned yet' : 'Assigned to ${f.assignedTo}'),
                     if (f.photoCount > 0) Text('${f.photoCount} photo${f.photoCount == 1 ? '' : 's'} attached'),
-                    if (page.likesOn && session.can('faults-maintenance.faults.like'))
+                    if (page.likesOn && (session?.can('faults-maintenance.faults.like') ?? false))
                       IgongoButton(
                         label: '${page.likes} like${page.likes == 1 ? '' : 's'}',
                         icon: Icons.favorite_border,
@@ -101,7 +101,7 @@ class FaultDetailScreen extends ConsumerWidget {
               if (page.commentsOn)
                 CommentBox(
                   comments: page.comments,
-                  canComment: session.can('faults-maintenance.faults.comment'),
+                  canComment: (session?.can('faults-maintenance.faults.comment') ?? false),
                   onSend: (body) async {
                     await api.comment(id, body);
                     ref.invalidate(faultProvider(id));

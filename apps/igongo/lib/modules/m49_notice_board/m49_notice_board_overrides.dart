@@ -5,4 +5,8 @@ import '../../shared/catalog/catalog.dart';
 import 'presentation/board/notice_board_screen.dart';
 
 /// Module 49's hand-made screens.
-final m49Overrides = <String, ScreenOverride>{'S49-01': (_, s) => NoticeBoardScreen(s)};
+final m49Overrides = <String, ScreenOverride>{
+  'S49-01': (_, s) => NoticeBoardScreen(s),
+  // Details open inside the screen above, so their numbers lead there too.
+  'S49-02': (_, s) => NoticeBoardScreen(s),
+};

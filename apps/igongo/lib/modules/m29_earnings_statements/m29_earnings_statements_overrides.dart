@@ -9,4 +9,7 @@ import 'presentation/payslips/my_payslips_screen.dart';
 final m29Overrides = <String, ScreenOverride>{
   'S29-01': (_, s) => MyPayslipsScreen(s),
   'S29-03': (_, s) => LifetimeEarningsScreen(s),
+  // Details open inside the screen above, so their numbers lead there too.
+  'S29-02': (_, s) => MyPayslipsScreen(s),
+  'S29-04': (_, s) => LifetimeEarningsScreen(s),
 };

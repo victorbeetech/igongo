@@ -1,8 +1,9 @@
 // The hand-made screens of module 73 (Crafts & Bookshop), live from the API through
-// the shared booking screens. Every other screen of the module uses a shared layout.
+// the shared booking screens. Staff screens use the shared bookings desk.
 
 import '../../shared/catalog/catalog.dart';
 import '../../shared/bookings/presentation/book_screen.dart';
+import '../../shared/bookings/presentation/bookings_desk_screen.dart';
 import '../../shared/bookings/presentation/my_bookings_screen.dart';
 import 'domain/place.dart';
 
@@ -11,4 +12,5 @@ final m73Overrides = <String, ScreenOverride>{
   'S73-01': (_, s) => BookScreen(s, place),
   'S73-02': (_, s) => BookScreen(s, place),
   'S73-03': (_, s) => MyBookingsScreen(s, place),
+  'S73-04': (_, s) => BookingsDeskScreen(s, place, status: 'confirmed'),
 };

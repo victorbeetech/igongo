@@ -101,6 +101,15 @@ describe("real-user details", () => {
     expect(t.audit.map((e) => e.action)).toContain("login.locked_out");
   });
 
+  it("refuses reset links the same way for every address while email is not set up", async () => {
+    const t = await testAuth({ emailReady: false });
+    await t.call("/sign-up/email", ann);
+    const known = await t.call("/request-password-reset", { email: ann.email });
+    const unknown = await t.call("/request-password-reset", { email: "nobody@example.com" });
+    expect([known.status, unknown.status]).toEqual([503, 503]);
+    expect(await known.json()).toEqual(await unknown.json());
+  });
+
   it("resets a password by email: the link works once and signs out other devices", async () => {
     const t = await testAuth();
     const up = await t.call("/sign-up/email", ann);
@@ -128,7 +137,11 @@ describe("real-user details", () => {
   it("lets a guest delete their account, but not staff, and never removes the last sign-in method", async () => {
     const t = await testAuth();
     const up = await t.call("/sign-up/email", ann);
-    expect((await t.call("/unlink-account", { providerId: "credential" }, cookieOf(up))).status).toBe(400);
+    const { user } = (await up.clone().json()) as { user: { id: string } };
+    const [password] = await (await t.auth.$context).internalAdapter.findAccounts(user.id);
+    const last = await t.call("/unlink-account", { accountId: password?.id }, cookieOf(up));
+    expect(last.status).toBe(400);
+    expect(((await last.json()) as { code: string }).code).toMatch(/LAST_ACCOUNT|last/i);
     expect((await t.call("/delete-user", {}, cookieOf(up))).status).toBe(200);
     await staff(t);
     const sam = await t.call("/sign-in/email", { email: "sam@igongo.test", password: "Kitchen pass 9" });

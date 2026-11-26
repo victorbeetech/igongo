@@ -2,8 +2,11 @@
 
 These rules bind every change and every thread, by a person or an AI
 assistant, as firmly as [the code standards](architecture/code-standards.md).
-A CI step that enforces the checkable ones is planned for the access and
-security phase in the [build checklist](BUILD-CHECKLIST.md).
+The checkable ones (rules 2, 3, 5, 6 and 7) are enforced on every pull
+request by `tools/quality-check/check.mjs`, in the Quality workflow
+(`.github/workflows/quality.yml`). Run it locally with
+`node tools/quality-check/check.mjs`. An empty catch is allowed only with a
+comment inside saying why nothing else is needed.
 
 1. **Never weaken security to make something pass.** Do not turn off or loosen security, CORS, sign-in or permission checks.
 2. **Never bend a test to make it pass.** Do not edit, skip or delete a test for that reason. Fix the code instead, and report any test that still fails.

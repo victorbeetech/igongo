@@ -183,35 +183,35 @@ The whole app and web portal are built as a clickable product first, with sample
   - [x] Safety on real data: every price, discount and total worked out on the server; a double-tapped order (checkout key) or payment (same pending charge) never happens twice; another person's order or delivery answers 403; quantities 1 to 100 checked on the server; review text shown as plain text.
   - [x] Leftover from the last phase: chat messages now send an instant push ("New message from Sam", never the words). The live chat screen itself still refreshes every few seconds.
   - [ ] Tried, not finished: the live map and turn-by-turn route (need the Google Maps key), in-app card checkout (the app shows the card link to copy), rider ratings on the Riders page (the stars are saved; the page does not show them yet), and scheduled reports by email or WhatsApp (need the email and WhatsApp keys).
-- [ ] Next phase B, access and security (asked by the user, 26 Nov 2026; not started):
-  - [ ] Guests sign up in the app only. The super admin upgrades a person to staff by matching a staff record with a verified email, recorded in the audit log.
-  - [ ] Mandatory 2-step sign-in for staff, recovery codes, and a required second super admin.
-  - [ ] No guest and staff switch: one account is one kind.
-  - [ ] The web portal is staff only, on a staff subdomain, and the server refuses guest accounts there.
-  - [ ] A Security settings screen; card kill; sign out a device; sign-in alerts.
-  - [ ] Short sessions and automatic sign-out on shared computers; lockout after failed tries.
+- [ ] Next phase B, access and security (asked by the user, 26 Nov 2026; in progress, PRs #23 and #24; tests in `modules/users-login/test/security.test.ts` and `apps/api/test/access-day.test.ts`):
+  - [x] Guests sign up in the app only. The super admin upgrades a person to staff by matching a staff record with a verified email, recorded in the audit log.
+  - [x] Mandatory 2-step sign-in for the super admin (and staff in sensitive roles when the super admin switches it on), recovery codes, a warning while there is no second super admin, and the last super admin can never be removed.
+  - [x] No guest and staff switch: one account is one kind. The phone app's role switch, client view and demo home are gone.
+  - [x] The web portal is staff only and the server refuses guest accounts there (sessions ended on the server). The staff subdomain waits for the hotel's domain (igongo.victorbee.com for now).
+  - [ ] A Security settings screen; card kill; sign out a device; sign-in alerts. Done except the instant card kill from this screen (cards are blocked on the cards page).
+  - [x] Short sessions and automatic sign-out on shared computers; lockout after failed tries.
   - [ ] Database snapshots with a tested restore.
-  - [ ] Privacy: export and delete a person's data.
+  - [x] Privacy: export and delete a person's data (download my data; delete my account in the app, staff closed by HR).
   - [ ] Biometric sign-in, and offline clock-in at the gate.
-  - [ ] Sidebar: one collapse button, and Preview moved to the bottom of the sidebar for the super admin only.
-  - [ ] Tests proving a guest cannot reach any staff data.
-  - [ ] One person is one account, with several sign-in methods linked to it (email and password, Google, Apple). The same verified email never makes a second account. Each rule below has a test:
-    - [ ] Link automatically only when the provider has verified the email (Google verified, Apple verified).
-    - [ ] An email and password sign-up must verify its email before it can be linked or used, which blocks takeover by registering someone's email first.
-    - [ ] Apple "Hide My Email" relay addresses are linked only by hand, from inside a signed-in account, after a confirmation.
-    - [ ] Adding or removing a method needs a fresh sign-in, and the last method can never be removed.
-    - [ ] The staff match and the roles belong to the account, so every linked method gets the same roles.
-    - [ ] The list of sign-in methods, and every link and unlink, show in the audit log and send the person an email alert.
-  - [ ] A CI step that fails on skipped tests, secrets in code, passwords or tokens in logs, and TODO in auth code (see [Quality rules](QUALITY-RULES.md)).
+  - [x] Sidebar: one collapse button, and Preview moved to the bottom of the sidebar for the super admin only.
+  - [x] Tests proving a guest cannot reach any staff data.
+  - [x] One person is one account, with several sign-in methods linked to it (email and password, Google, Apple). The same verified email never makes a second account. Each rule below has a test (`modules/users-login/test/account-linking.test.ts`):
+    - [x] Link automatically only when the provider has verified the email (Google verified, Apple verified).
+    - [x] An email and password sign-up must verify its email before it can be linked or used, which blocks takeover by registering someone's email first.
+    - [x] Apple "Hide My Email" relay addresses are linked only by hand, from inside a signed-in account, after a confirmation.
+    - [x] Adding or removing a method needs a fresh sign-in, and the last method can never be removed.
+    - [x] The staff match and the roles belong to the account, so every linked method gets the same roles.
+    - [x] The list of sign-in methods, and every link and unlink, show in the audit log and send the person an email alert (the email goes out once an email provider is set up; until then a push).
+  - [x] A CI step that fails on skipped tests, secrets in code, passwords or tokens in logs, and TODO in auth code (see [Quality rules](QUALITY-RULES.md)). Done 26 Nov: `tools/quality-check/check.mjs` in the Quality workflow, which also runs the web lint.
   - [ ] Real-user hardening, each item with its own test:
-    - [ ] A double-tapped pay or submit never charges or creates twice (idempotency keys, and the button is disabled while sending).
-    - [ ] Emails are lowercased and trimmed everywhere: sign-up, sign-in and the staff match.
-    - [ ] Apostrophes and unicode in names are safe (parameterised queries, escaped output).
-    - [ ] iPhone photo uploads (HEIC, large files, rotation) are converted and size-limited.
-    - [ ] Password reset email works end to end; tokens expire and work once.
+    - [x] A double-tapped pay or submit never charges or creates twice (idempotency keys, and the button is disabled while sending). Tests: `modules/payments/test/pay-once.test.ts`, `apps/api/test/food-day.test.ts`.
+    - [x] Emails are lowercased and trimmed everywhere: sign-up, sign-in and the staff match.
+    - [x] Apostrophes and unicode in names are safe (parameterised queries, escaped output).
+    - [x] iPhone photo uploads (HEIC, large files, rotation) are converted and size-limited: the app re-encodes to JPEG at 1600 px, and the server refuses raw HEIC with a clear message and anything over the limit.
+    - [ ] Password reset email works end to end; tokens expire and work once. Tested with a stand-in mailbox; the real email waits on an email provider (see [NEEDS-YOU](NEEDS-YOU.md)), and until then resets are refused the same way for every address.
     - [ ] Times are stored in UTC and shown in Africa/Kampala or the viewer's time zone.
-    - [ ] Signal lost after paying: the payment status is settled by the gateway webhook and a "check status" retry, never lost or charged twice.
-    - [ ] A delete my account button in the guest app (also an App Store rule), with a clear data policy.
+    - [x] Signal lost after paying: the payment status is settled by the gateway webhook and a "check status" retry, never lost or charged twice (the provider is always asked directly; a short payment counts as failed). Test: `modules/payments/test/pay-once.test.ts`.
+    - [x] A delete my account button in the guest app (also an App Store rule). The data policy text comes with the legal phase.
     - [ ] Apple "Hide My Email" relay addresses are accepted and used for the staff match.
     - [ ] Load and abuse: rate limits per user and IP, queues, and a test with thousands of requests at once.
 - [ ] Full security audit, right after the access and security phase and again just before TestFlight (asked by the user, 26 Nov 2026; not started). Each item has a check and a written result in `docs/SECURITY-AUDIT.md`:
@@ -239,15 +239,15 @@ The whole app and web portal are built as a clickable product first, with sample
     - [ ] 4. CSRF protection with a token check: a forged form from another site is rejected.
     - [ ] 5. Secure session cookies: HttpOnly, Secure, SameSite.
     - [ ] 6. Password reset links expire and work once.
-    - [ ] 7. Safe uploads (asked by the user, 26 Nov 2026). Each rule has a proving test and a result in `docs/SECURITY-AUDIT.md`:
-      - [ ] Check the real content of every file (magic bytes and a real decode); never trust the extension or the declared type.
-      - [ ] A strict size limit for each file type.
-      - [ ] Re-encode images, which strips hidden code and metadata, and reject anything that does not decode.
-      - [ ] Rename every upload at once to a random name that cannot be guessed (a UUID); the original name is never kept.
-      - [ ] Store uploads only in object storage (Cloudflare R2), never on the app server. No public listing. Files are served with the correct content type and `nosniff`, and anything that is not an image is download only.
-      - [ ] Uploads are never executed.
-      - [ ] Upload rate limits per person.
-      - [ ] Tests: a fake jpg that is really a script, a file that is too big, and a double extension (`photo.jpg.php`) are all rejected.
+    - [ ] 7. Safe uploads (asked by the user, 26 Nov 2026). Each rule has a proving test and a result in `docs/SECURITY-AUDIT.md`. Built 26 Nov in `modules/files-media` (tests in `test/file-content.test.ts` and `apps/api/test/managers-day.test.ts`):
+      - [x] Check the real content of every file (magic bytes and a check that the file is whole: JPEG end marker, PNG header and end chunks, WebP size, PDF end); never trust the extension or the declared type. A full pixel decode on the server is not possible on Workers without an image library.
+      - [x] A strict size limit for each file type (10 MB photos, 20 MB PDFs, and the super admin's lower limit).
+      - [ ] Re-encode images, which strips hidden code and metadata, and reject anything that does not decode. Done on the phone (the app re-encodes every photo to JPEG at 1600 px before sending, which also converts iPhone HEIC); the server refuses photos with hidden code. Server-side re-encoding of web uploads is not done yet.
+      - [x] Rename every upload at once to a random name that cannot be guessed (a UUID); the original name is never kept.
+      - [x] Store uploads only in object storage (Cloudflare R2), never on the app server. No public listing. Files are served with the correct content type and `nosniff`, and anything that is not an image is download only.
+      - [x] Uploads are never executed (served with `nosniff` and a sandbox content policy).
+      - [x] Upload rate limits per person (30 files in 10 minutes).
+      - [x] Tests: a fake jpg that is really a script, a file that is too big, and a double extension (`photo.jpg.php`) are all rejected.
     - [ ] 8. Admin pages locked: a normal user gets 403.
     - [ ] 9. Every price and total rechecked on the server; the browser is never trusted.
     - [ ] 10. Debug mode off in production: people see only "Something went wrong, reference A12F", with the details in private logs.
