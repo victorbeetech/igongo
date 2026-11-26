@@ -6,7 +6,14 @@ import 'package:material_ui/material_ui.dart';
 /// One photo, or a plain box while the file is missing.
 class PhotoSlot extends StatelessWidget {
   /// Creates a slot of [width] by [height]; [asset] is the picture's path, if any.
-  const PhotoSlot({super.key, required this.width, required this.height, this.asset, this.icon = Icons.image_outlined});
+  const PhotoSlot({
+    super.key,
+    required this.width,
+    required this.height,
+    this.asset,
+    this.alignment = Alignment.center,
+    this.icon = Icons.image_outlined,
+  });
 
   /// The slot's size in logical pixels.
   final double width;
@@ -16,6 +23,9 @@ class PhotoSlot extends StatelessWidget {
 
   /// The photo's https address or asset path, or null for the placeholder.
   final String? asset;
+
+  /// Which part of the photo stays in view when it is cropped to the slot.
+  final Alignment alignment;
 
   /// The icon on the placeholder.
   final IconData icon;
@@ -34,8 +44,20 @@ class PhotoSlot extends StatelessWidget {
       child: asset == null
           ? placeholder
           : asset!.startsWith('http')
-          ? Image.network(asset!, fit: BoxFit.cover, excludeFromSemantics: true, errorBuilder: (_, _, _) => placeholder)
-          : Image.asset(asset!, fit: BoxFit.cover, excludeFromSemantics: true, errorBuilder: (_, _, _) => placeholder),
+          ? Image.network(
+              asset!,
+              fit: BoxFit.cover,
+              alignment: alignment,
+              excludeFromSemantics: true,
+              errorBuilder: (_, _, _) => placeholder,
+            )
+          : Image.asset(
+              asset!,
+              fit: BoxFit.cover,
+              alignment: alignment,
+              excludeFromSemantics: true,
+              errorBuilder: (_, _, _) => placeholder,
+            ),
     );
   }
 }

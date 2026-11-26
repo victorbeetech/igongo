@@ -73,56 +73,62 @@ class _MenuCarouselState extends ConsumerState<MenuCarousel> {
             for (final i in ref.watch(menuProvider(outlet.key)).valueOrNull ?? const <MenuItem>[])
               if (i.available && !i.isContainer) i,
           ];
-    _count = items.length;
-    if (outlet == null || items.isEmpty) {
-      return PhotoSlot(
-        width: double.infinity,
-        height: widget.height,
-        asset: GuestPhotos.banner,
-        icon: Icons.landscape_outlined,
-      );
-    }
+    // The banner photo (the hut) is the first slide; dishes follow.
+    const banner = 1;
+    _count = items.length + banner;
+    final bannerSlide = PhotoSlot(
+      width: double.infinity,
+      height: widget.height,
+      asset: GuestPhotos.banner,
+      alignment: GuestPhotos.bannerAlignment,
+      icon: Icons.landscape_outlined,
+    );
+    if (outlet == null || items.isEmpty) return bannerSlide;
     final p = context.palette;
     return SizedBox(
       height: widget.height,
       child: PageView.builder(
         controller: _page,
-        itemCount: items.length,
-        itemBuilder: (_, i) => Semantics(
-          button: true,
-          label: '${items[i].name}, ${ugx(items[i].price)}',
-          child: Material(
-            color: p.surfaceAlt,
-            child: InkWell(
-              onTap: () => _open(outlet.key, items[i]),
-              child: Row(
-                children: [
-                  PhotoSlot(width: widget.height, height: widget.height, icon: Icons.restaurant_outlined),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(IgongoSpace.md),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        spacing: IgongoSpace.xs,
-                        children: [
-                          Text(
-                            items[i].name,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: context.text.titleMedium,
-                          ),
-                          Text(ugx(items[i].price), style: context.text.titleSmall?.copyWith(color: p.primaryText)),
-                          Text('Tap to order', style: context.text.bodySmall),
-                        ],
+        itemCount: _count,
+        itemBuilder: (_, slide) {
+          if (slide < banner) return bannerSlide;
+          final i = slide - banner;
+          return Semantics(
+            button: true,
+            label: '${items[i].name}, ${ugx(items[i].price)}',
+            child: Material(
+              color: p.surfaceAlt,
+              child: InkWell(
+                onTap: () => _open(outlet.key, items[i]),
+                child: Row(
+                  children: [
+                    PhotoSlot(width: widget.height, height: widget.height, icon: Icons.restaurant_outlined),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(IgongoSpace.md),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          spacing: IgongoSpace.xs,
+                          children: [
+                            Text(
+                              items[i].name,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: context.text.titleMedium,
+                            ),
+                            Text(ugx(items[i].price), style: context.text.titleSmall?.copyWith(color: p.primaryText)),
+                            Text('Tap to order', style: context.text.bodySmall),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

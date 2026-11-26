@@ -61,11 +61,12 @@ Reference images from the owner (ticket-ref-1 to 3). Three parts:
 - **Takeaway container:** the app offers it when the menu has an available item whose name contains "container" (priced by the server like any dish, hidden from the dish grid). A proper "container" flag on menu items (module 61) is better than the name match.
 - **Delivery location:** zone and place are asked and must be confirmed before ordering; the last location is filled in next time. A map pin (lat/lng) waits for the Google Maps key.
 
-## 12. Photo slots for the owner's own photos (owner, 26 Nov: no stock photos; placeholders until then)
-All slots show a plain placeholder icon today. To swap one: put the file in `apps/igongo/assets/photos/`, list that folder under `flutter: assets:` in `apps/igongo/pubspec.yaml`, and set the path in `apps/igongo/lib/shared/ui/photo/guest_photos.dart` (an https address works too).
-| Slot (`GuestPhotos.`) | Where it shows | Photo needed |
-|---|---|---|
-| `banner` | Guest home, when there are no dishes to slide | The thatched hut with the hills (wide) |
-| `food` | Today's menu card on the guest home | A plate of the restaurant's food (3:2) |
-| `roomStandard` / `roomDeluxe` / `roomExecutive` | Room booking screens (to be wired when those screens are built) | One photo per room type (3:2) |
-- Not slotted yet: a picture per outlet and per dish (the menu has no photo field; module 61 needs one, and the dish grid, carousel and item page then read it).
+## 12. Photo slots for the owner's own photos (owner, 26 Nov: no stock photos)
+Slots without a photo show a plain placeholder icon. To swap one: put the file in `apps/igongo/assets/photos/`, set the path in `apps/igongo/lib/shared/ui/photo/guest_photos.dart` (an https address also works). Shoot landscape JPGs, 1200 px wide or more, under about 300 KB, with the subject in the middle (the app crops).
+| Slot | Shows on | Photo needed | Status |
+|---|---|---|---|
+| `banner` | Guest home header, first slide | Wide photo of the hut (shoot 16:9, hut centred) | Done: `igongo-hut.jpg` (owner's photo, 650 px wide; a larger original would be sharper) |
+| `food` | Today's menu card, guest home | One appetising dish (3:2) | Needed |
+| `roomStandard`, `roomDeluxe`, `roomExecutive` | Room booking screens | One photo per room type (3:2) | Needed; screens not wired yet |
+| Outlet photos | Shop rows on the Food screen | One per outlet, e.g. restaurant, bar, pool bar (square, 600 px) | Needed; no photo field on outlets yet |
+| Dish photos | Dish grid, carousel, item page | One per dish (3:2, dish centred) | Needed; the menu has no photo field yet (module 61 and the menu API need one first) |

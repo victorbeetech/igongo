@@ -35,3 +35,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    # The owner's own photos (see lib/shared/ui/photo/guest_photos.dart).
+    - assets/photos/

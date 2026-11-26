@@ -5,14 +5,20 @@
 // in pubspec.yaml. Later the super admin will change the banner (wait list).
 //
 // Pictures the hotel must send:
-//  * banner: the thatched Igongo cultural hut with the hills behind (wide).
+//  * banner: the owner's round thatched hut (now set: assets/photos/igongo-hut.jpg).
 //  * food: a plate of the restaurant's food (wide, 3:2).
 //  * roomStandard, roomDeluxe, roomExecutive: one photo of each room type (wide, 3:2).
+
+import 'package:material_ui/material_ui.dart';
 
 /// Where each guest-home picture lives (null shows the placeholder).
 abstract final class GuestPhotos {
   /// The banner at the top of the guest home.
-  static const String? banner = null;
+  static const String banner = 'assets/photos/igongo-hut.jpg';
+
+  /// Which part of the banner photo stays in view when it is cropped wide
+  /// (a little above centre keeps the thatch and the door).
+  static const Alignment bannerAlignment = Alignment(0, -0.3);
 
   /// The photo on the Food shop card.
   static const String? food = null;
