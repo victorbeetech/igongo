@@ -3,7 +3,10 @@
  *   1. find the bill and check the payer may pay it,
  *   2. check the method is switched on for this module and outlet,
  *   3. work out the amount (deposit up to the balance),
- *   4. save a pending payment, then ask the provider to charge.
+ *   4. a double tap (the same payer, record, method and amount still
+ *      pending from the last few minutes) gets that same payment back,
+ *      so the payer is never charged twice,
+ *   5. save a pending payment, then ask the provider to charge.
  * The result comes later by callback, or when the app asks again.
  */
 
@@ -15,6 +18,9 @@ import type { Payment } from "../../domain/payment";
 import { toMsisdn } from "../../domain/uganda-phone";
 import type { PaymentsDeps } from "../payments-deps";
 import { amountToTake, billOf } from "./bill-of";
+
+/** How long a pending charge counts as "the same tap" (a mobile money prompt times out after about 5 minutes). */
+const SAME_CHARGE_MINUTES = 5;
 
 export interface StartInput {
   ref: PayableRef;
@@ -40,7 +46,13 @@ export async function startPayment(deps: PaymentsDeps, input: StartInput): Promi
   if (info.kind === "prompt" && !msisdn) throw new AppError("bad_request", "Enter a Ugandan mobile money number, such as 0772 123456.");
   // 3. How much.
   const amount = amountToTake(bill, input.amount);
-  // 4. Pending first, so a fast callback always finds it.
+  // 4. Double tap: the same charge still waiting is returned, not started again.
+  const since = deps.change.now.getTime() - SAME_CHARGE_MINUTES * 60_000;
+  const waiting = (await deps.payments.forRecord(input.ref.module, input.ref.recordId)).find(
+    (p) => p.status === "pending" && p.method === input.method && p.amount === amount && p.payerUserId === bill.payerUserId && p.createdAt.getTime() >= since,
+  );
+  if (waiting) return waiting;
+  // 5. Pending first, so a fast callback always finds it.
   const id = newId("pay");
   const payment: Payment = {
     id, module: input.ref.module, recordId: input.ref.recordId, label: bill.label, outlet: bill.outlet, method: input.method, amount, status: "pending",

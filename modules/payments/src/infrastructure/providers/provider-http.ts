@@ -20,6 +20,11 @@ export async function keysFor<K extends string>(secrets: SecretReader, provider:
   return Object.fromEntries(names.map((n, i) => [n, values[i]])) as Record<K, string>;
 }
 
+/** True when every key in [names] is saved (the provider is connected); never shows the values. */
+export async function hasKeys(secrets: SecretReader, names: readonly string[]): Promise<boolean> {
+  return (await Promise.all(names.map((n) => secrets.get(n)))).every(Boolean);
+}
+
 /**
  * Calls a provider and reads its JSON reply.
  * @throws AppError when the provider refuses or cannot be reached

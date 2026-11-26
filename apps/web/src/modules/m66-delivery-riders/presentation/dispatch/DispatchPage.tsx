@@ -1,7 +1,9 @@
 "use client";
 // S66-01 Dispatch board and S66-11 Riders: orders ready for a rider, each
 // with a rider to assign from those online; deliveries on the way; riders
-// online, and the cash each holds to hand in (S66-08).
+// online, and the cash each holds to hand in (S66-08). The dispatcher can
+// also send anything else that needs a rider (shop items, laundry, a room
+// service tray, a parcel); the guest follows it on the same tracker.
 
 import { useState } from "react";
 import { useAssign, useDispatchBoard, useReceiveCash } from "@/modules/m66-delivery-riders/data/deliveryApi";
@@ -15,6 +17,11 @@ import { StatusChip } from "@/shared/ui/chip/StatusChip";
 import { SelectInput } from "@/shared/ui/field/SelectInput";
 import { SectionHeader } from "@/shared/ui/section/SectionHeader";
 import { DataTable } from "@/shared/ui/table/DataTable";
+import { SOURCE_WORDS, type DeliveryJob } from "../../domain/deliveryJob";
+import { SendDeliveryForm } from "./SendDeliveryForm";
+
+/** What the rider carries: the food order number, or the words for anything else. */
+const whatOf = (j: DeliveryJob) => (j.what ? `${SOURCE_WORDS[j.source]}: ${j.what}` : SOURCE_WORDS[j.source]);
 
 export function DispatchPage({ screen }: { screen: ScreenContext }) {
   const board = useDispatchBoard();
@@ -25,6 +32,7 @@ export function DispatchPage({ screen }: { screen: ScreenContext }) {
     <>
       <PurposeText text={screen.spec.purpose} />
       <div className="grid gap-3 p-4">
+        <SendDeliveryForm />
         <LiveData query={board} name="Deliveries">
           {(d) => (
             <>
@@ -35,6 +43,7 @@ export function DispatchPage({ screen }: { screen: ScreenContext }) {
                 empty="Nothing waiting."
                 columns={[
                   { label: "Order", cell: (j) => j.orderNumber },
+                  { label: "What", cell: whatOf },
                   { label: "To", cell: (j) => j.place.label },
                   { label: "Ready since", cell: (j) => timeOf(j.openedAt) },
                   { label: "Collect", cell: (j) => ugx(j.cashToCollect) },
@@ -50,7 +59,7 @@ export function DispatchPage({ screen }: { screen: ScreenContext }) {
                 ]}
               />
               <SectionHeader title={`On the way (${d.active.length})`} />
-              <DataTable rows={d.active} rowKey={(j) => j.id} empty="No deliveries out." columns={[{ label: "Order", cell: (j) => j.orderNumber }, { label: "Rider", cell: (j) => j.riderName ?? "-" }, { label: "To", cell: (j) => j.place.label }, { label: "Status", cell: (j) => <StatusChip status={words(j.status)} /> }]} />
+              <DataTable rows={d.active} rowKey={(j) => j.id} empty="No deliveries out." columns={[{ label: "Order", cell: (j) => j.orderNumber }, { label: "What", cell: whatOf }, { label: "Rider", cell: (j) => j.riderName ?? "-" }, { label: "To", cell: (j) => j.place.label }, { label: "Status", cell: (j) => <StatusChip status={words(j.status)} /> }]} />
               <SectionHeader title={`Riders online (${d.riders.length})`} />
               <DataTable
                 rows={d.riders}

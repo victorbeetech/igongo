@@ -1,13 +1,17 @@
 // Checkout: how the guest wants the food (only the types the super admin
 // switched on for this outlet), when (pre-orders and timed deliveries:
 // "1 kg fried beef, I'm coming at 4 PM"), where (delivery zone and place,
-// room or table), notes and allergies. Placing it opens the pay sheet when
-// the rules ask for money first.
+// room or table), notes, allergies and a promo or voucher code ("Apply"
+// asks the server for the price; the app never works out a discount).
+// Placing it sends one checkout key, so a double tap never orders twice,
+// then opens the pay sheet when the rules ask for money first.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../shared/api/api_client.dart';
+import '../../../shared/format/request_key.dart';
 import '../../../shared/format/ugx.dart';
 import '../../../shared/payments/presentation/pay_sheet.dart';
 import '../../../shared/theme/theme.dart';
@@ -16,6 +20,7 @@ import '../../../shared/ui/field/igongo_field.dart';
 import '../../../shared/ui/toast/igongo_toast.dart';
 import '../application/cart_controller.dart';
 import '../application/orders_providers.dart';
+import '../domain/cart_quote.dart';
 import '../domain/order_type.dart';
 
 /// The checkout sheet for the cart.
@@ -31,6 +36,11 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
   final _place = TextEditingController();
   final _notes = TextEditingController();
   final _allergies = TextEditingController();
+  final _promo = TextEditingController();
+
+  /// This checkout's key: the same order comes back if "Place order" is tapped twice.
+  final _requestKey = newRequestKey();
+  CartQuote? _quote;
   String? _type;
   String? _zone;
   DateTime? _arriveAt;
@@ -41,6 +51,7 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
     _place.dispose();
     _notes.dispose();
     _allergies.dispose();
+    _promo.dispose();
     super.dispose();
   }
 
@@ -58,10 +69,44 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
   /// Text of [c], or null when empty.
   static String? _text(TextEditingController c) => c.text.trim().isEmpty ? null : c.text.trim();
 
+  /// The cart and details as the API takes them.
+  Json _body(String outlet, String type) {
+    final place = _text(_place);
+    return {
+      'outlet': outlet,
+      'type': type,
+      'lines': [for (final l in ref.read(cartProvider).lines) l.toJson()],
+      'arriveAt': ?_arriveAt?.toUtc().toIso8601String(),
+      if (type == 'delivery') 'deliverTo': {'label': place ?? '', 'zone': _zone, 'lat': null, 'lng': null},
+      if (type == 'room_service') 'deliverTo': {'label': 'Room $place', 'zone': null, 'lat': null, 'lng': null},
+      if (type == 'dine_in') 'table': place,
+      'notes': ?_text(_notes),
+      'allergies': ?_text(_allergies),
+      'promoCode': ?_text(_promo),
+    };
+  }
+
+  /// Asks the server for the price with the code (and the delivery fee).
+  Future<void> _applyCode(String outlet) async {
+    final type = _type;
+    if (type == null) return showIgongoToast(context, 'Choose how you want it first.');
+    if (type == 'delivery' && _zone == null) return showIgongoToast(context, 'Choose the zone first.');
+    try {
+      final quote = await ref.read(ordersApiProvider).quote(_body(outlet, type));
+      if (mounted) setState(() => _quote = quote);
+    } on Exception catch (e) {
+      if (mounted) {
+        setState(() => _quote = null);
+        showIgongoToast(context, '$e');
+      }
+    }
+  }
+
   /// Places the order, then pays when money is due now.
   Future<void> _placeOrder(String outlet) async {
     final type = _type;
     final cart = ref.read(cartProvider);
+    if (cart.lines.isEmpty) return;
     // Step 1: check the form has what this order type needs.
     if (type == null) return showIgongoToast(context, 'Choose how you want it.');
     if (type == 'pre_order' && _arriveAt == null) return showIgongoToast(context, 'Choose when you are coming.');
@@ -73,19 +118,8 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
     }
     setState(() => _busy = true);
     try {
-      // Step 2: place it; the API prices it again and applies the rules.
-      final place = _text(_place);
-      final order = await ref.read(ordersApiProvider).place({
-        'outlet': outlet,
-        'type': type,
-        'lines': [for (final l in cart.lines) l.toJson()],
-        'arriveAt': ?_arriveAt?.toUtc().toIso8601String(),
-        if (type == 'delivery') 'deliverTo': {'label': place, 'zone': _zone, 'lat': null, 'lng': null},
-        if (type == 'room_service') 'deliverTo': {'label': 'Room $place', 'zone': null, 'lat': null, 'lng': null},
-        if (type == 'dine_in') 'table': place,
-        'notes': ?_text(_notes),
-        'allergies': ?_text(_allergies),
-      });
+      // Step 2: place it; the API prices it again and applies the rules and the code.
+      final order = await ref.read(ordersApiProvider).place({..._body(outlet, type), 'requestKey': _requestKey});
       ref.read(cartProvider.notifier).clear();
       ref.invalidate(myOrdersProvider);
       if (!mounted) return;
@@ -193,6 +227,25 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
               ),
             IgongoField(label: 'Notes for the kitchen', controller: _notes),
             IgongoField(label: 'Allergies', controller: _allergies),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              spacing: IgongoSpace.sm,
+              children: [
+                Expanded(
+                  child: IgongoField(label: 'Promo or voucher code', controller: _promo),
+                ),
+                IgongoButton(label: 'Apply', variant: ButtonVariant.secondary, onPressed: () => _applyCode(outlet)),
+              ],
+            ),
+            if (_quote case final q?)
+              Text(
+                [
+                  if (q.discount > 0) '${q.promoLabel ?? 'Code'}: −${ugx(q.discount)}',
+                  if (q.deliveryFee > 0) 'Delivery ${ugx(q.deliveryFee)}',
+                  'Total ${ugx(q.total)}',
+                ].join(' · '),
+                style: context.text.titleMedium,
+              ),
             IgongoButton(
               label: _busy ? 'Placing…' : 'Place order',
               expand: true,

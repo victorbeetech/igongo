@@ -11,7 +11,7 @@
 import type { SecretReader } from "@igongo/contracts/super-admin";
 import { AppError } from "@igongo/core";
 import type { PaymentProvider } from "../../application/ports/payment-provider";
-import { at, callJson, keysFor, type Fetch } from "./provider-http";
+import { at, callJson, hasKeys, keysFor, type Fetch } from "./provider-http";
 
 const NAME = "Flutterwave";
 const BASE = "https://api.flutterwave.com/v3";
@@ -24,6 +24,7 @@ export function flutterwaveProvider(secrets: SecretReader, fetchFn: Fetch): Paym
   }
 
   return {
+    connected: () => hasKeys(secrets, ["flutterwave.secret_key"] as const),
     async start(charge) {
       const json = await callJson(fetchFn, NAME, `${BASE}/payments`, {
         method: "POST",

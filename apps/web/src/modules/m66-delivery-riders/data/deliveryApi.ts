@@ -3,8 +3,9 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/shared/api/apiClient";
+import type { GuestRef } from "@/shared/api/types/guestRef";
 import { useApiMutation } from "@/shared/api/useApiMutation";
-import type { DeliveryJob } from "../domain/deliveryJob";
+import type { DeliveryJob, DeliverySource } from "../domain/deliveryJob";
 import type { DeliveryRules } from "../domain/deliveryRules";
 import type { RiderStatus } from "../domain/riderStatus";
 
@@ -38,3 +39,22 @@ export const usePing = () => useApiMutation((p: { lat: number; lng: number }) =>
 /** The rider's step on a job. */
 export const useJobStep = () =>
   useApiMutation((v: { jobId: string; step: "accept" | "decline" | "pickup" | "deliver" | "fail"; body?: unknown }) => api<DeliveryJob>(`/api/delivery/jobs/${v.jobId}/${v.step}`, { method: "POST", body: v.body ?? {} }), { done: "Done", ...refresh });
+
+/** A delivery the dispatcher sends by hand (anything but food). */
+export interface ManualDelivery {
+  source: Exclude<DeliverySource, "food">;
+  what: string;
+  /** [userId] links it to the guest's app, so they can follow it. */
+  customer: { name: string; phone?: string; userId?: string };
+  place: { label: string; zone: string | null; lat: null; lng: null };
+  cashToCollect: number;
+}
+
+export const useSendDelivery = () => useApiMutation((b: ManualDelivery) => api<DeliveryJob>("/api/delivery/jobs", { method: "POST", body: b }), { done: "Delivery sent to the board", ...refresh });
+
+/** The zones and fees, for the "Send a delivery" form. */
+export const useZonesForDispatch = () => useQuery({ queryKey: ["delivery", "zones"], queryFn: () => api<{ items: { zone: string; name: string; fee: number; minutes: number }[] }>("/api/delivery/zones") });
+
+/** Guests matching [q], so a hand-sent delivery shows on the guest's tracker (CRM, by address). */
+export const useGuestSearch = (q: string) =>
+  useQuery({ queryKey: ["crm", "guests", q], queryFn: () => api<{ items: GuestRef[] }>(`/api/crm/guests?q=${encodeURIComponent(q)}`), enabled: q.trim().length >= 2, retry: false });

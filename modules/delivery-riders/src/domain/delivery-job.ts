@@ -3,6 +3,7 @@
  * moment the kitchen marks it ready until it is handed over (or fails).
  */
 
+import type { DeliverySource } from "@igongo/contracts/delivery-riders";
 import type { DeliveryPlace } from "@igongo/contracts/food-ordering";
 
 export const JOB_STATUSES = ["waiting", "assigned", "accepted", "picked_up", "delivered", "failed"] as const;
@@ -10,9 +11,14 @@ export type JobStatus = (typeof JOB_STATUSES)[number];
 
 export interface DeliveryJob {
   id: string;
+  /** What is delivered: food, shop items, laundry, a room service tray or a parcel. */
+  source: DeliverySource;
+  /** The record in the source module (the food order ID), or the job's own ID for a parcel. */
   orderId: string;
-  /** The ticket number, such as `F-0042`. */
+  /** The number people quote, such as `F-0042` for food or `D-0007` for a parcel. */
   orderNumber: string;
+  /** What the rider carries, in words, such as "2 bags of laundry". Null for food (the ticket lists it). */
+  what: string | null;
   customerUserId: string | null;
   customerName: string;
   customerPhone: string | null;

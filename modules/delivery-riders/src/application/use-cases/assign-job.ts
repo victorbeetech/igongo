@@ -2,6 +2,7 @@
 
 import { AppError, recordChange } from "@igongo/core";
 import type { DeliveryJob } from "../../domain/delivery-job";
+import { assignedMessage } from "../../domain/delivery-messages";
 import type { DeliveryDeps } from "../delivery-deps";
 
 /** The job [id]. @throws AppError not_found */
@@ -18,6 +19,8 @@ export async function assignJob(deps: DeliveryDeps, id: string, riderUserId: str
   if (!rider) throw new AppError("not_found", "That rider has never gone online.");
   const assigned: DeliveryJob = { ...job, status: "assigned", riderUserId, riderName: rider.name, assignedAt: deps.change.now };
   await deps.jobs.update(assigned);
-  await recordChange(deps.change, { module: "delivery-riders", action: "delivery.assigned", recordType: "delivery", recordId: id, summary: `Order ${job.orderNumber} assigned to ${rider.name}` });
+  await recordChange(deps.change, { module: "delivery-riders", action: "delivery.assigned", recordType: "delivery", recordId: id, summary: `${job.orderNumber} assigned to ${rider.name}` });
+  // The rider's phone rings with the new job.
+  await deps.notify([riderUserId], assignedMessage(assigned));
   return assigned;
 }

@@ -29,15 +29,30 @@ export interface Order {
   table: string | null;
   deliverTo: DeliveryPlace | null;
   subtotal: number;
+  /** Shillings taken off by a promo or voucher code (0 without one). */
+  discount: number;
+  /** The promo or voucher code used, in capitals, or null. */
+  promoCode: string | null;
   deliveryFee: number;
+  /** subtotal - discount + deliveryFee, worked out on the server only. */
   total: number;
   paid: number;
-  /** When a pre-order guest arrives. */
+  /**
+   * The time the guest asked for: arrival for a pre-order, or the wanted
+   * time of a scheduled delivery, takeaway or room service order. Null for
+   * "as soon as possible".
+   */
   arriveAt: Date | null;
   /** When the food should be ready. */
   readyAt: Date;
   /** The staff member who took it (phone, walk-in or waiter order). */
   takenBy: string | null;
+  /**
+   * The key the app sent with "place order" (one per checkout). The same
+   * key from the same person returns the same order, so a double tap never
+   * orders twice.
+   */
+  requestKey: string | null;
   history: StatusChange[];
   createdAt: Date;
   updatedAt: Date;

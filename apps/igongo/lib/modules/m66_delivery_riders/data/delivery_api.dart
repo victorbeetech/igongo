@@ -1,7 +1,9 @@
-// The rider endpoints the app uses (`/api/delivery`).
+// The delivery endpoints the app uses (`/api/delivery`): the rider's shift
+// and steps, and the guest's tracker for everything delivered to them.
 
 import '../../../shared/api/api_client.dart';
 import '../domain/rider_shift.dart';
+import '../domain/tracked_delivery.dart';
 
 /// Calls the rider API.
 class DeliveryApi {
@@ -22,6 +24,15 @@ class DeliveryApi {
   /// Delivers job [id] with the guest's [code] and the cash taken.
   Future<void> deliver(String id, {String? code, int? cash}) =>
       _api.post('/api/delivery/jobs/$id/deliver', {'code': ?code, 'cashCollected': ?cash});
+
+  /// My deliveries of every kind: those on their way, then the last 30 days' finished ones.
+  Future<({List<TrackedDelivery> active, List<TrackedDelivery> done})> mine() async {
+    final json = await _api.get('/api/delivery/mine');
+    List<TrackedDelivery> read(String key) => [
+      for (final d in json[key] as List<dynamic>? ?? const []) TrackedDelivery.fromJson(d as Json),
+    ];
+    return (active: read('active'), done: read('done'));
+  }
 
   /// Reports job [id] could not be delivered, and why.
   Future<void> fail(String id, String reason) => _api.post('/api/delivery/jobs/$id/fail', {'reason': reason});

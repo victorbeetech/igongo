@@ -2,8 +2,11 @@
 // tracking (`/api/delivery`) and orders (`/api/orders`).
 
 import '../../../shared/api/api_client.dart';
+import '../domain/cart_line.dart';
+import '../domain/cart_quote.dart';
 import '../domain/delivery_track.dart';
 import '../domain/delivery_zone.dart';
+import '../domain/item_stars.dart';
 import '../domain/menu_item.dart';
 import '../domain/order.dart';
 import '../domain/ordering_rules.dart';
@@ -33,6 +36,40 @@ class OrdersApi {
 
   /// Delivery zones.
   Future<List<DeliveryZone>> zones() async => _items(await _api.get('/api/delivery/zones'), DeliveryZone.fromJson);
+
+  /// The server's price for the cart [body] (with any promo code), without ordering.
+  Future<CartQuote> quote(Json body) async => CartQuote.fromJson(await _api.post('/api/orders/quote', body));
+
+  /// Each dish's average stars, for the menu.
+  Future<Map<String, ItemStars>> stars() async => {
+    for (final s in _items(await _api.get('/api/orders/stars'), ItemStars.fromJson)) s.itemId: s,
+  };
+
+  /// Rates my delivered order [id]: food stars, delivery stars (deliveries) and a short review.
+  Future<void> rate(String id, {required int food, int? delivery, String? comment}) =>
+      _api.post('/api/orders/$id/rating', {'food': food, 'delivery': ?delivery, 'comment': ?comment});
+
+  /// My order [id] again at today's prices: the outlet, type, cart lines and dishes no longer on the menu.
+  Future<({String outlet, String type, List<CartLine> lines, List<String> missing})> reorder(String id) async {
+    final json = await _api.get('/api/orders/$id/reorder');
+    final quote = json['quote'] as Json?;
+    final lines = [for (final l in quote?['lines'] as List<dynamic>? ?? const []) _cartLineOf(l as Json)];
+    return (
+      outlet: '${json['outlet']}',
+      type: '${json['type']}',
+      lines: lines,
+      missing: [for (final m in json['missing'] as List<dynamic>? ?? const []) '$m'],
+    );
+  }
+
+  /// A priced order line from the API as a cart line (its options back as `group:choice` picks).
+  static CartLine _cartLineOf(Json l) => CartLine(
+    itemId: '${l['itemId']}',
+    name: '${l['name']}',
+    quantity: (l['quantity'] as num?)?.toInt() ?? 1,
+    unitPrice: (l['unitPrice'] as num?)?.toInt() ?? 0,
+    options: [for (final o in l['options'] as List<dynamic>? ?? const []) '${(o as Json)['group']}:${o['key']}'],
+  );
 
   /// Places an order; [body] is the cart and details as the API takes them.
   Future<Order> place(Json body) async => Order.fromJson(await _api.post('/api/orders', body));

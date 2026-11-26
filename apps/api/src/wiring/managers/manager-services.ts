@@ -16,6 +16,7 @@
  * (its contract is null, or its tiles are not asked for).
  */
 
+import type { UserNotifier } from "@igongo/contracts/notifications";
 import { advanceHistory, advanceKpis, advanceRecovery, DrizzleAdvanceRepository, SettingsAdvanceRulesStore, type AdvancesDeps } from "@igongo/advances-loans";
 import { attendanceKpis } from "@igongo/attendance";
 import { bonusHistory, bonusKpis, cashBonusSource, DrizzleBonusRepository, SettingsBonusRulesStore, type BonusesDeps } from "@igongo/bonuses-rewards";
@@ -91,6 +92,8 @@ export class ManagerServices {
     /** The R2 bucket for files, or null when it is not bound. */
     private readonly blobs: BlobStore | null,
     private readonly trail: AuditReader,
+    /** Pushes to people's own phones (chat messages). */
+    private readonly notify: UserNotifier,
   ) {}
 
   /** Builds [key]'s deps once, before its router runs (see manager-routes.ts). */
@@ -176,7 +179,7 @@ export class ManagerServices {
   }
 
   chat(): ChatDeps {
-    return { chats: new DrizzleChatRepository(this.db), settings: new SettingsChatStore(this.db), staff: this.staffModules.staff(), files: this.fileDirectory(), change: this.change };
+    return { chats: new DrizzleChatRepository(this.db), settings: new SettingsChatStore(this.db), staff: this.staffModules.staff(), files: this.fileDirectory(), notify: this.notify, change: this.change };
   }
 
   records(): RecordsDeps {

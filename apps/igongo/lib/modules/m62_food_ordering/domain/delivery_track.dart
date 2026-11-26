@@ -6,7 +6,7 @@ import '../../../shared/api/api_client.dart';
 /// A delivery's tracking.
 class DeliveryTrack {
   /// Creates the tracking.
-  const DeliveryTrack({required this.status, required this.code, required this.minutes, this.riderName});
+  const DeliveryTrack({required this.status, required this.code, required this.minutes, this.riderName, this.eta});
 
   /// Reads it from the API's JSON.
   factory DeliveryTrack.fromJson(Json json) => DeliveryTrack(
@@ -14,6 +14,7 @@ class DeliveryTrack {
     code: '${json['code']}',
     minutes: (json['minutes'] as num?)?.toInt() ?? 0,
     riderName: json['riderName'] as String?,
+    eta: json['eta'] as String?,
   );
 
   /// The job's status.
@@ -27,4 +28,7 @@ class DeliveryTrack {
 
   /// The rider, once assigned.
   final String? riderName;
+
+  /// When it should arrive (ISO time), once a rider has it.
+  final String? eta;
 }

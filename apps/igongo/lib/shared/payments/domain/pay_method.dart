@@ -6,11 +6,15 @@ import '../../api/api_client.dart';
 /// A payment method on offer.
 class PayMethod {
   /// Creates a method.
-  const PayMethod({required this.method, required this.name, required this.kind});
+  const PayMethod({required this.method, required this.name, required this.kind, this.preview = false});
 
   /// Reads one from the API's JSON.
-  factory PayMethod.fromJson(Json json) =>
-      PayMethod(method: '${json['method']}', name: '${json['name']}', kind: '${json['kind']}');
+  factory PayMethod.fromJson(Json json) => PayMethod(
+    method: '${json['method']}',
+    name: '${json['name']}',
+    kind: '${json['kind']}',
+    preview: json['preview'] == true,
+  );
 
   /// The method key, such as `mtn_momo`.
   final String method;
@@ -20,6 +24,10 @@ class PayMethod {
 
   /// `prompt` (a phone approval), `redirect` (a card page) or `staff` (paid at the desk).
   final String kind;
+
+  /// Preview mode: a gateway whose keys are not saved yet. Shown greyed out
+  /// and labelled, never payable.
+  final bool preview;
 
   /// True when the guest must type a phone number.
   bool get needsPhone => kind == 'prompt';

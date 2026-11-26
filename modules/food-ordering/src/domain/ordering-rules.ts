@@ -27,6 +27,8 @@ export interface OrderingRules {
   cancelWindowMinutes: number;
   /** Minutes each order already in the kitchen adds to a ready time. */
   minutesPerQueuedOrder: number;
+  /** How many days ahead a guest may schedule an order (0 turns scheduling off). */
+  scheduleAheadDays: number;
 }
 
 const PAYMENT_BY_TYPE: Record<OrderType, PaymentTiming> = { delivery: "before", room_service: "later", dine_in: "later", takeaway: "before", pre_order: "deposit" };
@@ -38,7 +40,11 @@ export const DEFAULT_ORDERING_RULES: OrderingRules = {
   depositPercent: 50,
   cancelWindowMinutes: 5,
   minutesPerQueuedOrder: 3,
+  scheduleAheadDays: 7,
 };
+
+/** Order types a guest may schedule for later (pre-orders always have a time; dine-in is now). */
+export const SCHEDULABLE_TYPES: readonly OrderType[] = ["delivery", "takeaway", "room_service"];
 
 /** True when [type] can be ordered at [outlet]. */
 export function typeAllowed(rules: OrderingRules, type: OrderType, outlet: string): boolean {
@@ -56,10 +62,11 @@ export function paidBeforeKitchen(rules: OrderingRules, type: OrderType, total: 
 
 /**
  * When the food will be ready: now plus the slowest item plus the kitchen's
- * queue; for a pre-order, at the guest's arrival time.
+ * queue; for a pre-order or scheduled order, at the guest's time less the
+ * delivery's travel minutes (so it arrives on time).
  */
-export function readyTime(input: { now: Date; prepMinutes: number[]; queued: number; arriveAt: Date | null; rules: OrderingRules }): Date {
-  if (input.arriveAt) return input.arriveAt;
+export function readyTime(input: { now: Date; prepMinutes: number[]; queued: number; arriveAt: Date | null; travelMinutes?: number; rules: OrderingRules }): Date {
+  if (input.arriveAt) return new Date(input.arriveAt.getTime() - (input.travelMinutes ?? 0) * 60_000);
   const minutes = Math.max(0, ...input.prepMinutes) + input.queued * input.rules.minutesPerQueuedOrder;
   return new Date(input.now.getTime() + minutes * 60_000);
 }

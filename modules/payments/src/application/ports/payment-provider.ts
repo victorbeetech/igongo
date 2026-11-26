@@ -36,6 +36,8 @@ export interface ProviderVerdict {
 }
 
 export interface PaymentProvider {
+  /** True once the super admin has saved all of this provider's keys. Until then its screens are a preview. */
+  connected(): Promise<boolean>;
   /** Starts a charge. @throws AppError not_configured when keys are missing */
   start(charge: ProviderCharge): Promise<ProviderStarted>;
   /** Asks the provider how the charge [providerRef] (our [paymentId]) stands. */

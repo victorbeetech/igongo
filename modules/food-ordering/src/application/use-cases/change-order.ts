@@ -31,7 +31,7 @@ export async function advanceOrder(deps: OrderingDeps, id: string, status: Order
 export async function cancelOrder(deps: OrderingDeps, id: string, by: { userId: string; staff: boolean }, reason: string): Promise<Order> {
   const order = await orderOf(deps, id);
   if (!by.staff) {
-    if (order.userId !== by.userId) throw new AppError("not_found", "Order not found.");
+    if (order.userId !== by.userId) throw new AppError("permission_denied", "This order is not yours.");
     const window = (await deps.rules.read()).cancelWindowMinutes * 60_000;
     // Guests may cancel only before the kitchen starts and within the window.
     if (order.status === "preparing" || order.status === "ready" || deps.change.now.getTime() - order.createdAt.getTime() > window) {

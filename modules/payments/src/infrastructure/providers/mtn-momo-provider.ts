@@ -10,7 +10,7 @@
 
 import type { SecretReader } from "@igongo/contracts/super-admin";
 import type { PaymentProvider } from "../../application/ports/payment-provider";
-import { at, callJson, keysFor, type Fetch } from "./provider-http";
+import { at, callJson, hasKeys, keysFor, type Fetch } from "./provider-http";
 
 const NAME = "MTN MoMo";
 const KEYS = ["mtn_momo.api_user", "mtn_momo.api_key", "mtn_momo.subscription_key"] as const;
@@ -39,6 +39,7 @@ export function mtnMomoProvider(secrets: SecretReader, environment: EnvironmentO
   }
 
   return {
+    connected: () => hasKeys(secrets, KEYS),
     async start(charge) {
       const { base, currency, headers } = await session();
       // MTN wants a UUID reference; we keep it as the provider reference.

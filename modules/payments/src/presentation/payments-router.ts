@@ -1,7 +1,8 @@
 /**
  * Payments HTTP routes, mounted by the gateway at `/api/payments`.
  *
- *   GET   /payments/methods?module&outlet    methods switched on here (S77-01)
+ *   GET   /payments/methods?module&outlet    methods switched on here (S77-01), plus preview ones without keys
+ *   GET   /payments/connections              which gateways have their keys saved (super admin)
  *   POST  /payments/pay                      pay a bill in the app (S77-01, S77-02)
  *   POST  /payments/record                   staff record a till payment (S77-08)
  *   GET   /payments?status&module&mine       payments list (S77-04), or mine
@@ -49,10 +50,20 @@ export function paymentsRouter(deps: (c: Context<ActorEnv>) => PaymentsDeps) {
       const settings = await deps(c).settings.read();
       const staff = isStaffFor(c, P.manual);
       // Guests see app methods; till staff also see the ones they record.
-      const items = PAYMENT_METHODS.filter((m) => methodAllowed(settings, m, module, outlet ?? null))
+      const allowed = PAYMENT_METHODS.filter((m) => methodAllowed(settings, m, module, outlet ?? null))
         .map((m) => METHOD_CATALOG[m])
         .filter((m) => staff || m.kind !== "staff");
-      return c.json({ items });
+      // A gateway switched on but without keys is not usable yet: it moves to the preview list.
+      const providers = deps(c).providers;
+      const connected = new Map(await Promise.all(Object.entries(providers).map(async ([m, p]) => [m, await p.connected()] as const)));
+      const items = allowed.filter((m) => m.kind === "staff" || connected.get(m.method));
+      // Preview mode: every gateway still waiting for keys, shown greyed out and labelled, never payable.
+      const preview = settings.showPreview ? PAYMENT_METHODS.filter((m) => providers[m] && !connected.get(m)).map((m) => ({ ...METHOD_CATALOG[m], preview: true })) : [];
+      return c.json({ items, preview });
+    })
+    .get("/connections", requireStaffPermission(P.methods), async (c) => {
+      const providers = deps(c).providers;
+      return c.json(Object.fromEntries(await Promise.all(Object.entries(providers).map(async ([m, p]) => [m, await p.connected()] as const))));
     })
     .post("/pay", requirePermission(P.pay), zValidator("json", payBody), async (c) => {
       const { module, recordId, method, amount, phone } = c.req.valid("json");

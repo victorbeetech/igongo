@@ -2,6 +2,7 @@
 
 import type { FileDirectory } from "@igongo/contracts/files-media";
 import type { StaffDirectory } from "@igongo/contracts/hr-records";
+import type { UserNotifier } from "@igongo/contracts/notifications";
 import type { ChangeContext } from "@igongo/core";
 import type { ChatRepository } from "./ports/chat-repository";
 import type { ChatSettingsStore } from "./ports/settings-store";
@@ -12,5 +13,7 @@ export interface ChatDeps {
   /** To find staff to start a chat with. */
   staff: StaffDirectory;
   files: FileDirectory;
+  /** Pushes "new message" to the other people in the chat (Notifications). */
+  notify: UserNotifier;
   change: ChangeContext;
 }

@@ -31,7 +31,7 @@ function RulesForm({ initial }: { initial: OrderingRules }) {
   const save = useSaveOrderingRules();
   const [r, setR] = useState(initial);
   const setType = (t: OrderType, patch: Partial<OrderingRules["types"][OrderType]>) => setR({ ...r, types: { ...r.types, [t]: { ...r.types[t], ...patch } } });
-  const num = (k: "preorderMinNoticeMinutes" | "depositPercent" | "cancelWindowMinutes" | "minutesPerQueuedOrder") => (v: string) => setR({ ...r, [k]: Number(v) || 0 });
+  const num = (k: "preorderMinNoticeMinutes" | "depositPercent" | "cancelWindowMinutes" | "minutesPerQueuedOrder" | "scheduleAheadDays") => (v: string) => setR({ ...r, [k]: Number(v) || 0 });
   return (
     <>
       {(Object.keys(TYPE_WORDS) as OrderType[]).map((t) => (
@@ -48,6 +48,7 @@ function RulesForm({ initial }: { initial: OrderingRules }) {
         <TextInput label="Deposit (%)" type="number" value={String(r.depositPercent)} onChange={num("depositPercent")} />
         <TextInput label="Guests may cancel within (minutes)" type="number" value={String(r.cancelWindowMinutes)} onChange={num("cancelWindowMinutes")} />
         <TextInput label="Minutes each queued order adds" type="number" value={String(r.minutesPerQueuedOrder)} onChange={num("minutesPerQueuedOrder")} />
+        <TextInput label="Guests may schedule orders up to (days ahead; 0 turns it off)" type="number" value={String(r.scheduleAheadDays)} onChange={num("scheduleAheadDays")} />
       </div>
       <Button onClick={() => save.mutate(r)} disabled={save.isPending}>Save ordering rules</Button>
     </>

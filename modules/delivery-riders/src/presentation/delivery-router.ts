@@ -11,7 +11,10 @@
  *   POST  /delivery/rider/online          go online or offline
  *   POST  /delivery/rider/location        live location ping
  *   POST  /delivery/jobs/:id/accept|decline|pickup|deliver|fail   the rider's steps (S66-04 to S66-07)
- *   GET   /delivery/track/:orderId        the guest follows their delivery (S66-10)
+ *   POST  /delivery/jobs                  the dispatcher sends anything else (shop, laundry, parcel)
+ *   GET   /delivery/mine                  the tracker: my deliveries of every kind (S66-10)
+ *   GET   /delivery/track/job/:jobId      one delivery on the tracker
+ *   GET   /delivery/track/:orderId        a food order's delivery on the tracker
  */
 
 import { zValidator } from "@hono/zod-validator";
@@ -19,11 +22,13 @@ import { actorOf, AppError, omitKey, recordChange, requireSignIn, requireStaffPe
 import { Hono, type Context } from "hono";
 import type { DeliveryDeps } from "../application/delivery-deps";
 import { assignJob } from "../application/use-cases/assign-job";
+import { openDelivery } from "../application/use-cases/open-job";
 import { acceptJob, declineJob, deliverJob, failJob, pickUpJob } from "../application/use-cases/rider-actions";
 import { myShift, pingLocation, receiveCash, setOnline } from "../application/use-cases/rider-shift";
 import { ACTIVE_JOB_STATUSES, type DeliveryJob } from "../domain/delivery-job";
+import { trackingOf } from "../domain/delivery-tracking";
 import { DELIVERY_PERMISSIONS as P } from "./permissions";
-import { assignBody, deliverBody, failBody, locationBody, onlineBody, rulesBody } from "./request-schemas";
+import { assignBody, deliverBody, failBody, locationBody, manualJobBody, onlineBody, rulesBody } from "./request-schemas";
 
 /** @throws AppError unless the caller dispatches (scope `all`) */
 function dispatcher(c: Context<ActorEnv>) {
@@ -35,6 +40,19 @@ function rider(c: Context<ActorEnv>): string {
   const actor = actorOf(c);
   if (!scopeOf(actor, P.edit)) throw new AppError("permission_denied", `You need the permission ${P.edit}.`);
   return actor.userId;
+}
+
+/** How far back the tracker lists finished deliveries. */
+const TRACKER_DAYS = 30;
+
+/**
+ * The tracker view of [job] for the signed-in guest. Someone else's delivery
+ * is refused with 403 (never shown, never hinted at beyond that).
+ */
+async function trackFor(c: Context<ActorEnv>, deps: DeliveryDeps, job: DeliveryJob | null) {
+  if (!job) throw new AppError("not_found", "No delivery for this yet.");
+  if (job.customerUserId !== actorOf(c).userId) throw new AppError("permission_denied", "This delivery is not yours.");
+  return trackingOf(job, job.riderUserId ? await deps.riders.byUserId(job.riderUserId) : null);
 }
 
 /** A job without the guest's code (riders must ask the guest for it). */
@@ -71,6 +89,15 @@ export function deliveryRouter(deps: (c: Context<ActorEnv>) => DeliveryDeps) {
       dispatcher(c);
       return c.json(forStaff(await assignJob(deps(c), c.req.param("id"), c.req.valid("json").riderUserId)));
     })
+    .post("/jobs", zValidator("json", manualJobBody), async (c) => {
+      dispatcher(c);
+      const { source, what, customer, place, cashToCollect } = c.req.valid("json");
+      const job = await openDelivery(deps(c), {
+        source, recordId: null, reference: null, what, place, cashToCollect,
+        customer: { userId: customer.userId ?? null, name: customer.name, phone: customer.phone ?? null },
+      });
+      return c.json(forStaff(job), 201);
+    })
     .post("/riders/:id/cash", async (c) => {
       dispatcher(c);
       return c.json(await receiveCash(deps(c), c.req.param("id")));
@@ -93,15 +120,22 @@ export function deliveryRouter(deps: (c: Context<ActorEnv>) => DeliveryDeps) {
     .post("/jobs/:id/pickup", async (c) => c.json(forStaff(await pickUpJob(deps(c), c.req.param("id"), rider(c)))))
     .post("/jobs/:id/deliver", zValidator("json", deliverBody), async (c) => c.json(forStaff(await deliverJob(deps(c), c.req.param("id"), rider(c), c.req.valid("json")))))
     .post("/jobs/:id/fail", zValidator("json", failBody), async (c) => c.json(forStaff(await failJob(deps(c), c.req.param("id"), rider(c), c.req.valid("json").reason))))
+    .get("/mine", requireSignIn, async (c) => {
+      const d = deps(c);
+      const since = new Date(d.change.now.getTime() - TRACKER_DAYS * 86_400_000);
+      const jobs = await d.jobs.list({ customerUserId: actorOf(c).userId, since, limit: 100 });
+      // Rider positions only for deliveries on the road; one read per rider.
+      const riders = new Map<string, Awaited<ReturnType<typeof d.riders.byUserId>>>();
+      for (const j of jobs) if (j.status === "picked_up" && j.riderUserId && !riders.has(j.riderUserId)) riders.set(j.riderUserId, await d.riders.byUserId(j.riderUserId));
+      const items = jobs.map((j) => trackingOf(j, j.riderUserId ? (riders.get(j.riderUserId) ?? null) : null));
+      return c.json({ active: items.filter((t) => t.status !== "delivered" && t.status !== "failed"), done: items.filter((t) => t.status === "delivered" || t.status === "failed") });
+    })
+    .get("/track/job/:jobId", requireSignIn, async (c) => {
+      const d = deps(c);
+      return c.json(await trackFor(c, d, await d.jobs.byId(c.req.param("jobId"))));
+    })
     .get("/track/:orderId", requireSignIn, async (c) => {
       const d = deps(c);
-      const job = await d.jobs.byOrder(c.req.param("orderId"));
-      if (!job || job.customerUserId !== actorOf(c).userId) throw new AppError("not_found", "No delivery for this order yet.");
-      const where = job.riderUserId ? await d.riders.byUserId(job.riderUserId) : null;
-      // The guest sees their own code, to give the rider at the door.
-      return c.json({
-        status: job.status, code: job.code, riderName: job.riderName, minutes: job.minutes, cashToCollect: job.cashToCollect,
-        rider: where && job.status === "picked_up" ? { lat: where.lat, lng: where.lng, at: where.locationAt } : null,
-      });
+      return c.json(await trackFor(c, d, await d.jobs.bySource("food", c.req.param("orderId"))));
     });
 }

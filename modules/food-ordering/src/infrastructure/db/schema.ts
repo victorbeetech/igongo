@@ -5,7 +5,7 @@
 
 import type { DeliveryPlace } from "@igongo/contracts/food-ordering";
 import { moduleSettingsTable } from "@igongo/core";
-import { index, integer, jsonb, pgSchema, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
+import { boolean, index, integer, jsonb, pgSchema, smallint, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 import type { OrderLine } from "../../domain/order-line";
 import type { StatusChange } from "../../domain/status-change";
 
@@ -30,18 +30,45 @@ export const orders = ordersSchema.table(
     table: text("table_label"),
     deliverTo: jsonb("deliver_to").$type<DeliveryPlace | null>(),
     subtotal: integer("subtotal").notNull(),
+    discount: integer("discount").notNull().default(0),
+    promoCode: text("promo_code"),
     deliveryFee: integer("delivery_fee").notNull(),
     total: integer("total").notNull(),
     paid: integer("paid").notNull(),
     arriveAt: timestamp("arrive_at", { withTimezone: true }),
     readyAt: timestamp("ready_at", { withTimezone: true }).notNull(),
     takenBy: text("taken_by"),
+    requestKey: text("request_key"),
     history: jsonb("history").$type<StatusChange[]>().notNull(),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull(),
   },
-  // Ticket numbers never repeat; boards read by outlet and status.
-  (t) => [uniqueIndex("orders_seq_key").on(t.seq), index("orders_board_idx").on(t.outlet, t.status, t.readyAt), index("orders_user_idx").on(t.userId, t.createdAt)],
+  // Ticket numbers never repeat; boards read by outlet and status; one order per checkout key per person.
+  (t) => [
+    uniqueIndex("orders_seq_key").on(t.seq),
+    index("orders_board_idx").on(t.outlet, t.status, t.readyAt),
+    index("orders_user_idx").on(t.userId, t.createdAt),
+    uniqueIndex("orders_request_key").on(t.userId, t.requestKey),
+  ],
+);
+
+/** Guests' ratings and reviews of their orders, one per order (S62-11). */
+export const ratings = ordersSchema.table(
+  "ratings",
+  {
+    orderId: text("order_id").primaryKey(),
+    userId: text("user_id").notNull(),
+    name: text("name").notNull(),
+    outlet: text("outlet").notNull(),
+    itemIds: text("item_ids").array().notNull(),
+    food: smallint("food").notNull(),
+    delivery: smallint("delivery"),
+    comment: text("comment"),
+    hidden: boolean("hidden").notNull().default(false),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull(),
+  },
+  // The menu shows each outlet's newest reviews.
+  (t) => [index("ratings_outlet_idx").on(t.outlet, t.createdAt)],
 );
 
 /** The ordering rules (key `rules`). */

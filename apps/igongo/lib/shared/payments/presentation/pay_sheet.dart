@@ -3,7 +3,9 @@
 // wait while the guest approves on their phone. The sheet asks the API
 // again every few seconds; the API re-checks with the provider each time.
 // Card payments show the checkout link to open (the app adds no browser
-// package; the web portal opens it directly).
+// package; the web portal opens it directly). In preview mode, gateways
+// waiting for their keys show greyed out with "Preview: not connected yet",
+// so the screen can be seen before the keys arrive; they never take money.
 
 import 'dart:async';
 
@@ -162,12 +164,18 @@ class _PaySheetState extends ConsumerState<PaySheet> {
                         children: [
                           for (final m in list)
                             ChoiceChip(
-                              label: Text(m.name),
+                              label: Text(m.preview ? '${m.name} · Preview' : m.name),
                               selected: _method?.method == m.method,
-                              onSelected: (_) => setState(() => _method = m),
+                              // A preview method is shown, never chosen.
+                              onSelected: m.preview ? null : (_) => setState(() => _method = m),
                             ),
                         ],
                       ),
+                      if (list.any((m) => m.preview))
+                        Text(
+                          'Preview: not connected yet. These open once the hotel adds its keys.',
+                          style: context.text.bodySmall,
+                        ),
                       if (_method?.needsPhone ?? false)
                         IgongoField(
                           label: 'Phone number',

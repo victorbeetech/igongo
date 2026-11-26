@@ -19,3 +19,6 @@ export const promotionsVouchersRouter = (deps: Parameters<typeof recordsRouter>[
 
 /** This module's numbers for the management dashboard. */
 export const promotionsVouchersKpis = (db: Database) => recordKpis(promotionsVouchersModule, promotionsVouchersTables, db, "Promotions and vouchers");
+
+/** The `PromoDesk` contract (promo and voucher codes at checkouts), for the gateway to hand to selling modules. */
+export { promoDesk } from "./infrastructure/promo-desk";

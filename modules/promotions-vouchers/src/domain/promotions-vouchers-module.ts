@@ -41,7 +41,9 @@ export const promotionsVouchersModule: RecordModule = {
           field("expires", "Expires", "date", { inList: true }),
           field("buyer_phone", "Buyer phone", "phone"),
         ],
-        statuses: steps("Issued", "Redeemed.", "Expired.", "Cancelled."),
+        // A voucher is money: a request (a guest buying a gift card) only works
+        // at checkout once an approver has moved it to Issued.
+        statuses: steps("Requested", "Issued!", "Redeemed.", "Expired.", "Cancelled."),
       },
     ],
   },

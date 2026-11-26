@@ -9,12 +9,13 @@ import { TYPE_WORDS, type OrderStatus } from "@/modules/m62-food-ordering/domain
 import { LiveData } from "@/shared/api/LiveData";
 import type { ScreenContext } from "@/shared/catalog/types";
 import { ugx } from "@/shared/format/ugx";
-import { timeOf, words } from "@/shared/format/when";
+import { dayTimeOf, timeOf, words } from "@/shared/format/when";
 import { PurposeText } from "@/shared/screens/parts/PurposeText";
 import { Button } from "@/shared/ui/button/Button";
 import { Card } from "@/shared/ui/card/Card";
 import { SelectInput } from "@/shared/ui/field/SelectInput";
 import { SectionHeader } from "@/shared/ui/section/SectionHeader";
+import { ReviewsPanel } from "./ReviewsPanel";
 
 /** The board's columns, in kitchen order. */
 const COLUMNS: OrderStatus[] = ["awaiting_payment", "received", "preparing", "ready", "on_the_way", "delivered"];
@@ -40,6 +41,8 @@ export function OrdersBoardPage({ screen }: { screen: ScreenContext }) {
                     <Card key={o.id} className="mb-2 grid gap-1">
                       <p className="text-subtitle font-bold">{o.number} · {TYPE_WORDS[o.type]}{o.table ? ` · ${o.table}` : ""}</p>
                       <p className="text-caption text-muted">{o.customerName} · ready {timeOf(o.readyAt)} · {ugx(o.paid)} of {ugx(o.total)} paid</p>
+                      {o.arriveAt && <p className="text-label font-bold">Scheduled for {dayTimeOf(o.arriveAt)}</p>}
+                      {o.promoCode && <p className="text-caption">Code {o.promoCode}: {ugx(o.discount)} off</p>}
                       <p className="text-body">{o.lines.map((l) => `${l.quantity} x ${l.name}${l.options.length ? ` (${l.options.map((x) => x.name).join(", ")})` : ""}`).join("; ")}</p>
                       {o.allergies && <p className="text-label text-error">Allergies: {o.allergies}</p>}
                       {o.notes && <p className="text-caption">{o.notes}</p>}
@@ -54,6 +57,7 @@ export function OrdersBoardPage({ screen }: { screen: ScreenContext }) {
             </div>
           )}
         </LiveData>
+        <ReviewsPanel outlet={outlet} />
       </div>
     </>
   );
