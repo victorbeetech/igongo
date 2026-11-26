@@ -37,6 +37,8 @@ void main() {
     expect(find.text('Hello, Grace'), findsOneWidget);
     // Step 2: no staff menu: the frame has no drawer for a guest.
     expect(find.byType(RoleDrawer), findsNothing);
+    // Step 2b: the food shop is on the guest home as a card.
+    expect(find.text('Food shop'), findsOneWidget);
     // Step 3: no super admin Preview button for a guest.
     expect(find.byTooltip('Preview'), findsNothing);
   });

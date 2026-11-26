@@ -20,3 +20,8 @@ Items the user asked to keep, to build after the current work is confirmed worki
 - The super admin signs in on the phone app only. The web is for staff roles, which keep web and app access.
 - Move the super admin's web sign-in, screens and routes out of the web portal when this is built.
 - When removing anything (screen, route, role, test, doc), remove it completely: code, routes, tests, imports, docs and unused files. See [QUALITY-RULES.md](QUALITY-RULES.md), rule 11.
+
+## 5. Visual guest home
+- Each area on the guest home as a card with its own picture: rooms, food and shop, events, spa, pool, museum.
+- Hotel photo and the red and cream theme, with pictures from the brand package only.
+- The food shop card is in place already (it opens the food home); the picture cards follow.
