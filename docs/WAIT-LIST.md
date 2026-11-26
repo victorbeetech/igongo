@@ -66,7 +66,7 @@ Slots without a photo show a plain placeholder icon. To swap one: put the file i
 | Slot | Shows on | Photo needed | Status |
 |---|---|---|---|
 | `banner` | Guest home header, first slide | Wide photo of the hut (shoot 16:9, hut centred) | Done: `igongo-hut.jpg` (owner's photo, 650 px wide; a larger original would be sharper) |
-| `food` | Today's menu card, guest home | One appetising dish (3:2) | Needed |
-| `roomStandard`, `roomDeluxe`, `roomExecutive` | Room booking screens | One photo per room type (3:2) | Needed; screens not wired yet |
-| Outlet photos | Shop rows on the Food screen | One per outlet, e.g. restaurant, bar, pool bar (square, 600 px) | Needed; no photo field on outlets yet |
+| `food` | Today's menu card, guest home | One appetising dish (3:2) | Done: `food-dish.jpg` (placeholder dish from the owner) |
+| `roomStandard`, `roomDeluxe`, `roomExecutive` | Room booking screens | One photo per room type (3:2) | Standard and deluxe saved; executive still needed (the image sent was a meeting room, not a bedroom); screens not wired yet |
+| Outlet photos | Shop rows on the Food screen | One per outlet, e.g. restaurant, bar, pool bar (square, 600 px) | Restaurant saved (shows on the demo outlet only); the others needed; no photo field on outlets yet |
 | Dish photos | Dish grid, carousel, item page | One per dish (3:2, dish centred) | Needed; the menu has no photo field yet (module 61 and the menu API need one first) |

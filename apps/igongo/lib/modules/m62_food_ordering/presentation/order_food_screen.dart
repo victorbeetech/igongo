@@ -18,6 +18,7 @@ import '../../../shared/ui/guest/guest_chip_row.dart';
 import '../../../shared/ui/guest/guest_product_card.dart';
 import '../../../shared/ui/guest/guest_search_header.dart';
 import '../../../shared/ui/guest/guest_shop_row.dart';
+import '../../../shared/ui/photo/guest_photos.dart';
 import '../../../shared/ui/section/section_header.dart';
 import '../application/cart_controller.dart';
 import '../application/orders_providers.dart';
@@ -122,6 +123,7 @@ class OrderFoodScreen extends ConsumerWidget {
                             detail: 'Open for app orders',
                             badges: badgesOf(o),
                             selected: o.key == outlet,
+                            photo: isDemoOutlet(o.key) ? GuestPhotos.outletRestaurant : null,
                             onTap: () {
                               ref.read(menuCategoryProvider.notifier).set(null);
                               ref.read(cartProvider.notifier).useOutlet(o.key);

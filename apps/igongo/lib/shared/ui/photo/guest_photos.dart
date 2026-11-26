@@ -6,8 +6,8 @@
 //
 // Pictures the hotel must send:
 //  * banner: the owner's round thatched hut (now set: assets/photos/igongo-hut.jpg).
-//  * food: a plate of the restaurant's food (wide, 3:2).
-//  * roomStandard, roomDeluxe, roomExecutive: one photo of each room type (wide, 3:2).
+//  * food: set (assets/photos/food-dish.jpg, a placeholder dish from the owner).
+//  * roomStandard, roomDeluxe: set. roomExecutive: still needed (a bedroom, not a meeting room).
 
 import 'package:material_ui/material_ui.dart';
 
@@ -21,15 +21,19 @@ abstract final class GuestPhotos {
   static const Alignment bannerAlignment = Alignment(0, -0.3);
 
   /// The photo on the Food shop card.
-  static const String? food = null;
+  static const String food = 'assets/photos/food-dish.jpg';
 
   /// Room photos for the room booking screens (not shown yet: the screens use
   /// placeholders until these are set and the screens read them).
-  static const String? roomStandard = null;
+  static const String roomStandard = 'assets/photos/room-standard.jpg';
 
   /// The deluxe room photo.
-  static const String? roomDeluxe = null;
+  static const String roomDeluxe = 'assets/photos/room-deluxe.jpg';
 
   /// The executive room photo.
   static const String? roomExecutive = null;
+
+  /// The restaurant outlet's photo (shown on the demo outlet's shop row; real
+  /// outlets have no photo field yet).
+  static const String outletRestaurant = 'assets/photos/outlet-restaurant.jpg';
 }
