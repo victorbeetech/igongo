@@ -190,7 +190,7 @@ The whole app and web portal are built as a clickable product first, with sample
   - [x] The web portal is staff only and the server refuses guest accounts there (sessions ended on the server). The staff subdomain waits for the hotel's domain (igongo.victorbee.com for now).
   - [ ] A Security settings screen; card kill; sign out a device; sign-in alerts. Done except the instant card kill from this screen (cards are blocked on the cards page).
   - [x] Short sessions and automatic sign-out on shared computers; lockout after failed tries.
-  - [ ] Database snapshots with a tested restore.
+  - [x] Database snapshots with a tested restore. Done 26 Nov: snapshot before each deploy, restore into a separate branch tested and checked ([Backups](BACKUPS.md)). Daily scheduled snapshots need a paid Neon plan.
   - [x] Privacy: export and delete a person's data (download my data; delete my account in the app, staff closed by HR).
   - [ ] Biometric sign-in, and offline clock-in at the gate.
   - [x] Sidebar: one collapse button, and Preview moved to the bottom of the sidebar for the super admin only.
