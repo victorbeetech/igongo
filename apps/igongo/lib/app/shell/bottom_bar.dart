@@ -29,7 +29,7 @@ class BottomBar extends ConsumerWidget {
   static const _home = ('home', 'Home', Icons.home_outlined);
   static const _me = ('S00-31', 'Me', Icons.person_outline);
   static const _food = ('S62-01', 'Food', Icons.restaurant_menu_outlined);
-  static const _bookings = ('S54-05', 'Bookings', Icons.event_available_outlined);
+  static const _bookings = ('S67-01', 'Bookings', Icons.event_available_outlined);
   static const _cart = ('S62-04', 'Cart', Icons.shopping_cart_outlined);
 
   /// The guest tabs, always the same.

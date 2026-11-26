@@ -70,3 +70,8 @@ Slots without a photo show a plain placeholder icon. To swap one: put the file i
 | `roomStandard`, `roomDeluxe`, `roomExecutive` | Room booking screens | One photo per room type (3:2) | Standard and deluxe saved; executive still needed (the image sent was a meeting room, not a bedroom); screens not wired yet |
 | Outlet photos | Shop rows on the Food screen | One per outlet, e.g. restaurant, bar, pool bar (square, 600 px) | Restaurant saved (shows on the demo outlet only); the others needed; no photo field on outlets yet |
 | Dish photos | Dish grid, carousel, item page | One per dish (3:2, dish centred) | Needed; the menu has no photo field yet (module 61 and the menu API need one first) |
+
+## 13. Super admin uploads the in-app logo and banner (later)
+- The super admin uploads a new in-app logo or banner from the web, and the app shows it without a new release.
+- Not built yet: wait until the web admin upload and the app's image reading are in place.
+- The launcher icon cannot change this way. It is built into the app, so a new icon needs a new build and a store update.

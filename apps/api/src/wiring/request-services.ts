@@ -123,7 +123,7 @@ export class RequestServices {
   /** The guest modules for [actor]'s change context. */
   guestModules(actor: { userId: string; name: string } | undefined): GuestServices {
     const cfg = this.config;
-    return new GuestServices(this.db, this.changeContext(actor), this.modules(), this.secrets(), { api: cfg.baseURL, web: cfg.webOrigins[0] ?? cfg.baseURL }, this.notifier());
+    return new GuestServices(this.db, this.changeContext(actor), this.modules(), this.secrets(), { api: cfg.baseURL, web: cfg.webOrigins[0] ?? cfg.baseURL }, this.notifier(), { apiKey: this.env.RESEND_API_KEY, from: this.env.RECEIPT_FROM }, this.env.TICKET_SIGNING_KEY ?? null);
   }
 
   // --- Managers and money (files, faults, checkups, payroll, advances, bonuses, earnings, reports, chat, records) ---

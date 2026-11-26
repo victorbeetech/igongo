@@ -62,6 +62,8 @@ class MyProfileScreen extends ConsumerWidget {
                   children: [
                     Text(session.name.isEmpty ? 'Your account' : session.name, style: context.text.titleLarge),
                     if (session.email.isNotEmpty) Text(session.email, style: context.text.bodyMedium),
+                    // The short profile number (00001), shown after the email.
+                    if (session.displayId.isNotEmpty) Text('ID ${session.displayId}', style: context.text.bodySmall),
                     Text(session.isStaff ? 'Staff account' : 'Guest account', style: context.text.bodySmall),
                   ],
                 ),
