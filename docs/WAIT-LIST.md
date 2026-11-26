@@ -60,3 +60,12 @@ Reference images from the owner (ticket-ref-1 to 3). Three parts:
 - **Dine-in time:** the app now asks for it and sends it to the kitchen in the order notes ("Dine-in at 7:30 PM"). The API refuses scheduled dine-in orders (`SCHEDULABLE_TYPES` in `modules/food-ordering/src/domain/ordering-rules.ts`); add `dine_in` there so the time becomes a real arrival time, then send it as `arriveAt`.
 - **Takeaway container:** the app offers it when the menu has an available item whose name contains "container" (priced by the server like any dish, hidden from the dish grid). A proper "container" flag on menu items (module 61) is better than the name match.
 - **Delivery location:** zone and place are asked and must be confirmed before ordering; the last location is filled in next time. A map pin (lat/lng) waits for the Google Maps key.
+
+## 12. Photo slots for the owner's own photos (owner, 26 Nov: no stock photos; placeholders until then)
+All slots show a plain placeholder icon today. To swap one: put the file in `apps/igongo/assets/photos/`, list that folder under `flutter: assets:` in `apps/igongo/pubspec.yaml`, and set the path in `apps/igongo/lib/shared/ui/photo/guest_photos.dart` (an https address works too).
+| Slot (`GuestPhotos.`) | Where it shows | Photo needed |
+|---|---|---|
+| `banner` | Guest home, when there are no dishes to slide | The thatched hut with the hills (wide) |
+| `food` | Today's menu card on the guest home | A plate of the restaurant's food (3:2) |
+| `roomStandard` / `roomDeluxe` / `roomExecutive` | Room booking screens (to be wired when those screens are built) | One photo per room type (3:2) |
+- Not slotted yet: a picture per outlet and per dish (the menu has no photo field; module 61 needs one, and the dish grid, carousel and item page then read it).
