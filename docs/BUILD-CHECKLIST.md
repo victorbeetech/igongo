@@ -189,6 +189,17 @@ The whole app and web portal are built as a clickable product first, with sample
   - [ ] Biometric sign-in, and offline clock-in at the gate.
   - [ ] Sidebar: one collapse button, and Preview moved to the bottom of the sidebar for the super admin only.
   - [ ] Tests proving a guest cannot reach any staff data.
+  - [ ] Real-user hardening, each item with its own test:
+    - [ ] A double-tapped pay or submit never charges or creates twice (idempotency keys, and the button is disabled while sending).
+    - [ ] Emails are lowercased and trimmed everywhere: sign-up, sign-in and the staff match.
+    - [ ] Apostrophes and unicode in names are safe (parameterised queries, escaped output).
+    - [ ] iPhone photo uploads (HEIC, large files, rotation) are converted and size-limited.
+    - [ ] Password reset email works end to end; tokens expire and work once.
+    - [ ] Times are stored in UTC and shown in Africa/Kampala or the viewer's time zone.
+    - [ ] Signal lost after paying: the payment status is settled by the gateway webhook and a "check status" retry, never lost or charged twice.
+    - [ ] A delete my account button in the guest app (also an App Store rule), with a clear data policy.
+    - [ ] Apple "Hide My Email" relay addresses are accepted and used for the staff match.
+    - [ ] Load and abuse: rate limits per user and IP, queues, and a test with thousands of requests at once.
 - [ ] Last phase before TestFlight, premium animations and transitions (asked by the user, 26 Nov 2026; do after the basics, not started): booking flows, menu scroll effects and modern TikTok-style motion, mostly in the guest app and the public websites, all of premium quality.
 - [ ] Event bus (Queues and outbox) and Notifications. Files & Media is done.
 - [ ] Build each module's back end (domain, use cases, database, API and events), in the agreed order.
