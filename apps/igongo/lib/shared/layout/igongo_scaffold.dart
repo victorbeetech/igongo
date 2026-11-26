@@ -17,6 +17,7 @@ class IgongoScaffold extends StatelessWidget {
     this.bottomBar,
     this.drawer,
     this.floatingAction,
+    this.showAppBar = true,
   });
 
   /// The title in the app bar.
@@ -40,12 +41,17 @@ class IgongoScaffold extends StatelessWidget {
   /// A floating button, such as the preview panel button.
   final Widget? floatingAction;
 
+  /// False hides the red app bar (the guest home draws its own header in that spot).
+  final bool showAppBar;
+
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: Text(title, maxLines: 1, overflow: TextOverflow.ellipsis),
-      actions: actions,
-    ),
+    appBar: showAppBar
+        ? AppBar(
+            title: Text(title, maxLines: 1, overflow: TextOverflow.ellipsis),
+            actions: actions,
+          )
+        : null,
     drawer: drawer,
     bottomNavigationBar: bottomBar,
     floatingActionButton: floatingAction,

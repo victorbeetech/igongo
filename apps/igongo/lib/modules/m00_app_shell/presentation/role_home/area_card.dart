@@ -30,7 +30,10 @@ class AreaCard extends StatelessWidget {
       child: Material(
         color: p.surfaceAlt,
         elevation: 0,
-        shape: RoundedRectangleBorder(borderRadius: radius, side: BorderSide(color: p.border)),
+        shape: RoundedRectangleBorder(
+          borderRadius: radius,
+          side: BorderSide(color: p.border),
+        ),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           // The whole card opens the area.
@@ -44,7 +47,9 @@ class AreaCard extends StatelessWidget {
                 spacing: IgongoSpace.sm,
                 children: [
                   CircleAvatar(backgroundColor: p.primary, foregroundColor: p.onPrimary, child: Icon(icon)),
-                  Expanded(child: Text(label, style: context.text.bodyMedium?.copyWith(color: p.text))),
+                  Expanded(
+                    child: Text(label, style: context.text.bodyMedium?.copyWith(color: p.text)),
+                  ),
                   Icon(Icons.chevron_right, size: 18, color: p.textMuted),
                 ],
               ),

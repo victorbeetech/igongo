@@ -26,7 +26,10 @@ class FoodShopCard extends StatelessWidget {
       child: Material(
         color: p.surfaceAlt,
         elevation: 0,
-        shape: RoundedRectangleBorder(borderRadius: radius, side: BorderSide(color: p.border)),
+        shape: RoundedRectangleBorder(
+          borderRadius: radius,
+          side: BorderSide(color: p.border),
+        ),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           // The whole card opens the food home.

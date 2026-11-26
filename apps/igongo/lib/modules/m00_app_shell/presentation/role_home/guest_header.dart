@@ -31,42 +31,46 @@ class GuestHeader extends StatelessWidget {
         color: p.primary,
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(IgongoSpace.xl)),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Step 1: one small greeting line, cut with an ellipsis if too long; the bell at the right.
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  greetingFor(DateTime.now(), name),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: false,
-                  style: context.text.titleSmall?.copyWith(color: p.onPrimary),
+      // SafeArea keeps the greeting below the phone's clock when there is no app bar above.
+      child: SafeArea(
+        bottom: false,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Step 1: one small greeting line, cut with an ellipsis if too long; the bell at the right.
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    greetingFor(DateTime.now(), name),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: false,
+                    style: context.text.titleSmall?.copyWith(color: p.onPrimary),
+                  ),
+                ),
+                IconButton(
+                  tooltip: 'Notifications',
+                  icon: Icon(Icons.notifications_none, color: p.onPrimary),
+                  onPressed: onBell,
+                ),
+              ],
+            ),
+            // Step 2: the banner, full width (a placeholder until a picture is set).
+            Padding(
+              padding: const EdgeInsets.only(right: IgongoSpace.md),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(IgongoRadius.lg),
+                child: const PhotoSlot(
+                  width: double.infinity,
+                  height: 140,
+                  asset: GuestPhotos.banner,
+                  icon: Icons.landscape_outlined,
                 ),
               ),
-              IconButton(
-                tooltip: 'Notifications',
-                icon: Icon(Icons.notifications_none, color: p.onPrimary),
-                onPressed: onBell,
-              ),
-            ],
-          ),
-          // Step 2: the banner, full width (a placeholder until a picture is set).
-          Padding(
-            padding: const EdgeInsets.only(right: IgongoSpace.md),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(IgongoRadius.lg),
-              child: const PhotoSlot(
-                width: double.infinity,
-                height: 140,
-                asset: GuestPhotos.banner,
-                icon: Icons.landscape_outlined,
-              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
