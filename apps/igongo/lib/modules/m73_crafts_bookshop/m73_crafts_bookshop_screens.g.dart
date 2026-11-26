@@ -2,13 +2,14 @@
 // Module 73: Crafts & Bookshop. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm73_crafts_bookshop_overrides.dart';
 
 /// Module 73, Crafts & Bookshop: every screen and dialog, with its sample data.
-const m73CraftsBookshopModule = ModuleSpec(
+final m73CraftsBookshopModule = ModuleSpec(
   code: '73',
   name: 'Crafts & Bookshop',
   slug: 'crafts-bookshop',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S73-01',
       name: 'Shop',
@@ -98,7 +99,8 @@ const m73CraftsBookshopModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m73Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D73-01',
       name: 'Product sold out',
@@ -108,7 +110,7 @@ const m73CraftsBookshopModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Ankole basket',
       'Woven mat',

@@ -2,13 +2,14 @@
 // Module 67: Room Bookings. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm67_room_bookings_overrides.dart';
 
 /// Module 67, Room Bookings: every screen and dialog, with its sample data.
-const m67RoomBookingsModule = ModuleSpec(
+final m67RoomBookingsModule = ModuleSpec(
   code: '67',
   name: 'Room Bookings',
   slug: 'room-bookings',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S67-01',
       name: 'Rooms',
@@ -164,7 +165,8 @@ const m67RoomBookingsModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m67Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D67-01',
       name: 'Change booking',
@@ -190,7 +192,7 @@ const m67RoomBookingsModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Deluxe king room',
       'Twin garden view',

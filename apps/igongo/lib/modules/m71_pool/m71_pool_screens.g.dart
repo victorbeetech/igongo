@@ -2,13 +2,14 @@
 // Module 71: Swimming Pool. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm71_pool_overrides.dart';
 
 /// Module 71, Swimming Pool: every screen and dialog, with its sample data.
-const m71PoolModule = ModuleSpec(
+final m71PoolModule = ModuleSpec(
   code: '71',
   name: 'Swimming Pool',
   slug: 'pool',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S71-01',
       name: 'Pool home',
@@ -98,7 +99,8 @@ const m71PoolModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m71Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D71-01',
       name: 'Pool closed',
@@ -116,7 +118,7 @@ const m71PoolModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Adult day pass',
       'Child day pass',

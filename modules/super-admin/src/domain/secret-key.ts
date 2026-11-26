@@ -26,11 +26,13 @@ export const KNOWN_SECRET_KEYS = [
   "whatsapp.access_token",
   "whatsapp.phone_number_id",
   "resend.api_key",
+  "mtn_momo.api_user",
   "mtn_momo.api_key",
   "mtn_momo.subscription_key",
   "airtel_money.client_id",
   "airtel_money.client_secret",
   "flutterwave.secret_key",
   "flutterwave.public_key",
+  "flutterwave.secret_hash",
   "google_maps.api_key",
 ] as const;

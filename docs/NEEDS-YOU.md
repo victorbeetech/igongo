@@ -39,6 +39,15 @@ Built and switched off until the hotel agrees the providers (Africa's Talking, M
 
 ---
 
+## Payments, food delivery and bookings: keys and first set-up (26 Nov 2026)
+
+Everything is built; only keys and the hotel's own settings are missing. Nothing below is needed for the preview, and cash payments already work.
+
+1. **Mobile money and card keys** (when the hotel signs up). In the web portal open Integrations > Connection settings and paste: `mtn_momo.api_user`, `mtn_momo.api_key`, `mtn_momo.subscription_key`; `airtel_money.client_id`, `airtel_money.client_secret`; `flutterwave.secret_key`, `flutterwave.secret_hash`. Then switch each method on in Payments > Payment methods. Start in **sandbox**; switch to **live** only after a real test payment.
+2. **Flutterwave webhook.** In the Flutterwave dashboard set the webhook URL to `https://igongo-api.victorbee.com/api/payments/callbacks/card` and the secret hash to the same value as `flutterwave.secret_hash`.
+3. **Google Maps key** (`google_maps.api_key`), for rider navigation and, later, zone maps.
+4. **Hotel set-up** (super admin, no code): outlets and menus (Menus), order types and payment timing (Food ordering > Settings), delivery zones and fees (Delivery > Zones), and rooms, museum tickets, events, pool passes and shop items (each module's Settings and Offerings).
+
 ## Staff cards: test NFC on a real phone (25 Nov 2026)
 
 **Status:** clock-in, station mode, meals and wristband scans are built and tested with a mock card reader. The cloud has no NFC, so a real tap has never been tried.

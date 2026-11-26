@@ -2,13 +2,14 @@
 // Module 62: Food Ordering. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm62_food_ordering_overrides.dart';
 
 /// Module 62, Food Ordering: every screen and dialog, with its sample data.
-const m62FoodOrderingModule = ModuleSpec(
+final m62FoodOrderingModule = ModuleSpec(
   code: '62',
   name: 'Food Ordering',
   slug: 'food-ordering',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S62-01',
       name: 'Food home',
@@ -186,7 +187,8 @@ const m62FoodOrderingModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m62Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D62-01',
       name: 'Edit cart item',
@@ -220,7 +222,7 @@ const m62FoodOrderingModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Order 3021 · Room 104',
       'Order 3022 · Table 6',

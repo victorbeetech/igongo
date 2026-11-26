@@ -142,6 +142,15 @@ The whole app and web portal are built as a clickable product first, with sample
   - [x] Web staff portal pages on the real API for all seven (stations work with USB card readers).
   - [x] App screens on the real API: clock-in and station mode, my attendance, my card, notice board and post, my daily report, meal today, my profile. NFC is behind an interface with a mock off phones.
   - [ ] Real-phone NFC test (see [NEEDS-YOU](NEEDS-YOU.md)).
+- [x] Guest and rider modules (26 Nov 2026), each its own folder, schema, routes, permissions, audit and tests (staff tools need a scope wider than `own`, so guests never reach them):
+  - [x] Guest CRM (`modules/crm-guests`): my profile and message consent, staff guest search, tags and notes.
+  - [x] Menus (`modules/menu-catalogue`): outlets, items with options and allergens, out of stock for the day.
+  - [x] Food Ordering (`modules/food-ordering`): delivery, room service, dine-in, takeaway and pre-order with an arrival time; paid before, by deposit or later per type; kitchen board; ticket numbers.
+  - [x] Delivery & Riders (`modules/delivery-riders`): zones and fees, automatic or dispatcher assignment, accept, pick up, deliver with the guest's 4-digit code, cash limits and hand-in.
+  - [x] Payments (`modules/payments`): MTN MoMo, Airtel Money and Flutterwave adapters that read the keys the super admin saves, callbacks re-checked with the provider, cash, room charge and manual payments, method switches per outlet and module. Only the keys are missing (see [NEEDS-YOU](NEEDS-YOU.md)).
+  - [x] Bookings, on one shared engine (`packages/bookings-kit`): rooms (nights), museum, events (slots and enquiries), pool (slots) and crafts and bookshop (stock). Clash and stock checks, deposits, approve, cancel, check-in by code or QR.
+  - [x] Web portal pages on the real API for all of them, and app screens: book, my bookings, order food, my orders with tracking, the pay sheet, rider home and my account.
+  - [ ] Tried, not finished: refunds through the providers' own refund APIs (refunds are recorded, money goes back by hand for now), the settlement report, drawing delivery zones on a map, the rider's live location from the phone, and opening the card checkout page inside the app (the link is shown to copy).
 - [ ] Event bus (Queues and outbox), Notifications, Files & Media.
 - [ ] Build each module's back end (domain, use cases, database, API and events), in the agreed order.
 - [ ] Connect each module's screens to its API.
