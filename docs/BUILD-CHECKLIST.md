@@ -128,7 +128,7 @@ The whole app and web portal are built as a clickable product first, with sample
   - [x] Roles & Permissions (`modules/roles-permissions`): runtime roles, `module.feature.action` permissions with data scope, several and temporary roles per person, included roles, the 121 pre-made roles seeded from docs, `GET /api/access/me` for menus, the "who can do X" report.
   - [x] Audit Trail (`modules/audit-trail`): append-only, hash-chained, searchable, tamper check.
   - [x] Super Admin Console (`modules/super-admin`): module switches and maintenance, hotel, branding and regional settings, encrypted integration and gateway keys.
-  - [ ] App Layout & Navigation (module 3): server-driven menus and layouts per role.
+  - [x] App Layout & Navigation (module 3, `modules/app-builder`, 26 Nov 2026): menus, hidden modules, tabs and home tiles per role from `/api/layout/me`, with history and roll back, on the web and in the app.
   - [x] Web portal connected for these: sign-in, first set-up, active sessions, accounts, create account, login methods, roles list, role builder, permissions matrix, role holders, permission report, audit search, modules list and settings.
   - [x] Connect the app's sign-in to the API (email and password; the session is kept in the phone's secure storage). The console keys screen (S14-02) is still to do.
 - [x] Staff modules (25 Nov 2026), each its own folder, schema, routes, permissions, audit and tests:
@@ -164,7 +164,31 @@ The whole app and web portal are built as a clickable product first, with sample
   - [x] Records Archive & Search (`modules/records-search`): search the permanent record years back by words, module and dates, with a spreadsheet.
   - [x] Payments: refunds through Flutterwave's refund API, and the settlement report by day, method, module and outlet.
   - [x] Web portal pages on the real API for all of them, and app screens: report a fault with photos, my faults, checkups due and run, my payslips, lifetime earnings, my advances and request, my rewards, chat and the dashboard.
-  - [ ] Tried, not finished: live chat push (chat checks every few seconds until the realtime service), MTN MoMo and Airtel Money refunds (still paid back by hand; their refund APIs need the hotel's accounts), saved and scheduled reports, targets and alerts, and photo uploads on the live site until file storage is switched on (see [NEEDS-YOU](NEEDS-YOU.md)).
+  - [ ] Tried, not finished: live chat push (chat checks every few seconds until the realtime service), MTN MoMo and Airtel Money refunds (still paid back by hand; their refund APIs need the hotel's accounts), targets and alerts, and photo uploads on the live site until file storage is switched on (see [NEEDS-YOU](NEEDS-YOU.md)). Saved and scheduled reports were finished in the final phase.
+- [x] Final phase (26 Nov 2026): the rest of the modules on real data, each its own folder, schema, routes, permissions, audit and tests:
+  - [x] 40 operations, HR, guest service and money desk modules (lost and found, leave, tasks, housekeeping, laundry, visitors, keys, shifts, training and the rest) on one shared records engine (`packages/records-kit`): record types, fields and statuses the super admin sets per module, `PREFIX-0001` numbers and QR codes.
+  - [x] Stock & Inventory (`modules/stock-inventory`): stores, items with unit conversions, receive, issue, transfer, adjust, waste and counts on a ledger, average cost, who reaches which store, and a desk for requisitions, purchasing, suppliers and recipes. Categories, units and rules are all super admin settings.
+  - [x] Spa, venues and equipment, and tables and dine-in on the shared bookings engine.
+  - [x] Staff card designer (module 16): templates on an SVG canvas in brand colours only, card types, a template per role, printing at the exact card size. The black portrait card is the default.
+  - [x] Saved and scheduled reports (module 81): save a pick of areas and days, run it by hand or every day, Monday or 1st of the month at 7 AM Kampala time; every run is kept to read or download. The API's daily 7 AM cron also applies new database tables.
+  - [x] Web pages and app screens for all of them. The hosted site opens on sign-in; the previews stay at `/#/role-switcher`.
+  - [ ] Tried, not finished: live chat push with Durable Objects (chat still refreshes every few seconds), the push notification rule editor (waits on the Firebase steps), drawing the staff card in the app from the saved designs (the app shows the default card), and sending scheduled reports by email or WhatsApp (runs are kept in the portal until those keys are in).
+- [ ] Next phase A, food side and tracking (asked by the user, 26 Nov 2026; not started):
+  - [ ] Food ordering with all FoodPanda-style features: live tracking, promos, ratings, reorder, scheduled orders, rider assignment and the rest.
+  - [ ] A delivery tracker for everything that moves (food, laundry, room service, deliveries).
+  - [ ] Preview mode for screens that need keys (payments and other gateways): they stay viewable before the keys are saved. No demo data on real screens.
+- [ ] Next phase B, access and security (asked by the user, 26 Nov 2026; not started):
+  - [ ] Guests sign up in the app only. The super admin upgrades a person to staff by matching a staff record with a verified email, recorded in the audit log.
+  - [ ] Mandatory 2-step sign-in for staff, recovery codes, and a required second super admin.
+  - [ ] No guest and staff switch: one account is one kind.
+  - [ ] The web portal is staff only, on a staff subdomain, and the server refuses guest accounts there.
+  - [ ] A Security settings screen; card kill; sign out a device; sign-in alerts.
+  - [ ] Short sessions and automatic sign-out on shared computers; lockout after failed tries.
+  - [ ] Database snapshots with a tested restore.
+  - [ ] Privacy: export and delete a person's data.
+  - [ ] Biometric sign-in, and offline clock-in at the gate.
+  - [ ] Sidebar: one collapse button, and Preview moved to the bottom of the sidebar for the super admin only.
+  - [ ] Tests proving a guest cannot reach any staff data.
 - [ ] Event bus (Queues and outbox) and Notifications. Files & Media is done.
 - [ ] Build each module's back end (domain, use cases, database, API and events), in the agreed order.
 - [ ] Connect each module's screens to its API.

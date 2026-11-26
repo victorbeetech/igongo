@@ -6,26 +6,23 @@
  *   GET  /reports/settings                hidden tiles and default range      S81-06
  *   PUT  /reports/settings                change them                         S81-06
  *   GET  /reports/catalogue               every tile there is (for settings)  S81-06
+ *   ...  /reports/saved, /reports/runs     saved and scheduled reports (saved-router.ts)
  */
 
 import { zValidator } from "@hono/zod-validator";
-import type { KpiSource } from "@igongo/contracts/reports-analytics";
-import { actorOf, canForOthers, recordChange, requireStaffPermission, scopeOf, toCsv, type ActorEnv } from "@igongo/core";
+import { recordChange, requireStaffPermission, toCsv, type ActorEnv } from "@igongo/core";
 import { Hono, type Context } from "hono";
 import type { ReportsDeps } from "../application/reports-deps";
 import { readDashboard } from "../application/use-cases/read-dashboard";
-import { hotelRange } from "./hotel-range";
+import { hotelRange } from "../domain/hotel-range";
 import { REPORT_PERMISSIONS as P } from "./permissions";
 import { rangeQuery, settingsBody } from "./request-schemas";
+import { savedRouter } from "./saved-router";
+import { viewerSources } from "./viewer-sources";
 
 export function reportsRouter(deps: (c: Context<ActorEnv>) => ReportsDeps) {
   /** The sources the caller may see: all with scope `all`, otherwise their modules only. */
-  function sourcesFor(c: Context<ActorEnv>): KpiSource[] {
-    const actor = actorOf(c);
-    const sources = deps(c).sources;
-    if (scopeOf(actor, P.view) === "all") return sources;
-    return sources.filter((s) => canForOthers(actor, `${s.module}.reports.view`));
-  }
+  const sourcesFor = (c: Context<ActorEnv>) => viewerSources(c, deps(c).sources);
 
   /** The dashboard for the query's range. */
   async function dashboard(c: Context<ActorEnv>, q: { from?: string; to?: string }) {
@@ -55,5 +52,6 @@ export function reportsRouter(deps: (c: Context<ActorEnv>) => ReportsDeps) {
       // Every tile, read over today so the settings page can list them.
       const range = hotelRange(deps(c).change.now, 1);
       return c.json({ groups: await readDashboard(deps(c).sources, range, []) });
-    });
+    })
+    .route("/", savedRouter(deps));
 }

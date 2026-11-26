@@ -9,7 +9,11 @@ import { MIGRATIONS } from "./migrations/migrations.g";
 import { runMigrations } from "./migrations/run-migrations";
 import { postgresProvider } from "./shell/database";
 import { readConfig, type Env } from "./shell/env";
+import { runScheduledReports } from "./shell/run-scheduled-reports";
 import { createLogger } from "@igongo/core";
+
+/** The daily cron, 04:00 UTC = 7 AM in Kampala; kept on in wrangler.jsonc. */
+const DAILY_CRON = "0 4 * * *";
 
 const app = createApp(postgresProvider, (error, c) => {
   Sentry.withScope((scope) => {
@@ -30,11 +34,21 @@ export default Sentry.withSentry(
   }),
   {
     fetch: app.fetch,
-    // Cron: apply new database migrations (see migrations/run-migrations.ts).
-    async scheduled(_event, env, ctx) {
+    // Cron. Every run applies new database migrations (see
+    // migrations/run-migrations.ts); the daily 7 AM Kampala run
+    // (DAILY_CRON) also runs the scheduled saved reports.
+    async scheduled(event, env, ctx) {
       const open = postgresProvider(env);
-      const report = await runMigrations(open.db, MIGRATIONS).finally(() => ctx.waitUntil(open.close()));
-      createLogger({ job: "migrations" }).log(report.changedAfterApply.length ? "warn" : "info", "Migrations run", { ...report });
+      try {
+        const report = await runMigrations(open.db, MIGRATIONS);
+        createLogger({ job: "migrations" }).log(report.changedAfterApply.length ? "warn" : "info", "Migrations run", { ...report });
+        if (event.cron === DAILY_CRON) {
+          const reports = await runScheduledReports(open.db, env, new Date(event.scheduledTime));
+          createLogger({ job: "saved-reports" }).log(reports !== "off" && reports.failed ? "warn" : "info", "Scheduled reports run", { result: reports });
+        }
+      } finally {
+        ctx.waitUntil(open.close());
+      }
     },
   } satisfies ExportedHandler<Env>,
 );

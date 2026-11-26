@@ -2,7 +2,7 @@
 
 import { describe, expect, it } from "vitest";
 import { readDashboard } from "../src/application/use-cases/read-dashboard";
-import { hotelRange } from "../src/presentation/hotel-range";
+import { hotelRange } from "../src/domain/hotel-range";
 
 describe("dashboard", () => {
   it("marks a failing source and hides tiles", async () => {
