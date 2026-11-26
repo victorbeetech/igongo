@@ -61,6 +61,8 @@ export class GuestServices {
     private readonly notify: UserNotifier,
     /** The receipt email's settings: the Resend key (a secret) and the sender address. */
     private readonly receiptMail: { apiKey?: string; from?: string } = {},
+    /** The secret that signs booking tickets (TICKET_SIGNING_KEY). Null means ticket checks are off. */
+    private readonly ticketKey: string | null = null,
   ) {}
 
   /** True when the super admin has [key] on and not in maintenance. */
@@ -124,7 +126,7 @@ export class GuestServices {
 
   /** One booking module's deps. */
   booking(key: BookingModuleKey): BookingsDeps {
-    return BOOKING_MODULES[key](this.db, this.change);
+    return { ...BOOKING_MODULES[key](this.db, this.change), ticketKey: this.ticketKey };
   }
 
   payments(): PaymentsDeps {

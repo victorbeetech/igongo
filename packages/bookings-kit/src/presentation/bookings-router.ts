@@ -27,14 +27,16 @@ import { unitsLeft } from "../application/use-cases/check-availability";
 import { makeBooking } from "../application/use-cases/make-booking";
 import { addOffering, editOffering } from "../application/use-cases/save-offering";
 import type { Booking } from "../domain/booking";
+import { BOOKING_QR_PREFIX, issueTicket, parseTicket } from "../domain/ticket-signature";
+import type { TicketVerdict } from "../domain/ticket-verdict";
+import { verifyTicket } from "../application/use-cases/verify-ticket";
 import { bookingPermissions } from "./booking-permissions";
-import { approveBody, availabilityQuery, bookBody, cancelBody, checkInBody, listQuery, offeringBody, offeringPatch, rulesBody } from "./request-schemas";
+import { approveBody, availabilityQuery, bookBody, cancelBody, checkInBody, listQuery, offeringBody, offeringPatch, rulesBody, ticketBody } from "./request-schemas";
 
 /** The text inside a booking's QR code. */
-export const BOOKING_QR_PREFIX = "IGG-BK:";
+export { BOOKING_QR_PREFIX } from "../domain/ticket-signature";
 
 /** A booking as the screens show it, with its QR text. */
-const shown = (b: Booking) => ({ ...b, qr: `${BOOKING_QR_PREFIX}${b.code}` });
 
 /** True when the caller (maybe nobody) is staff holding [permission]. */
 function staff(c: Context<ActorEnv>, permission: string): boolean {
@@ -44,6 +46,13 @@ function staff(c: Context<ActorEnv>, permission: string): boolean {
 
 export function bookingsRouter(moduleKey: string, deps: (c: Context<ActorEnv>) => BookingsDeps) {
   const P = bookingPermissions(moduleKey);
+
+  /** The booking as the app and the door see it. Its QR text is signed when ticket checks are on. */
+  const present = async (c: Context<ActorEnv>, b: Booking) => {
+    const key = deps(c).ticketKey ?? null;
+    const ticket = key ? await issueTicket(key, b.id, b.code) : null;
+    return { ...b, ticket, qr: `${BOOKING_QR_PREFIX}${ticket ?? b.code}` };
+  };
   return new Hono<ActorEnv>()
     .get("/offerings", async (c) => {
       const all = c.req.query("all") === "1" && staff(c, P.view);
@@ -82,28 +91,63 @@ export function bookingsRouter(moduleKey: string, deps: (c: Context<ActorEnv>) =
         guest: byStaff ? { userId: null, name: guest.name, phone: guest.phone ?? null } : { userId: actor.userId, name: actor.name, phone: null },
         byStaff,
       });
-      return c.json(shown(booking), 201);
+      return c.json(await present(c, booking), 201);
     })
-    .get("/bookings/mine", requireSignIn, async (c) => c.json({ items: (await deps(c).bookings.list({ userId: actorOf(c).userId, limit: 200 })).map(shown) }))
+    .get("/bookings/mine", requireSignIn, async (c) => c.json({ items: await Promise.all((await deps(c).bookings.list({ userId: actorOf(c).userId, limit: 200 })).map((b) => present(c, b))) }))
     .get("/bookings", requireStaffPermission(P.view), zValidator("query", listQuery), async (c) => {
       const { date, status } = c.req.valid("query");
-      return c.json({ items: (await deps(c).bookings.list({ ...(date ? { date } : {}), ...(status ? { status } : {}), limit: 500 })).map(shown) });
+      const rows = await deps(c).bookings.list({ ...(date ? { date } : {}), ...(status ? { status } : {}), limit: 500 });
+      return c.json({ items: await Promise.all(rows.map((b) => present(c, b))) });
     })
     .get("/bookings/:id", requireSignIn, async (c) => {
       const b = await deps(c).bookings.byId(c.req.param("id"));
       if (!b || (b.userId !== actorOf(c).userId && !staff(c, P.view))) throw new AppError("not_found", "Booking not found.");
-      return c.json(shown(b));
+      return c.json(await present(c, b));
     })
     .post("/bookings/:id/cancel", requireSignIn, zValidator("json", cancelBody), async (c) => {
       const actor = actorOf(c);
-      return c.json(shown(await cancelBooking(deps(c), c.req.param("id"), { userId: actor.userId, staff: canForOthers(actor, P.edit) }, c.req.valid("json").reason)));
+      return c.json(await present(c, await cancelBooking(deps(c), c.req.param("id"), { userId: actor.userId, staff: canForOthers(actor, P.edit) }, c.req.valid("json").reason)));
     })
-    .post("/bookings/:id/approve", requireStaffPermission(P.approve), zValidator("json", approveBody), async (c) => c.json(shown(await approveBooking(deps(c), c.req.param("id"), c.req.valid("json").total))))
+    .post("/bookings/:id/approve", requireStaffPermission(P.approve), zValidator("json", approveBody), async (c) => c.json(await present(c, await approveBooking(deps(c), c.req.param("id"), c.req.valid("json").total))))
     .post("/check-in", requireStaffPermission(P.edit), zValidator("json", checkInBody), async (c) => {
       const d = deps(c);
-      const code = c.req.valid("json").code.replace(BOOKING_QR_PREFIX, "");
-      const b = await d.bookings.byCode(code);
+      const text = c.req.valid("json").code;
+      // Step 1: a signed ticket (scanned QR) must pass its signature check first.
+      if (parseTicket(text)) {
+        const scan = await verifyTicket(d, text);
+        if (scan.verdict !== "valid" || !scan.booking) throw new AppError("conflict", ticketMessage(scan.verdict));
+        return c.json(await present(c, await checkIn(d, scan.booking)));
+      }
+      // Step 2: a bare code typed by the desk from the booking, found by its code.
+      const b = await d.bookings.byCode(text.replace(BOOKING_QR_PREFIX, ""));
       if (!b) throw new AppError("not_found", "No booking has that code.");
-      return c.json(shown(await checkIn(d, b)));
+      return c.json(await present(c, await checkIn(d, b)));
+    })
+    // Scan a ticket: the verdict (valid, used, forged, cancelled or unpaid) and the booking details when the signature matches.
+    .post("/tickets/verify", requireStaffPermission(P.edit), zValidator("json", ticketBody), async (c) => {
+      const scan = await verifyTicket(deps(c), c.req.valid("json").ticket);
+      return c.json({ verdict: scan.verdict, booking: scan.booking ? await present(c, scan.booking) : null });
+    })
+    // Check a valid ticket in: marks it used. The audit trail records the staff member and the time.
+    .post("/tickets/check-in", requireStaffPermission(P.edit), zValidator("json", ticketBody), async (c) => {
+      const d = deps(c);
+      const scan = await verifyTicket(d, c.req.valid("json").ticket);
+      if (scan.verdict !== "valid" || !scan.booking) throw new AppError("conflict", ticketMessage(scan.verdict));
+      const b = await checkIn(d, scan.booking);
+      return c.json({ verdict: "checked_in", booking: await present(c, b) });
     });
+}
+
+/** The words the door shows for a ticket that cannot be let in. */
+function ticketMessage(verdict: TicketVerdict): string {
+  switch (verdict) {
+    case "used":
+      return "This ticket was already used.";
+    case "forged":
+      return "This ticket is forged: its signature does not match.";
+    case "cancelled":
+      return "This booking was cancelled.";
+    default:
+      return "This booking is not paid or confirmed yet.";
+  }
 }

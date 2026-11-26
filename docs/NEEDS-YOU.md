@@ -176,3 +176,11 @@ Take a snapshot in Neon before the API deploy, because the new migrations run on
 3. or, as super admin, open Settings and set `resend.api_key` and `resend.sender` (these override the Worker secret).
 
 No key is written in the repository. The code is `modules/payments/src/infrastructure/email/resend-receipt-mailer.ts`.
+
+## Ticket signing key (booking tickets and scanning)
+
+**What is needed:** a long random secret that only the server knows. Any long random text works, for example 40 or more letters and digits.
+
+**Why:** the QR code on each booking ticket carries a signature made with this key. Staff scanning a ticket only accept codes whose signature matches, so a copied or edited ticket shows as Forged. Without the key, ticket checks answer "not configured" (HTTP 503) and the QR falls back to the plain booking code.
+
+**Exact steps:** set the Worker secret `TICKET_SIGNING_KEY` in the API Worker: `wrangler secret put TICKET_SIGNING_KEY`. Then redeploy the API. Do not share the key and do not store it in the repository. Changing it makes all tickets already issued show as Forged, so set it once.
