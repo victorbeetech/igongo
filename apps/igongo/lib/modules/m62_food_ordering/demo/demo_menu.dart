@@ -23,11 +23,17 @@ const bool demoMenuOn = true;
 /// The key of the demo outlet (never sent to the server).
 const String demoOutletKey = 'demo-restaurant';
 
-/// The demo outlet list, shown only when the server has no outlets.
-const List<Outlet> demoOutlets = [Outlet(key: demoOutletKey, name: 'Demo restaurant')];
+/// The key of the second demo restaurant (it shares the demo dishes).
+const String demoKaahwaKey = 'demo-kaahwa';
 
-/// Whether [outlet] is the demo outlet and the demo is switched on.
-bool isDemoOutlet(String outlet) => demoMenuOn && outlet == demoOutletKey;
+/// The demo outlet list, shown only when the server has no outlets.
+const List<Outlet> demoOutlets = [
+  Outlet(key: demoOutletKey, name: 'Demo restaurant'),
+  Outlet(key: demoKaahwaKey, name: 'Kaahwa Kanuzire'),
+];
+
+/// Whether [outlet] is a demo outlet and the demo is switched on.
+bool isDemoOutlet(String outlet) => demoMenuOn && (outlet == demoOutletKey || outlet == demoKaahwaKey);
 
 /// The demo delivery zone (so delivery can be tried).
 const List<DeliveryZone> demoZones = [

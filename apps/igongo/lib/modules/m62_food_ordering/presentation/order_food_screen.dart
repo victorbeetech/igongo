@@ -17,7 +17,7 @@ import '../../../shared/ui/card/igongo_card.dart';
 import '../../../shared/ui/guest/guest_chip_row.dart';
 import '../../../shared/ui/guest/guest_product_card.dart';
 import '../../../shared/ui/guest/guest_search_header.dart';
-import '../../../shared/ui/guest/guest_shop_row.dart';
+import '../../../shared/ui/guest/guest_restaurant_slides.dart';
 import '../../../shared/ui/photo/guest_photos.dart';
 import '../../../shared/ui/section/section_header.dart';
 import '../application/cart_controller.dart';
@@ -41,6 +41,11 @@ class OrderFoodScreen extends ConsumerWidget {
   /// Opens [sheet] from the bottom.
   static Future<void> _open(BuildContext context, Widget sheet) =>
       showModalBottomSheet<void>(context: context, isScrollControlled: true, builder: (_) => sheet);
+
+  /// A restaurant's photo: Kaahwa Kanuzire has its own, the demo restaurant a placeholder, others none yet.
+  static String? _restaurantPhoto(Outlet o) => o.name.toLowerCase().contains('kaahwa')
+      ? GuestPhotos.hotelKaahwaKanuzire
+      : (isDemoOutlet(o.key) ? GuestPhotos.outletRestaurant : null);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => LiveView<List<Outlet>>(
@@ -113,23 +118,27 @@ class OrderFoodScreen extends ConsumerWidget {
                           onSelected: (l) => ref.read(menuCategoryProvider.notifier).set(l == 'All' ? null : l),
                         ),
                       if (demo) const DemoNotice(),
-                      // Step 5: the shops (outlets), one row each; tap to switch.
-                      const SectionHeader('Shops'),
-                      for (final o in outlets)
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, 0, IgongoSpace.lg, IgongoSpace.sm),
-                          child: GuestShopRow(
-                            title: o.name,
-                            detail: 'Open for app orders',
-                            badges: badgesOf(o),
-                            selected: o.key == outlet,
-                            photo: isDemoOutlet(o.key) ? GuestPhotos.outletRestaurant : null,
-                            onTap: () {
-                              ref.read(menuCategoryProvider.notifier).set(null);
-                              ref.read(cartProvider.notifier).useOutlet(o.key);
-                            },
-                          ),
+                      // Step 5: the restaurants as a slideshow; tap a slide to open that restaurant.
+                      const SectionHeader('Restaurants'),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, 0, IgongoSpace.lg, IgongoSpace.sm),
+                        child: GuestRestaurantSlides(
+                          slides: [
+                            for (final o in outlets)
+                              RestaurantSlide(
+                                title: o.name,
+                                detail: 'Open for app orders',
+                                badges: badgesOf(o),
+                                selected: o.key == outlet,
+                                photo: _restaurantPhoto(o),
+                                onTap: () {
+                                  ref.read(menuCategoryProvider.notifier).set(null);
+                                  ref.read(cartProvider.notifier).useOutlet(o.key);
+                                },
+                              ),
+                          ],
                         ),
+                      ),
                       if (all.isEmpty)
                         const Padding(
                           padding: EdgeInsets.all(IgongoSpace.lg),
