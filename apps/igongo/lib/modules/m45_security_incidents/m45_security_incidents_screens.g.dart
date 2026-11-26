@@ -2,13 +2,14 @@
 // Module 45: Security, Patrols & Incidents. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm45_security_incidents_overrides.dart';
 
 /// Module 45, Security, Patrols & Incidents: every screen and dialog, with its sample data.
-const m45SecurityIncidentsModule = ModuleSpec(
+final m45SecurityIncidentsModule = ModuleSpec(
   code: '45',
   name: 'Security, Patrols & Incidents',
   slug: 'security-incidents',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S45-01',
       name: 'Security home',
@@ -88,7 +89,8 @@ const m45SecurityIncidentsModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m45Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D45-01',
       name: 'Send panic alert',
@@ -106,7 +108,7 @@ const m45SecurityIncidentsModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Patrol · Night round 2',
       'Incident · Gate argument',

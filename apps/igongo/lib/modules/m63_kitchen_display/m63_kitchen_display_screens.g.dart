@@ -2,13 +2,14 @@
 // Module 63: Kitchen Display & Production. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm63_kitchen_display_overrides.dart';
 
 /// Module 63, Kitchen Display & Production: every screen and dialog, with its sample data.
-const m63KitchenDisplayModule = ModuleSpec(
+final m63KitchenDisplayModule = ModuleSpec(
   code: '63',
   name: 'Kitchen Display & Production',
   slug: 'kitchen-display',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S63-01',
       name: 'Kitchen display',
@@ -65,7 +66,8 @@ const m63KitchenDisplayModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m63Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D63-01',
       name: 'Bump ticket',
@@ -83,7 +85,7 @@ const m63KitchenDisplayModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Order 3021 · 2 items',
       'Order 3022 · 4 items',

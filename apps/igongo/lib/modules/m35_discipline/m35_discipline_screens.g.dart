@@ -2,13 +2,14 @@
 // Module 35: Discipline & Cases. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm35_discipline_overrides.dart';
 
 /// Module 35, Discipline & Cases: every screen and dialog, with its sample data.
-const m35DisciplineModule = ModuleSpec(
+final m35DisciplineModule = ModuleSpec(
   code: '35',
   name: 'Discipline & Cases',
   slug: 'discipline',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S35-01',
       name: 'Cases',
@@ -76,7 +77,8 @@ const m35DisciplineModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m35Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D35-01',
       name: 'Issue warning',
@@ -102,7 +104,7 @@ const m35DisciplineModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Case 2026-014 · Late arrival',
       'Case 2026-015 · Cash short',

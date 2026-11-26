@@ -2,13 +2,14 @@
 // Module 13: Data Import, Export & Backup. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm13_data_import_export_overrides.dart';
 
 /// Module 13, Data Import, Export & Backup: every screen and dialog, with its sample data.
-const m13DataImportExportModule = ModuleSpec(
+final m13DataImportExportModule = ModuleSpec(
   code: '13',
   name: 'Data Import, Export & Backup',
   slug: 'data-import-export',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S13-01',
       name: 'Import wizard',
@@ -65,8 +66,9 @@ const m13DataImportExportModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [],
-  mock: ModuleMock(
+  overrides: m13Overrides,
+  dialogs: const [],
+  mock: const ModuleMock(
     items: [
       'Staff import (CSV)',
       'Menu import',

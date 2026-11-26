@@ -2,13 +2,14 @@
 // Module 08: Forms & Templates Builder. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm08_forms_builder_overrides.dart';
 
 /// Module 08, Forms & Templates Builder: every screen and dialog, with its sample data.
-const m08FormsBuilderModule = ModuleSpec(
+final m08FormsBuilderModule = ModuleSpec(
   code: '08',
   name: 'Forms & Templates Builder',
   slug: 'forms-builder',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S08-01',
       name: 'Forms library',
@@ -120,7 +121,8 @@ const m08FormsBuilderModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m08Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D08-01',
       name: 'Publish form',
@@ -130,7 +132,7 @@ const m08FormsBuilderModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Daily kitchen report',
       'Pool safety checklist',

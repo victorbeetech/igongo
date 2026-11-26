@@ -2,13 +2,14 @@
 // Module 23: Recruitment. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm23_recruitment_overrides.dart';
 
 /// Module 23, Recruitment: every screen and dialog, with its sample data.
-const m23RecruitmentModule = ModuleSpec(
+final m23RecruitmentModule = ModuleSpec(
   code: '23',
   name: 'Recruitment',
   slug: 'recruitment',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S23-01',
       name: 'Vacancies',
@@ -98,7 +99,8 @@ const m23RecruitmentModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m23Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D23-01',
       name: 'Move stage',
@@ -124,7 +126,7 @@ const m23RecruitmentModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Chef de partie',
       'Waiter / waitress',

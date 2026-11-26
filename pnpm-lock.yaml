@@ -10,9 +10,18 @@ importers:
 
   apps/api:
     dependencies:
+      '@igongo/access-zones':
+        specifier: workspace:*
+        version: link:../../modules/access-zones
+      '@igongo/accounting-export':
+        specifier: workspace:*
+        version: link:../../modules/accounting-export
       '@igongo/advances-loans':
         specifier: workspace:*
         version: link:../../modules/advances-loans
+      '@igongo/asset-register':
+        specifier: workspace:*
+        version: link:../../modules/asset-register
       '@igongo/attendance':
         specifier: workspace:*
         version: link:../../modules/attendance
@@ -25,15 +34,30 @@ importers:
       '@igongo/bookings-kit':
         specifier: workspace:*
         version: link:../../packages/bookings-kit
+      '@igongo/buffet':
+        specifier: workspace:*
+        version: link:../../modules/buffet
+      '@igongo/campaigns':
+        specifier: workspace:*
+        version: link:../../modules/campaigns
+      '@igongo/cash-up':
+        specifier: workspace:*
+        version: link:../../modules/cash-up
       '@igongo/chat':
         specifier: workspace:*
         version: link:../../modules/chat
+      '@igongo/company-calendar':
+        specifier: workspace:*
+        version: link:../../modules/company-calendar
       '@igongo/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
       '@igongo/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@igongo/corporate-accounts':
+        specifier: workspace:*
+        version: link:../../modules/corporate-accounts
       '@igongo/crafts-bookshop':
         specifier: workspace:*
         version: link:../../modules/crafts-bookshop
@@ -43,9 +67,18 @@ importers:
       '@igongo/daily-reports':
         specifier: workspace:*
         version: link:../../modules/daily-reports
+      '@igongo/data-import-export':
+        specifier: workspace:*
+        version: link:../../modules/data-import-export
       '@igongo/delivery-riders':
         specifier: workspace:*
         version: link:../../modules/delivery-riders
+      '@igongo/devices-stations':
+        specifier: workspace:*
+        version: link:../../modules/devices-stations
+      '@igongo/discipline':
+        specifier: workspace:*
+        version: link:../../modules/discipline
       '@igongo/earnings-statements':
         specifier: workspace:*
         version: link:../../modules/earnings-statements
@@ -58,15 +91,57 @@ importers:
       '@igongo/files-media':
         specifier: workspace:*
         version: link:../../modules/files-media
+      '@igongo/fleet-transport':
+        specifier: workspace:*
+        version: link:../../modules/fleet-transport
       '@igongo/food-ordering':
         specifier: workspace:*
         version: link:../../modules/food-ordering
+      '@igongo/forms-builder':
+        specifier: workspace:*
+        version: link:../../modules/forms-builder
+      '@igongo/guest-feedback':
+        specifier: workspace:*
+        version: link:../../modules/guest-feedback
+      '@igongo/guest-requests':
+        specifier: workspace:*
+        version: link:../../modules/guest-requests
+      '@igongo/housekeeping':
+        specifier: workspace:*
+        version: link:../../modules/housekeeping
       '@igongo/hr-records':
         specifier: workspace:*
         version: link:../../modules/hr-records
       '@igongo/inspections':
         specifier: workspace:*
         version: link:../../modules/inspections
+      '@igongo/key-control':
+        specifier: workspace:*
+        version: link:../../modules/key-control
+      '@igongo/kitchen-display':
+        specifier: workspace:*
+        version: link:../../modules/kitchen-display
+      '@igongo/knowledge-base':
+        specifier: workspace:*
+        version: link:../../modules/knowledge-base
+      '@igongo/laundry':
+        specifier: workspace:*
+        version: link:../../modules/laundry
+      '@igongo/leave':
+        specifier: workspace:*
+        version: link:../../modules/leave
+      '@igongo/locations-departments':
+        specifier: workspace:*
+        version: link:../../modules/locations-departments
+      '@igongo/lost-found':
+        specifier: workspace:*
+        version: link:../../modules/lost-found
+      '@igongo/loyalty':
+        specifier: workspace:*
+        version: link:../../modules/loyalty
+      '@igongo/meetings':
+        specifier: workspace:*
+        version: link:../../modules/meetings
       '@igongo/menu-catalogue':
         specifier: workspace:*
         version: link:../../modules/menu-catalogue
@@ -79,18 +154,42 @@ importers:
       '@igongo/notifications':
         specifier: workspace:*
         version: link:../../modules/notifications
+      '@igongo/onboarding-exit':
+        specifier: workspace:*
+        version: link:../../modules/onboarding-exit
       '@igongo/payments':
         specifier: workspace:*
         version: link:../../modules/payments
       '@igongo/payroll':
         specifier: workspace:*
         version: link:../../modules/payroll
+      '@igongo/performance':
+        specifier: workspace:*
+        version: link:../../modules/performance
+      '@igongo/petty-cash':
+        specifier: workspace:*
+        version: link:../../modules/petty-cash
       '@igongo/pool':
         specifier: workspace:*
         version: link:../../modules/pool
+      '@igongo/pricing-tax':
+        specifier: workspace:*
+        version: link:../../modules/pricing-tax
+      '@igongo/promotions-vouchers':
+        specifier: workspace:*
+        version: link:../../modules/promotions-vouchers
+      '@igongo/receipts-invoicing':
+        specifier: workspace:*
+        version: link:../../modules/receipts-invoicing
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
       '@igongo/records-search':
         specifier: workspace:*
         version: link:../../modules/records-search
+      '@igongo/recruitment':
+        specifier: workspace:*
+        version: link:../../modules/recruitment
       '@igongo/reports-analytics':
         specifier: workspace:*
         version: link:../../modules/reports-analytics
@@ -100,18 +199,42 @@ importers:
       '@igongo/room-bookings':
         specifier: workspace:*
         version: link:../../modules/room-bookings
+      '@igongo/security-incidents':
+        specifier: workspace:*
+        version: link:../../modules/security-incidents
+      '@igongo/shifts-rosters':
+        specifier: workspace:*
+        version: link:../../modules/shifts-rosters
       '@igongo/staff-cards':
         specifier: workspace:*
         version: link:../../modules/staff-cards
       '@igongo/staff-meals':
         specifier: workspace:*
         version: link:../../modules/staff-meals
+      '@igongo/staff-welfare':
+        specifier: workspace:*
+        version: link:../../modules/staff-welfare
       '@igongo/super-admin':
         specifier: workspace:*
         version: link:../../modules/super-admin
+      '@igongo/surveys-polls':
+        specifier: workspace:*
+        version: link:../../modules/surveys-polls
+      '@igongo/tasks':
+        specifier: workspace:*
+        version: link:../../modules/tasks
+      '@igongo/training':
+        specifier: workspace:*
+        version: link:../../modules/training
       '@igongo/users-login':
         specifier: workspace:*
         version: link:../../modules/users-login
+      '@igongo/visitor-management':
+        specifier: workspace:*
+        version: link:../../modules/visitor-management
+      '@igongo/workflow-approvals':
+        specifier: workspace:*
+        version: link:../../modules/workflow-approvals
       '@igongo/wristbands':
         specifier: workspace:*
         version: link:../../modules/wristbands
@@ -208,6 +331,92 @@ importers:
         specifier: 4.168.0
         version: 4.168.0(@cloudflare/workers-types@5.20261125.1)(@types/node@24.19.4)(vitest@5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)))
 
+  modules/access-zones:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/accounting-export:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
   modules/advances-loans:
     dependencies:
       '@hono/zod-validator':
@@ -228,6 +437,49 @@ importers:
       zod:
         specifier: 4.6.7
         version: 4.6.7
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/asset-register:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
     devDependencies:
       '@cloudflare/workers-types':
         specifier: 5.20261125.1
@@ -392,6 +644,135 @@ importers:
         specifier: 5.1.2
         version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
 
+  modules/buffet:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/campaigns:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/cash-up:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
   modules/chat:
     dependencies:
       '@hono/zod-validator':
@@ -412,6 +793,92 @@ importers:
       zod:
         specifier: 4.6.7
         version: 4.6.7
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/company-calendar:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/corporate-accounts:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
     devDependencies:
       '@cloudflare/workers-types':
         specifier: 5.20261125.1
@@ -570,6 +1037,49 @@ importers:
         specifier: 5.1.2
         version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
 
+  modules/data-import-export:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
   modules/delivery-riders:
     dependencies:
       '@hono/zod-validator':
@@ -590,6 +1100,92 @@ importers:
       zod:
         specifier: 4.6.7
         version: 4.6.7
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/devices-stations:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/discipline:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
     devDependencies:
       '@cloudflare/workers-types':
         specifier: 5.20261125.1
@@ -791,6 +1387,49 @@ importers:
         specifier: 5.1.2
         version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
 
+  modules/fleet-transport:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
   modules/food-ordering:
     dependencies:
       '@hono/zod-validator':
@@ -811,6 +1450,178 @@ importers:
       zod:
         specifier: 4.6.7
         version: 4.6.7
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/forms-builder:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/guest-feedback:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/guest-requests:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/housekeeping:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
     devDependencies:
       '@cloudflare/workers-types':
         specifier: 5.20261125.1
@@ -903,6 +1714,393 @@ importers:
       zod:
         specifier: 4.6.7
         version: 4.6.7
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/key-control:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/kitchen-display:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/knowledge-base:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/laundry:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/leave:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/locations-departments:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/lost-found:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/loyalty:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/meetings:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
     devDependencies:
       '@cloudflare/workers-types':
         specifier: 5.20261125.1
@@ -1104,6 +2302,49 @@ importers:
         specifier: 5.1.2
         version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
 
+  modules/onboarding-exit:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
   modules/payments:
     dependencies:
       '@hono/zod-validator':
@@ -1196,6 +2437,92 @@ importers:
         specifier: 5.1.2
         version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
 
+  modules/performance:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/petty-cash:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
   modules/pool:
     dependencies:
       '@igongo/bookings-kit':
@@ -1204,6 +2531,135 @@ importers:
       '@igongo/core':
         specifier: workspace:*
         version: link:../../packages/core
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/pricing-tax:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/promotions-vouchers:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/receipts-invoicing:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
       drizzle-orm:
         specifier: 0.45.4
         version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
@@ -1266,6 +2722,49 @@ importers:
       '@types/node':
         specifier: 24.19.4
         version: 24.19.4
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/recruitment:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
       eslint:
         specifier: 9.39.5
         version: 9.39.5(jiti@2.7.0)
@@ -1411,6 +2910,92 @@ importers:
         specifier: 5.1.2
         version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
 
+  modules/security-incidents:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/shifts-rosters:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
   modules/staff-cards:
     dependencies:
       '@hono/zod-validator':
@@ -1503,6 +3088,49 @@ importers:
         specifier: 5.1.2
         version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
 
+  modules/staff-welfare:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
   modules/super-admin:
     dependencies:
       '@hono/zod-validator':
@@ -1523,6 +3151,135 @@ importers:
       zod:
         specifier: 4.6.7
         version: 4.6.7
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/surveys-polls:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/tasks:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/training:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
     devDependencies:
       '@cloudflare/workers-types':
         specifier: 5.20261125.1
@@ -1575,6 +3332,92 @@ importers:
       zod:
         specifier: 4.6.7
         version: 4.6.7
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/visitor-management:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@electric-sql/pglite':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      drizzle-kit:
+        specifier: 0.31.11
+        version: 0.31.11
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  modules/workflow-approvals:
+    dependencies:
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@igongo/records-kit':
+        specifier: workspace:*
+        version: link:../../packages/records-kit
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
     devDependencies:
       '@cloudflare/workers-types':
         specifier: 5.20261125.1
@@ -1721,6 +3564,46 @@ importers:
         version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
 
   packages/design-tokens: {}
+
+  packages/records-kit:
+    dependencies:
+      '@hono/zod-validator':
+        specifier: 0.9.1
+        version: 0.9.1(hono@4.13.22)(zod@4.6.7)
+      '@igongo/contracts':
+        specifier: workspace:*
+        version: link:../contracts
+      '@igongo/core':
+        specifier: workspace:*
+        version: link:../core
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@cloudflare/workers-types@5.20261125.1)(@electric-sql/pglite@0.6.0)(@opentelemetry/api@1.10.0)(kysely@0.29.9)(postgres@4.1.1)
+      hono:
+        specifier: 4.13.22
+        version: 4.13.22
+      zod:
+        specifier: 4.6.7
+        version: 4.6.7
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: 5.20261125.1
+        version: 5.20261125.1
+      '@types/node':
+        specifier: 24.19.4
+        version: 24.19.4
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      typescript-eslint:
+        specifier: 8.74.0
+        version: 8.74.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 5.1.2
+        version: 5.1.2(@opentelemetry/api@1.10.0)(@types/node@24.19.4)(vite@8.3.8(@types/node@24.19.4)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
 
 packages:
 
@@ -6677,8 +8560,8 @@ snapshots:
       '@next/eslint-plugin-next': 16.4.6(eslint@9.39.5(jiti@2.7.0))
       eslint: 9.39.5(jiti@2.7.0)
       eslint-import-resolver-node: 0.3.10
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(eslint@9.39.5(jiti@2.7.0)))(eslint@9.39.5(jiti@2.7.0))
-      eslint-plugin-import: 2.32.0(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(eslint@9.39.5(jiti@2.7.0)))(eslint@9.39.5(jiti@2.7.0)))(eslint@9.39.5(jiti@2.7.0))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@9.39.5(jiti@2.7.0))
+      eslint-plugin-import: 2.32.0(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.5(jiti@2.7.0))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.39.5(jiti@2.7.0))
       eslint-plugin-react: 7.37.5(eslint@9.39.5(jiti@2.7.0))
       eslint-plugin-react-hooks: 7.1.1(eslint@9.39.5(jiti@2.7.0))
@@ -6701,7 +8584,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(eslint@9.39.5(jiti@2.7.0)))(eslint@9.39.5(jiti@2.7.0)):
+  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0)(eslint@9.39.5(jiti@2.7.0)):
     dependencies:
       '@nolyfill/is-core-module': 1.0.39
       debug: 4.4.3
@@ -6712,21 +8595,21 @@ snapshots:
       tinyglobby: 0.2.17
       unrs-resolver: 1.13.0
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(eslint@9.39.5(jiti@2.7.0)))(eslint@9.39.5(jiti@2.7.0)))(eslint@9.39.5(jiti@2.7.0))
+      eslint-plugin-import: 2.32.0(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.5(jiti@2.7.0))
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.14.0(eslint-import-resolver-node@0.3.10)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(eslint@9.39.5(jiti@2.7.0)))(eslint@9.39.5(jiti@2.7.0)))(eslint@9.39.5(jiti@2.7.0)):
+  eslint-module-utils@2.14.0(eslint-import-resolver-node@0.3.10)(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.5(jiti@2.7.0)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       eslint: 9.39.5(jiti@2.7.0)
       eslint-import-resolver-node: 0.3.10
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(eslint@9.39.5(jiti@2.7.0)))(eslint@9.39.5(jiti@2.7.0))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@9.39.5(jiti@2.7.0))
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.32.0(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(eslint@9.39.5(jiti@2.7.0)))(eslint@9.39.5(jiti@2.7.0)))(eslint@9.39.5(jiti@2.7.0)):
+  eslint-plugin-import@2.32.0(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.5(jiti@2.7.0)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.2.0
@@ -6737,7 +8620,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.39.5(jiti@2.7.0)
       eslint-import-resolver-node: 0.3.10
-      eslint-module-utils: 2.14.0(eslint-import-resolver-node@0.3.10)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(eslint@9.39.5(jiti@2.7.0)))(eslint@9.39.5(jiti@2.7.0)))(eslint@9.39.5(jiti@2.7.0))
+      eslint-module-utils: 2.14.0(eslint-import-resolver-node@0.3.10)(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.5(jiti@2.7.0))
       hasown: 2.0.4
       is-core-module: 2.18.0
       is-glob: 4.0.3

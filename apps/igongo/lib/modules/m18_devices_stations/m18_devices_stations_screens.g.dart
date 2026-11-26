@@ -2,13 +2,14 @@
 // Module 18: Devices & Stations. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm18_devices_stations_overrides.dart';
 
 /// Module 18, Devices & Stations: every screen and dialog, with its sample data.
-const m18DevicesStationsModule = ModuleSpec(
+final m18DevicesStationsModule = ModuleSpec(
   code: '18',
   name: 'Devices & Stations',
   slug: 'devices-stations',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S18-01',
       name: 'Devices list',
@@ -120,7 +121,8 @@ const m18DevicesStationsModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m18Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D18-01',
       name: 'Lock device',
@@ -146,7 +148,7 @@ const m18DevicesStationsModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Main gate reader',
       'Reception reader',

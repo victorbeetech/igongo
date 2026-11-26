@@ -2,13 +2,14 @@
 // Module 44: Laundry. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm44_laundry_overrides.dart';
 
 /// Module 44, Laundry: every screen and dialog, with its sample data.
-const m44LaundryModule = ModuleSpec(
+final m44LaundryModule = ModuleSpec(
   code: '44',
   name: 'Laundry',
   slug: 'laundry',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S44-01',
       name: 'Laundry orders',
@@ -65,7 +66,8 @@ const m44LaundryModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m44Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D44-01',
       name: 'Laundry ready',
@@ -75,7 +77,7 @@ const m44LaundryModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Bag 0412 · Room 104',
       'Bag 0413 · Kitchen whites',

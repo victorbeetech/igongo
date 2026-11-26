@@ -2,13 +2,14 @@
 // Module 65: Buffet Service. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm65_buffet_overrides.dart';
 
 /// Module 65, Buffet Service: every screen and dialog, with its sample data.
-const m65BuffetModule = ModuleSpec(
+final m65BuffetModule = ModuleSpec(
   code: '65',
   name: 'Buffet Service',
   slug: 'buffet',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S65-01',
       name: 'Buffet sessions',
@@ -65,7 +66,8 @@ const m65BuffetModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m65Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D65-01',
       name: 'Entry refused',
@@ -75,7 +77,7 @@ const m65BuffetModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Breakfast buffet',
       'Lunch buffet',

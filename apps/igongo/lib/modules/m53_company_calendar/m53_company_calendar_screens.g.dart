@@ -2,13 +2,14 @@
 // Module 53: Company Calendar. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm53_company_calendar_overrides.dart';
 
 /// Module 53, Company Calendar: every screen and dialog, with its sample data.
-const m53CompanyCalendarModule = ModuleSpec(
+final m53CompanyCalendarModule = ModuleSpec(
   code: '53',
   name: 'Company Calendar',
   slug: 'company-calendar',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S53-01',
       name: 'Calendar',
@@ -54,7 +55,8 @@ const m53CompanyCalendarModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m53Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D53-01',
       name: 'RSVP',
@@ -64,7 +66,7 @@ const m53CompanyCalendarModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Wedding · Hall A',
       'Fire drill',

@@ -2,13 +2,14 @@
 // Module 56: Feedback, Complaints & Reviews. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm56_guest_feedback_overrides.dart';
 
 /// Module 56, Feedback, Complaints & Reviews: every screen and dialog, with its sample data.
-const m56GuestFeedbackModule = ModuleSpec(
+final m56GuestFeedbackModule = ModuleSpec(
   code: '56',
   name: 'Feedback, Complaints & Reviews',
   slug: 'guest-feedback',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S56-01',
       name: 'Feedback inbox',
@@ -87,7 +88,8 @@ const m56GuestFeedbackModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m56Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D56-01',
       name: 'Assign complaint',
@@ -105,7 +107,7 @@ const m56GuestFeedbackModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Great beef pilau (5★)',
       'Slow room service (2★)',

@@ -17,6 +17,7 @@
  *   /events, /pool, /shop   the guest and rider modules (see guests/guest-routes.ts)
  *   /api/files, /faults, /inspections, /payroll, /advances, /bonuses,
  *   /earnings, /reports, /chat, /records  manager and money modules (see managers/manager-routes.ts)
+ *   /api/lost-found, /tasks, /leave, /visitors ...  the records-kit modules (see operations/record-modules.ts)
  */
 
 import { auditRouter } from "@igongo/audit-trail";
@@ -30,6 +31,7 @@ import type { ApiEnv } from "../shell/api-env";
 import { moduleGate } from "./module-gate";
 import { mountGuestRoutes } from "./guests/guest-routes";
 import { mountManagerRoutes } from "./managers/manager-routes";
+import { mountRecordRoutes } from "./operations/record-routes";
 import { mountStaffRoutes } from "./staff/staff-routes";
 
 /** The shell's context, seen through a module router's narrower type. */
@@ -69,4 +71,5 @@ export function mountRoutes(app: Hono<ApiEnv>) {
   mountStaffRoutes(app);
   mountGuestRoutes(app);
   mountManagerRoutes(app);
+  mountRecordRoutes(app);
 }

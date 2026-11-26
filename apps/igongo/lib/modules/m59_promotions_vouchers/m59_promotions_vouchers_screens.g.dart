@@ -2,13 +2,14 @@
 // Module 59: Promotions, Vouchers & Gift Cards. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm59_promotions_vouchers_overrides.dart';
 
 /// Module 59, Promotions, Vouchers & Gift Cards: every screen and dialog, with its sample data.
-const m59PromotionsVouchersModule = ModuleSpec(
+final m59PromotionsVouchersModule = ModuleSpec(
   code: '59',
   name: 'Promotions, Vouchers & Gift Cards',
   slug: 'promotions-vouchers',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S59-01',
       name: 'Promotions',
@@ -76,7 +77,8 @@ const m59PromotionsVouchersModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m59Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D59-01',
       name: 'Invalid code',
@@ -86,7 +88,7 @@ const m59PromotionsVouchersModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'XMAS25 · 25% off',
       'Buffet for two',

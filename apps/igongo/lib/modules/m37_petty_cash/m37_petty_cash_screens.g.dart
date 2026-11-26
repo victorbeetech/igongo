@@ -2,13 +2,14 @@
 // Module 37: Petty Cash & Expense Claims. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm37_petty_cash_overrides.dart';
 
 /// Module 37, Petty Cash & Expense Claims: every screen and dialog, with its sample data.
-const m37PettyCashModule = ModuleSpec(
+final m37PettyCashModule = ModuleSpec(
   code: '37',
   name: 'Petty Cash & Expense Claims',
   slug: 'petty-cash',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S37-01',
       name: 'My claims',
@@ -76,7 +77,8 @@ const m37PettyCashModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m37Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D37-01',
       name: 'Approve claim',
@@ -94,7 +96,7 @@ const m37PettyCashModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: ['Taxi for supplies', 'Gas refill', 'Printer ink', 'Staff water', 'Market vegetables', 'Generator fuel'],
     statuses: ['Waiting', 'Approved', 'Paid', 'Refused'],
     kpis: [

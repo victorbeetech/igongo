@@ -2,13 +2,14 @@
 // Module 41: Asset Register. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm41_asset_register_overrides.dart';
 
 /// Module 41, Asset Register: every screen and dialog, with its sample data.
-const m41AssetRegisterModule = ModuleSpec(
+final m41AssetRegisterModule = ModuleSpec(
   code: '41',
   name: 'Asset Register',
   slug: 'asset-register',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S41-01',
       name: 'Assets list',
@@ -76,7 +77,8 @@ const m41AssetRegisterModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m41Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D41-01',
       name: 'Move asset',
@@ -94,7 +96,7 @@ const m41AssetRegisterModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Generator 250 kVA',
       'Pool pump 2',

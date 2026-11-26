@@ -2,13 +2,14 @@
 // Module 24: Onboarding & Exit. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm24_onboarding_exit_overrides.dart';
 
 /// Module 24, Onboarding & Exit: every screen and dialog, with its sample data.
-const m24OnboardingExitModule = ModuleSpec(
+final m24OnboardingExitModule = ModuleSpec(
   code: '24',
   name: 'Onboarding & Exit',
   slug: 'onboarding-exit',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S24-01',
       name: 'Onboarding list',
@@ -87,7 +88,8 @@ const m24OnboardingExitModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m24Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D24-01',
       name: 'Start onboarding',
@@ -113,7 +115,7 @@ const m24OnboardingExitModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Ainembabazi Joan · Starts Mon',
       'Agaba Moses · Week 2',

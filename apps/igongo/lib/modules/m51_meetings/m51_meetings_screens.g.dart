@@ -2,13 +2,14 @@
 // Module 51: Meetings & Minutes. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm51_meetings_overrides.dart';
 
 /// Module 51, Meetings & Minutes: every screen and dialog, with its sample data.
-const m51MeetingsModule = ModuleSpec(
+final m51MeetingsModule = ModuleSpec(
   code: '51',
   name: 'Meetings & Minutes',
   slug: 'meetings',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S51-01',
       name: 'Meetings',
@@ -65,7 +66,8 @@ const m51MeetingsModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m51Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D51-01',
       name: 'Sign attendance',
@@ -83,7 +85,7 @@ const m51MeetingsModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Weekly managers meeting',
       'Kitchen briefing',

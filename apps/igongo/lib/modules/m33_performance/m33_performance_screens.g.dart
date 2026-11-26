@@ -2,13 +2,14 @@
 // Module 33: Performance & Appraisals. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm33_performance_overrides.dart';
 
 /// Module 33, Performance & Appraisals: every screen and dialog, with its sample data.
-const m33PerformanceModule = ModuleSpec(
+final m33PerformanceModule = ModuleSpec(
   code: '33',
   name: 'Performance & Appraisals',
   slug: 'performance',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S33-01',
       name: 'My appraisals',
@@ -76,7 +77,8 @@ const m33PerformanceModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m33Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D33-01',
       name: 'Submit appraisal',
@@ -94,7 +96,7 @@ const m33PerformanceModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Appraisal · Atuhaire Grace',
       'Appraisal · Mugisha Brian',
