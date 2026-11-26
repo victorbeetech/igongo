@@ -12,6 +12,7 @@ export { hashPassword, verifyPassword } from "./crypto/password-hasher";
 export { SecretBox } from "./crypto/secret-box";
 export { sha256Hex } from "./crypto/sha256-hex";
 export type { Database } from "./db/database";
+export { countByKey } from "./db/count-by-key";
 export { nextRunningNumber } from "./db/next-running-number";
 export { ModuleSettings, moduleSettingsTable, type ModuleSettingsTable } from "./db/module-settings";
 export { AppError, type AppErrorCode } from "./errors/app-error";

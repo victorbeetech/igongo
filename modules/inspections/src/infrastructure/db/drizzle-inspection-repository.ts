@@ -1,7 +1,7 @@
 /** `InspectionRepository` on Postgres, with Drizzle. */
 
-import type { Database } from "@igongo/core";
-import { and, asc, count, desc, eq, gte, lte, sql, type SQL } from "drizzle-orm";
+import { countByKey, type Database } from "@igongo/core";
+import { and, asc, count, desc, eq, gte, lte, type SQL } from "drizzle-orm";
 import type { InspectionRepository, RunFilter } from "../../application/ports/inspection-repository";
 import type { Checklist, Frequency } from "../../domain/checklist";
 import type { InspectionRun } from "../../domain/inspection-run";
@@ -43,18 +43,15 @@ export class DrizzleInspectionRepository implements InspectionRepository {
     if (filter.checklistId) where.push(eq(runs.checklistId, filter.checklistId));
     if (filter.from) where.push(gte(runs.workDate, filter.from));
     if (filter.to) where.push(lte(runs.workDate, filter.to));
-    const rows = await this.db
-      .select({
-        run: runs,
-        likes: sql<number>`(select count(*) from ${runLikes} where ${runLikes.runId} = ${runs.id})`,
-        comments: sql<number>`(select count(*) from ${runComments} where ${runComments.runId} = ${runs.id})`,
-        likedByMe: sql<boolean>`exists(select 1 from ${runLikes} where ${runLikes.runId} = ${runs.id} and ${runLikes.userId} = ${viewerId})`,
-      })
-      .from(runs)
-      .where(and(...where))
-      .orderBy(desc(runs.submittedAt))
-      .limit(filter.limit);
-    return rows.map((r) => ({ ...r.run, likes: Number(r.likes), comments: Number(r.comments), likedByMe: Boolean(r.likedByMe) }));
+    const rows = await this.db.select().from(runs).where(and(...where)).orderBy(desc(runs.submittedAt)).limit(filter.limit);
+    // The counts for the listed runs, in grouped queries.
+    const ids = rows.map((r) => r.id);
+    const [likes, comments, mine] = await Promise.all([
+      countByKey(this.db, runLikes, runLikes.runId, ids),
+      countByKey(this.db, runComments, runComments.runId, ids),
+      countByKey(this.db, runLikes, runLikes.runId, ids, eq(runLikes.userId, viewerId)),
+    ]);
+    return rows.map((r) => ({ ...r, likes: likes.get(r.id) ?? 0, comments: comments.get(r.id) ?? 0, likedByMe: mine.has(r.id) }));
   }
 
   async addRun(run: InspectionRun): Promise<void> {

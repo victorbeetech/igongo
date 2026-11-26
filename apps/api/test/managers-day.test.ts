@@ -83,6 +83,8 @@ describe("managers and money", () => {
     expect((await max.call("POST", `/api/faults/${fault.id}/like`)).body).toMatchObject({ liked: true, likes: 1 });
     expect((await max.call("POST", `/api/faults/${fault.id}/comments`, { body: "On my way with a washer." })).status).toBe(201);
     expect((await guest("GET", `/api/faults/${fault.id}`)).status).toBe(403);
+    // The list counts them too.
+    expect(((await max.call("GET", "/api/faults?open=1")).body["items"] as unknown[])[0]).toMatchObject({ likes: 1, comments: 1, likedByMe: true });
 
     // The manager assigns Max; Max fixes it (saying what he did); Sam closes it.
     expect((await sam.call("POST", `/api/faults/${fault.id}/assign`, { staffId: sam.staffId })).status).toBe(403);

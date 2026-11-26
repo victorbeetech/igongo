@@ -1,7 +1,7 @@
 /** `FaultRepository` on Postgres, with Drizzle. People are kept as flat columns so lists can filter on them. */
 
-import { nextRunningNumber, omitKeys, type Database } from "@igongo/core";
-import { and, asc, count, desc, eq, notInArray, or, sql, type SQL } from "drizzle-orm";
+import { countByKey, nextRunningNumber, omitKeys, type Database } from "@igongo/core";
+import { and, asc, count, desc, eq, notInArray, or, type SQL } from "drizzle-orm";
 import type { FaultFilter, FaultRepository } from "../../application/ports/fault-repository";
 import type { Fault } from "../../domain/fault";
 import type { FaultComment } from "../../domain/fault-comment";
@@ -84,19 +84,15 @@ export class DrizzleFaultRepository implements FaultRepository {
       const mine = filter.alsoPerson ? [eq(faults.reporterUserId, filter.alsoPerson), eq(faults.assignedUserId, filter.alsoPerson)] : [];
       where.push(or(eq(faults.department, filter.department), ...mine) as SQL);
     }
-    const rows = await this.db
-      .select({
-        fault: faults,
-        likes: sql<number>`(select count(*) from ${faultLikes} where ${faultLikes.faultId} = ${faults.id})`,
-        comments: sql<number>`(select count(*) from ${faultComments} where ${faultComments.faultId} = ${faults.id})`,
-        likedByMe: sql<boolean>`exists(select 1 from ${faultLikes} where ${faultLikes.faultId} = ${faults.id} and ${faultLikes.userId} = ${viewerId})`,
-      })
-      .from(faults)
-      .where(and(...where))
-      .orderBy(desc(faults.createdAt))
-      .limit(filter.limit)
-      .offset(filter.offset);
-    return rows.map((r) => ({ ...toFault(r.fault), likes: Number(r.likes), comments: Number(r.comments), likedByMe: Boolean(r.likedByMe) }));
+    const rows = await this.db.select().from(faults).where(and(...where)).orderBy(desc(faults.createdAt)).limit(filter.limit).offset(filter.offset);
+    // The counts for the listed faults, in grouped queries.
+    const ids = rows.map((r) => r.id);
+    const [likes, comments, mine] = await Promise.all([
+      countByKey(this.db, faultLikes, faultLikes.faultId, ids),
+      countByKey(this.db, faultComments, faultComments.faultId, ids),
+      countByKey(this.db, faultLikes, faultLikes.faultId, ids, eq(faultLikes.userId, viewerId)),
+    ]);
+    return rows.map((r) => ({ ...toFault(r), likes: likes.get(r.id) ?? 0, comments: comments.get(r.id) ?? 0, likedByMe: mine.has(r.id) }));
   }
 
   nextNumber(): Promise<string> {
