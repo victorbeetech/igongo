@@ -11,6 +11,7 @@ import type { ChangeContext, Database } from "@igongo/core";
 import { DrizzleReportRepository, SettingsTemplateStore, type ReportsDeps } from "@igongo/daily-reports";
 import { DrizzleStaffRepository } from "@igongo/hr-records";
 import { DrizzleNoticeRepository, SettingsBoardStore, type NoticesDeps } from "@igongo/notice-board";
+import { SettingsDesignsStore } from "@igongo/card-designs";
 import { cardResolver, DrizzleCardRepository } from "@igongo/staff-cards";
 import { DrizzleClaimRepository, SettingsMealRulesStore, type MealsDeps } from "@igongo/staff-meals";
 import { DrizzleBandRepository } from "@igongo/wristbands";
@@ -34,6 +35,7 @@ export class StaffServices {
   /** Staff Cards' contract for Attendance and Staff Meals. */
   readonly cardResolver = once(() => cardResolver(this.cards()));
   readonly bands = once(() => new DrizzleBandRepository(this.db));
+  readonly cardDesigns = once(() => new SettingsDesignsStore(this.db));
 
   /** Attendance's dependencies for [change]'s caller. */
   attendance(change: ChangeContext): AttendanceDeps {

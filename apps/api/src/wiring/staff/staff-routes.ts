@@ -4,6 +4,7 @@
  * without touching the others.
  *
  *   /api/hr/*             staff directory and profiles        module 22
+ *   /api/cards/designs    card templates, types and role choice module 16
  *   /api/cards/*          staff cards, NFC and QR              module 16
  *   /api/wristbands/*     event wristbands                     module 17
  *   /api/attendance/*     clock-in and out, boards             module 25
@@ -17,6 +18,7 @@ import type { ActorEnv } from "@igongo/core";
 import { reportsRouter } from "@igongo/daily-reports";
 import { hrRouter } from "@igongo/hr-records";
 import { noticesRouter } from "@igongo/notice-board";
+import { designsRouter } from "@igongo/card-designs";
 import { cardsRouter } from "@igongo/staff-cards";
 import { mealsRouter } from "@igongo/staff-meals";
 import { wristbandsRouter } from "@igongo/wristbands";
@@ -32,6 +34,8 @@ function services(c: Context<ActorEnv>) {
 
 export function mountStaffRoutes(app: Hono<ApiEnv>) {
   mount(app, "hr", "hr-records", hrRouter((c) => ({ staff: services(c).staff.staff(), roles: services(c).roles, change: services(c).change })));
+  // Card designs first, so `/api/cards/designs` is not read as a card ID.
+  mount(app, "cards/designs", "staff-cards", designsRouter((c) => ({ store: services(c).staff.cardDesigns(), change: services(c).change })));
   mount(app, "cards", "staff-cards", cardsRouter((c) => ({ cards: services(c).staff.cards(), staff: services(c).staff.staff(), change: services(c).change })));
   mount(app, "wristbands", "wristbands", wristbandsRouter((c) => ({ bands: services(c).staff.bands(), change: services(c).change })));
   mount(app, "attendance", "attendance", attendanceRouter((c) => services(c).staff.attendance(services(c).change)));

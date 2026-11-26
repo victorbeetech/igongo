@@ -3,13 +3,15 @@
 // with its own fold button at the top (never outside it). Open, it shows the
 // role, the search box and the module list; folded, it becomes a narrow rail
 // of icons with the open button, a search button and one icon per module.
-// The modules come from the role at run time; the super admin sees all.
+// The modules come from the role at run time: signed in, from the layout the
+// super admin published for the person's roles; otherwise the preview role.
 // On small screens it is a drawer, opened from the top bar, always open wide.
 
 import { PanelLeftClose, PanelLeftOpen, Search, X } from "lucide-react";
 import { useState } from "react";
 import { catalog } from "@/shared/catalog/catalogIndex";
 import type { RoleSpec } from "@/shared/catalog/types";
+import { layoutModules, useMyLayout } from "@/shared/session/useMyLayout";
 import { SidebarModules } from "./SidebarModules";
 import { SidebarSearch } from "./SidebarSearch";
 import { useSidebarOpen } from "./useSidebarOpen";
@@ -33,8 +35,10 @@ export function PortalSidebar({ role, activeCode, drawerOpen, onCloseDrawer }: P
   const [searching, setSearching] = useState(false);
   const [focusSignal, setFocusSignal] = useState(0);
   // Step 1: the module codes behind the role's tiles, or every module for the super admin.
+  const layout = useMyLayout().data;
   const reach = new Set(role.tiles.map(([, id]) => id!.slice(1, 3)));
-  const modules = catalog.modules.filter((m) => m.code !== "00" && (role.key === "super-admin" || reach.has(m.code)));
+  const all = catalog.modules.filter((m) => m.code !== "00");
+  const modules = layout ? layoutModules(layout, all) : all.filter((m) => role.key === "super-admin" || reach.has(m.code));
   // Step 2: folded only on wide screens; the small-screen drawer is always wide.
   const folded = !open && !drawerOpen;
   const openAndSearch = () => {

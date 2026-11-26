@@ -1,11 +1,15 @@
 // The side menu: the modules the person's role can open, built from the role
-// at run time, never hard-coded. The super admin sees every module, so a long
+// at run time, never hard-coded. Signed in, it follows the layout the super
+// admin published for the person's roles (`/api/layout/me`); signed out or
+// offline, the preview role from the catalog. The super admin sees every module, so a long
 // menu gets a search box at the top that filters it as the person types.
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../shared/catalog/module_matches.dart';
+import '../../shared/layout/application/layout_providers.dart';
 import '../../shared/preferences/preferences.dart';
 import '../../shared/theme/theme.dart';
 import '../../shared/ui/icons/module_icons.dart';
@@ -14,15 +18,15 @@ import '../catalog/catalog_index.dart';
 import '../navigation/open_target.dart';
 
 /// The menu of modules for the current role.
-class RoleDrawer extends StatefulWidget {
+class RoleDrawer extends ConsumerStatefulWidget {
   /// Creates the menu.
   const RoleDrawer({super.key});
 
   @override
-  State<RoleDrawer> createState() => _RoleDrawerState();
+  ConsumerState<RoleDrawer> createState() => _RoleDrawerState();
 }
 
-class _RoleDrawerState extends State<RoleDrawer> {
+class _RoleDrawerState extends ConsumerState<RoleDrawer> {
   /// A menu longer than this gets the search box.
   static const _searchFrom = 8;
 
@@ -34,10 +38,15 @@ class _RoleDrawerState extends State<RoleDrawer> {
     // Step 1: the role and the modules it reaches.
     final index = CatalogIndex.instance;
     final role = index.roles[PreferencesScope.of(context).roleKey] ?? index.defaultRole;
+    final layout = ref.watch(myLayoutProvider).valueOrNull;
     final everything = role.key == 'super-admin';
-    final modules = index.modules.values
-        .where((m) => m.code != '00' && (everything || role.modules.contains(m.code)))
-        .toList();
+    final modules = layout == null
+        ? index.modules.values.where((m) => m.code != '00' && (everything || role.modules.contains(m.code))).toList()
+        // Signed in: the published layout's modules, in its order.
+        : (index.modules.values.where((m) => m.code != '00' && layout.placeOf(m.slug) != null).toList()..sort((a, b) {
+            final byPlace = layout.placeOf(a.slug)!.compareTo(layout.placeOf(b.slug)!);
+            return byPlace != 0 ? byPlace : a.code.compareTo(b.code);
+          }));
     // Step 2: only the modules that match the search (all of them when it is empty).
     final shown = modules.where((m) => moduleMatches(m, _query)).toList();
     return Drawer(

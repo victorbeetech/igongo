@@ -7,5 +7,8 @@
 /** True only in the static preview build. Fixed at build time. */
 export const STATIC_PREVIEW = process.env.NEXT_PUBLIC_STATIC_PREVIEW === "1";
 
-/** The screen the preview opens on when the address has no `#`: the role switcher. */
-export const PREVIEW_START = "/role-switcher";
+/**
+ * The screen the site opens on when the address has no `#`. The hosted site
+ * (`build:cloudflare`) opens on sign-in; a review build on the role switcher.
+ */
+export const PREVIEW_START = process.env.NEXT_PUBLIC_START_SCREEN ?? "/role-switcher";
