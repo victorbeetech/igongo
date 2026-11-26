@@ -13,6 +13,9 @@ export const notConfiguredCodeSender: CodeSender = {
   async send(channel: CodeChannel) {
     throw new AppError("not_configured", `Sending codes by ${channel} is not set up yet.`);
   },
+  ready() {
+    return false;
+  },
 };
 
 /** Knows no cards. */

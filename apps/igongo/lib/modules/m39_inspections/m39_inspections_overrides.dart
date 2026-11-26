@@ -5,4 +5,8 @@ import '../../shared/catalog/catalog.dart';
 import 'presentation/due/checkups_due_screen.dart';
 
 /// Module 39's hand-made screens.
-final m39Overrides = <String, ScreenOverride>{'S39-01': (_, s) => CheckupsDueScreen(s)};
+final m39Overrides = <String, ScreenOverride>{
+  'S39-01': (_, s) => CheckupsDueScreen(s),
+  // Details open inside the screen above, so their numbers lead there too.
+  'S39-02': (_, s) => CheckupsDueScreen(s),
+};

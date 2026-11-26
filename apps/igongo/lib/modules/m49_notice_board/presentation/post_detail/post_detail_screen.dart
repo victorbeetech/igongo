@@ -74,7 +74,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
           if (page.notice.allowComments) ...[
             const SectionHeader('Comments'),
             for (final c in page.comments) IgongoListRow(title: c.authorName, subtitle: c.body),
-            if (session.can('notice-board.posts.comment'))
+            if ((session?.can('notice-board.posts.comment') ?? false))
               Padding(
                 padding: const EdgeInsets.all(IgongoSpace.lg),
                 child: Column(

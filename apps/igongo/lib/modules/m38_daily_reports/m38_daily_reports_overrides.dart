@@ -8,4 +8,6 @@ import 'presentation/my_report/my_report_screen.dart';
 final m38Overrides = <String, ScreenOverride>{
   'S38-01': (_, s) => MyReportScreen(s),
   'S38-02': (_, s) => MyReportScreen(s),
+  // Details open inside the screen above, so their numbers lead there too.
+  'S38-06': (_, s) => MyReportScreen(s),
 };

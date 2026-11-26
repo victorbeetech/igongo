@@ -74,8 +74,8 @@ class ClockInScreen extends ConsumerWidget {
         ),
         // Step 2: station mode, for the gate, reception and security.
         ...[
-          if (session.can('attendance.station.create')) const SectionHeader('Station mode'),
-          if (session.can('attendance.station.create')) const StationPanel(),
+          if ((session?.can('attendance.station.create') ?? false)) const SectionHeader('Station mode'),
+          if ((session?.can('attendance.station.create') ?? false)) const StationPanel(),
         ],
       ],
     ),

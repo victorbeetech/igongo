@@ -47,4 +47,19 @@ class BookingsApi {
   /// Cancels my booking [id].
   Future<void> cancel(String id) =>
       _api.post('${place.path}/bookings/$id/cancel', {'reason': 'Cancelled by the guest'});
+
+  /// Staff: every booking, optionally on [date] (yyyy-mm-dd) or with [status].
+  Future<List<Booking>> desk({String? date, String? status}) async {
+    final query = [if (date != null) 'date=$date', if (status != null) 'status=$status'].join('&');
+    final json = await _api.get('${place.path}/bookings${query.isEmpty ? '' : '?$query'}');
+    return [for (final b in json['items'] as List<dynamic>) Booking.fromJson(b as Json)];
+  }
+
+  /// Staff: approves a requested booking.
+  Future<Booking> approve(String id) async =>
+      Booking.fromJson(await _api.post('${place.path}/bookings/$id/approve', const <String, dynamic>{}));
+
+  /// Staff: checks in the booking with [code] (typed, or the QR text).
+  Future<Booking> checkIn(String code) async =>
+      Booking.fromJson(await _api.post('${place.path}/check-in', {'code': code}));
 }

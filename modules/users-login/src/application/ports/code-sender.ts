@@ -9,4 +9,6 @@ export type CodeChannel = "sms" | "whatsapp" | "email";
 export interface CodeSender {
   /** Sends [message] to [to] (a phone number or email) over [channel]. */
   send(channel: CodeChannel, to: string, message: string): Promise<void>;
+  /** True when [channel] is set up (a provider and its keys), so sending can work. */
+  ready(channel: CodeChannel): boolean;
 }

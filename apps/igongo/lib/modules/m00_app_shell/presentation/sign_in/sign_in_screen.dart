@@ -97,6 +97,11 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
               ),
               const SizedBox(height: IgongoSpace.md),
               IgongoButton(label: _busy ? 'Signing in…' : 'Sign in', expand: true, onPressed: _busy ? null : _signIn),
+              IgongoButton(
+                label: 'Forgot password?',
+                variant: ButtonVariant.text,
+                onPressed: () => screen.open('S00-17'),
+              ),
               const SizedBox(height: IgongoSpace.lg),
               // Step 3: guest sign-up (staff accounts come from the hotel).
               IgongoButton(

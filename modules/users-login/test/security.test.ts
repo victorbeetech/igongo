@@ -101,6 +101,15 @@ describe("real-user details", () => {
     expect(t.audit.map((e) => e.action)).toContain("login.locked_out");
   });
 
+  it("refuses reset links the same way for every address while email is not set up", async () => {
+    const t = await testAuth({ emailReady: false });
+    await t.call("/sign-up/email", ann);
+    const known = await t.call("/request-password-reset", { email: ann.email });
+    const unknown = await t.call("/request-password-reset", { email: "nobody@example.com" });
+    expect([known.status, unknown.status]).toEqual([503, 503]);
+    expect(await known.json()).toEqual(await unknown.json());
+  });
+
   it("resets a password by email: the link works once and signs out other devices", async () => {
     const t = await testAuth();
     const up = await t.call("/sign-up/email", ann);

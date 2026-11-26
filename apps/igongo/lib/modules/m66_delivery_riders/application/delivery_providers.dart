@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../shared/session/session_controller.dart';
 import '../data/delivery_api.dart';
+import '../domain/dispatch_board.dart';
 import '../domain/rider_shift.dart';
 import '../domain/tracked_delivery.dart';
 
@@ -25,4 +26,10 @@ final myDeliveriesProvider = FutureProvider.autoDispose<({List<TrackedDelivery> 
 ) {
   ref.watch(sessionProvider);
   return ref.watch(deliveryApiProvider).mine();
+});
+
+/// The dispatch board; reloads when the session changes.
+final dispatchBoardProvider = FutureProvider.autoDispose<DispatchBoard>((ref) {
+  ref.watch(sessionProvider);
+  return ref.watch(deliveryApiProvider).board();
 });

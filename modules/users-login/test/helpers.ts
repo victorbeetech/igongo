@@ -38,8 +38,11 @@ export function memoryAccess(): AccessReader & RoleAssigner & { held: Map<string
   };
 }
 
-/** A full Better Auth set-up on PGlite with fakes for roles and the audit trail. */
-export async function testAuth() {
+/**
+ * A full Better Auth set-up on PGlite with fakes for roles and the audit
+ * trail. [emailReady] false acts as if no email provider is set up yet.
+ */
+export async function testAuth({ emailReady = true }: { emailReady?: boolean } = {}) {
   const { db, client } = await freshDb();
   const audit: AuditEntryInput[] = [];
   const alerts: string[] = [];
@@ -52,7 +55,7 @@ export async function testAuth() {
     pins: new DrizzlePinStore(db),
     cards: notConfiguredCardDirectory,
     // Codes and links are kept in memory, as if emailed.
-    codes: { send: async (channel: string, to: string, message: string) => void sent.push({ channel, to, message }) },
+    codes: { send: async (channel: string, to: string, message: string) => void sent.push({ channel, to, message }), ready: () => emailReady },
     audit: { record: async (e: AuditEntryInput) => void audit.push(e) },
     failedLogins: new DrizzleFailedLoginStore(db),
     devices: new DrizzleKnownDeviceStore(db),

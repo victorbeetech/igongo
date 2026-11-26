@@ -4,7 +4,8 @@
  *
  * - before each request: emails and names are tidied, a switched-off method
  *   is refused at once, self sign-up is refused when the policy says so,
- *   weak passwords are refused, a locked email is refused, and linking a
+ *   weak passwords are refused, a reset link is refused (for everyone alike)
+ *   until email is set up, a locked email is refused, and linking a
  *   new sign-in method needs a fresh sign-in;
  * - after each request: wrong passwords are counted (lockout), failed
  *   sign-ins and unlinked methods are recorded;
@@ -96,6 +97,11 @@ export function loginGuardHooks(deps: AuthDeps, webOrigins: string[]): Pick<Bett
         const newPassword = field ? body?.[field] : undefined;
         const problem = typeof newPassword === "string" ? passwordProblem(newPassword, policy) : null;
         if (problem) throw new APIError("BAD_REQUEST", { message: problem, code: "WEAK_PASSWORD" });
+        // 3b. A reset link needs email to be set up. Refused the same way for every
+        // address, so the answer never tells whether an account exists.
+        if (ctx.path === "/request-password-reset" && !deps.codes.ready("email")) {
+          throw new APIError("SERVICE_UNAVAILABLE", { message: "Password reset by email is not set up yet. Please ask the hotel to reset it for you.", code: "EMAIL_NOT_SET_UP" });
+        }
         // 4. A locked email cannot even try.
         if (ctx.path === "/sign-in/email" && typeof tidied?.["email"] === "string") await asApiError(() => refuseIfLocked(deps.failedLogins, tidied["email"] as string, new Date()));
         // 5. Linking Google or Apple to an account needs a recent sign-in.
