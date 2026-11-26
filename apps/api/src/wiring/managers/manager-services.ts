@@ -37,7 +37,7 @@ import { paymentKpis } from "@igongo/payments";
 import { DrizzlePayrollRepository, payHistory, payrollKpis, SettingsPayrollStore, type PayrollDeps } from "@igongo/payroll";
 import { poolKpis } from "@igongo/pool";
 import type { RecordsDeps } from "@igongo/records-search";
-import { SettingsDashboardStore, type ReportsDeps } from "@igongo/reports-analytics";
+import { DrizzleSavedReportStore, SettingsDashboardStore, type ReportsDeps } from "@igongo/reports-analytics";
 import { roomBookingsKpis } from "@igongo/room-bookings";
 import { spaKpis } from "@igongo/spa";
 import { stockKpis } from "@igongo/stock-inventory";
@@ -172,7 +172,7 @@ export class ManagerServices {
     // Only switched-on modules are asked for numbers.
     const on = await Promise.all(Object.keys(KPI_SOURCES).map(async (k) => ((await this.isOn(k)) ? k : null)));
     const sources = on.filter((k): k is string => !!k).map((k) => (KPI_SOURCES[k] as (db: Database) => KpiSource)(this.db));
-    return { sources, settings: new SettingsDashboardStore(this.db), change: this.change };
+    return { sources, settings: new SettingsDashboardStore(this.db), saved: new DrizzleSavedReportStore(this.db), change: this.change };
   }
 
   chat(): ChatDeps {

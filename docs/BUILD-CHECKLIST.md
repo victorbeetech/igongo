@@ -1,5 +1,7 @@
 # Build checklist, from start to end
 
+> Every change follows the binding [Quality rules](QUALITY-RULES.md).
+
 This is the order the project must follow. Each phase ends with an approval before the next one starts. Tick a box only when the item is done **and** checked.
 
 Every phase follows the [code standards](architecture/code-standards.md): clean architecture, a folder for each module, reusable and separated shared code, minimal code, comments on every process, and zero warnings.
@@ -128,7 +130,7 @@ The whole app and web portal are built as a clickable product first, with sample
   - [x] Roles & Permissions (`modules/roles-permissions`): runtime roles, `module.feature.action` permissions with data scope, several and temporary roles per person, included roles, the 121 pre-made roles seeded from docs, `GET /api/access/me` for menus, the "who can do X" report.
   - [x] Audit Trail (`modules/audit-trail`): append-only, hash-chained, searchable, tamper check.
   - [x] Super Admin Console (`modules/super-admin`): module switches and maintenance, hotel, branding and regional settings, encrypted integration and gateway keys.
-  - [ ] App Layout & Navigation (module 3): server-driven menus and layouts per role.
+  - [x] App Layout & Navigation (module 3, `modules/app-builder`, 26 Nov 2026): menus, hidden modules, tabs and home tiles per role from `/api/layout/me`, with history and roll back, on the web and in the app.
   - [x] Web portal connected for these: sign-in, first set-up, active sessions, accounts, create account, login methods, roles list, role builder, permissions matrix, role holders, permission report, audit search, modules list and settings.
   - [x] Connect the app's sign-in to the API (email and password; the session is kept in the phone's secure storage). The console keys screen (S14-02) is still to do.
 - [x] Staff modules (25 Nov 2026), each its own folder, schema, routes, permissions, audit and tests:
@@ -164,7 +166,71 @@ The whole app and web portal are built as a clickable product first, with sample
   - [x] Records Archive & Search (`modules/records-search`): search the permanent record years back by words, module and dates, with a spreadsheet.
   - [x] Payments: refunds through Flutterwave's refund API, and the settlement report by day, method, module and outlet.
   - [x] Web portal pages on the real API for all of them, and app screens: report a fault with photos, my faults, checkups due and run, my payslips, lifetime earnings, my advances and request, my rewards, chat and the dashboard.
-  - [ ] Tried, not finished: live chat push (chat checks every few seconds until the realtime service), MTN MoMo and Airtel Money refunds (still paid back by hand; their refund APIs need the hotel's accounts), saved and scheduled reports, targets and alerts, and photo uploads on the live site until file storage is switched on (see [NEEDS-YOU](NEEDS-YOU.md)).
+  - [ ] Tried, not finished: live chat push (chat checks every few seconds until the realtime service), MTN MoMo and Airtel Money refunds (still paid back by hand; their refund APIs need the hotel's accounts), targets and alerts, and photo uploads on the live site until file storage is switched on (see [NEEDS-YOU](NEEDS-YOU.md)). Saved and scheduled reports were finished in the final phase.
+- [x] Final phase (26 Nov 2026): the rest of the modules on real data, each its own folder, schema, routes, permissions, audit and tests:
+  - [x] 40 operations, HR, guest service and money desk modules (lost and found, leave, tasks, housekeeping, laundry, visitors, keys, shifts, training and the rest) on one shared records engine (`packages/records-kit`): record types, fields and statuses the super admin sets per module, `PREFIX-0001` numbers and QR codes.
+  - [x] Stock & Inventory (`modules/stock-inventory`): stores, items with unit conversions, receive, issue, transfer, adjust, waste and counts on a ledger, average cost, who reaches which store, and a desk for requisitions, purchasing, suppliers and recipes. Categories, units and rules are all super admin settings.
+  - [x] Spa, venues and equipment, and tables and dine-in on the shared bookings engine.
+  - [x] Staff card designer (module 16): templates on an SVG canvas in brand colours only, card types, a template per role, printing at the exact card size. The black portrait card is the default.
+  - [x] Saved and scheduled reports (module 81): save a pick of areas and days, run it by hand or every day, Monday or 1st of the month at 7 AM Kampala time; every run is kept to read or download. The API's daily 7 AM cron also applies new database tables.
+  - [x] Web pages and app screens for all of them. The hosted site opens on sign-in; the previews stay at `/#/role-switcher`.
+  - [ ] Tried, not finished: live chat push with Durable Objects (chat still refreshes every few seconds), the push notification rule editor (waits on the Firebase steps), drawing the staff card in the app from the saved designs (the app shows the default card), and sending scheduled reports by email or WhatsApp (runs are kept in the portal until those keys are in).
+- [ ] Next phase A, food side and tracking (asked by the user, 26 Nov 2026; not started):
+  - [ ] Food ordering with all FoodPanda-style features: live tracking, promos, ratings, reorder, scheduled orders, rider assignment and the rest.
+  - [ ] A delivery tracker for everything that moves (food, laundry, room service, deliveries).
+  - [ ] Preview mode for screens that need keys (payments and other gateways): they stay viewable before the keys are saved. No demo data on real screens.
+- [ ] Next phase B, access and security (asked by the user, 26 Nov 2026; not started):
+  - [ ] Guests sign up in the app only. The super admin upgrades a person to staff by matching a staff record with a verified email, recorded in the audit log.
+  - [ ] Mandatory 2-step sign-in for staff, recovery codes, and a required second super admin.
+  - [ ] No guest and staff switch: one account is one kind.
+  - [ ] The web portal is staff only, on a staff subdomain, and the server refuses guest accounts there.
+  - [ ] A Security settings screen; card kill; sign out a device; sign-in alerts.
+  - [ ] Short sessions and automatic sign-out on shared computers; lockout after failed tries.
+  - [ ] Database snapshots with a tested restore.
+  - [ ] Privacy: export and delete a person's data.
+  - [ ] Biometric sign-in, and offline clock-in at the gate.
+  - [ ] Sidebar: one collapse button, and Preview moved to the bottom of the sidebar for the super admin only.
+  - [ ] Tests proving a guest cannot reach any staff data.
+  - [ ] One person is one account, with several sign-in methods linked to it (email and password, Google, Apple). The same verified email never makes a second account. Each rule below has a test:
+    - [ ] Link automatically only when the provider has verified the email (Google verified, Apple verified).
+    - [ ] An email and password sign-up must verify its email before it can be linked or used, which blocks takeover by registering someone's email first.
+    - [ ] Apple "Hide My Email" relay addresses are linked only by hand, from inside a signed-in account, after a confirmation.
+    - [ ] Adding or removing a method needs a fresh sign-in, and the last method can never be removed.
+    - [ ] The staff match and the roles belong to the account, so every linked method gets the same roles.
+    - [ ] The list of sign-in methods, and every link and unlink, show in the audit log and send the person an email alert.
+  - [ ] A CI step that fails on skipped tests, secrets in code, passwords or tokens in logs, and TODO in auth code (see [Quality rules](QUALITY-RULES.md)).
+  - [ ] Real-user hardening, each item with its own test:
+    - [ ] A double-tapped pay or submit never charges or creates twice (idempotency keys, and the button is disabled while sending).
+    - [ ] Emails are lowercased and trimmed everywhere: sign-up, sign-in and the staff match.
+    - [ ] Apostrophes and unicode in names are safe (parameterised queries, escaped output).
+    - [ ] iPhone photo uploads (HEIC, large files, rotation) are converted and size-limited.
+    - [ ] Password reset email works end to end; tokens expire and work once.
+    - [ ] Times are stored in UTC and shown in Africa/Kampala or the viewer's time zone.
+    - [ ] Signal lost after paying: the payment status is settled by the gateway webhook and a "check status" retry, never lost or charged twice.
+    - [ ] A delete my account button in the guest app (also an App Store rule), with a clear data policy.
+    - [ ] Apple "Hide My Email" relay addresses are accepted and used for the staff match.
+    - [ ] Load and abuse: rate limits per user and IP, queues, and a test with thousands of requests at once.
+- [ ] Last phase before TestFlight, premium animations and transitions (asked by the user, 26 Nov 2026; do after the basics, not started): booking flows, menu scroll effects and modern TikTok-style motion, mostly in the guest app and the public websites, all of premium quality.
+- [ ] Legal and compliance, right before App Store readiness (asked by the user, 26 Nov 2026; not started). Each item has a check. The legal texts must be reviewed by the hotel or a lawyer before launch:
+  - [ ] A privacy policy page, in the app and on the website, covering Uganda's Data Protection and Privacy Act.
+  - [ ] Terms of service, accepted at sign-up.
+  - [ ] Images: only photos the hotel owns or that are licensed. `docs/ASSETS.md` lists the source and licence of every photo, icon and logo. No stock or web-scraped images.
+  - [ ] Fonts: confirm Cinzel and Lato are under the open font licence (OFL) and record it in `docs/ASSETS.md`. No personal-use fonts.
+  - [ ] Names and brands: no other company's name, logo or look (FoodPanda, APEX and others are references only). The Igongo name and logo are used with the hotel's written permission, recorded in the docs.
+  - [ ] Age: the app is for ages 13 and up, stated in the terms, with a date of birth or age check at sign-up.
+  - [ ] Cancellation: a clear booking, order and refund cancellation policy shown before paying, and delete my account always available.
+- [ ] App Store readiness, right before TestFlight (asked by the user, 26 Nov 2026; not started). Each item has a check:
+  - [ ] No crash on open, tested on the built iOS app.
+  - [ ] A reviewer demo login: a guest reviewer account with working sample bookings, written into [MAC-STEPS](MAC-STEPS.md) for the App Store Connect review notes.
+  - [ ] Payments: bookings and food are physical goods and services, so the gateways are allowed. Anything digital is avoided or uses in-app purchase.
+  - [ ] Browsing without signing up (rooms, menu, museum); sign-up only when booking or ordering.
+  - [ ] No "Coming soon" or dead buttons in release builds; unfinished modules are hidden.
+  - [ ] Clear permission texts for NFC, location, camera, notifications and photos.
+  - [ ] Report and block for anything users write (chat, reviews).
+  - [ ] Sign in with Apple wherever Google is offered.
+  - [ ] Store screenshots with nothing from Android in them.
+  - [ ] Real native value (NFC, push, tracking, offline), not just a website.
+  - [ ] Delete my account in the app, a privacy policy URL and a support URL.
 - [ ] Event bus (Queues and outbox) and Notifications. Files & Media is done.
 - [ ] Build each module's back end (domain, use cases, database, API and events), in the agreed order.
 - [ ] Connect each module's screens to its API.

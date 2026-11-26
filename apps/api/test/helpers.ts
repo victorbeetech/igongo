@@ -44,7 +44,7 @@ export async function testApi() {
   await runMigrations(db, MIGRATIONS);
   const errors: unknown[] = [];
   const app = createApp(() => ({ db, close: async () => {} }), (e) => void errors.push(e));
-  return { app, client, errors, browser: () => browser(app) };
+  return { app, client, db, errors, browser: () => browser(app) };
 }
 
 /** A pretend browser on the web origin: sends JSON and keeps the session cookie. */

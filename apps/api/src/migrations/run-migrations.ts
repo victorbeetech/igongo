@@ -8,9 +8,10 @@
  * - An applied migration whose file has since changed is reported, never
  *   re-run: fix it with a new migration instead.
  *
- * It runs from the Worker's scheduled handler. The deploy steps turn on a
- * one-minute cron, check the table, then turn the cron off again, so the
- * database is not woken up all day (Neon bills compute time).
+ * It runs from the Worker's scheduled handler: daily at 7 AM Kampala time,
+ * and every minute while the deploy steps turn on a one-minute cron to apply
+ * a new release's tables at once (they then set it back to the daily one,
+ * so the database is not woken up all day; Neon bills compute time).
  */
 
 import { sql } from "drizzle-orm";

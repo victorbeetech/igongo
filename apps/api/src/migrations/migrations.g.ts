@@ -59,6 +59,12 @@ export const MIGRATIONS: Migration[] = [
   "sql": "-- Build step 5b (stock, spa, venues and tables): the super admin configures\n--> statement-breakpoint\n-- the spa, venue and table offerings and stock (stores, items, units, rules)\n--> statement-breakpoint\n-- and sees every booking and stock balance. Daily work stays with the hotel's\n--> statement-breakpoint\n-- own roles, which already hold each module's wildcard permissions.\n--> statement-breakpoint\nINSERT INTO \"roles\".\"role_permissions\" (\"role_id\",\"permission_key\",\"scope\") SELECT r.\"id\", p.key, 'all' FROM \"roles\".\"roles\" r CROSS JOIN (VALUES ('spa.settings.edit'), ('spa.offerings.edit'), ('spa.bookings.view'), ('venues-equipment.settings.edit'), ('venues-equipment.offerings.edit'), ('venues-equipment.bookings.view'), ('tables-dinein.settings.edit'), ('tables-dinein.offerings.edit'), ('tables-dinein.bookings.view'), ('stock-inventory.settings.edit'), ('stock-inventory.stock.view'), ('stock-inventory.values.view'), ('stock-inventory.items.edit'), ('stock-inventory.stock.export'), ('stock-inventory.records.view'), ('stock-inventory.records.export')) AS p(key) WHERE r.\"id\" = 'role_super-admin' ON CONFLICT DO NOTHING;\n--> statement-breakpoint\n-- Every staff member can raise and follow their own stock requisitions.\n--> statement-breakpoint\nINSERT INTO \"roles\".\"role_permissions\" (\"role_id\",\"permission_key\",\"scope\") SELECT r.\"id\", p.key, 'own' FROM \"roles\".\"roles\" r CROSS JOIN (VALUES ('stock-inventory.records.view'), ('stock-inventory.records.create')) AS p(key) WHERE r.\"id\" = 'role_staff-base' ON CONFLICT DO NOTHING;\n"
  },
  {
+  "module": "roles-permissions",
+  "name": "0007_report_export_permission",
+  "checksum": "f4ce8e2ee4439d0b",
+  "sql": "-- Saved and scheduled reports: the super admin can download the dashboard\n--> statement-breakpoint\n-- and saved report runs as spreadsheets, like the managers already can.\n--> statement-breakpoint\nINSERT INTO \"roles\".\"role_permissions\" (\"role_id\",\"permission_key\",\"scope\") SELECT r.\"id\", 'reports-analytics.dashboard.export', 'all' FROM \"roles\".\"roles\" r WHERE r.\"id\" = 'role_super-admin' ON CONFLICT DO NOTHING;\n"
+ },
+ {
   "module": "users-login",
   "name": "0000_users_login",
   "checksum": "26c20af258cc84a8",
@@ -219,6 +225,12 @@ export const MIGRATIONS: Migration[] = [
   "name": "0000_init",
   "checksum": "43024e2289601e54",
   "sql": "CREATE SCHEMA \"analytics\";\n--> statement-breakpoint\nCREATE TABLE \"analytics\".\"settings\" (\n\t\"key\" text PRIMARY KEY NOT NULL,\n\t\"value\" jsonb NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_by\" text\n);\n"
+ },
+ {
+  "module": "reports-analytics",
+  "name": "0001_saved_reports",
+  "checksum": "188736910feef000",
+  "sql": "CREATE TABLE \"analytics\".\"report_runs\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"report_id\" text NOT NULL,\n\t\"report_name\" text NOT NULL,\n\t\"from_day\" text NOT NULL,\n\t\"to_day\" text NOT NULL,\n\t\"trigger\" text NOT NULL,\n\t\"groups\" jsonb NOT NULL,\n\t\"ran_at\" timestamp with time zone NOT NULL\n);\n--> statement-breakpoint\nCREATE TABLE \"analytics\".\"saved_reports\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"name\" text NOT NULL,\n\t\"owner_id\" text NOT NULL,\n\t\"owner_name\" text NOT NULL,\n\t\"modules\" text[] NOT NULL,\n\t\"days\" integer NOT NULL,\n\t\"schedule\" text NOT NULL,\n\t\"created_at\" timestamp with time zone NOT NULL,\n\t\"last_run_at\" timestamp with time zone\n);\n--> statement-breakpoint\nCREATE INDEX \"report_runs_report_idx\" ON \"analytics\".\"report_runs\" USING btree (\"report_id\",\"ran_at\");--> statement-breakpoint\nCREATE INDEX \"saved_reports_owner_idx\" ON \"analytics\".\"saved_reports\" USING btree (\"owner_id\");--> statement-breakpoint\nCREATE INDEX \"saved_reports_schedule_idx\" ON \"analytics\".\"saved_reports\" USING btree (\"schedule\");"
  },
  {
   "module": "chat",

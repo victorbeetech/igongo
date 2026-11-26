@@ -11,10 +11,9 @@ import '../../../../shared/live/live_view.dart';
 import '../../../../shared/screens/parts/purpose_text.dart';
 import '../../../../shared/screens/parts/screen_list_view.dart';
 import '../../../../shared/screens/screen_layout.dart';
-import '../../../../shared/ui/kpi/kpi_card.dart';
-import '../../../../shared/ui/section/section_header.dart';
 import '../../application/report_providers.dart';
 import '../../domain/dashboard.dart';
+import '../parts/kpi_groups.dart';
 
 /// The ranges to choose from.
 const _ranges = [(1, 'Today'), (7, '7 days'), (30, '30 days')];
@@ -61,25 +60,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           ),
           if (d.groups.isEmpty)
             const Padding(padding: EdgeInsets.all(IgongoSpace.lg), child: Text('No numbers for your roles yet.')),
-          for (final g in d.groups) ...[
-            SectionHeader(g.title),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
-              child: g.failed
-                  ? const Text('These numbers could not be read just now.')
-                  : Wrap(
-                      spacing: IgongoSpace.sm,
-                      runSpacing: IgongoSpace.sm,
-                      children: [
-                        for (final k in g.kpis)
-                          SizedBox(
-                            width: 160,
-                            child: KpiCard(label: k.label, value: k.shown),
-                          ),
-                      ],
-                    ),
-            ),
-          ],
+          ...kpiGroups(d.groups),
         ],
       ),
     ),
