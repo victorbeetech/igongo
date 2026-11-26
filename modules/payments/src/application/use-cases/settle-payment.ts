@@ -27,7 +27,11 @@ export async function refreshPayment(deps: PaymentsDeps, payment: Payment): Prom
 export async function settle(deps: PaymentsDeps, payment: Payment, status: "succeeded" | "failed", message: string | null): Promise<Payment> {
   const now = deps.change.now;
   if (!(await deps.payments.settle(payment.id, status, message, now))) return (await deps.payments.byId(payment.id)) ?? payment;
-  if (status === "succeeded") await deps.payables[payment.module]?.paid(payment.recordId, payment.amount, payment.id);
+  if (status === "succeeded") {
+    await deps.payables[payment.module]?.paid(payment.recordId, payment.amount, payment.id);
+    // Step 5: the receipt email. A skipped or failed email never undoes the payment.
+    await deps.receipts?.sendReceipt({ ...payment, status, message, settledAt: now });
+  }
   await recordChange(deps.change, {
     module: "payments",
     action: status === "succeeded" ? "payment.succeeded" : "payment.failed",

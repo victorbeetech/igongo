@@ -8,6 +8,7 @@ export type { CardDirectory } from "./application/ports/card-directory";
 export { AUTH_BASE_PATH, createAuth, type Auth } from "./infrastructure/auth/create-auth";
 export type { AuthConfig, AuthDeps } from "./infrastructure/auth/auth-deps";
 export type { AppleKeys } from "./infrastructure/auth/apple-client-secret";
+export { user as loginUser } from "./infrastructure/db/schema";
 export { DrizzleAccountStore } from "./infrastructure/db/drizzle-account-store";
 export { DrizzleFailedLoginStore } from "./infrastructure/db/drizzle-failed-login-store";
 export { DrizzleKnownDeviceStore } from "./infrastructure/db/drizzle-known-device-store";

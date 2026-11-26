@@ -163,3 +163,16 @@ To finish, either:
 2. Tell Claude to retry from the cloud once a BLAKE3 package can be installed in the session.
 
 Take a snapshot in Neon before the API deploy, because the new migrations run on the first scheduled tick.
+
+## Receipt emails: add the Resend key (booking receipts)
+
+**What is needed:** a Resend API key, and a verified sender address on your domain (for example `Igongo <receipts@yourdomain>`).
+
+**Why:** booking receipts are emailed to the guest after payment. Until the key is set, nothing is sent and the app works as before.
+
+**Exact steps:**
+1. In Resend, create an API key and verify the sending domain.
+2. Either set the Worker secret: `wrangler secret put RESEND_API_KEY` (in the API Worker), and `RECEIPT_FROM` as a variable with the sender address,
+3. or, as super admin, open Settings and set `resend.api_key` and `resend.sender` (these override the Worker secret).
+
+No key is written in the repository. The code is `modules/payments/src/infrastructure/email/resend-receipt-mailer.ts`.

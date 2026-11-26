@@ -26,7 +26,9 @@ import { eventsConferencesDeps } from "@igongo/events-conferences";
 import { DrizzleOrderRepository, DrizzleRatingRepository, orderPayable, orderTracker, SettingsRulesStore, type OrderingDeps } from "@igongo/food-ordering";
 import { DrizzleItemRepository, menuReader, SettingsMenuStore, type MenuDeps } from "@igongo/menu-catalogue";
 import { museumDeps } from "@igongo/museum";
-import { DrizzlePaymentRepository, paymentProviders, SettingsMethodStore, type PaymentsDeps } from "@igongo/payments";
+import { DrizzlePaymentRepository, paymentProviders, resendReceiptMailer, SettingsMethodStore, type PaymentsDeps } from "@igongo/payments";
+import { loginUser } from "@igongo/users-login";
+import { eq } from "drizzle-orm";
 import { poolDeps } from "@igongo/pool";
 import { promoDesk, promotionsVouchersDeps } from "@igongo/promotions-vouchers";
 import { roomBookingsDeps } from "@igongo/room-bookings";
@@ -57,6 +59,8 @@ export class GuestServices {
     private readonly urls: { api: string; web: string },
     /** Pushes to people's phones (Notifications). */
     private readonly notify: UserNotifier,
+    /** The receipt email's settings: the Resend key (a secret) and the sender address. */
+    private readonly receiptMail: { apiKey?: string; from?: string } = {},
   ) {}
 
   /** True when the super admin has [key] on and not in maintenance. */
@@ -135,6 +139,16 @@ export class GuestServices {
       change: this.change,
       apiBase: this.urls.api,
       webBase: this.urls.web,
+      // The receipt email: sent only once RESEND_API_KEY is set (see docs/NEEDS-YOU.md).
+      receipts: resendReceiptMailer({
+        // The super admin's setting wins; the Worker secret is the default.
+        apiKey: async () => (await this.secrets.get("resend.api_key")) ?? this.receiptMail.apiKey ?? null,
+        from: async () => (await this.secrets.get("resend.sender")) ?? this.receiptMail.from ?? null,
+        emailOf: async (userId) => {
+          const [row] = await this.db.select({ email: loginUser.email }).from(loginUser).where(eq(loginUser.id, userId)).limit(1);
+          return row?.email ?? null;
+        },
+      }),
     };
   }
 }

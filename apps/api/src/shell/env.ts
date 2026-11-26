@@ -30,6 +30,10 @@ export interface Env extends PushEnv {
   // --- Secrets ---
   BETTER_AUTH_SECRET?: string;
   SETTINGS_ENCRYPTION_KEY?: string;
+  /** Resend API key for receipt emails (a Worker secret; set by the owner). Unset means no email is sent. */
+  RESEND_API_KEY?: string;
+  /** The receipt sender, such as "Igongo <receipts@yourdomain>". Placeholder until the owner sets it. */
+  RECEIPT_FROM?: string;
   GOOGLE_CLIENT_SECRET?: string;
   BOOTSTRAP_ADMIN_EMAIL?: string;
   SENTRY_DSN?: string;
