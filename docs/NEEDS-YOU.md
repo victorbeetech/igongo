@@ -184,3 +184,5 @@ No key is written in the repository. The code is `modules/payments/src/infrastru
 **Why:** the QR code on each booking ticket carries a signature made with this key. Staff scanning a ticket only accept codes whose signature matches, so a copied or edited ticket shows as Forged. Without the key, ticket checks answer "not configured" (HTTP 503) and the QR falls back to the plain booking code.
 
 **Exact steps:** set the Worker secret `TICKET_SIGNING_KEY` in the API Worker: `wrangler secret put TICKET_SIGNING_KEY`. Then redeploy the API. Do not share the key and do not store it in the repository. Changing it makes all tickets already issued show as Forged, so set it once.
+
+**Rotate the key before real bookings.** The owner will set `TICKET_SIGNING_KEY` himself. A value for this key was posted in chat during the build, so treat that value as exposed: generate a new key, set it with `wrangler secret put TICKET_SIGNING_KEY`, and redeploy the API before any real bookings are taken. Tickets issued before the rotation will show as Forged afterwards, so rotate before the first real booking.
