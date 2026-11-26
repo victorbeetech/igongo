@@ -15,6 +15,7 @@ import '../../../../shared/ui/icons/module_icons.dart';
 import '../../../../shared/ui/list_row/igongo_list_row.dart';
 import '../../../../shared/ui/section/section_header.dart';
 import '../../../../shared/ui/tile/home_tile.dart';
+import 'area_card.dart';
 import 'food_shop_card.dart';
 import 'role_header.dart';
 import 'role_shortcuts.dart';
@@ -62,11 +63,19 @@ class RoleHomeScreen extends ConsumerWidget {
           child: TileGrid(
             children: [
               for (final tile in role.tiles)
-                HomeTile(
-                  label: tile.label,
-                  icon: ModuleIcons.of(tile.screenId.substring(1, 3)),
-                  onTap: () => screen.open(tile.screenId),
-                ),
+                // Step 2a: guests see area cards; staff keep the plain tiles.
+                if (role.isClient)
+                  AreaCard(
+                    label: tile.label,
+                    icon: ModuleIcons.of(tile.screenId.substring(1, 3)),
+                    onTap: () => screen.open(tile.screenId),
+                  )
+                else
+                  HomeTile(
+                    label: tile.label,
+                    icon: ModuleIcons.of(tile.screenId.substring(1, 3)),
+                    onTap: () => screen.open(tile.screenId),
+                  ),
             ],
           ),
         ),
