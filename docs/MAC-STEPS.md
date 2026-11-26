@@ -2,7 +2,9 @@
 
 Every pull request already proves the app builds: GitHub Actions runs the checks, builds an Android APK (download it from the run's page, under **Artifacts**) and compiles the iPhone app on a Mac runner. Only **signing and uploading** need your own Mac, because they use your Apple account. About 20 minutes the first time, 5 after that.
 
-[Back to README](../README.md) · [Needs you](NEEDS-YOU.md)
+[Back to README](../README.md) · [Needs you](NEEDS-YOU.md) · [Run on the iPhone simulator](RUN-ON-SIMULATOR.md)
+
+Just want to see the app on your Mac's iPhone simulator? Follow [RUN-ON-SIMULATOR.md](RUN-ON-SIMULATOR.md) instead; it needs no signing.
 
 ---
 
