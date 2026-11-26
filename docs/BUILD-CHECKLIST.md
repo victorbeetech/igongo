@@ -1,5 +1,7 @@
 # Build checklist, from start to end
 
+> Every change follows the binding [Quality rules](QUALITY-RULES.md).
+
 This is the order the project must follow. Each phase ends with an approval before the next one starts. Tick a box only when the item is done **and** checked.
 
 Every phase follows the [code standards](architecture/code-standards.md): clean architecture, a folder for each module, reusable and separated shared code, minimal code, comments on every process, and zero warnings.
@@ -196,6 +198,7 @@ The whole app and web portal are built as a clickable product first, with sample
     - [ ] Adding or removing a method needs a fresh sign-in, and the last method can never be removed.
     - [ ] The staff match and the roles belong to the account, so every linked method gets the same roles.
     - [ ] The list of sign-in methods, and every link and unlink, show in the audit log and send the person an email alert.
+  - [ ] A CI step that fails on skipped tests, secrets in code, passwords or tokens in logs, and TODO in auth code (see [Quality rules](QUALITY-RULES.md)).
   - [ ] Real-user hardening, each item with its own test:
     - [ ] A double-tapped pay or submit never charges or creates twice (idempotency keys, and the button is disabled while sending).
     - [ ] Emails are lowercased and trimmed everywhere: sign-up, sign-in and the staff match.
