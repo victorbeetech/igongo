@@ -1,0 +1,11 @@
+// The hand-made screens of module 66 (Delivery & Riders), live from the API.
+// Dispatch and zones are on the web portal; every other screen uses a shared layout.
+
+import '../../shared/catalog/catalog.dart';
+import 'presentation/rider_home_screen.dart';
+
+/// Module 66's hand-made screens.
+final m66Overrides = <String, ScreenOverride>{
+  for (final id in ['S66-03', 'S66-04', 'S66-05', 'S66-06', 'S66-07', 'S66-08', 'S66-09'])
+    id: (_, s) => RiderHomeScreen(s),
+};

@@ -2,13 +2,14 @@
 // Module 69: Events & Conferences. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm69_events_conferences_overrides.dart';
 
 /// Module 69, Events & Conferences: every screen and dialog, with its sample data.
-const m69EventsConferencesModule = ModuleSpec(
+final m69EventsConferencesModule = ModuleSpec(
   code: '69',
   name: 'Events & Conferences',
   slug: 'events-conferences',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S69-01',
       name: 'Events home',
@@ -142,7 +143,8 @@ const m69EventsConferencesModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m69Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D69-01',
       name: 'Send quote',
@@ -160,7 +162,7 @@ const m69EventsConferencesModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Wedding · Kansiime & Mugisha',
       'Conference · MTN Uganda',

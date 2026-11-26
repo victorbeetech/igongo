@@ -1,0 +1,11 @@
+// The ordering rules (S62-16), as the API returns them.
+
+import type { OrderType } from "./order";
+
+export interface OrderingRules {
+  types: Record<OrderType, { enabled: boolean; outlets: string[]; payment: "before" | "deposit" | "later" }>;
+  preorderMinNoticeMinutes: number;
+  depositPercent: number;
+  cancelWindowMinutes: number;
+  minutesPerQueuedOrder: number;
+}

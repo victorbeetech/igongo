@@ -1,0 +1,11 @@
+-- The super admin configures every guest and rider module (build step 3):
+--> statement-breakpoint
+-- payment methods, outlets and menus, ordering and delivery rules, guest tags,
+--> statement-breakpoint
+-- and each booking module's rules and catalogue. Daily work (taking orders,
+--> statement-breakpoint
+-- riding, checking guests in) stays with the hotel's own roles.
+--> statement-breakpoint
+-- WHERE EXISTS skips a deleted role; ON CONFLICT DO NOTHING keeps any change.
+--> statement-breakpoint
+INSERT INTO "roles"."role_permissions" ("role_id","permission_key","scope") SELECT r."id", p.key, 'all' FROM "roles"."roles" r CROSS JOIN (VALUES ('payments.methods.edit'), ('payments.payments.view'), ('menu-catalogue.settings.edit'), ('menu-catalogue.items.view'), ('menu-catalogue.items.create'), ('menu-catalogue.items.edit'), ('food-ordering.rules.edit'), ('food-ordering.orders.view'), ('delivery-riders.rules.edit'), ('crm-guests.settings.edit'), ('room-bookings.settings.edit'), ('room-bookings.offerings.edit'), ('room-bookings.bookings.view'), ('museum.settings.edit'), ('museum.offerings.edit'), ('museum.bookings.view'), ('events-conferences.settings.edit'), ('events-conferences.offerings.edit'), ('events-conferences.bookings.view'), ('pool.settings.edit'), ('pool.offerings.edit'), ('pool.bookings.view'), ('crafts-bookshop.settings.edit'), ('crafts-bookshop.offerings.edit'), ('crafts-bookshop.bookings.view')) AS p(key) WHERE r."id" = 'role_super-admin' ON CONFLICT DO NOTHING;

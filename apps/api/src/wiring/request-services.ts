@@ -22,6 +22,7 @@ import {
 import type { Env } from "../shell/env";
 import { readConfig } from "../shell/env";
 import { authConfigFrom } from "./auth-config";
+import { GuestServices } from "./guests/guest-services";
 import { noticeAnnouncer } from "./staff/notice-announcer";
 import { StaffServices } from "./staff/staff-services";
 
@@ -84,6 +85,13 @@ export class RequestServices {
 
   // --- Staff modules (HR, cards, wristbands, attendance, reports, meals, notices) ---
   readonly staffModules = once(() => new StaffServices(this.db, noticeAnnouncer(this.db, this.env, (roles) => this.access().holdersOf(roles))));
+
+  // --- Guests and riders (CRM, menus, orders, delivery, payments, bookings) ---
+  /** The guest modules for [actor]'s change context. */
+  guestModules(actor: { userId: string; name: string } | undefined): GuestServices {
+    const cfg = this.config;
+    return new GuestServices(this.db, this.changeContext(actor), this.modules(), this.secrets(), { api: cfg.baseURL, web: cfg.webOrigins[0] ?? cfg.baseURL });
+  }
 
   /** The change context for the signed-in caller, for audited use cases. */
   changeContext(actor: { userId: string; name: string } | undefined): ChangeContext {

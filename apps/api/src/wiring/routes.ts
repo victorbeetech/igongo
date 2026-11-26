@@ -13,6 +13,8 @@
  *   /api/notifications/*   push devices and sends                    module 10
  *   /api/hr, /cards, /wristbands, /attendance, /daily-reports,
  *   /staff-meals, /notices  the staff modules (see staff/staff-routes.ts)
+ *   /api/crm, /menu, /orders, /delivery, /payments, /rooms, /museum,
+ *   /events, /pool, /shop   the guest and rider modules (see guests/guest-routes.ts)
  */
 
 import { auditRouter } from "@igongo/audit-trail";
@@ -24,6 +26,7 @@ import { AUTH_BASE_PATH, loginMethodsRouter, setupRouter, usersRouter, type User
 import type { Context, Hono } from "hono";
 import type { ApiEnv } from "../shell/api-env";
 import { moduleGate } from "./module-gate";
+import { mountGuestRoutes } from "./guests/guest-routes";
 import { mountStaffRoutes } from "./staff/staff-routes";
 
 /** The shell's context, seen through a module router's narrower type. */
@@ -61,4 +64,5 @@ export function mountRoutes(app: Hono<ApiEnv>) {
   app.use("/api/notifications/*", moduleGate("notifications"));
   app.route("/api/notifications", createNotificationsRouter());
   mountStaffRoutes(app);
+  mountGuestRoutes(app);
 }

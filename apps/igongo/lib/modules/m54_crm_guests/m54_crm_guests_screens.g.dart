@@ -2,13 +2,14 @@
 // Module 54: CRM: Guest & Client Profiles. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm54_crm_guests_overrides.dart';
 
 /// Module 54, CRM: Guest & Client Profiles: every screen and dialog, with its sample data.
-const m54CrmGuestsModule = ModuleSpec(
+final m54CrmGuestsModule = ModuleSpec(
   code: '54',
   name: 'CRM: Guest & Client Profiles',
   slug: 'crm-guests',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S54-01',
       name: 'Guests list',
@@ -98,7 +99,8 @@ const m54CrmGuestsModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m54Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D54-01',
       name: 'Merge guests',
@@ -116,7 +118,7 @@ const m54CrmGuestsModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Kansiime Doreen · Gold',
       'Mbabazi Allan · Corporate',

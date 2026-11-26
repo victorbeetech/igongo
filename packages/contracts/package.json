@@ -12,6 +12,11 @@
     "./super-admin": "./super-admin/index.ts",
     "./hr-records": "./hr-records/index.ts",
     "./staff-cards": "./staff-cards/index.ts",
+    "./payments": "./payments/index.ts",
+    "./menu-catalogue": "./menu-catalogue/index.ts",
+    "./food-ordering": "./food-ordering/index.ts",
+    "./delivery-riders": "./delivery-riders/index.ts",
+    "./crm-guests": "./crm-guests/index.ts",
     "./catalog/modules.json": "./catalog/modules.json"
   }
 }

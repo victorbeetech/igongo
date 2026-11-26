@@ -21,6 +21,17 @@ export const MODULES = [
   "daily-reports",
   "staff-meals",
   "notice-board",
+  // Guests and riders (build step 3).
+  "crm-guests",
+  "menu-catalogue",
+  "food-ordering",
+  "delivery-riders",
+  "payments",
+  "room-bookings",
+  "museum",
+  "events-conferences",
+  "pool",
+  "crafts-bookshop",
 ];
 
 /** Every migration file as { module, name, path }, in apply order. */

@@ -2,13 +2,14 @@
 // Module 68: Museum & Cultural Visits. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm68_museum_overrides.dart';
 
 /// Module 68, Museum & Cultural Visits: every screen and dialog, with its sample data.
-const m68MuseumModule = ModuleSpec(
+final m68MuseumModule = ModuleSpec(
   code: '68',
   name: 'Museum & Cultural Visits',
   slug: 'museum',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S68-01',
       name: 'Museum home',
@@ -142,7 +143,8 @@ const m68MuseumModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m68Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D68-01',
       name: 'Slot full',
@@ -152,7 +154,7 @@ const m68MuseumModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Ankole cattle gallery',
       'Royal drum exhibit',

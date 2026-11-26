@@ -2,13 +2,14 @@
 // Module 66: Delivery & Riders. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm66_delivery_riders_overrides.dart';
 
 /// Module 66, Delivery & Riders: every screen and dialog, with its sample data.
-const m66DeliveryRidersModule = ModuleSpec(
+final m66DeliveryRidersModule = ModuleSpec(
   code: '66',
   name: 'Delivery & Riders',
   slug: 'delivery-riders',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S66-01',
       name: 'Dispatch board',
@@ -131,7 +132,8 @@ const m66DeliveryRidersModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m66Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D66-01',
       name: 'Assign rider',
@@ -157,7 +159,7 @@ const m66DeliveryRidersModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Order 3024 · Mugisha Ivan',
       'Order 3029 · Kato Henry',

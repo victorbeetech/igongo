@@ -1,0 +1,17 @@
+/** Where payments are kept. */
+
+import type { Payment, PaymentStatus } from "../../domain/payment";
+
+export interface PaymentRepository {
+  byId(id: string): Promise<Payment | null>;
+  /** Payments of one record, oldest first. */
+  forRecord(module: string, recordId: string): Promise<Payment[]>;
+  list(filter: { status?: PaymentStatus; module?: string; payerUserId?: string; limit: number }): Promise<Payment[]>;
+  add(payment: Payment): Promise<void>;
+  /**
+   * Moves a payment out of `pending` once, and only once.
+   * @returns false when it was no longer pending (someone else settled it)
+   */
+  settle(id: string, status: "succeeded" | "failed", message: string | null, at: Date): Promise<boolean>;
+  update(payment: Payment): Promise<void>;
+}
