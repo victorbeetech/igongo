@@ -15,11 +15,17 @@ class BookingSelection {
   final DateTime? to;
 
   /// Nights between check-in and check-out (0 for a single day).
-  int get nights => to == null ? 0 : to.difference(from).inDays;
+  int get nights {
+    final end = to;
+    return end == null ? 0 : end.difference(from).inDays;
+  }
 
   /// The first day as `YYYY-MM-DD`, for the API.
   String get fromKey => dayKey(from);
 
   /// The check-out day as `YYYY-MM-DD`, or null for a single day.
-  String? get toKey => to == null ? null : dayKey(to);
+  String? get toKey {
+    final end = to;
+    return end == null ? null : dayKey(end);
+  }
 }

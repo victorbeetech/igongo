@@ -24,7 +24,8 @@ class OfferingFilter {
   bool matches(Offering o) {
     // Step 1: the price range.
     if (o.price < minPrice) return false;
-    if (maxPrice != null && o.price > maxPrice) return false;
+    final ceiling = maxPrice;
+    if (ceiling != null && o.price > ceiling) return false;
     // Step 2: the room type, matched by word in the name, ignoring case.
     if (types.isEmpty) return true;
     final name = o.name.toLowerCase();
