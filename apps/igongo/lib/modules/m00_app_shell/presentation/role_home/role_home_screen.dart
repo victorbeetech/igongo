@@ -67,7 +67,7 @@ class RoleHomeScreen extends ConsumerWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
           child: role.isClient
-              // Guests: same-size one-line area cards, one column on a phone.
+              // Guests: same-size one-line area cards, two to a row (more on wider screens).
               ? GuestTileList(
                   children: [
                     for (final tile in role.tiles)

@@ -42,14 +42,25 @@ class AreaCard extends StatelessWidget {
           child: SizedBox(
             height: 60,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.md, vertical: IgongoSpace.sm),
+              padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.sm, vertical: IgongoSpace.sm),
               // The red icon disc, the name, then the arrow.
               child: Row(
                 spacing: IgongoSpace.sm,
                 children: [
-                  CircleAvatar(backgroundColor: p.primary, foregroundColor: p.onPrimary, child: Icon(icon)),
+                  // A small disc so two cards fit across a phone.
+                  CircleAvatar(
+                    radius: 16,
+                    backgroundColor: p.primary,
+                    foregroundColor: p.onPrimary,
+                    child: Icon(icon, size: 18),
+                  ),
                   Expanded(
-                    child: Text(label, style: context.text.bodyMedium?.copyWith(color: p.text)),
+                    child: Text(
+                      label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.text.bodyMedium?.copyWith(color: p.text),
+                    ),
                   ),
                   Icon(Icons.chevron_right, size: 18, color: p.textMuted),
                 ],
