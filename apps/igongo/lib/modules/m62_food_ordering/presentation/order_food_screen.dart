@@ -83,12 +83,21 @@ class OrderFoodScreen extends ConsumerWidget {
                   error: (e, _) => [Padding(padding: const EdgeInsets.all(IgongoSpace.lg), child: Text('$e'))],
                   data: (all) {
                     // Step 3: only the dishes whose name matches the search.
-                    final items = [for (final i in all) if (query.isEmpty || i.name.toLowerCase().contains(query)) i];
+                    final items = [
+                      for (final i in all)
+                        if (query.isEmpty || i.name.toLowerCase().contains(query)) i,
+                    ];
                     return [
                       if (all.isEmpty)
-                        const Padding(padding: EdgeInsets.all(IgongoSpace.lg), child: Text('Nothing on this menu yet.')),
+                        const Padding(
+                          padding: EdgeInsets.all(IgongoSpace.lg),
+                          child: Text('Nothing on this menu yet.'),
+                        ),
                       if (all.isNotEmpty && items.isEmpty)
-                        const Padding(padding: EdgeInsets.all(IgongoSpace.lg), child: Text('No dish matches your search.')),
+                        const Padding(
+                          padding: EdgeInsets.all(IgongoSpace.lg),
+                          child: Text('No dish matches your search.'),
+                        ),
                       for (final section in {for (final i in items) i.section}) ...[
                         SectionHeader(section),
                         for (final i in items.where((i) => i.section == section))

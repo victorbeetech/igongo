@@ -35,7 +35,10 @@ class FoodShopCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Food shop', style: TextStyle(color: scheme.onPrimary, fontSize: 22, fontWeight: FontWeight.bold)),
+                      Text(
+                        'Food shop',
+                        style: TextStyle(color: scheme.onPrimary, fontSize: 22, fontWeight: FontWeight.bold),
+                      ),
                       const SizedBox(height: IgongoSpace.xs),
                       Text(
                         'Order for delivery, dine-in, takeaway or pre-order',

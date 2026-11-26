@@ -48,7 +48,11 @@ class AreaCard extends StatelessWidget {
                   child: Icon(icon),
                 ),
                 const SizedBox(height: IgongoSpace.sm),
-                Text(label, textAlign: TextAlign.center, style: TextStyle(color: scheme.onSurface)),
+                Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: scheme.onSurface),
+                ),
               ],
             ),
           ),

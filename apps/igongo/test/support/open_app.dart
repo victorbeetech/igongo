@@ -37,7 +37,9 @@ Future<void> openApp(
     ..state = state;
   if (role != null) prefs.roleKey = role;
   // Step 2: a fresh app each time, so nothing carries over between screens.
-  await tester.pumpWidget(IgongoApp(key: UniqueKey(), initialLocation: location, preferences: prefs, overrides: overrides));
+  await tester.pumpWidget(
+    IgongoApp(key: UniqueKey(), initialLocation: location, preferences: prefs, overrides: overrides),
+  );
   // Step 3: a few frames for the theme; animations are not waited for (they loop).
   await tester.pump(const Duration(milliseconds: 50));
   // Step 4: load every picture on screen (logos, the staff card) for real, so a
