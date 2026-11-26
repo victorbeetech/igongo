@@ -1,0 +1,11 @@
+-- Full check of the super admin's screens (26 Nov 2026): like every other
+--> statement-breakpoint
+-- module, the super admin sees the main records of the staff and money
+--> statement-breakpoint
+-- modules it configures, so their overview and settings screens open
+--> statement-breakpoint
+-- (faults and payroll settings were refused before). Daily work, such as
+--> statement-breakpoint
+-- dispatching riders or running a checkup, stays with the hotel's own roles.
+--> statement-breakpoint
+INSERT INTO "roles"."role_permissions" ("role_id","permission_key","scope") SELECT r."id", p.key, 'all' FROM "roles"."roles" r CROSS JOIN (VALUES ('attendance.records.view'), ('crm-guests.profiles.view'), ('daily-reports.reports.view'), ('faults-maintenance.faults.view'), ('hr-records.staff.view'), ('payments.reports.view'), ('payroll.runs.view'), ('payroll.profiles.view'), ('staff-meals.claims.view'), ('wristbands.bands.view')) AS p(key) WHERE r."id" = 'role_super-admin' ON CONFLICT DO NOTHING;

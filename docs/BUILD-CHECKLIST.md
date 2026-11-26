@@ -210,15 +210,47 @@ The whole app and web portal are built as a clickable product first, with sample
     - [ ] A delete my account button in the guest app (also an App Store rule), with a clear data policy.
     - [ ] Apple "Hide My Email" relay addresses are accepted and used for the staff match.
     - [ ] Load and abuse: rate limits per user and IP, queues, and a test with thousands of requests at once.
+- [ ] Full security audit, right after the access and security phase and again just before TestFlight (asked by the user, 26 Nov 2026; not started). Each item has a check and a written result in `docs/SECURITY-AUDIT.md`:
+  - [ ] Scan the git history for secrets.
+  - [ ] Rate limits on every public endpoint.
+  - [ ] Access checks: each person sees only their own data.
+  - [ ] Passwords hashed properly.
+  - [ ] API keys and settings only as Worker secrets; none in the app or the repo.
+  - [ ] Proper authentication on every route that needs it.
+  - [ ] Dependencies updated and unused packages removed.
+  - [ ] Every form and input sanitised.
+  - [ ] XSS protection.
+  - [ ] Debug mode and detailed errors off in production.
+  - [ ] No exposed files or routes.
+  - [ ] Every admin route protected.
+  - [ ] Every API endpoint secured.
+  - [ ] Strict CORS, to our own hosts only.
+  - [ ] Security headers (CSP, HSTS and the rest).
+  - [ ] Secure database access: a least-privilege database user and no public access.
+  - [ ] A final full security audit report.
+  - [ ] The 12-check security pass. Each check has a test that proves it and a result line in `docs/SECURITY-AUDIT.md`. Every fix is tested after it is made. The pass ends with `security-report.pdf` showing 12 of 12 passed and 0 open holes:
+    - [ ] 1. Safe database queries only (parameterised). Test: `' OR 1=1 --` returns 0 rows.
+    - [ ] 2. XSS: text people write (comments, names) is always shown as plain text, never run as script.
+    - [ ] 3. Sign-in rate limit: slowed or blocked after repeated wrong passwords.
+    - [ ] 4. CSRF protection with a token check: a forged form from another site is rejected.
+    - [ ] 5. Secure session cookies: HttpOnly, Secure, SameSite.
+    - [ ] 6. Password reset links expire and work once.
+    - [ ] 7. Upload limits: images only, at most 5 MB, checked on the server by the real file type.
+    - [ ] 8. Admin pages locked: a normal user gets 403.
+    - [ ] 9. Every price and total rechecked on the server; the browser is never trusted.
+    - [ ] 10. Debug mode off in production: people see only "Something went wrong, reference A12F", with the details in private logs.
+    - [ ] 11. Risky packages updated and unused ones deleted.
+    - [ ] 12. The whole git history scanned for leaked keys, and any found are rotated.
+    - [ ] HTTPS everywhere.
 - [ ] Last phase before TestFlight, premium animations and transitions (asked by the user, 26 Nov 2026; do after the basics, not started): booking flows, menu scroll effects and modern TikTok-style motion, mostly in the guest app and the public websites, all of premium quality.
-- [ ] Legal and compliance, right before App Store readiness (asked by the user, 26 Nov 2026; not started). Each item has a check. The legal texts must be reviewed by the hotel or a lawyer before launch:
-  - [ ] A privacy policy page, in the app and on the website, covering Uganda's Data Protection and Privacy Act.
-  - [ ] Terms of service, accepted at sign-up.
-  - [ ] Images: only photos the hotel owns or that are licensed. `docs/ASSETS.md` lists the source and licence of every photo, icon and logo. No stock or web-scraped images.
-  - [ ] Fonts: confirm Cinzel and Lato are under the open font licence (OFL) and record it in `docs/ASSETS.md`. No personal-use fonts.
-  - [ ] Names and brands: no other company's name, logo or look (FoodPanda, APEX and others are references only). The Igongo name and logo are used with the hotel's written permission, recorded in the docs.
-  - [ ] Age: the app is for ages 13 and up, stated in the terms, with a date of birth or age check at sign-up.
-  - [ ] Cancellation: a clear booking, order and refund cancellation policy shown before paying, and delete my account always available.
+- [ ] Legal and compliance for Uganda, right before App Store readiness (asked by the user, 26 Nov 2026; not started). Each item has a check, and everything here is to be confirmed by a Ugandan lawyer before launch. Apple and Google store rules stay as listed under App Store readiness:
+  - [ ] Data Protection and Privacy Act 2019: privacy policy and consent texts written for it; a docs note on registering with the Personal Data Protection Office (under NITA-U); a data-subject rights page (access, correct, delete); and the steps to report a data breach.
+  - [ ] Children: personal data of anyone under 18 needs a parent's or guardian's consent, so the app is for ages 18 and up, or has a guardian-consent flow.
+  - [ ] Electronic Transactions Act 2011 and Computer Misuse Act: terms of service accepted at sign-up, and electronic records and receipts that meet them.
+  - [ ] URA EFRIS: the accountant confirms whether the hotel must issue EFRIS e-receipts for bookings and food (see [NEEDS-YOU](NEEDS-YOU.md)); a hook for it is kept either way.
+  - [ ] Names and trademarks: the Igongo name and logo belong to the hotel and are used with its written permission, recorded in the docs. Trademarks are registered through URSB. No other company's name, logo or look (FoodPanda, APEX and others are references only).
+  - [ ] Photos and fonts (Copyright and Neighbouring Rights Act 2006): only images the hotel owns or has licensed, and open-licence (OFL) fonts such as Cinzel and Lato. `docs/ASSETS.md` lists the source and licence of every photo, icon, logo and font.
+  - [ ] Payments and cancellation: a clear booking, order and refund cancellation policy shown before paying; prices in Ugandan shillings with taxes shown; delete my account always available. The mobile-money providers handle the Bank of Uganda rules, noted in the docs.
 - [ ] App Store readiness, right before TestFlight (asked by the user, 26 Nov 2026; not started). Each item has a check:
   - [ ] No crash on open, tested on the built iOS app.
   - [ ] A reviewer demo login: a guest reviewer account with working sample bookings, written into [MAC-STEPS](MAC-STEPS.md) for the App Store Connect review notes.
@@ -231,6 +263,7 @@ The whole app and web portal are built as a clickable product first, with sample
   - [ ] Store screenshots with nothing from Android in them.
   - [ ] Real native value (NFC, push, tracking, offline), not just a website.
   - [ ] Delete my account in the app, a privacy policy URL and a support URL.
+- [ ] Run the full security audit again, just before TestFlight, and update `docs/SECURITY-AUDIT.md`.
 - [ ] Event bus (Queues and outbox) and Notifications. Files & Media is done.
 - [ ] Build each module's back end (domain, use cases, database, API and events), in the agreed order.
 - [ ] Connect each module's screens to its API.
