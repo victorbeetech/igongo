@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Igongo burgundy sampled from the launcher design; behind the adaptive icon foreground. -->
+    <color name="ic_launcher_background">#8C0A15</color>
+</resources>

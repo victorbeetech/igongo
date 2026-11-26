@@ -37,3 +37,8 @@ Design sheets: guest home, food shop (with search and an add-to-cart bar), cart 
 - A free-text note per item, for example "no tomatoes".
 - The customisation and notes are saved on the order, and show in the cart, the checkout and the kitchen view.
 - Not built yet: saved with the order and shown to the kitchen once the order flow is live.
+
+## 8. Super admin uploads the in-app logo and banner (later)
+- The super admin uploads a new in-app logo or banner from the web, and the app shows it without a new release.
+- Not built yet: wait until the web admin upload and the app's image reading are in place.
+- The launcher icon cannot change this way. It is built into the app, so a new icon needs a new build and a store update.
