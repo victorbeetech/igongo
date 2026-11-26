@@ -211,14 +211,14 @@ The whole app and web portal are built as a clickable product first, with sample
     - [ ] Apple "Hide My Email" relay addresses are accepted and used for the staff match.
     - [ ] Load and abuse: rate limits per user and IP, queues, and a test with thousands of requests at once.
 - [ ] Last phase before TestFlight, premium animations and transitions (asked by the user, 26 Nov 2026; do after the basics, not started): booking flows, menu scroll effects and modern TikTok-style motion, mostly in the guest app and the public websites, all of premium quality.
-- [ ] Legal and compliance, right before App Store readiness (asked by the user, 26 Nov 2026; not started). Each item has a check. The legal texts must be reviewed by the hotel or a lawyer before launch:
-  - [ ] A privacy policy page, in the app and on the website, covering Uganda's Data Protection and Privacy Act.
-  - [ ] Terms of service, accepted at sign-up.
-  - [ ] Images: only photos the hotel owns or that are licensed. `docs/ASSETS.md` lists the source and licence of every photo, icon and logo. No stock or web-scraped images.
-  - [ ] Fonts: confirm Cinzel and Lato are under the open font licence (OFL) and record it in `docs/ASSETS.md`. No personal-use fonts.
-  - [ ] Names and brands: no other company's name, logo or look (FoodPanda, APEX and others are references only). The Igongo name and logo are used with the hotel's written permission, recorded in the docs.
-  - [ ] Age: the app is for ages 13 and up, stated in the terms, with a date of birth or age check at sign-up.
-  - [ ] Cancellation: a clear booking, order and refund cancellation policy shown before paying, and delete my account always available.
+- [ ] Legal and compliance for Uganda, right before App Store readiness (asked by the user, 26 Nov 2026; not started). Each item has a check, and everything here is to be confirmed by a Ugandan lawyer before launch. Apple and Google store rules stay as listed under App Store readiness:
+  - [ ] Data Protection and Privacy Act 2019: privacy policy and consent texts written for it; a docs note on registering with the Personal Data Protection Office (under NITA-U); a data-subject rights page (access, correct, delete); and the steps to report a data breach.
+  - [ ] Children: personal data of anyone under 18 needs a parent's or guardian's consent, so the app is for ages 18 and up, or has a guardian-consent flow.
+  - [ ] Electronic Transactions Act 2011 and Computer Misuse Act: terms of service accepted at sign-up, and electronic records and receipts that meet them.
+  - [ ] URA EFRIS: the accountant confirms whether the hotel must issue EFRIS e-receipts for bookings and food (see [NEEDS-YOU](NEEDS-YOU.md)); a hook for it is kept either way.
+  - [ ] Names and trademarks: the Igongo name and logo belong to the hotel and are used with its written permission, recorded in the docs. Trademarks are registered through URSB. No other company's name, logo or look (FoodPanda, APEX and others are references only).
+  - [ ] Photos and fonts (Copyright and Neighbouring Rights Act 2006): only images the hotel owns or has licensed, and open-licence (OFL) fonts such as Cinzel and Lato. `docs/ASSETS.md` lists the source and licence of every photo, icon, logo and font.
+  - [ ] Payments and cancellation: a clear booking, order and refund cancellation policy shown before paying; prices in Ugandan shillings with taxes shown; delete my account always available. The mobile-money providers handle the Bank of Uganda rules, noted in the docs.
 - [ ] App Store readiness, right before TestFlight (asked by the user, 26 Nov 2026; not started). Each item has a check:
   - [ ] No crash on open, tested on the built iOS app.
   - [ ] A reviewer demo login: a guest reviewer account with working sample bookings, written into [MAC-STEPS](MAC-STEPS.md) for the App Store Connect review notes.
