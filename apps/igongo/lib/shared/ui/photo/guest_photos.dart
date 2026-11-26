@@ -8,6 +8,7 @@
 //  * banner: the owner's round thatched hut (now set: assets/photos/igongo-hut.jpg).
 //  * food: set (assets/photos/food-dish.jpg, a placeholder dish from the owner).
 //  * roomStandard, roomDeluxe: set. roomExecutive: still needed (a bedroom, not a meeting room).
+//  * hotel photos (entrance, cottages, gardens, cattle statue, cultural hut, pool, bathroom, restaurant): set from the owner's photos.
 
 import 'package:material_ui/material_ui.dart';
 
@@ -36,4 +37,25 @@ abstract final class GuestPhotos {
   /// The restaurant outlet's photo (shown on the demo outlet's shop row; real
   /// outlets have no photo field yet).
   static const String outletRestaurant = 'assets/photos/outlet-restaurant.jpg';
+
+  /// The hotel building and its entrance steps.
+  static const String hotelEntrance = 'assets/photos/hotel-entrance.jpg';
+
+  /// The cottages and the paved walk between them.
+  static const String hotelCottages = 'assets/photos/hotel-cottages.jpg';
+
+  /// The gardens: trimmed hedges, palms and the cattle statue.
+  static const String hotelGardens = 'assets/photos/hotel-gardens.jpg';
+
+  /// The long-horned cattle statue close up.
+  static const String hotelCattleStatue = 'assets/photos/hotel-cattle-statue.jpg';
+
+  /// The cultural hut with its clay figures.
+  static const String hotelCulturalHut = 'assets/photos/hotel-cultural-hut.jpg';
+
+  /// The swimming pool.
+  static const String hotelPool = 'assets/photos/hotel-pool.jpg';
+
+  /// A room bathroom (for a room slot).
+  static const String roomBathroom = 'assets/photos/room-bathroom.jpg';
 }
