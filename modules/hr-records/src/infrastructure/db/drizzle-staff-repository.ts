@@ -46,6 +46,11 @@ export class DrizzleStaffRepository implements StaffRepository {
     return row ?? null;
   }
 
+  async byStaffNumber(staffNumber: string): Promise<StaffMember | null> {
+    const [row] = await this.db.select().from(staff).where(eq(staff.staffNumber, staffNumber));
+    return row ?? null;
+  }
+
   async search(filter: StaffFilter): Promise<StaffMember[]> {
     // Build the conditions one by one; undefined ones are skipped by and().
     const conditions: (SQL | undefined)[] = [

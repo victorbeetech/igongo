@@ -17,10 +17,8 @@ const day = (days: number) => new Intl.DateTimeFormat("en-CA", { timeZone: "Afri
 /** A hotel with a super admin, a way to add staff with pre-made roles, and a self-registered guest. */
 async function hotel() {
   const t = await testApi();
-  const owner = t.browser();
-  await owner("POST", "/api/auth/sign-up/email", { name: "Owner", email: "owner@example.com", password: "Owner pass 123" });
-  await t.client.exec(`update users_login."user" set email_verified = true where email = 'owner@example.com'`);
-  expect((await owner("POST", "/api/setup/claim")).status).toBe(200);
+  // The owner: set-up claimed and 2-step on, as the console requires.
+  const owner = await t.owner();
 
   /** A signed-in staff account holding [roleIds]. */
   async function staff(name: string, roleIds: string[]) {
@@ -33,7 +31,8 @@ async function hotel() {
   }
 
   // A guest signs up in the app and gets the Guest role by themselves.
-  const guest = t.browser();
+  // Guests sign up in the app, never on the staff web portal.
+  const guest = t.phone();
   expect((await guest("POST", "/api/auth/sign-up/email", { name: "Grace", email: "grace@example.com", password: "Grace pass 123" })).status).toBe(200);
   return { ...t, owner, staff, guest };
 }

@@ -6,11 +6,15 @@
 // The modules come from the role at run time: signed in, from the layout the
 // super admin published for the person's roles; otherwise the preview role.
 // On small screens it is a drawer, opened from the top bar, always open wide.
+// There is one fold button (the panel icon) in every size, and no role
+// switcher: one account is one kind. Preview sits at the foot of the
+// sidebar, for the super admin only.
 
-import { PanelLeftClose, PanelLeftOpen, Search, X } from "lucide-react";
+import { PanelLeftClose, PanelLeftOpen, Search, SlidersHorizontal } from "lucide-react";
 import { useState } from "react";
 import { catalog } from "@/shared/catalog/catalogIndex";
 import type { RoleSpec } from "@/shared/catalog/types";
+import { useMe } from "@/shared/session/useMe";
 import { layoutModules, useMyLayout } from "@/shared/session/useMyLayout";
 import { SidebarModules } from "./SidebarModules";
 import { SidebarSearch } from "./SidebarSearch";
@@ -24,18 +28,24 @@ interface PortalSidebarProps {
   /** Small screens: whether the drawer is open, and how to close it. */
   drawerOpen: boolean;
   onCloseDrawer: () => void;
+  /** Opens the preview panel (super admin only). */
+  onPreview: () => void;
 }
 
 // The square icon buttons of the sidebar (fold, open, search, close).
 const ICON_BUTTON = "inline-flex size-10 shrink-0 items-center justify-center rounded-md text-muted hover:bg-surface-alt hover:text-ink";
 
 /** The sidebar for [role]. */
-export function PortalSidebar({ role, activeCode, drawerOpen, onCloseDrawer }: PortalSidebarProps) {
+export function PortalSidebar({ role, activeCode, drawerOpen, onCloseDrawer, onPreview }: PortalSidebarProps) {
   const [open, setOpen] = useSidebarOpen();
   const [searching, setSearching] = useState(false);
   const [focusSignal, setFocusSignal] = useState(0);
   // Step 1: the module codes behind the role's tiles, or every module for the super admin.
   const layout = useMyLayout().data;
+  // The signed-in person's own role name, else the previewed role's.
+  const me = useMe().data;
+  const roleName = me?.access.roles[0]?.name ?? role.name;
+  const canPreview = !!me?.access.roles.some((r) => r.key === "super-admin");
   const reach = new Set(role.tiles.map(([, id]) => id!.slice(1, 3)));
   const all = catalog.modules.filter((m) => m.code !== "00");
   const modules = layout ? layoutModules(layout, all) : all.filter((m) => role.key === "super-admin" || reach.has(m.code));
@@ -58,10 +68,9 @@ export function PortalSidebar({ role, activeCode, drawerOpen, onCloseDrawer }: P
           </>
         ) : (
           <>
-            <span className="min-w-0 flex-1 truncate px-2 text-caption font-bold tracking-widest text-muted uppercase">{role.name}</span>
-            {/* Wide screens fold the sidebar; the small-screen drawer closes instead. */}
-            <button type="button" className={`${ICON_BUTTON} hidden lg:inline-flex`} onClick={() => setOpen(false)} aria-label="Close sidebar" title="Close sidebar"><PanelLeftClose size={20} /></button>
-            <button type="button" className={`${ICON_BUTTON} lg:hidden`} onClick={onCloseDrawer} aria-label="Close menu"><X size={20} /></button>
+            <span className="min-w-0 flex-1 truncate px-2 text-caption font-bold tracking-widest text-muted uppercase">{roleName}</span>
+            {/* The one fold button: wide screens fold to icons, the small-screen drawer closes. */}
+            <button type="button" className={ICON_BUTTON} onClick={() => (drawerOpen ? onCloseDrawer() : setOpen(false))} aria-label="Close sidebar" title="Close sidebar"><PanelLeftClose size={20} /></button>
           </>
         )}
       </div>
@@ -74,6 +83,16 @@ export function PortalSidebar({ role, activeCode, drawerOpen, onCloseDrawer }: P
       <nav aria-label="Modules" className={`min-h-0 flex-1 overflow-y-auto px-2 pb-4 ${searching && !folded ? "hidden" : ""}`}>
         <SidebarModules modules={modules} activeCode={activeCode} folded={folded} />
       </nav>
+      {/* Step 5: Preview at the foot, for the super admin only. */}
+      {canPreview && (
+        <div className="border-t border-line p-2">
+          <button type="button" onClick={onPreview} title="Preview" aria-label="Preview"
+            className={`flex min-h-10 w-full items-center gap-3 rounded-md px-3 text-label text-muted hover:bg-surface-alt hover:text-ink ${folded ? "justify-center px-0" : ""}`}>
+            <SlidersHorizontal size={18} aria-hidden />
+            {!folded && <span>Preview</span>}
+          </button>
+        </div>
+      )}
     </aside>
   );
 }

@@ -1,9 +1,11 @@
 "use client";
-// S00-05 Sign in on the web: one entry point for everyone. Connected to the
-// API: email and password signs in for real, Google and Apple go to their
-// pages and come back, and only the methods the super admin has switched on
-// are shown. While the first super admin is still to be set up, the owner
-// finishes the set-up here after signing in with Google.
+// S00-05 Sign in on the web portal. The portal is for hotel staff and the
+// super admin only (guests use the app), so there is no guest sign-up here,
+// and the server refuses guest accounts whatever this page does.
+//
+// Steps: email and password first; Google and Apple (with their own marks)
+// when the super admin has them on; a 2-step code next when the account
+// has 2-step on. Errors brought back by Google or Apple are shown in words.
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, type FormEvent } from "react";
@@ -16,10 +18,13 @@ import { hrefFor } from "@/shared/navigation/hrefFor";
 import { useAddress } from "@/shared/navigation/useAddress";
 import { ME_KEY } from "@/shared/session/useMe";
 import { MY_LAYOUT_KEY } from "@/shared/session/useMyLayout";
+import { AppleIcon } from "@/shared/ui/brand-icons/AppleIcon";
+import { GoogleIcon } from "@/shared/ui/brand-icons/GoogleIcon";
 import { Button } from "@/shared/ui/button/Button";
 import { TextInput } from "@/shared/ui/field/TextInput";
 import { SkeletonList } from "@/shared/ui/skeleton/SkeletonList";
 import { FirstSetupPanel } from "./FirstSetupPanel";
+import { signInErrorText } from "./signInErrors";
 
 /** The sign-in page. */
 export function SignInPage({ screen }: { screen: ScreenContext }) {
@@ -30,11 +35,14 @@ export function SignInPage({ screen }: { screen: ScreenContext }) {
   const setup = useQuery({ queryKey: ["setup-status"], queryFn: fetchSetupStatus });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  // An error brought back in the address (Google, Apple, or a sign-out reason), else none.
+  const returned = address.params.get("error") ?? address.params.get("reason");
+  const [error, setError] = useState<string | null>(returned ? signInErrorText(returned) : null);
   const [busy, setBusy] = useState(false);
   const on = new Set(methods.data?.methods.filter((m) => m.platform === "all").map((m) => m.method));
+  const social = on.has("google") || on.has("apple");
 
-  /** Email and password: sign in, then go home (or to the 2FA step). */
+  /** Step 1: email and password, then home (or the 2-step code). */
   async function submit(event: FormEvent) {
     event.preventDefault();
     setBusy(true);
@@ -51,29 +59,44 @@ export function SignInPage({ screen }: { screen: ScreenContext }) {
     }
   }
 
+  /** Step 2: Google or Apple; they come back here with an error, or to home. */
+  const continueWith = (provider: "google" | "apple") => () =>
+    void signInSocial(provider, absoluteUrl("/home")).catch((e: unknown) => setError(e instanceof ApiError ? e.message : "We couldn't reach Igongo. Check your connection."));
+
   if (methods.isPending) return <SkeletonList />;
   return (
-    <div className="grid gap-3 p-4">
-      <p className="text-caption text-muted">Staff, riders and guests all sign in here.</p>
+    <div className="grid gap-4 p-4 pt-2">
+      <p className="text-caption text-muted">For hotel staff. Guests use the Igongo app.</p>
       {setup.data?.needed && <FirstSetupPanel />}
-      {/* Step 1: email and password, when switched on. */}
+      {error && (
+        <p role="alert" className="rounded-md border border-error/40 bg-error/10 p-3 text-caption text-error">
+          {error}
+        </p>
+      )}
       {on.has("email_password") && (
         <form onSubmit={submit} className="grid gap-3">
-          <TextInput label="Email" type="email" value={email} onChange={setEmail} autoComplete="email" hint="name@example.com" required />
+          <TextInput label="Email" type="email" value={email} onChange={setEmail} autoComplete="username" hint="name@example.com" required />
           <TextInput label="Password" type="password" value={password} onChange={setPassword} autoComplete="current-password" required />
-          {error && <p role="alert" className="text-caption text-error">{error}</p>}
           <Button type="submit" disabled={busy} block>{busy ? "Signing in…" : "Sign in"}</Button>
+          <div className="text-right">
+            <Button variant="text" href={hrefFor("S00-17", here)}>Forgot password?</Button>
+          </div>
         </form>
       )}
-      <div className="flex items-center gap-2 text-caption text-muted"><hr className="flex-1 border-line" />or<hr className="flex-1 border-line" /></div>
-      {/* Step 2: the other switched-on methods. */}
-      {on.has("google") && <Button variant="secondary" block onClick={() => void signInSocial("google", absoluteUrl("/home")).catch((e: unknown) => setError(e instanceof ApiError ? e.message : String(e)))}>Continue with Google</Button>}
-      {on.has("apple") && <Button variant="secondary" block onClick={() => void signInSocial("apple", absoluteUrl("/home"))}>Continue with Apple</Button>}
-      {(on.has("phone_sms") || on.has("phone_whatsapp")) && <Button variant="secondary" href={hrefFor("S00-10", here)} block>Phone number (SMS or WhatsApp)</Button>}
+      {social && on.has("email_password") && (
+        <div className="flex items-center gap-3 text-caption text-muted" aria-hidden>
+          <hr className="flex-1 border-line" />
+          or
+          <hr className="flex-1 border-line" />
+        </div>
+      )}
+      {social && (
+        <div className="grid gap-2">
+          {on.has("google") && <Button variant="secondary" block icon={<GoogleIcon />} onClick={continueWith("google")}>Continue with Google</Button>}
+          {on.has("apple") && <Button variant="secondary" block icon={<AppleIcon />} onClick={continueWith("apple")}>Continue with Apple</Button>}
+        </div>
+      )}
       {methods.isError && <p role="alert" className="text-caption text-error">We couldn&apos;t reach Igongo to load the sign-in options. Check your connection.</p>}
-      {/* Step 3: guest sign-up, when the hotel allows it. */}
-      {methods.data?.allowSelfRegistration && <Button variant="text" href={hrefFor("S00-18", here)}>New guest? Create an account</Button>}
-      <Button variant="text" href={hrefFor("S00-17", here)}>Forgot password?</Button>
     </div>
   );
 }

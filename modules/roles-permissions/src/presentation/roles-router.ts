@@ -18,7 +18,7 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono, type Context } from "hono";
 import modules from "@igongo/contracts/catalog/modules.json";
-import { DATA_SCOPES } from "@igongo/contracts/roles-permissions";
+import { DATA_SCOPES, type StaffAccountCheck } from "@igongo/contracts/roles-permissions";
 import { actorOf, AppError, requirePermission, type ActorEnv } from "@igongo/core";
 import type { ChangeContext } from "../application/change-context";
 import type { AssignmentRepository } from "../application/ports/assignment-repository";
@@ -36,6 +36,8 @@ import { assignBody, createRoleBody, listQuery, updateRoleBody, whoCanQuery } fr
 export interface RolesDeps {
   roles: RoleRepository;
   assignments: AssignmentRepository;
+  /** Staff roles only go to staff accounts (see assign-role). */
+  staffAccounts: StaffAccountCheck;
   /** The change context for the signed-in caller (who, audit recorder, clock). */
   change: ChangeContext;
 }

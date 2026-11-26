@@ -1,5 +1,5 @@
-// The preview panel for reviewing the prototype: pick the role, the screen
-// state, the theme and the text size. It goes away when real data arrives.
+// The super admin's preview panel: switch the design preview on, then pick
+// the role, the screen state, the theme and the text size.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:go_router/go_router.dart';
@@ -41,6 +41,14 @@ class _PreviewPanel extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
           child: Text('Preview', style: context.text.titleMedium),
+        ),
+        // The switch for the whole preview: off, the super admin sees their real app.
+        SwitchListTile(
+          secondary: const Icon(Icons.visibility_outlined),
+          title: const Text('Design preview'),
+          subtitle: const Text('Show sample screens, any role and any state'),
+          value: prefs.previewMode,
+          onChanged: (v) => prefs.previewMode = v,
         ),
         // Step 0: the design system showcase, every token and component on one screen.
         ListTile(

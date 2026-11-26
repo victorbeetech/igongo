@@ -43,3 +43,22 @@ export const HR_EVENTS = {
   staffUpdated: "staff.updated",
   staffLeft: "staff.left",
 } as const;
+
+/** A staff record as the super admin's staff match sees it (with the phone, never shown to the caller). */
+export interface StaffMatchRecord {
+  staffId: string;
+  staffNumber: string;
+  userId: string | null;
+  name: string;
+  phone: string | null;
+  status: StaffStatus;
+}
+
+/**
+ * Finds a staff record by number and links it to an account, for Users &
+ * Login's staff match. Linking adds the staff base role, like HR's own link.
+ */
+export interface StaffRecordMatcher {
+  byStaffNumber(staffNumber: string): Promise<StaffMatchRecord | null>;
+  linkAccount(staffId: string, userId: string): Promise<void>;
+}

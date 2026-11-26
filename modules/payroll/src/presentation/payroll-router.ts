@@ -44,6 +44,8 @@ export function payrollRouter(deps: (c: Context<ActorEnv>) => PayrollDeps) {
         const profiles = new Map((await d.payroll.profiles()).map((p) => [p.staffId, p]));
         // Everyone active, with or without a profile, so nobody is forgotten.
         const items = (await d.staff.active()).map((s) => ({ staff: s, profile: profiles.get(s.staffId) ?? null }));
+        // Pay is sensitive: every look at it is logged.
+        await recordChange(d.change, { module: "payroll", action: "profiles.viewed", recordType: "pay_profile", summary: "Viewed everyone's pay profiles" });
         return c.json({ items });
       })
       .put("/profiles/:staffId", requireStaffPermission(P.profilesEdit), zValidator("json", profileBody), async (c) => {
@@ -67,6 +69,7 @@ export function payrollRouter(deps: (c: Context<ActorEnv>) => PayrollDeps) {
       .post("/runs", requireStaffPermission(P.create), zValidator("json", runBody), async (c) => c.json(await startPayRun(deps(c), c.req.valid("json").period, by(c)), 201))
       .get("/runs/:id", requireStaffPermission(P.view), async (c) => {
         const run = await runOf(c);
+        await recordChange(deps(c).change, { module: "payroll", action: "payrun.viewed", recordType: "payrun", recordId: run.id, summary: `Viewed the ${run.period} pay run and its payslips` });
         return c.json({ run, payslips: await deps(c).payroll.payslips(run.id) });
       })
       .get("/runs/:id/export.csv", requireStaffPermission(P.export), async (c) => {

@@ -8,6 +8,13 @@
       "when": 1795645478170,
       "tag": "0000_users_login",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1795700820475,
+      "tag": "0001_security",
+      "breakpoints": true
     }
   ]
 }

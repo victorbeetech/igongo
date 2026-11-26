@@ -10,6 +10,8 @@ export interface Account {
   id: string;
   name: string;
   email: string;
+  /** Google and Apple verify it; email sign-ups verify by the link. Needed for the staff match. */
+  emailVerified: boolean;
   phoneNumber: string | null;
   status: "active" | "pending" | "locked" | "suspended";
   kind: "staff" | "client";

@@ -1,5 +1,6 @@
-// The shortcuts under every staff home: approvals, the notice board, the
-// client view switch and the panic button. Guests do not see them.
+// The shortcuts under every staff home: approvals and the notice board.
+// There is no client view switch: one account is one kind (approved access
+// model). Guests do not see them.
 
 /// One shortcut: its words and the screen or dialog it opens.
 class RoleShortcut {
@@ -13,10 +14,5 @@ class RoleShortcut {
   final String targetId;
 
   /// The shortcuts every staff role has, as the role spec says.
-  static const staff = [
-    RoleShortcut('Approvals inbox', 'S00-30'),
-    RoleShortcut('Notice board', 'S49-01'),
-    RoleShortcut('Switch to client view', 'D00-02'),
-    RoleShortcut('Panic button', 'S00-24'),
-  ];
+  static const staff = [RoleShortcut('Approvals inbox', 'S00-30'), RoleShortcut('Notice board', 'S49-01')];
 }

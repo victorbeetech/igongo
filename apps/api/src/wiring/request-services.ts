@@ -12,12 +12,15 @@ import { SettingsLayoutStore } from "@igongo/app-builder";
 import { auditRecorder, DrizzleAuditStore } from "@igongo/audit-trail";
 import { memoryBlobStore, r2BlobStore, type BlobStore } from "@igongo/files-media";
 import type { AuditRecorder } from "@igongo/contracts/audit-trail";
+import type { StaffAccountCheck } from "@igongo/contracts/roles-permissions";
 import { createLogger, SecretBox, type ChangeContext, type Database } from "@igongo/core";
 import { accessService, DrizzleAssignmentRepository, DrizzleRoleRepository } from "@igongo/roles-permissions";
 import { DrizzleConsoleStore, moduleSwitchReader, secretReader } from "@igongo/super-admin";
 import {
   createAuth,
   DrizzleAccountStore,
+  DrizzleFailedLoginStore,
+  DrizzleKnownDeviceStore,
   DrizzleLoginSettingsStore,
   DrizzlePinStore,
   notConfiguredCardDirectory,
@@ -30,7 +33,9 @@ import { authConfigFrom } from "./auth-config";
 import { GuestServices } from "./guests/guest-services";
 import { ManagerServices } from "./managers/manager-services";
 import { noticeAnnouncer } from "./staff/notice-announcer";
+import { securityAlerts } from "./security-alerts";
 import { userNotifier } from "./user-notifier";
+import { staffRecordMatcher } from "@igongo/hr-records";
 import { StaffServices } from "./staff/staff-services";
 
 /** Remembers the first result of [make]. */
@@ -56,7 +61,11 @@ export class RequestServices {
   // --- Roles & Permissions ---
   readonly roles = once(() => new DrizzleRoleRepository(this.db));
   readonly assignments = once(() => new DrizzleAssignmentRepository(this.db));
-  readonly access = once(() => accessService({ roles: this.roles(), assignments: this.assignments() }, { audit: this.audit(), now: this.now, requestId: this.requestId }));
+  /** Staff roles only go to staff accounts: Users & Login says which accounts are staff. */
+  readonly staffAccounts = once((): StaffAccountCheck => ({ isStaffAccount: async (id) => (await this.accounts().get(id))?.kind === "staff" }));
+  readonly access = once(() =>
+    accessService({ roles: this.roles(), assignments: this.assignments(), staffAccounts: this.staffAccounts() }, { audit: this.audit(), now: this.now, requestId: this.requestId }),
+  );
 
   // --- App Layout & Navigation (core: menus, tabs and home tiles per role) ---
   readonly layoutStore = once(() => new SettingsLayoutStore(this.db));
@@ -90,8 +99,19 @@ export class RequestServices {
         cards: notConfiguredCardDirectory,
         codes: notConfiguredCodeSender,
         audit: this.audit(),
+        failedLogins: new DrizzleFailedLoginStore(this.db),
+        devices: new DrizzleKnownDeviceStore(this.db),
+        alerts: this.securityAlerts(),
+        bootstrapEmail: this.bootstrapEmail,
       }),
   );
+  /** New-device and sign-in method alerts, by email (once set up) and push. */
+  readonly securityAlerts = once(() => securityAlerts(notConfiguredCodeSender, this.notifier(), this.access(), this.logger()));
+
+  /** HR's staff records for the super admin's staff match, recorded as [actor]. */
+  staffRecords(actor: { userId: string; name: string } | undefined) {
+    return staffRecordMatcher({ staff: this.staffModules().staff(), roles: this.access() }, this.changeContext(actor));
+  }
 
   // --- Staff modules (HR, cards, wristbands, attendance, reports, meals, notices) ---
   readonly staffModules = once(() => new StaffServices(this.db, noticeAnnouncer(this.db, this.env, (roles) => this.access().holdersOf(roles))));

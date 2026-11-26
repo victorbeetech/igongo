@@ -8,6 +8,7 @@ class Session {
     required this.token,
     required this.userId,
     required this.name,
+    this.email = '',
     required this.isStaff,
     required this.permissions,
     required this.roleKeys,
@@ -22,6 +23,9 @@ class Session {
   /// The person's name.
   final String name;
 
+  /// The person's sign-in email.
+  final String email;
+
   /// True for staff; clients see the guest app.
   final bool isStaff;
 
@@ -30,6 +34,9 @@ class Session {
 
   /// The keys of the person's roles, such as `gatekeeper`.
   final List<String> roleKeys;
+
+  /// True for the super admin, who alone may use the Preview panel.
+  bool get isSuperAdmin => roleKeys.contains('super-admin');
 
   /// True when one of the person's permissions covers [required]
   /// (`module.feature.action`; the same rule as the API's matcher).

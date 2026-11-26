@@ -1,5 +1,6 @@
-// The top of every role home: a red card with the white mark, the greeting,
-// the role name and a button to switch roles.
+// The top of every role home: a red card with the white mark, the greeting
+// with the person's own name, and their role. No role switch: one account
+// is one kind.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
@@ -10,14 +11,14 @@ import '../../../../shared/ui/logo/igongo_logo.dart';
 
 /// The greeting card at the top of a role home.
 class RoleHeader extends StatelessWidget {
-  /// Creates the header for [role]. [onSwitch] opens the role switcher.
-  const RoleHeader({super.key, required this.role, required this.onSwitch});
+  /// Creates the header for [role]; [name] is the signed-in person's, or null when signed out.
+  const RoleHeader({super.key, required this.role, this.name});
 
   /// The role whose home this is.
   final RoleSpec role;
 
-  /// Opens the role switcher.
-  final VoidCallback onSwitch;
+  /// The signed-in person's name.
+  final String? name;
 
   @override
   Widget build(BuildContext context) {
@@ -35,17 +36,13 @@ class RoleHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 2,
               children: [
-                Text('Good morning, Grace', style: context.text.titleMedium?.copyWith(color: p.onPrimary)),
+                Text(
+                  name == null ? 'Welcome to Igongo' : 'Hello, ${name!.split(' ').first}',
+                  style: context.text.titleMedium?.copyWith(color: p.onPrimary),
+                ),
                 Text(role.name, style: context.text.bodySmall?.copyWith(color: p.onPrimary.withValues(alpha: 0.85))),
               ],
             ),
-          ),
-          // White on red keeps the 6.2:1 contrast from the theme notes.
-          TextButton.icon(
-            onPressed: onSwitch,
-            style: TextButton.styleFrom(foregroundColor: p.onPrimary),
-            icon: const Icon(Icons.swap_horiz, size: 18),
-            label: const Text('Switch'),
           ),
         ],
       ),

@@ -6,6 +6,7 @@
 export type { StaffRepository } from "./application/ports/staff-repository";
 export { enrolStaff, STAFF_BASE_ROLE_KEY } from "./application/use-cases/enrol-staff";
 export { updateStaff } from "./application/use-cases/update-staff";
+export { staffRecordMatcher } from "./application/use-cases/staff-record-matcher";
 export type { StaffDraft, StaffMember } from "./domain/staff-member";
 export { nextStaffNumber } from "./domain/staff-number";
 export { DrizzleStaffRepository } from "./infrastructure/db/drizzle-staff-repository";

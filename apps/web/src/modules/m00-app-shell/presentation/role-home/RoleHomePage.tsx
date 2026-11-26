@@ -1,8 +1,6 @@
 // S00-21 Role home on the web: built from the person's role at run time. The
 // tiles come from the role (the super admin edits them in the layout editor).
 
-import { ArrowLeftRight } from "lucide-react";
-import Link from "next/link";
 import { catalog } from "@/shared/catalog/catalogIndex";
 import type { ScreenContext } from "@/shared/catalog/types";
 import { hrefFor } from "@/shared/navigation/hrefFor";
@@ -27,9 +25,6 @@ export function RoleHomePage({ screen }: { screen: ScreenContext }) {
           <div className="text-title font-bold">Good morning, Grace</div>
           <div className="text-caption opacity-85">{role.name}</div>
         </div>
-        <Link href={hrefFor("S00-22", here)} className="inline-flex items-center gap-1 rounded-md px-3 py-2 text-label font-bold hover:bg-primary-dark">
-          <ArrowLeftRight size={16} /> Switch
-        </Link>
       </div>
       {/* Step 2: the role's tiles, with a sample count on every other tile. */}
       <SectionHeader title="Today" />

@@ -7,7 +7,10 @@ import type { AccountStore } from "../../application/ports/account-store";
 import type { CardDirectory } from "../../application/ports/card-directory";
 import type { CodeSender } from "../../application/ports/code-sender";
 import type { LoginSettingsStore } from "../../application/ports/login-settings-store";
+import type { FailedLoginStore } from "../../application/ports/failed-login-store";
+import type { KnownDeviceStore } from "../../application/ports/known-device-store";
 import type { PinStore } from "../../application/ports/pin-store";
+import type { SecurityAlerts } from "../../application/ports/security-alerts";
 import type { AppleKeys } from "./apple-client-secret";
 
 /** Settings from the Worker's environment and the super admin's keys. */
@@ -32,4 +35,11 @@ export interface AuthDeps {
   cards: CardDirectory;
   codes: CodeSender;
   audit: AuditRecorder;
+  /** Wrong-password counts, for the lockout. */
+  failedLogins: FailedLoginStore;
+  /** Devices each account used, for new-device alerts. */
+  devices: KnownDeviceStore;
+  alerts: SecurityAlerts;
+  /** The owner's email for the one-time set-up (Worker secret). */
+  bootstrapEmail: string | undefined;
 }

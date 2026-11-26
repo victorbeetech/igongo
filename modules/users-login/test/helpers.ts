@@ -19,7 +19,7 @@ export async function freshDb() {
 
 import type { AuditEntryInput } from "@igongo/contracts/audit-trail";
 import type { AccessProfile, AccessReader, RoleAssigner } from "@igongo/contracts/roles-permissions";
-import { createAuth, DrizzleAccountStore, DrizzleLoginSettingsStore, DrizzlePinStore, notConfiguredCardDirectory, notConfiguredCodeSender } from "../src";
+import { createAuth, DrizzleAccountStore, DrizzleFailedLoginStore, DrizzleKnownDeviceStore, DrizzleLoginSettingsStore, DrizzlePinStore, notConfiguredCardDirectory } from "../src";
 
 /** Roles & Permissions stand-in: role keys per person, in memory. */
 export function memoryAccess(): AccessReader & RoleAssigner & { held: Map<string, string[]> } {
@@ -42,6 +42,8 @@ export function memoryAccess(): AccessReader & RoleAssigner & { held: Map<string
 export async function testAuth() {
   const { db, client } = await freshDb();
   const audit: AuditEntryInput[] = [];
+  const alerts: string[] = [];
+  const sent: { channel: string; to: string; message: string }[] = [];
   const deps = {
     db,
     settings: new DrizzleLoginSettingsStore(db),
@@ -49,21 +51,35 @@ export async function testAuth() {
     access: memoryAccess(),
     pins: new DrizzlePinStore(db),
     cards: notConfiguredCardDirectory,
-    codes: notConfiguredCodeSender,
+    // Codes and links are kept in memory, as if emailed.
+    codes: { send: async (channel: string, to: string, message: string) => void sent.push({ channel, to, message }) },
     audit: { record: async (e: AuditEntryInput) => void audit.push(e) },
+    failedLogins: new DrizzleFailedLoginStore(db),
+    devices: new DrizzleKnownDeviceStore(db),
+    // Alerts are kept in memory so tests can read them.
+    alerts: { toPerson: async (p: { email: string }, message: string) => void alerts.push(`${p.email}: ${message}`), toSuperAdmins: async (message: string) => void alerts.push(`admins: ${message}`) },
+    bootstrapEmail: "owner@example.com",
   };
   const config = { baseURL: "http://api.test", secret: "test-secret-that-is-long-enough-123456", trustedOrigins: ["http://web.test"], google: null, apple: null };
   const auth = await createAuth(config, deps);
-  /** Calls an auth route with a JSON body and optional cookie. */
-  const call = (path: string, body?: unknown, cookie?: string) =>
+  /**
+   * Calls an auth route with a JSON body and optional cookie. By default it
+   * is the app (no web origin); `web: true` makes it the staff web portal.
+   */
+  const call = (path: string, body?: unknown, cookie?: string, opts: { web?: boolean; userAgent?: string } = {}) =>
     auth.handler(
       new Request(`http://api.test/api/auth${path}`, {
         method: body === undefined ? "GET" : "POST",
-        headers: { "content-type": "application/json", origin: "http://web.test", ...(cookie ? { cookie } : {}) },
+        headers: {
+          "content-type": "application/json",
+          ...(opts.web ? { origin: "http://web.test" } : {}),
+          ...(opts.userAgent ? { "user-agent": opts.userAgent } : {}),
+          ...(cookie ? { cookie } : {}),
+        },
         ...(body === undefined ? {} : { body: JSON.stringify(body) }),
       }),
     );
-  return { db, client, auth, deps, audit, call };
+  return { db, client, auth, deps, audit, alerts, sent, call };
 }
 
 /** The session cookie from a response, ready to send back. */
