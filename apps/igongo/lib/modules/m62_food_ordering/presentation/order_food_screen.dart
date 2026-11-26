@@ -13,12 +13,15 @@ import '../../../shared/screens/parts/purpose_text.dart';
 import '../../../shared/screens/parts/screen_list_view.dart';
 import '../../../shared/screens/screen_layout.dart';
 import '../../../shared/ui/button/igongo_button.dart';
+import '../../../shared/ui/card/igongo_card.dart';
 import '../../../shared/ui/list_row/igongo_list_row.dart';
 import '../../../shared/ui/section/section_header.dart';
 import '../application/cart_controller.dart';
 import '../application/orders_providers.dart';
+import '../demo/demo_menu.dart';
 import '../domain/outlet.dart';
 import 'checkout_sheet.dart';
+import 'demo_notice.dart';
 import 'item_sheet.dart';
 
 /// The guest's food ordering screen.
@@ -87,7 +90,12 @@ class OrderFoodScreen extends ConsumerWidget {
                       for (final i in all)
                         if (query.isEmpty || i.name.toLowerCase().contains(query)) i,
                     ];
+                    // Step 4: dishes on today go first by section; out-of-stock dishes go last.
+                    final onToday = [for (final i in items) if (i.available) i];
+                    final outToday = [for (final i in items) if (!i.available) i];
+                    final demo = isDemoOutlet(outlet);
                     return [
+                      if (demo) const DemoNotice(),
                       if (all.isEmpty)
                         const Padding(
                           padding: EdgeInsets.all(IgongoSpace.lg),
@@ -98,20 +106,42 @@ class OrderFoodScreen extends ConsumerWidget {
                           padding: EdgeInsets.all(IgongoSpace.lg),
                           child: Text('No dish matches your search.'),
                         ),
-                      for (final section in {for (final i in items) i.section}) ...[
+                      for (final section in {for (final i in onToday) i.section}) ...[
                         SectionHeader(section),
-                        for (final i in items.where((i) => i.section == section))
+                        for (final i in onToday.where((i) => i.section == section))
                           IgongoListRow(
                             title: i.name,
                             subtitle: [ugx(i.price), ?stars[i.id]?.words].join(' · '),
-                            status: i.available ? null : 'Out today',
-                            onTap: i.available
-                                ? () {
+                            // Demo dishes show but cannot go in the cart.
+                            onTap: demo
+                                ? null
+                                : () {
                                     ref.read(cartProvider.notifier).useOutlet(outlet);
                                     _open(context, ItemSheet(item: i));
-                                  }
-                                : null,
+                                  },
                           ),
+                      ],
+                      // Out-of-stock dishes: dimmed, last, in a "Not available" card.
+                      if (outToday.isNotEmpty) ...[
+                        const SectionHeader('Not available'),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
+                          child: IgongoCard(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                for (final i in outToday)
+                                  Opacity(
+                                    opacity: 0.5,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: IgongoSpace.xs),
+                                      child: Text('${i.name} · ${ugx(i.price)}'),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     ];
                   },

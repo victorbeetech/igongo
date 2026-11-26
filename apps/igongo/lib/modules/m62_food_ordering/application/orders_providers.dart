@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../shared/session/session_controller.dart';
 import '../data/orders_api.dart';
+import '../demo/demo_menu.dart';
 import '../domain/delivery_track.dart';
 import '../domain/delivery_zone.dart';
 import '../domain/item_stars.dart';
@@ -17,14 +18,17 @@ import '../domain/outlet.dart';
 final ordersApiProvider = Provider((ref) => OrdersApi(ref.watch(apiClientProvider)));
 
 /// Outlets guests may order from.
-final outletsProvider = FutureProvider.autoDispose<List<Outlet>>((ref) {
+// The demo outlet shows only while the server has no outlets (see demo/demo_menu.dart).
+final outletsProvider = FutureProvider.autoDispose<List<Outlet>>((ref) async {
   ref.watch(sessionProvider);
-  return ref.watch(ordersApiProvider).outlets();
+  final live = await ref.watch(ordersApiProvider).outlets();
+  return live.isEmpty && demoMenuOn ? demoOutlets : live;
 });
 
 /// One outlet's menu.
-final menuProvider = FutureProvider.autoDispose.family<List<MenuItem>, String>((ref, outlet) {
+final menuProvider = FutureProvider.autoDispose.family<List<MenuItem>, String>((ref, outlet) async {
   ref.watch(sessionProvider);
+  if (isDemoOutlet(outlet)) return demoMenuItems;
   return ref.watch(ordersApiProvider).menu(outlet);
 });
 
