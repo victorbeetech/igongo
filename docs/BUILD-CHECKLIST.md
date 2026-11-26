@@ -257,7 +257,17 @@ The whole app and web portal are built as a clickable product first, with sample
     - [ ] HTTPS forced everywhere.
     - [ ] Database access locked down: not reachable from the internet except through the API.
     - [ ] Every form is checked on the server too, not only on the page (for example, quantity must be 1 to 10 and anything else is rejected).
+  - [ ] The 20 common shortcuts that get AI-built apps hacked (asked by the user, 26 Nov 2026): secret keys in code, an open database, any password works, no limit on tries, seeing each other's data, only /admin protected, trusting input, file uploads, no two-step sign-in, test accounts or pages live, errors that say too much, copied code, old pages online, payment checks skipped, AI chatbot risks, plain text, sign up as admin, never updating, no backup, no activity log. Each has a check and a result line in [SECURITY-AUDIT](SECURITY-AUDIT.md) (the table is ready, all open).
+- [ ] Project files docs pass (asked by the user, 26 Nov 2026): check the repo has a PRD, `ARCHITECTURE.md`, `ARCHITECTURE-ESSENTIALS.md`, `AGENTS.md` and `CLAUDE.md`, and write any that are missing from the existing spec, architecture and code-standards docs. Today only `CLAUDE.md` and `README.md` are at the top; the spec and architecture live in `docs/`.
 - [ ] Last phase before TestFlight, premium animations and transitions (asked by the user, 26 Nov 2026; do after the basics, not started): booking flows, menu scroll effects and modern TikTok-style motion, mostly in the guest app and the public websites, all of premium quality.
+- [ ] Speed, right after the animations (asked by the user, 26 Nov 2026: "make the app very light and speedy"; not started). The app and the web stay very light and fast, and nothing is loaded that is not needed. Each item has a check:
+  - [ ] Load only what the screen needs: lazy loading of modules, screens and images, and deferred loading in the app.
+  - [ ] Small bundles: code splitting on the web, tree shaking, unused packages and assets removed, bundle size budgets checked in CI.
+  - [ ] Optimised images: modern formats, the right size for each screen, compressed, cached.
+  - [ ] Caching: API answers and static files cached where safe; no repeated calls for the same data.
+  - [ ] Pagination and virtualised long lists everywhere.
+  - [ ] Quick start-up: measured cold start for the app and first load for the web, with targets.
+  - [ ] Tests on low-end Android phones and on slow (3G) signal.
 - [ ] Legal and compliance for Uganda, right before App Store readiness (asked by the user, 26 Nov 2026; not started). Each item has a check, and everything here is to be confirmed by a Ugandan lawyer before launch. Apple and Google store rules stay as listed under App Store readiness:
   - [ ] Data Protection and Privacy Act 2019: privacy policy and consent texts written for it; a docs note on registering with the Personal Data Protection Office (under NITA-U); a data-subject rights page (access, correct, delete); and the steps to report a data breach.
   - [ ] Children: personal data of anyone under 18 needs a parent's or guardian's consent, so the app is for ages 18 and up, or has a guardian-consent flow.
@@ -279,6 +289,7 @@ The whole app and web portal are built as a clickable product first, with sample
   - [ ] Real native value (NFC, push, tracking, offline), not just a website.
   - [ ] Delete my account in the app, a privacy policy URL and a support URL.
 - [ ] Run the full security audit again, just before TestFlight, and update `docs/SECURITY-AUDIT.md`.
+- [ ] The final gate before any deployment (asked by the user, 26 Nov 2026): run the whole [master pre-deployment checklist](MASTER-PREDEPLOY-CHECKLIST.md) (21 sections) together with the security audit, and record each result in `docs/SECURITY-AUDIT.md`. Nothing goes to real users while an item is open.
 - [ ] Event bus (Queues and outbox) and Notifications. Files & Media is done.
 - [ ] Build each module's back end (domain, use cases, database, API and events), in the agreed order.
 - [ ] Connect each module's screens to its API.
