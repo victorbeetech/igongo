@@ -2,13 +2,14 @@
 // Module 72: Spa / Humura. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm72_spa_overrides.dart';
 
 /// Module 72, Spa / Humura: every screen and dialog, with its sample data.
-const m72SpaModule = ModuleSpec(
+final m72SpaModule = ModuleSpec(
   code: '72',
   name: 'Spa / Humura',
   slug: 'spa',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S72-01',
       name: 'Spa home',
@@ -87,7 +88,8 @@ const m72SpaModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m72Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D72-01',
       name: 'No-show',
@@ -97,7 +99,7 @@ const m72SpaModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: ['Full body massage', 'Facial', 'Foot spa', 'Steam bath', 'Couples massage', 'Manicure'],
     statuses: ['Booked', 'In treatment', 'Done', 'Free slot'],
     kpis: [('Bookings today', '14'), ('Therapists on', '4'), ('Free slots', '6'), ('Revenue', 'UGX 1.1M')],

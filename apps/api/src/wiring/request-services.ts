@@ -6,6 +6,7 @@
  */
 
 import type { RecordsDeps } from "@igongo/records-kit";
+import { stockDeps, stockDeskDeps, type StockDeps } from "@igongo/stock-inventory";
 import type { RecordModuleEntry } from "./operations/record-modules";
 import { auditRecorder, DrizzleAuditStore } from "@igongo/audit-trail";
 import { memoryBlobStore, r2BlobStore, type BlobStore } from "@igongo/files-media";
@@ -111,6 +112,16 @@ export class RequestServices {
   /** [entry]'s deps for [actor], with the HR staff directory for assignees. */
   recordModule(entry: RecordModuleEntry, actor: { userId: string; name: string } | undefined): RecordsDeps {
     return entry.deps(this.db, this.changeContext(actor), this.staffModules().staff());
+  }
+
+  /** Stock & Inventory's ledger deps for [actor]. */
+  stock(actor: { userId: string; name: string } | undefined): StockDeps {
+    return stockDeps(this.db, this.changeContext(actor), this.staffModules().staff());
+  }
+
+  /** Stock's desk (requisitions, purchasing, suppliers, counts, recipes) for [actor]. */
+  stockDesk(actor: { userId: string; name: string } | undefined): RecordsDeps {
+    return stockDeskDeps(this.db, this.changeContext(actor), this.staffModules().staff());
   }
 
   /** The change context for the signed-in caller, for audited use cases. */

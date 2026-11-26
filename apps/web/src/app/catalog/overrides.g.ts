@@ -62,12 +62,15 @@ import { m60Overrides } from "@/modules/m60-guest-requests/overrides";
 import { m61Overrides } from "@/modules/m61-menu-catalogue/overrides";
 import { m62Overrides } from "@/modules/m62-food-ordering/overrides";
 import { m63Overrides } from "@/modules/m63-kitchen-display/overrides";
+import { m64Overrides } from "@/modules/m64-tables-dinein/overrides";
 import { m65Overrides } from "@/modules/m65-buffet/overrides";
 import { m66Overrides } from "@/modules/m66-delivery-riders/overrides";
 import { m67Overrides } from "@/modules/m67-room-bookings/overrides";
 import { m68Overrides } from "@/modules/m68-museum/overrides";
 import { m69Overrides } from "@/modules/m69-events-conferences/overrides";
+import { m70Overrides } from "@/modules/m70-venues-equipment/overrides";
 import { m71Overrides } from "@/modules/m71-pool/overrides";
+import { m72Overrides } from "@/modules/m72-spa/overrides";
 import { m73Overrides } from "@/modules/m73-crafts-bookshop/overrides";
 import { m76Overrides } from "@/modules/m76-pricing-tax/overrides";
 import { m77Overrides } from "@/modules/m77-payments/overrides";
@@ -75,6 +78,7 @@ import { m78Overrides } from "@/modules/m78-receipts-invoicing/overrides";
 import { m79Overrides } from "@/modules/m79-cash-up/overrides";
 import { m80Overrides } from "@/modules/m80-accounting-export/overrides";
 import { m81Overrides } from "@/modules/m81-reports-analytics/overrides";
+import { m84Overrides } from "@/modules/m84-stock-inventory/overrides";
 
 /** Hand-made screens by screen number. Every other screen uses a shared layout. */
-export const allOverrides: ScreenOverrides = {...m00Overrides, ...m01Overrides, ...m02Overrides, ...m04Overrides, ...m05Overrides, ...m06Overrides, ...m08Overrides, ...m09Overrides, ...m11Overrides, ...m13Overrides, ...m14Overrides, ...m15Overrides, ...m16Overrides, ...m17Overrides, ...m18Overrides, ...m19Overrides, ...m20Overrides, ...m21Overrides, ...m22Overrides, ...m23Overrides, ...m24Overrides, ...m25Overrides, ...m26Overrides, ...m27Overrides, ...m28Overrides, ...m29Overrides, ...m30Overrides, ...m31Overrides, ...m32Overrides, ...m33Overrides, ...m34Overrides, ...m35Overrides, ...m36Overrides, ...m37Overrides, ...m38Overrides, ...m39Overrides, ...m40Overrides, ...m41Overrides, ...m42Overrides, ...m43Overrides, ...m44Overrides, ...m45Overrides, ...m46Overrides, ...m47Overrides, ...m48Overrides, ...m49Overrides, ...m50Overrides, ...m51Overrides, ...m52Overrides, ...m53Overrides, ...m54Overrides, ...m55Overrides, ...m56Overrides, ...m57Overrides, ...m58Overrides, ...m59Overrides, ...m60Overrides, ...m61Overrides, ...m62Overrides, ...m63Overrides, ...m65Overrides, ...m66Overrides, ...m67Overrides, ...m68Overrides, ...m69Overrides, ...m71Overrides, ...m73Overrides, ...m76Overrides, ...m77Overrides, ...m78Overrides, ...m79Overrides, ...m80Overrides, ...m81Overrides};
+export const allOverrides: ScreenOverrides = {...m00Overrides, ...m01Overrides, ...m02Overrides, ...m04Overrides, ...m05Overrides, ...m06Overrides, ...m08Overrides, ...m09Overrides, ...m11Overrides, ...m13Overrides, ...m14Overrides, ...m15Overrides, ...m16Overrides, ...m17Overrides, ...m18Overrides, ...m19Overrides, ...m20Overrides, ...m21Overrides, ...m22Overrides, ...m23Overrides, ...m24Overrides, ...m25Overrides, ...m26Overrides, ...m27Overrides, ...m28Overrides, ...m29Overrides, ...m30Overrides, ...m31Overrides, ...m32Overrides, ...m33Overrides, ...m34Overrides, ...m35Overrides, ...m36Overrides, ...m37Overrides, ...m38Overrides, ...m39Overrides, ...m40Overrides, ...m41Overrides, ...m42Overrides, ...m43Overrides, ...m44Overrides, ...m45Overrides, ...m46Overrides, ...m47Overrides, ...m48Overrides, ...m49Overrides, ...m50Overrides, ...m51Overrides, ...m52Overrides, ...m53Overrides, ...m54Overrides, ...m55Overrides, ...m56Overrides, ...m57Overrides, ...m58Overrides, ...m59Overrides, ...m60Overrides, ...m61Overrides, ...m62Overrides, ...m63Overrides, ...m64Overrides, ...m65Overrides, ...m66Overrides, ...m67Overrides, ...m68Overrides, ...m69Overrides, ...m70Overrides, ...m71Overrides, ...m72Overrides, ...m73Overrides, ...m76Overrides, ...m77Overrides, ...m78Overrides, ...m79Overrides, ...m80Overrides, ...m81Overrides, ...m84Overrides};

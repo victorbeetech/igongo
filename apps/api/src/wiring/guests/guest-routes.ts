@@ -13,6 +13,9 @@
  *   /api/events/*     events and enquiries                   module 69
  *   /api/pool/*       pool passes and lessons                module 71
  *   /api/shop/*       crafts and bookshop                    module 73
+ *   /api/spa/*        spa treatments (Humura)                module 72
+ *   /api/venues/*     venues and equipment hire              module 70
+ *   /api/tables/*     table reservations                     module 64
  */
 
 import { craftsBookshopRouter } from "@igongo/crafts-bookshop";
@@ -26,6 +29,9 @@ import { museumRouter } from "@igongo/museum";
 import { paymentsRouter } from "@igongo/payments";
 import { poolRouter } from "@igongo/pool";
 import { roomBookingsRouter } from "@igongo/room-bookings";
+import { spaRouter } from "@igongo/spa";
+import { tablesDineinRouter } from "@igongo/tables-dinein";
+import { venuesEquipmentRouter } from "@igongo/venues-equipment";
 import type { Context, Hono } from "hono";
 import type { ApiEnv } from "../../shell/api-env";
 import { mountModule as mount } from "../mount-module";
@@ -48,4 +54,7 @@ export function mountGuestRoutes(app: Hono<ApiEnv>) {
   mount(app, "events", "events-conferences", eventsConferencesRouter(booking("events-conferences")));
   mount(app, "pool", "pool", poolRouter(booking("pool")));
   mount(app, "shop", "crafts-bookshop", craftsBookshopRouter(booking("crafts-bookshop")));
+  mount(app, "spa", "spa", spaRouter(booking("spa")));
+  mount(app, "venues", "venues-equipment", venuesEquipmentRouter(booking("venues-equipment")));
+  mount(app, "tables", "tables-dinein", tablesDineinRouter(booking("tables-dinein")));
 }
