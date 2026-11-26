@@ -33,9 +33,9 @@ class AppShell extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final prefs = PreferencesScope.of(context);
     final signedIn = ChromeRules.signedIn(spec);
-    // Step 1b: the staff menu (drawer) is for staff and the super admin only; a guest sees the guest tabs.
+    // Step 1b: a signed-in guest sees the guest tabs, not the staff menu. Preview and signed-out builds keep the menu.
     final session = ref.watch(sessionProvider).valueOrNull;
-    final staffMenu = session != null && (session.isStaff || session.isSuperAdmin);
+    final guestOnly = session != null && !session.isStaff && !session.isSuperAdmin;
     // Step 1: the banner: offline when the preview says so.
     final banners = [
       if (prefs.state == ViewState.offline)
@@ -51,7 +51,7 @@ class AppShell extends ConsumerWidget {
       title: spec.id == 'S00-21' ? 'Home' : spec.name,
       banners: banners,
       body: body,
-      drawer: signedIn && staffMenu ? const RoleDrawer() : null,
+      drawer: signedIn && !guestOnly ? const RoleDrawer() : null,
       bottomBar: signedIn ? BottomBar(currentId: spec.id) : null,
       actions: [
         // Search joins real accounts once it is live (docs/APP-WIRING.md).
