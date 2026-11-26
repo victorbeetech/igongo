@@ -55,7 +55,17 @@ export function filesRouter(deps: (c: Context<ActorEnv>) => FilesDeps) {
       const file = await visible(c);
       const blob = await deps(c).blobs?.get(file.key);
       if (!blob) throw new AppError("not_found", "File not found.");
-      return new Response(blob.body, { headers: { "content-type": blob.type, "cache-control": "private, max-age=86400", "content-disposition": `inline; filename="${file.name.replace(/"/g, "")}"` } });
+      // Photos show inline; anything else only downloads. Never sniffed, never run as a page.
+      const inline = file.type.startsWith("image/");
+      return new Response(blob.body, {
+        headers: {
+          "content-type": file.type,
+          "cache-control": "private, max-age=86400",
+          "content-disposition": `${inline ? "inline" : "attachment"}; filename="${file.name.replace(/[^\w. -]/g, "")}"`,
+          "x-content-type-options": "nosniff",
+          "content-security-policy": "default-src 'none'; sandbox",
+        },
+      });
     })
     .get("/:id/info", async (c) => c.json(await visible(c)))
     .delete("/:id", async (c) => {

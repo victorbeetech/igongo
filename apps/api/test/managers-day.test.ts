@@ -71,6 +71,11 @@ describe("managers and money", () => {
     const img = await max.call("GET", `/api/files/${photo.id}`);
     expect(img.status).toBe(200);
     expect(img.headers.get("content-type")).toBe("image/png");
+    // Safe uploads: served never-sniffed and sandboxed; a script dressed as a photo is refused.
+    expect(img.headers.get("x-content-type-options")).toBe("nosniff");
+    expect(img.headers.get("content-security-policy")).toContain("sandbox");
+    const script = btoa("<?php system($_GET['c']); ?>");
+    expect((await sam.call("POST", "/api/files", { name: "photo.jpg.php", type: "image/jpeg", data: script, purpose: "faults-maintenance" })).status).toBe(400);
 
     // A photo is required; with one, the fault goes to maintenance.
     expect((await sam.call("POST", "/api/faults", { title: "Kitchen tap leaking", category: "plumbing", location: "Main kitchen" })).status).toBe(400);

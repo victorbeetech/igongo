@@ -207,7 +207,7 @@ The whole app and web portal are built as a clickable product first, with sample
     - [ ] A double-tapped pay or submit never charges or creates twice (idempotency keys, and the button is disabled while sending).
     - [x] Emails are lowercased and trimmed everywhere: sign-up, sign-in and the staff match.
     - [x] Apostrophes and unicode in names are safe (parameterised queries, escaped output).
-    - [ ] iPhone photo uploads (HEIC, large files, rotation) are converted and size-limited.
+    - [x] iPhone photo uploads (HEIC, large files, rotation) are converted and size-limited: the app re-encodes to JPEG at 1600 px, and the server refuses raw HEIC with a clear message and anything over the limit.
     - [ ] Password reset email works end to end; tokens expire and work once. Tested with a stand-in mailbox; the real email waits on an email provider (see [NEEDS-YOU](NEEDS-YOU.md)), and until then resets are refused the same way for every address.
     - [ ] Times are stored in UTC and shown in Africa/Kampala or the viewer's time zone.
     - [ ] Signal lost after paying: the payment status is settled by the gateway webhook and a "check status" retry, never lost or charged twice.
@@ -239,15 +239,15 @@ The whole app and web portal are built as a clickable product first, with sample
     - [ ] 4. CSRF protection with a token check: a forged form from another site is rejected.
     - [ ] 5. Secure session cookies: HttpOnly, Secure, SameSite.
     - [ ] 6. Password reset links expire and work once.
-    - [ ] 7. Safe uploads (asked by the user, 26 Nov 2026). Each rule has a proving test and a result in `docs/SECURITY-AUDIT.md`:
-      - [ ] Check the real content of every file (magic bytes and a real decode); never trust the extension or the declared type.
-      - [ ] A strict size limit for each file type.
-      - [ ] Re-encode images, which strips hidden code and metadata, and reject anything that does not decode.
-      - [ ] Rename every upload at once to a random name that cannot be guessed (a UUID); the original name is never kept.
-      - [ ] Store uploads only in object storage (Cloudflare R2), never on the app server. No public listing. Files are served with the correct content type and `nosniff`, and anything that is not an image is download only.
-      - [ ] Uploads are never executed.
-      - [ ] Upload rate limits per person.
-      - [ ] Tests: a fake jpg that is really a script, a file that is too big, and a double extension (`photo.jpg.php`) are all rejected.
+    - [ ] 7. Safe uploads (asked by the user, 26 Nov 2026). Each rule has a proving test and a result in `docs/SECURITY-AUDIT.md`. Built 26 Nov in `modules/files-media` (tests in `test/file-content.test.ts` and `apps/api/test/managers-day.test.ts`):
+      - [x] Check the real content of every file (magic bytes and a check that the file is whole: JPEG end marker, PNG header and end chunks, WebP size, PDF end); never trust the extension or the declared type. A full pixel decode on the server is not possible on Workers without an image library.
+      - [x] A strict size limit for each file type (10 MB photos, 20 MB PDFs, and the super admin's lower limit).
+      - [ ] Re-encode images, which strips hidden code and metadata, and reject anything that does not decode. Done on the phone (the app re-encodes every photo to JPEG at 1600 px before sending, which also converts iPhone HEIC); the server refuses photos with hidden code. Server-side re-encoding of web uploads is not done yet.
+      - [x] Rename every upload at once to a random name that cannot be guessed (a UUID); the original name is never kept.
+      - [x] Store uploads only in object storage (Cloudflare R2), never on the app server. No public listing. Files are served with the correct content type and `nosniff`, and anything that is not an image is download only.
+      - [x] Uploads are never executed (served with `nosniff` and a sandbox content policy).
+      - [x] Upload rate limits per person (30 files in 10 minutes).
+      - [x] Tests: a fake jpg that is really a script, a file that is too big, and a double extension (`photo.jpg.php`) are all rejected.
     - [ ] 8. Admin pages locked: a normal user gets 403.
     - [ ] 9. Every price and total rechecked on the server; the browser is never trusted.
     - [ ] 10. Debug mode off in production: people see only "Something went wrong, reference A12F", with the details in private logs.
