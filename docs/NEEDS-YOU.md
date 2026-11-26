@@ -159,7 +159,7 @@ The cloud cannot download the Android SDK or run Xcode, so the native builds wer
 The API builds (`pnpm --filter @igongo/api build`) and the web builds (`build:cloudflare`), but the cloud session could not finish the upload. The Cloudflare asset upload needs a BLAKE3 hash of each file, and the cloud session has no BLAKE3 tool installed. Installing one was refused by the session's permission check, so it was not forced.
 
 To finish, either:
-1. Run `pnpm --filter @igongo/api deploy` and `pnpm --filter @igongo/web deploy:cloudflare` on your computer after `npx wrangler login` (simplest), or
+1. Run `pnpm --filter @igongo/api run deploy` and `pnpm --filter @igongo/web deploy:cloudflare` on your computer after `npx wrangler login` (simplest). The API needs `run`: pnpm's own `deploy` command clashes with the script name and fails with ERR_PNPM_INVALID_DEPLOY_TARGET. Or
 2. Tell Claude to retry from the cloud once a BLAKE3 package can be installed in the session.
 
 Take a snapshot in Neon before the API deploy, because the new migrations run on the first scheduled tick.
