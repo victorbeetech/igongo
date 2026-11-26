@@ -1,6 +1,6 @@
 // The top of the guest home: Igongo red with one small greeting line (time of
-// day and first name), the alerts bell, and the banner picture below. The
-// banner comes from one place (GuestPhotos.banner) so it can be changed later.
+// day and first name), the alerts bell, and the promotions slideshow below. The
+// slides come from one place (GuestPhotos.promos) so they can be changed later.
 // Igongo red is the same in light and dark mode.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
@@ -8,7 +8,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../../shared/format/greeting.dart';
 import '../../../../shared/theme/theme.dart';
-import '../../../m62_food_ordering/presentation/menu_carousel.dart';
+import 'promo_slides.dart';
 
 /// The guest home's header. [name] is the signed-in guest's, or null when signed out.
 class GuestHeader extends StatelessWidget {
@@ -55,13 +55,13 @@ class GuestHeader extends StatelessWidget {
                 ),
               ],
             ),
-            // Step 2: the dish slideshow, full width.
+            // Step 2: the promotions slideshow, full width.
             Padding(
               padding: const EdgeInsets.only(right: IgongoSpace.md),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(IgongoRadius.lg),
-                // The slideshow of today's dishes (the banner placeholder when there are none).
-                child: const MenuCarousel(),
+                // Three business promotions (the super admin changes them later).
+                child: const PromoSlides(),
               ),
             ),
           ],

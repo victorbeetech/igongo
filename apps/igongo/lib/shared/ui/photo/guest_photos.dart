@@ -12,10 +12,29 @@
 
 import 'package:material_ui/material_ui.dart';
 
+/// One promotion slide: a photo and which part stays in view when cropped.
+class PromoPhoto {
+  /// Creates a promotion slide.
+  const PromoPhoto(this.asset, [this.alignment = Alignment.center]);
+
+  /// The photo's asset path or address.
+  final String asset;
+
+  /// The part of the photo kept in view.
+  final Alignment alignment;
+}
+
 /// Where each guest-home picture lives (null shows the placeholder).
 abstract final class GuestPhotos {
   /// The banner at the top of the guest home.
   static const String banner = 'assets/photos/igongo-hut.jpg';
+
+  /// The three promotion slides under the greeting (the hut is the new-promo slide).
+  static const List<PromoPhoto> promos = [
+    PromoPhoto(banner, bannerAlignment),
+    PromoPhoto('assets/photos/hotel-kaahwa-kanuzire.jpg'),
+    PromoPhoto('assets/photos/hotel-entrance-night.jpg'),
+  ];
 
   /// Which part of the banner photo stays in view when it is cropped wide
   /// (a little above centre keeps the thatch and the door).

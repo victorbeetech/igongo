@@ -39,8 +39,9 @@ void main() {
     expect(find.byType(AppBar), findsNothing);
     // Step 2: no staff menu: the frame has no drawer for a guest.
     expect(find.byType(RoleDrawer), findsNothing);
-    // Step 2b: the food shop is on the guest home as a card.
-    expect(find.text("Today's menu"), findsOneWidget);
+    // Step 2b: the meals slideshow replaces the old "Today's menu" words.
+    expect(find.text("Today's menu"), findsNothing);
+    expect(find.bySemanticsLabel('Meals to order'), findsOneWidget);
     // Step 3: no super admin Preview button for a guest.
     expect(find.byTooltip('Preview'), findsNothing);
   });
