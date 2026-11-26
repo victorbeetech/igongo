@@ -112,6 +112,7 @@ class SessionController extends AsyncNotifier<Session?> {
       userId: '${account['id'] ?? access['userId']}',
       name: '${account['name'] ?? ''}',
       email: '${account['email'] ?? ''}',
+      displayId: '${account['displayId'] ?? ''}',
       isStaff: access['isStaff'] == true,
       permissions: [
         for (final p in access['permissions'] as List<dynamic>? ?? const []) '${(p as Map<String, dynamic>)['key']}',

@@ -4,6 +4,8 @@ import type { AccountStatus } from "./account-status";
 
 export interface AccountSummary {
   id: string;
+  /** Short profile number, zero-padded (`00001`). Shown to the person; the internal `id` is not. */
+  displayId: string;
   name: string;
   email: string;
   emailVerified: boolean;

@@ -5,6 +5,7 @@ import type { Database } from "@igongo/core";
 import type { AccountStore } from "../../application/ports/account-store";
 import type { AccountStatus } from "../../domain/account-status";
 import type { AccountSummary, SessionSummary } from "../../domain/account-summary";
+import { formatDisplayNumber } from "../../domain/display-number";
 import { account, session, user } from "./schema";
 
 export class DrizzleAccountStore implements AccountStore {
@@ -63,6 +64,7 @@ export class DrizzleAccountStore implements AccountStore {
     const links = await this.db.select({ userId: account.userId, providerId: account.providerId }).from(account).where(inArray(account.userId, rows.map((r) => r.id)));
     return rows.map((r) => ({
       id: r.id,
+      displayId: formatDisplayNumber(r.displayNumber),
       name: r.name,
       email: r.email,
       emailVerified: r.emailVerified,
