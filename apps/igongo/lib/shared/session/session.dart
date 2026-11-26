@@ -9,6 +9,7 @@ class Session {
     required this.userId,
     required this.name,
     this.email = '',
+    this.displayId = '',
     required this.isStaff,
     required this.permissions,
     required this.roleKeys,
@@ -25,6 +26,10 @@ class Session {
 
   /// The person's sign-in email.
   final String email;
+
+  /// The short profile number the server gives, zero-padded (for example `00001`).
+  /// Empty until the account has loaded.
+  final String displayId;
 
   /// True for staff; clients see the guest app.
   final bool isStaff;

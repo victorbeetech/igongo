@@ -8,6 +8,7 @@
  * login policy and PINs for trusted devices.
  */
 
+import { sql } from "drizzle-orm";
 import { bigint, boolean, index, integer, jsonb, pgSchema, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
 import type { LoginMethod } from "@igongo/contracts/users-login";
 
@@ -33,6 +34,8 @@ export const user = usersLoginSchema.table("user", {
   status: text("status").notNull().default("active"),
   /** `staff` or `client`: who made the account and how. */
   kind: text("kind").notNull().default("client"),
+  /** Short number shown on the profile (`00001`). Handed out by the sequence below; never set by hand. */
+  displayNumber: bigint("display_number", { mode: "number" }).notNull().unique().default(sql`nextval('users_login.user_display_number_seq')`),
 });
 
 /** One signed-in device. Deleting the row signs that device out. */
