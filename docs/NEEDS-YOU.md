@@ -39,6 +39,12 @@ Built and switched off until the hotel agrees the providers (Africa's Talking, M
 
 ---
 
+## Final build phase: what only you can do (26 Nov 2026)
+
+1. **Set up the hotel's records, stock and card designs as the super admin.** Everything is configured on screen, with no code. Record types and statuses for the 40 desk modules, stock categories, units and stores, spa, venue and table offerings, the role menus (App builder), and card templates per role.
+2. **Scheduled reports.** They run at 7 AM Kampala time and are kept in Reports > Saved reports. Sending them by email or WhatsApp waits on those keys, the same ones listed below.
+3. **Card printer.** The card designer prints at the exact card size from the browser. Choose the card printer and turn off margins and scaling in the print dialog once, then save that as a preset.
+
 ## Managers and money: three things only you can do (26 Nov 2026)
 
 1. **Switch on file storage (2 minutes).** Photos on fault reports, checkups and chat need Cloudflare R2. In the Cloudflare dashboard open R2 Object Storage and click Enable (the free tier covers 10 GB). Then tell Claude, and it creates the bucket `igongo-files` and connects it to the API as `FILES`. Until then, uploads say "File storage is not set up yet" and everything else works.
