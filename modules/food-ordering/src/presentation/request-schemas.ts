@@ -59,4 +59,5 @@ export const rulesBody = z.object({
   cancelWindowMinutes: z.number().int().min(0).max(24 * 60),
   minutesPerQueuedOrder: z.number().int().min(0).max(60),
   scheduleAheadDays: z.number().int().min(0).max(60).default(7),
+  containerFee: z.number().int().min(0).max(100000).default(0),
 });

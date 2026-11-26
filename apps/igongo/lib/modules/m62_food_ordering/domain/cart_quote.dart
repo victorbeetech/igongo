@@ -11,6 +11,7 @@ class CartQuote {
     required this.subtotal,
     required this.discount,
     required this.deliveryFee,
+    this.containerFee = 0,
     required this.total,
     required this.readyAt,
     this.promoLabel,
@@ -21,6 +22,7 @@ class CartQuote {
     subtotal: (json['subtotal'] as num?)?.toInt() ?? 0,
     discount: (json['discount'] as num?)?.toInt() ?? 0,
     deliveryFee: (json['deliveryFee'] as num?)?.toInt() ?? 0,
+    containerFee: (json['containerFee'] as num?)?.toInt() ?? 0,
     total: (json['total'] as num?)?.toInt() ?? 0,
     readyAt: '${json['readyAt']}',
     promoLabel: (json['promo'] as Json?)?['label'] as String?,
@@ -34,6 +36,9 @@ class CartQuote {
 
   /// The zone's delivery fee.
   final int deliveryFee;
+
+  /// The takeaway container fee (0 when containers are free).
+  final int containerFee;
 
   /// What the order will cost.
   final int total;

@@ -217,11 +217,11 @@ void main() {
     expect(find.text('Choose what time you are coming.'), findsOneWidget);
   });
 
-  testWidgets('takeaway offers a container and shows it in the total', (tester) async {
+  testWidgets('takeaway shows the container price (when the super admin set one) in the total', (tester) async {
     await _openCheckout(tester);
     expect(find.textContaining('About UGX 5,000 before delivery'), findsOneWidget);
     await _tapVisible(tester, find.text('Takeaway'));
-    await _tapVisible(tester, find.textContaining('Add a container'));
+    expect(find.textContaining('Container +UGX 1,000'), findsOneWidget);
     expect(find.textContaining('About UGX 6,000 before delivery (container included)'), findsOneWidget);
   });
 

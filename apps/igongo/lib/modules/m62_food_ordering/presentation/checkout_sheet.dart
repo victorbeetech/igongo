@@ -23,9 +23,7 @@ import '../application/cart_controller.dart';
 import '../application/orders_providers.dart';
 import '../demo/demo_menu.dart';
 import '../demo/demo_orders.dart';
-import '../domain/cart_line.dart';
 import '../domain/cart_quote.dart';
-import '../domain/menu_item.dart';
 import '../domain/order_type.dart';
 
 /// The checkout sheet for the cart.
@@ -50,9 +48,6 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
   String? _zone;
   DateTime? _arriveAt;
   bool _busy = false;
-
-  /// Takeaway: the guest wants a container (when the restaurant sells one).
-  bool _container = false;
 
   /// The zone and place the guest confirmed for delivery ("zone|place"); null until confirmed.
   String? _confirmedFor;
@@ -80,40 +75,23 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
   /// Text of [c], or null when empty.
   static String? _text(TextEditingController c) => c.text.trim().isEmpty ? null : c.text.trim();
 
-  /// The restaurant's takeaway container, if its menu sells one (it is an ordinary priced menu item).
-  MenuItem? _containerItem(String outlet) => (ref.read(menuProvider(outlet)).valueOrNull ?? const <MenuItem>[])
-      .where((i) => i.isContainer && i.available)
-      .firstOrNull;
-
-  /// The cart's lines, plus the container line when takeaway wants one.
-  List<CartLine> _lines(String outlet, String? type) {
-    final c = type == 'takeaway' && _container ? _containerItem(outlet) : null;
-    return [
-      ...ref.read(cartProvider).lines,
-      if (c != null) CartLine(itemId: c.id, name: c.name, quantity: 1, options: const [], unitPrice: c.price),
-    ];
-  }
-
   /// True when the guest confirmed the zone and place now showing.
   bool get _isConfirmed => _confirmedFor != null && _confirmedFor == '$_zone|${_text(_place)}';
 
   /// The cart and details as the API takes them.
   Json _body(String outlet, String type) {
     final place = _text(_place);
-    // Dine-in time goes to the kitchen in the notes (the API schedules deliveries, takeaways and pre-orders).
-    final dine = type == 'dine_in' && _arriveAt != null
-        ? 'Dine-in at ${TimeOfDay.fromDateTime(_arriveAt!).format(context)}'
-        : null;
-    final notes = [?dine, ?_text(_notes)].join('. ');
+    final notes = _text(_notes);
     return {
       'outlet': outlet,
       'type': type,
-      'lines': [for (final l in _lines(outlet, type)) l.toJson()],
-      'arriveAt': ?(type == 'dine_in' ? null : _arriveAt?.toUtc().toIso8601String()),
+      'lines': [for (final l in ref.read(cartProvider).lines) l.toJson()],
+      // Dine-in, takeaway, delivery and pre-order all send the guest's time to the API.
+      'arriveAt': ?_arriveAt?.toUtc().toIso8601String(),
       if (type == 'delivery') 'deliverTo': {'label': place ?? '', 'zone': _zone, 'lat': null, 'lng': null},
       if (type == 'room_service') 'deliverTo': {'label': 'Room $place', 'zone': null, 'lat': null, 'lng': null},
       if (type == 'dine_in') 'table': place,
-      'notes': ?(notes.isEmpty ? null : notes),
+      'notes': ?notes,
       'allergies': ?_text(_allergies),
       'promoCode': ?_text(_promo),
     };
@@ -154,7 +132,7 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
     if (type == 'delivery' && !_isConfirmed) return showIgongoToast(context, 'Confirm the delivery location.');
     // Demo menu: a local demo order only; nothing is sent or charged (demo/demo_orders.dart).
     if (isDemoOutlet(outlet)) {
-      final order = ref.read(demoOrdersProvider.notifier).place(_lines(outlet, type), type);
+      final order = ref.read(demoOrdersProvider.notifier).place(ref.read(cartProvider).lines, type);
       if (type == 'delivery') ref.read(lastDeliveryProvider.notifier).set(_zone, _text(_place) ?? '');
       ref.read(cartProvider.notifier).clear();
       ref.invalidate(myOrdersProvider);
@@ -202,11 +180,8 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
     final zones = demo ? demoZones : (ref.watch(zonesProvider).valueOrNull ?? const []);
     // The demo outlet has its own order types; real outlets follow the server's rules.
     final types = demo ? demoOrderTypes : (rules?.typesAt(outlet) ?? const <String>[]);
-    // Keep the menu loaded so the takeaway container (a menu item) can be found.
-    if (outlet.isNotEmpty) ref.watch(menuProvider(outlet));
-    // The container for takeaway, when the menu sells one.
-    final container = outlet.isEmpty ? null : _containerItem(outlet);
-    final containerCharge = _type == 'takeaway' && _container && container != null ? container.price : 0;
+    // The takeaway container fee is the super admin's rule (0 = free); the server adds it to the total.
+    final containerCharge = _type == 'takeaway' ? (demo ? demoContainerFee : (rules?.containerFee ?? 0)) : 0;
     final total = cart.lines.fold(0, (sum, l) => sum + l.unitPrice * l.quantity) + containerCharge;
     return Padding(
       padding: EdgeInsets.fromLTRB(
@@ -295,14 +270,8 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
                 ),
                 onTap: () => _pickTime(_type == 'dine_in' ? 15 : (rules?.preorderMinNoticeMinutes ?? 60)),
               ),
-            // Takeaway: a container, when the restaurant sells one (its price joins the total).
-            if (_type == 'takeaway' && container != null)
-              SwitchListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text('Add a container (+${ugx(container.price)})'),
-                value: _container,
-                onChanged: (v) => setState(() => _container = v),
-              ),
+            // Takeaway: containers are free unless the super admin set a price, which is shown here.
+            if (containerCharge > 0) Text('Container +${ugx(containerCharge)}'),
             // Delivery: the guest confirms the location before ordering.
             if (_type == 'delivery')
               CheckboxListTile(
@@ -335,6 +304,7 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
                 [
                   if (q.discount > 0) '${q.promoLabel ?? 'Code'}: −${ugx(q.discount)}',
                   if (q.deliveryFee > 0) 'Delivery ${ugx(q.deliveryFee)}',
+                  if (q.containerFee > 0) 'Container ${ugx(q.containerFee)}',
                   'Total ${ugx(q.total)}',
                 ].join(' · '),
                 style: context.text.titleMedium,

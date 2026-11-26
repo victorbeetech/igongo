@@ -43,7 +43,7 @@ export async function placeOrder(deps: OrderingDeps, input: PlaceInput): Promise
     id: newId("ord"), seq: await deps.orders.nextSeq(), userId: input.customer.userId, customerName: input.customer.name, customerPhone: input.customer.phone,
     outlet: input.outlet, type: input.type, channel: input.channel, status, lines: cart.lines, notes: input.notes ?? null, allergies: input.allergies ?? null,
     table: input.table ?? null, deliverTo: input.deliverTo ?? null, subtotal: cart.subtotal, discount: cart.discount, promoCode: cart.promo?.code ?? null,
-    deliveryFee: cart.deliveryFee, total: cart.total, paid: 0, arriveAt: input.arriveAt ?? null, readyAt: cart.readyAt,
+    deliveryFee: cart.deliveryFee, containerFee: cart.containerFee, total: cart.total, paid: 0, arriveAt: input.arriveAt ?? null, readyAt: cart.readyAt,
     takenBy: input.channel === "staff" ? deps.change.actorId : null, requestKey: key,
     history: [{ status, at: now.toISOString(), by: deps.change.actorId, note: null }], createdAt: now, updatedAt: now,
   };
