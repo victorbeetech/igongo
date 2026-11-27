@@ -1,12 +1,12 @@
 // Puts a screen inside the app frame: the red app bar with Search (and
-// Preview for the super admin only), the menu, the bottom bar and the
-// offline banner. There is no client view: one account is one kind.
+// Preview for the super admin only), the menu, the bottom bar, the floating
+// WhatsApp button for guests, and the offline banner. There is no client view: one account is one kind.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../shared/catalog/catalog.dart';
-import '../../shared/contact/whatsapp_chat_button.dart';
+import '../../shared/contact/whatsapp_float_button.dart';
 import '../../shared/layout/igongo_scaffold.dart';
 import '../../shared/preferences/preferences.dart';
 import '../../shared/session/session_controller.dart';
@@ -65,9 +65,9 @@ class AppShell extends ConsumerWidget {
       body: body,
       drawer: signedIn && !guestOnly ? const RoleDrawer() : null,
       bottomBar: signedIn ? BottomBar(currentId: spec.id) : null,
+      // Step 4: the one floating WhatsApp button, in the bottom corner on every guest screen.
+      floatingAction: (guestOnly || guestHome) ? const WhatsappFloatButton() : null,
       actions: [
-        // Signed-in guests get the same WhatsApp chat button as the top bar on the home.
-        if (signedIn && guestOnly) const WhatsappChatButton(),
         // Search joins real accounts once it is live (docs/APP-WIRING.md).
         if (signedIn && ViewRules.previewOn(prefs, ref.watch(sessionProvider).valueOrNull))
           IconButton(tooltip: 'Search', icon: const Icon(Icons.search), onPressed: () => openTarget(context, 'S00-25')),
