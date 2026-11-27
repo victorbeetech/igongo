@@ -32,7 +32,6 @@ class IgongoPalette extends ThemeExtension<IgongoPalette> {
     required this.warmCream,
     required this.warmCard,
     required this.accent,
-    required this.whatsapp,
   });
 
   /// Light mode. Igongo red is the same as in dark mode.
@@ -60,7 +59,6 @@ class IgongoPalette extends ThemeExtension<IgongoPalette> {
     warmCream: IgongoColorsLight.warmCream,
     warmCard: IgongoColorsLight.warmCard,
     accent: IgongoColorsLight.accent,
-    whatsapp: IgongoColorsLight.whatsapp,
   );
 
   /// Dark mode. Only backgrounds, text, borders and status colours change.
@@ -88,7 +86,6 @@ class IgongoPalette extends ThemeExtension<IgongoPalette> {
     warmCream: IgongoColorsDark.warmCream,
     warmCard: IgongoColorsDark.warmCard,
     accent: IgongoColorsDark.accent,
-    whatsapp: IgongoColorsDark.whatsapp,
   );
 
   /// Igongo red: buttons, bars, badges and the logo.
@@ -162,9 +159,6 @@ class IgongoPalette extends ThemeExtension<IgongoPalette> {
   /// Ochre gold: highlights, rating stars, status chips and small dividers (the reference's accent).
   final Color accent;
 
-  /// The WhatsApp green, for the chat button only (the same in both modes).
-  final Color whatsapp;
-
   /// Every colour by its token name, for the design system showcase.
   Map<String, Color> get named => {
     'primary': primary,
@@ -222,7 +216,6 @@ class IgongoPalette extends ThemeExtension<IgongoPalette> {
       warmCream: mix(warmCream, other.warmCream),
       warmCard: mix(warmCard, other.warmCard),
       accent: mix(accent, other.accent),
-      whatsapp: mix(whatsapp, other.whatsapp),
     );
   }
 }

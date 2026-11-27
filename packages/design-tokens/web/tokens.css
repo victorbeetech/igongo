@@ -31,7 +31,6 @@
   --c-client-view-banner: #2F6690;
   --c-primary-text: #B8292F;
   --c-accent: #C2822B;
-  --c-whatsapp: #25D366;
   --t-display-size: calc(26px * var(--text-scale));
   --t-display-line: calc(32px * var(--text-scale));
   --t-headline-size: calc(20px * var(--text-scale));
@@ -91,7 +90,6 @@
   --c-client-view-banner: #8DB9DE;
   --c-primary-text: #F6F1EC;
   --c-accent: #E0A95A;
-  --c-whatsapp: #25D366;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -123,6 +121,5 @@
     --c-client-view-banner: #8DB9DE;
     --c-primary-text: #F6F1EC;
     --c-accent: #E0A95A;
-    --c-whatsapp: #25D366;
   }
 }

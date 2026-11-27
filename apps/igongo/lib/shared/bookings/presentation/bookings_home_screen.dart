@@ -17,7 +17,6 @@ import '../domain/resort_experiences.dart';
 import '../domain/placeholder_copy.dart';
 import 'booking_hero.dart';
 import 'home/hero_chips.dart';
-import 'home/whatsapp_button.dart';
 import 'home/active_reservation_card.dart';
 import 'home/booking_segment_tabs.dart';
 import 'home/bookings_home_header.dart';
@@ -78,18 +77,33 @@ class BookingsHomeScreen extends ConsumerWidget {
                   padding: EdgeInsets.zero,
                   children: [
                     // Step 2: the picture slideshow with its place and theme chips.
-                    const Stack(
+                    Stack(
                       children: [
-                        BookingHero(),
-                        Positioned(
+                        const BookingHero(),
+                        const Positioned(
                           top: IgongoSpace.md,
                           left: IgongoSpace.md,
                           child: HeroPlaceChip(text: heroPlaceName),
                         ),
-                        Positioned(
-                          bottom: IgongoSpace.xl,
+                        const Positioned(
+                          bottom: 72,
                           left: IgongoSpace.md,
                           child: HeroThemeChip(text: heroThemeLabel),
+                        ),
+                        // The headline sits over the picture, above the page dots, as on the design.
+                        Positioned(
+                          left: IgongoSpace.md,
+                          right: IgongoSpace.md,
+                          bottom: 36,
+                          child: Text(
+                            'Experience the Regal Spirit of Ankole',
+                            style: context.text.headlineSmall?.copyWith(
+                              color: context.palette.onPrimary,
+                              shadows: [Shadow(color: context.palette.text.withValues(alpha: 0.5), blurRadius: 8)],
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ],
                     ),
@@ -99,10 +113,6 @@ class BookingsHomeScreen extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         spacing: IgongoSpace.md,
                         children: [
-                          Text(
-                            'Experience the Regal Spirit of Ankole',
-                            style: context.text.headlineSmall?.copyWith(color: context.palette.primaryText),
-                          ),
                           // Step 3: the active reservation (the next stay) with its three actions.
                           ActiveReservationCard(
                             stay: stay,
@@ -133,8 +143,6 @@ class BookingsHomeScreen extends ConsumerWidget {
               ),
             ],
           ),
-          // Step 7: the WhatsApp button floats bottom right (no number yet, so no tap action).
-          const Positioned(right: IgongoSpace.lg, bottom: IgongoSpace.lg, child: WhatsAppButton()),
         ],
       ),
     );

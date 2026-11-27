@@ -29,8 +29,7 @@ export const tokens = {
       "info": "#2F6690",
       "clientViewBanner": "#2F6690",
       "primaryText": "#B8292F",
-      "accent": "#C2822B",
-      "whatsapp": "#25D366"
+      "accent": "#C2822B"
     },
     "dark": {
       "primary": "#B8292F",
@@ -58,8 +57,7 @@ export const tokens = {
       "info": "#8DB9DE",
       "clientViewBanner": "#8DB9DE",
       "primaryText": "#F6F1EC",
-      "accent": "#E0A95A",
-      "whatsapp": "#25D366"
+      "accent": "#E0A95A"
     }
   },
   "font": {
