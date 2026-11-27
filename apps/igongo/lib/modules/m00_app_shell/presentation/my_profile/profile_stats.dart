@@ -24,7 +24,7 @@ class ProfileStats extends ConsumerWidget {
     final orders = ref.watch(myOrdersProvider).when(
       data: (list) => '${list.length}',
       loading: () => _unknown,
-      error: (_, __) => _unknown,
+      error: (_, _) => _unknown,
     );
     // Step 2: three equal tiles side by side.
     return Row(
