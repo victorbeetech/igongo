@@ -5,7 +5,7 @@
 
 import type { DeliveryPlace } from "@igongo/contracts/food-ordering";
 import { moduleSettingsTable } from "@igongo/core";
-import { boolean, index, integer, jsonb, pgSchema, smallint, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
+import { boolean, doublePrecision, index, integer, jsonb, pgSchema, smallint, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 import type { OrderLine } from "../../domain/order-line";
 import type { SavedCartLine } from "../../domain/saved-cart";
 import type { StatusChange } from "../../domain/status-change";
@@ -82,6 +82,19 @@ export const carts = ordersSchema.table("carts", {
   userId: text("user_id").primaryKey(),
   outlet: text("outlet"),
   lines: jsonb("lines").$type<SavedCartLine[]>().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull(),
+});
+
+/**
+ * Each guest's saved delivery pin (the map point they chose): one row per
+ * guest, keyed by their user ID, so a guest only ever reads their own.
+ */
+export const deliveryPins = ordersSchema.table("delivery_pins", {
+  userId: text("user_id").primaryKey(),
+  label: text("label").notNull(),
+  zone: text("zone"),
+  lat: doublePrecision("lat").notNull(),
+  lng: doublePrecision("lng").notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull(),
 });
 

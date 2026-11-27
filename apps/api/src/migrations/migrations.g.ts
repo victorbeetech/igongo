@@ -197,6 +197,12 @@ export const MIGRATIONS: Migration[] = [
   "sql": "CREATE TABLE \"orders\".\"carts\" (\n\t\"user_id\" text PRIMARY KEY NOT NULL,\n\t\"outlet\" text,\n\t\"lines\" jsonb NOT NULL,\n\t\"updated_at\" timestamp with time zone NOT NULL\n);\n"
  },
  {
+  "module": "food-ordering",
+  "name": "0004_guest_locations",
+  "checksum": "30d2b0ec42163bb3",
+  "sql": "CREATE TABLE \"orders\".\"delivery_pins\" (\n\t\"user_id\" text PRIMARY KEY NOT NULL,\n\t\"label\" text NOT NULL,\n\t\"zone\" text,\n\t\"lat\" double precision NOT NULL,\n\t\"lng\" double precision NOT NULL,\n\t\"updated_at\" timestamp with time zone NOT NULL\n);\n"
+ },
+ {
   "module": "delivery-riders",
   "name": "0000_init",
   "checksum": "c2b38ace91546101",
