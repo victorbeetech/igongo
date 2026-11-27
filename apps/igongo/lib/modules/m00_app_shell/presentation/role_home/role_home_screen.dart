@@ -20,7 +20,6 @@ import 'guest/guest_did_you_know.dart';
 import 'guest/guest_dish_row.dart';
 import 'guest/guest_hero_card.dart';
 import 'guest/guest_quick_actions.dart';
-import 'guest/guest_search_bar.dart';
 import 'guest/guest_section_title.dart';
 import 'guest/guest_status_strip.dart';
 import 'guest/guest_stories_row.dart';
@@ -45,15 +44,19 @@ class RoleHomeScreen extends ConsumerWidget {
     final name = session?.name;
     return ScreenListView(
       children: [
-        // Step 1: the greeting. Guests get the top row, search bar and status strip.
+        // Step 1: the greeting. Guests get the top row (with search) and the status strip.
         if (role.isClient) ...[
-          Padding(
-            padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, IgongoSpace.md, IgongoSpace.lg, 0),
-            child: GuestTopBar(name: name, onBell: () => screen.open('S00-28')),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, IgongoSpace.sm, IgongoSpace.lg, 0),
-            child: GuestSearchBar(onTap: () => screen.open('S00-25')),
+          // Step 1a: the top row sits below the status bar and any notch, so it is never hidden under them.
+          SafeArea(
+            bottom: false,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, IgongoSpace.md, IgongoSpace.lg, 0),
+              child: GuestTopBar(
+                name: name,
+                onBell: () => screen.open('S00-28'),
+                onSearch: () => screen.open('S00-25'),
+              ),
+            ),
           ),
           const Padding(
             padding: EdgeInsets.fromLTRB(IgongoSpace.lg, IgongoSpace.sm, IgongoSpace.lg, 0),
@@ -109,10 +112,7 @@ class RoleHomeScreen extends ConsumerWidget {
             ),
           ),
           // Step 6: the heritage story card at the foot of the home.
-          const Padding(
-            padding: EdgeInsets.all(IgongoSpace.lg),
-            child: GuestDidYouKnow(),
-          ),
+          const Padding(padding: EdgeInsets.all(IgongoSpace.lg), child: GuestDidYouKnow()),
         ] else ...[
           // Staff: the role's tiles, then the staff shortcuts.
           const SectionHeader('Today'),
