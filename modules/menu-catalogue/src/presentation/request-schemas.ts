@@ -39,3 +39,6 @@ export const stockBody = z.object({ inStock: z.boolean() });
 
 /** `PUT /menu/settings`. */
 export const settingsBody = z.object({ outlets: z.array(z.object({ key, name: z.string().trim().min(2).max(60) })).max(30), clientOutlets: z.array(key).max(30) });
+
+/** `GET /menu/search?q=`: what the guest typed in global search, 2 to 60 characters once trimmed. */
+export const searchQuery = z.object({ q: z.string().trim().min(2).max(60) });
