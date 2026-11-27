@@ -55,7 +55,10 @@ class GuestDidYouKnow extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('Read more', style: context.text.labelMedium?.copyWith(color: p.primaryText, fontWeight: FontWeight.w700)),
+                    Text(
+                      'Read more',
+                      style: context.text.labelMedium?.copyWith(color: p.primaryText, fontWeight: FontWeight.w700),
+                    ),
                     const SizedBox(width: IgongoSpace.xxs),
                     Icon(Icons.arrow_forward, size: IgongoSpace.md, color: p.primaryText),
                   ],

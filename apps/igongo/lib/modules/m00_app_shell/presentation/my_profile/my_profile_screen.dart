@@ -1,8 +1,10 @@
 // S00-31 My profile ("Me"): the guest's card over a hotel banner, three stat
-// tiles, their activity, how the app looks, and the account actions.
+// tiles, their activity, how the app looks, and the account actions. For a
+// guest the banner is also the app bar: it runs under the status bar.
 // Behaviour of each row is unchanged: sign out and delete keep their
 // confirmations, and staff accounts never see the activity rows or delete.
 
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
@@ -68,9 +70,10 @@ class MyProfileScreen extends ConsumerWidget {
     final session = ref.watch(sessionProvider).valueOrNull;
     final prefs = PreferencesScope.of(context);
     final guest = session != null && !session.isStaff;
-    return ScreenListView(
+    // Step 1: the list of sections, top to bottom.
+    final list = ScreenListView(
       children: [
-        // Step 1: the banner, with the card (or the sign-in prompt) overlapping its wavy edge.
+        // Step 1a: the banner, with the card (or the sign-in prompt) overlapping its wavy edge.
         Stack(
           children: [
             const Positioned(top: 0, left: 0, right: 0, child: ProfileBanner(height: _bannerHeight)),
@@ -146,6 +149,10 @@ class MyProfileScreen extends ConsumerWidget {
         ],
       ],
     );
+    // Step 2: a guest's banner sits under the status bar, so its icons turn light (white on red).
+    return guest
+        ? AnnotatedRegion<SystemUiOverlayStyle>(value: SystemUiOverlayStyle.light, child: list)
+        : list;
   }
 }
 

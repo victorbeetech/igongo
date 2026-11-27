@@ -10,8 +10,11 @@ import '../../../../../shared/ui/photo/guest_photo.dart';
 
 /// A story bubble: [icon] stands in for the picture, [label] sits under it.
 class GuestStoryBubble extends StatelessWidget {
-  /// Creates the bubble.
-  const GuestStoryBubble({super.key, required this.icon, required this.label});
+  /// Creates the bubble; [asset] is the demo picture's path (null shows the placeholder).
+  const GuestStoryBubble({super.key, required this.icon, required this.label, this.asset});
+
+  /// The demo picture's asset path, or null for the placeholder.
+  final String? asset;
 
   /// The icon shown while the picture is a placeholder.
   final IconData icon;
@@ -44,9 +47,11 @@ class GuestStoryBubble extends StatelessWidget {
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
-                      const GuestPhoto(),
+                      GuestPhoto(asset: asset),
                       // Step 2: the play-style icon over the picture, centred.
-                      Center(child: Icon(icon, size: IgongoSpace.lg, color: p.primary)),
+                      Center(
+                        child: Icon(icon, size: IgongoSpace.lg, color: p.primary),
+                      ),
                     ],
                   ),
                 ),

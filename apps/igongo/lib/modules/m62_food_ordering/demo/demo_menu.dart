@@ -11,6 +11,7 @@
 //
 // Delete this whole file when the hotel's real menus are live.
 
+import '../../../shared/ui/photo/guest_photos.dart';
 import '../domain/delivery_zone.dart';
 import '../domain/menu_item.dart';
 import '../domain/option_choice.dart';
@@ -70,6 +71,7 @@ const List<MenuItem> demoMenuItems = [
     options: [_drinkAddOn],
     allergens: ['fish'],
     description: 'Whole tilapia on the grill with greens.',
+    photoUrl: GuestPhotos.foodFish,
   ),
   MenuItem(
     id: 'demo-rolex',
@@ -79,6 +81,7 @@ const List<MenuItem> demoMenuItems = [
     available: true,
     options: [_drinkAddOn],
     allergens: ['egg', 'gluten'],
+    photoUrl: GuestPhotos.foodFishPlated,
   ),
   MenuItem(
     id: 'demo-matooke',
@@ -88,6 +91,7 @@ const List<MenuItem> demoMenuItems = [
     available: true,
     options: [_drinkAddOn],
     allergens: ['nuts'],
+    photoUrl: GuestPhotos.foodDish,
   ),
   MenuItem(
     id: 'demo-passion',

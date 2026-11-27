@@ -5,24 +5,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:igongo/app/shell/role_drawer.dart';
-import 'package:igongo/shared/session/session.dart';
 import 'package:igongo/shared/session/session_controller.dart';
 
+import '../support/guest_session.dart';
 import '../support/open_app.dart';
-
-/// A signed-in guest: a client account with only the guest role.
-class _GuestSessionController extends SessionController {
-  @override
-  Future<Session?> build() async => const Session(
-    token: 'test-token',
-    userId: 'acc_guest_test',
-    name: 'Grace Guest',
-    email: 'guest@example.com',
-    isStaff: false,
-    permissions: [],
-    roleKeys: ['guest'],
-  );
-}
 
 void main() {
   testWidgets('a signed-in guest lands on the guest home with no staff menu', (tester) async {
@@ -31,7 +17,7 @@ void main() {
       tester,
       '/home',
       preview: false,
-      overrides: [sessionProvider.overrideWith(_GuestSessionController.new)],
+      overrides: [sessionProvider.overrideWith(FakeGuestSession.new)],
     );
     // Step 1: the guest home greets the guest by first name.
     expect(find.textContaining(', Grace'), findsOneWidget);
