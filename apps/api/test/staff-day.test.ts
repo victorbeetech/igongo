@@ -23,12 +23,13 @@ async function hotel() {
   const owner = await t.owner();
 
   /** A signed-in staff account holding [roleIds]. */
-  async function account(name: string, roleIds: string[]) {
+  async function account(name: string, roleIds: string[], signIn = true) {
     const email = `${name.toLowerCase()}@example.com`;
     const created = (await owner("POST", "/api/users", { name, email, password: `${name} pass 1234` })).body as { id: string };
     for (const roleId of roleIds) expect((await owner("POST", `/api/access/users/${created.id}/roles`, { roleId })).status).toBe(204);
     const call = t.browser();
-    expect((await call("POST", "/api/auth/sign-in/email", { email, password: `${name} pass 1234` })).status).toBe(200);
+    // Staff sign in on the web only once they hold a staff role, so [person] signs in after HR enrols them.
+    if (signIn) expect((await call("POST", "/api/auth/sign-in/email", { email, password: `${name} pass 1234` })).status).toBe(200);
     return { call, userId: created.id };
   }
 
@@ -36,9 +37,11 @@ async function hotel() {
 
   /** Like [account], and enrolled by HR in [department] (which adds the staff base role). */
   async function person(name: string, department: string, roleIds: string[] = []) {
-    const { call, userId } = await account(name, roleIds);
+    const { call, userId } = await account(name, roleIds, false);
     const staff = (await hr.call("POST", "/api/hr/staff", { name, department, jobTitle: "Staff", userId })).body as { staffId: string; staffNumber: string };
     expect(staff.staffNumber).toMatch(/^IGG-\d{4}$/);
+    // Now enrolled (with the staff base role), the person signs in on the web.
+    expect((await call("POST", "/api/auth/sign-in/email", { email: `${name.toLowerCase()}@example.com`, password: `${name} pass 1234` })).status).toBe(200);
     return { call, staff, userId };
   }
   return { ...t, owner, hr: hr.call, person };
