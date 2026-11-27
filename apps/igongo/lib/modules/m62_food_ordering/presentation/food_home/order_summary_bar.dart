@@ -78,7 +78,7 @@ class OrderSummaryBar extends StatelessWidget {
                   onPressed: onView,
                   style: FilledButton.styleFrom(
                     backgroundColor: p.secondary,
-                    foregroundColor: p.onSecondary,
+                    foregroundColor: p.background,
                     minimumSize: const Size(0, IgongoTouch.minimum),
                   ),
                   child: const Row(
