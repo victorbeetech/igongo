@@ -5,7 +5,7 @@ import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../theme/theme.dart';
-import '../../ui/card/igongo_card.dart';
+import '../../ui/card/soft_card.dart';
 
 /// The three shortcuts; each callback opens its screen.
 class BookingShortcuts extends StatelessWidget {
@@ -39,8 +39,7 @@ class BookingShortcuts extends StatelessWidget {
         ),
       ),
     );
-    return IgongoCard(
-      padding: EdgeInsets.zero,
+    return SoftCard(
       child: IntrinsicHeight(
         child: Row(
           children: [

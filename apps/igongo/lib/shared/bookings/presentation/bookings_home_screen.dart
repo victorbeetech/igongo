@@ -8,6 +8,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../catalog/catalog.dart';
 import '../../format/day_key.dart';
+import '../../theme/theme.dart';
 import '../application/bookings_providers.dart';
 import '../domain/booking.dart';
 import '../domain/booking_categories.dart';
@@ -53,16 +54,19 @@ class BookingsHomeScreen extends ConsumerWidget {
     // Signed out or still loading: the sections just show their empty states.
     final all = ref.watch(myBookingsProvider(rooms)).valueOrNull ?? const <Booking>[];
     final recent = [...all]..sort((a, b) => (b.date ?? '').compareTo(a.date ?? ''));
-    return ListView(
+    // The page is the warmer brand cream, like the reference.
+    return ColoredBox(
+      color: context.palette.brandCream,
+      child: ListView(
       padding: EdgeInsets.zero,
       children: [
         // Step 1: the slideshow at the top.
         const BookingHero(),
         Padding(
-          padding: const EdgeInsets.all(IgongoSpace.lg),
+          padding: const EdgeInsets.all(IgongoSpace.md),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: IgongoSpace.lg,
+            spacing: IgongoSpace.md,
             children: [
               // Step 2: the next stay.
               NextStayCard(
@@ -78,7 +82,7 @@ class BookingsHomeScreen extends ConsumerWidget {
                 crossAxisSpacing: IgongoSpace.sm,
                 mainAxisSpacing: IgongoSpace.sm,
                 // Slightly wider than tall, like the reference tiles.
-                childAspectRatio: 1.3,
+                childAspectRatio: 1.43,
                 children: [
                   for (final c in bookingCategories)
                     BookingCategoryCard(category: c, onTap: () => screen.open(c.screenId)),
@@ -96,6 +100,7 @@ class BookingsHomeScreen extends ConsumerWidget {
           ),
         ),
       ],
+    ),
     );
   }
 }

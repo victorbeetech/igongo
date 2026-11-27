@@ -8,7 +8,7 @@ import 'package:material_ui/material_ui.dart';
 /// Shows [slides] one at a time, [height] tall, changing every [every].
 class AutoSlides extends StatefulWidget {
   /// Creates the slideshow.
-  const AutoSlides({super.key, required this.slides, required this.height, this.every = const Duration(seconds: 3)});
+  const AutoSlides({super.key, required this.slides, required this.height, this.every = const Duration(seconds: 3), this.onPageChanged});
 
   /// The slides (each fills the width).
   final List<Widget> slides;
@@ -18,6 +18,9 @@ class AutoSlides extends StatefulWidget {
 
   /// How long each slide stays.
   final Duration every;
+
+  /// Called with the slide number when the slide changes (for page dots).
+  final ValueChanged<int>? onPageChanged;
 
   @override
   State<AutoSlides> createState() => _AutoSlidesState();
@@ -49,6 +52,6 @@ class _AutoSlidesState extends State<AutoSlides> {
   @override
   Widget build(BuildContext context) => SizedBox(
     height: widget.height,
-    child: PageView(controller: _page, children: widget.slides),
+    child: PageView(controller: _page, onPageChanged: widget.onPageChanged, children: widget.slides),
   );
 }

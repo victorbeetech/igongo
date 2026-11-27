@@ -6,7 +6,7 @@ import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../theme/theme.dart';
-import '../../ui/card/igongo_card.dart';
+import '../../ui/card/soft_card.dart';
 import '../../ui/photo/guest_photos.dart';
 import '../../ui/photo/photo_slot.dart';
 import '../domain/booking.dart';
@@ -44,13 +44,12 @@ class RecentBookings extends StatelessWidget {
           Text('Your bookings will show here.', style: context.text.bodySmall?.copyWith(color: p.textMuted))
         else
           for (final b in bookings.take(3))
-            IgongoCard(
-              padding: EdgeInsets.zero,
+            SoftCard(
               onTap: onOpen,
               child: Row(
                 spacing: IgongoSpace.md,
                 children: [
-                  const PhotoSlot(width: 76, height: 56, asset: GuestPhotos.hotelEntrance, icon: Icons.bed_outlined),
+                  const PhotoSlot(width: 89, height: 58, asset: GuestPhotos.hotelEntrance, icon: Icons.bed_outlined),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

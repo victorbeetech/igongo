@@ -7,7 +7,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../format/day_key.dart';
 import '../../theme/theme.dart';
-import '../../ui/card/igongo_card.dart';
+import '../../ui/card/soft_card.dart';
 import '../../ui/photo/guest_photos.dart';
 import '../../ui/photo/photo_slot.dart';
 import '../domain/booking.dart';
@@ -49,16 +49,23 @@ class NextStayCard extends StatelessWidget {
     final day = parseDayKey(stay?.date);
     final end = parseDayKey(stay?.endDate);
     final nights = day != null && end != null ? end.difference(day).inDays : 1;
-    return IgongoCard(
+    return SoftCard(
+      padding: const EdgeInsets.all(IgongoSpace.sm),
       child: Row(
         spacing: IgongoSpace.sm,
         children: [
           // Step 1: the date tile: "TOM" (or the weekday), the day and the month.
           Container(
-            width: 64,
-            padding: const EdgeInsets.symmetric(vertical: IgongoSpace.sm),
-            decoration: BoxDecoration(color: p.surface, borderRadius: BorderRadius.circular(IgongoRadius.md)),
+            width: 54,
+            height: 75,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: p.surface,
+              borderRadius: BorderRadius.circular(IgongoRadius.md),
+              border: Border.all(color: p.border),
+            ),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   day == null ? '' : (day.difference(dayOnly(now)).inDays == 1 ? 'TOM' : _days[day.weekday - 1]),
@@ -72,7 +79,7 @@ class NextStayCard extends StatelessWidget {
           // Step 2: the room picture.
           ClipRRect(
             borderRadius: BorderRadius.circular(IgongoRadius.md),
-            child: const PhotoSlot(width: 72, height: 72, asset: GuestPhotos.roomDeluxe, icon: Icons.bed_outlined),
+            child: const PhotoSlot(width: 108, height: 75, asset: GuestPhotos.roomDeluxe, icon: Icons.bed_outlined),
           ),
           // Step 3: the title, when and how long, and the button.
           Expanded(

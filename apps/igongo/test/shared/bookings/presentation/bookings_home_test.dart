@@ -33,7 +33,7 @@ void main() {
     ]);
   });
 
-  bothModes('a category card shows its label and reports a tap', (tester, dark) async {
+  bothModes('a category card has its name for screen readers and reports a tap', (tester, dark) async {
     var taps = 0;
     await pumpComponent(
       tester,
@@ -41,8 +41,8 @@ void main() {
       SizedBox(width: 110, height: 110, child: BookingCategoryCard(category: bookingCategories.first, onTap: () => taps++)),
       dark: dark,
     );
-    expect(find.text('Rooms'), findsOneWidget);
-    await tester.tap(find.text('Rooms'));
+    expect(find.bySemanticsLabel('Rooms'), findsOneWidget);
+    await tester.tap(find.byType(BookingCategoryCard));
     expect(taps, 1);
   });
 }
