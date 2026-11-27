@@ -10,6 +10,7 @@ class CartLine {
     required this.quantity,
     required this.options,
     required this.unitPrice,
+    this.notes,
   });
 
   /// The menu item's ID.
@@ -27,6 +28,14 @@ class CartLine {
   /// Shillings each, with options.
   final int unitPrice;
 
-  /// The line as the API takes it.
-  Map<String, Object> toJson() => {'itemId': itemId, 'quantity': quantity, 'options': options};
+  /// The guest's note for the kitchen on this dish, or null.
+  final String? notes;
+
+  /// The line as the API takes it (the note only when there is one).
+  Map<String, Object> toJson() => {
+    'itemId': itemId,
+    'quantity': quantity,
+    'options': options,
+    'notes': ?notes,
+  };
 }

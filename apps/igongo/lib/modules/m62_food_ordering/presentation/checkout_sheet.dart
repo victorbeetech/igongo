@@ -6,6 +6,8 @@
 // Placing it sends one checkout key, so a double tap never orders twice,
 // then opens the pay sheet when the rules ask for money first.
 
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
@@ -46,6 +48,8 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
   String? _zone;
   DateTime? _arriveAt;
   bool _busy = false;
+  /// The guest has confirmed the delivery place and zone (needed for delivery).
+  bool _locationConfirmed = false;
 
   @override
   void dispose() {
@@ -110,9 +114,14 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
     if (cart.lines.isEmpty) return;
     // Step 1: check the form has what this order type needs.
     if (type == null) return showIgongoToast(context, 'Choose how you want it.');
-    if (type == 'pre_order' && _arriveAt == null) return showIgongoToast(context, 'Choose when you are coming.');
+    if ((type == 'pre_order' || type == 'dine_in') && _arriveAt == null) {
+      return showIgongoToast(context, 'Choose when you are coming.');
+    }
     if (type == 'delivery' && (_zone == null || _text(_place) == null)) {
       return showIgongoToast(context, 'Choose the zone and type where to deliver.');
+    }
+    if (type == 'delivery' && !_locationConfirmed) {
+      return showIgongoToast(context, 'Confirm the delivery location first.');
     }
     if ((type == 'room_service' || type == 'dine_in') && _text(_place) == null) {
       return showIgongoToast(context, type == 'dine_in' ? 'Type your table.' : 'Type your room.');
@@ -192,7 +201,11 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
                   ChoiceChip(
                     label: Text(orderTypeWords(t)),
                     selected: _type == t,
-                    onSelected: (_) => setState(() => _type = t),
+                    onSelected: (_) {
+                      setState(() => _type = t);
+                      // Takeaway: ask the server for the price now, so the container charge shows.
+                      if (t == 'takeaway') unawaited(_applyCode(outlet));
+                    },
                   ),
               ],
             ),
@@ -217,16 +230,32 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
                 },
                 controller: _place,
               ),
-            if (_type == 'pre_order' || _type == 'delivery' || _type == 'takeaway')
+            if (_type == 'pre_order' || _type == 'dine_in' || _type == 'delivery' || _type == 'takeaway')
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: const Icon(Icons.schedule),
                 title: Text(
                   _arriveAt == null
-                      ? (_type == 'pre_order' ? 'When are you coming?' : 'As soon as possible (tap to set a time)')
+                      ? (_type == 'pre_order' || _type == 'dine_in'
+                            ? 'When are you coming?'
+                            : 'As soon as possible (tap to set a time)')
                       : TimeOfDay.fromDateTime(_arriveAt!).format(context),
                 ),
                 onTap: () => _pickTime(rules?.preorderMinNoticeMinutes ?? 60),
+              ),
+            if (_type == 'delivery')
+              CheckboxListTile(
+                contentPadding: EdgeInsets.zero,
+                controlAffinity: ListTileControlAffinity.leading,
+                value: _locationConfirmed,
+                onChanged: (v) => setState(() => _locationConfirmed = v ?? false),
+                title: const Text('I confirm this delivery place and zone are right'),
+              ),
+            // Takeaway: the container charge (or "free") from the server's price.
+            if (_type == 'takeaway' && _quote?.containerFee != null)
+              Text(
+                _quote!.containerFee! > 0 ? 'Takeaway container ${ugx(_quote!.containerFee!)}' : 'Takeaway container: free',
+                style: context.text.bodySmall,
               ),
             IgongoField(label: 'Notes for the kitchen', controller: _notes),
             IgongoField(label: 'Allergies', controller: _allergies),
