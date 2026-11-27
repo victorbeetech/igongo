@@ -1,6 +1,7 @@
 // The cart summary: subtotal, any discount, the service charge and the total.
-// The numbers come from the server's quote (the app never decides a price).
-// While the quote loads it shows dashes, and it explains a failed quote.
+// The subtotal, discount and total come from the server's quote (the app never
+// decides a price). The service charge is a PLACEHOLDER line until the super
+// admin's service charge is built (docs/WAIT-LIST.md, item 8).
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
@@ -11,6 +12,7 @@ import '../../../../shared/theme/theme.dart';
 import '../../application/cart_quote_provider.dart';
 import '../../domain/cart_line.dart';
 import '../../domain/cart_quote.dart';
+import '../../domain/service_charge_placeholder.dart';
 
 /// The totals card for [lines], priced by the server.
 class CartSummary extends ConsumerWidget {
@@ -30,7 +32,6 @@ class CartSummary extends ConsumerWidget {
     final failed = async.hasError && quote == null;
     // Step 2: until the server answers, the lines' own prices show (they are the same prices).
     final local = lines.fold<int>(0, (sum, l) => sum + l.lineTotal);
-    final charge = quote?.serviceCharge;
     return Container(
       padding: const EdgeInsets.all(IgongoSpace.lg),
       decoration: BoxDecoration(
@@ -47,10 +48,10 @@ class CartSummary extends ConsumerWidget {
             _Row(label: quote.promoLabel ?? 'Discount', value: '− ${ugx(quote.discount)}'),
           ],
           const SizedBox(height: IgongoSpace.sm),
+          // PLACEHOLDER service charge line (see domain/service_charge_placeholder.dart); not calculated yet.
           _Row(
-            label: 'Service charge',
-            value: loading ? '…' : (charge == null ? 'Not set yet' : ugx(charge)),
-            muted: charge == null,
+            label: 'Service charge ($serviceChargeRatePlaceholder%)',
+            value: ugx(serviceChargeAmountPlaceholder),
           ),
           const SizedBox(height: IgongoSpace.md),
           Divider(color: palette.border, height: 1),
