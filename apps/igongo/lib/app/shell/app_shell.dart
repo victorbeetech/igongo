@@ -54,7 +54,8 @@ class AppShell extends ConsumerWidget {
     return IgongoScaffold(
       title: spec.id == 'S00-21' ? 'Home' : spec.name,
       banners: banners,
-      showAppBar: !guestHome,
+      // The Bookings home (S67-01) draws its own slideshow at the top, so a guest sees no app bar there.
+      showAppBar: !guestHome && !(spec.id == 'S67-01' && guestOnly),
       // Step 3: tab screens never show a Back arrow; pushed pages do.
       isTab: signedIn && bottomBarTabIds(ref).contains(spec.id),
       body: body,
