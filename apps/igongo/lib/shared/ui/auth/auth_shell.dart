@@ -55,26 +55,23 @@ class AuthShell extends StatelessWidget {
                   children: [
                     // Step 2a: the photo and logo at the top.
                     const AuthHero(),
-                    // Step 2b: the white card that holds the content, pulled up over the photo.
-                    Transform.translate(
-                      offset: const Offset(0, -IgongoSpace.lg),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.md),
-                        // A Material surface, so list tiles inside the card (such as the privacy checkbox) get their ink.
-                        child: Material(
-                          color: palette.surface,
-                          clipBehavior: Clip.antiAlias,
-                          // Only the top corners curve, as in the design, so the sheet rises from the wave.
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(top: Radius.circular(IgongoRadius.lg)),
-                          ),
-                          child: Padding(
-                            padding: cardPadding,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              spacing: gap,
-                              children: children,
-                            ),
+                    // Step 2b: the white card sits directly below the photo, so the wave at the photo's bottom edge shows.
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.md),
+                      // A Material surface, so list tiles inside the card (such as the privacy checkbox) get their ink.
+                      child: Material(
+                        color: palette.surface,
+                        clipBehavior: Clip.antiAlias,
+                        // Only the top corners curve, as in the design, so the sheet rises from the wave.
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(IgongoRadius.lg)),
+                        ),
+                        child: Padding(
+                          padding: cardPadding,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            spacing: gap,
+                            children: children,
                           ),
                         ),
                       ),

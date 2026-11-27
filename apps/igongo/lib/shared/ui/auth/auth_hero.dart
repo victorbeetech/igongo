@@ -54,11 +54,11 @@ class AuthHero extends StatelessWidget {
               child: Container(height: 26, color: palette.surface),
             ),
           ),
-          // Step 4: the logo on a white badge, centred on the curve, as in the design.
+          // Step 4: the logo on a white badge, centred at the top of the photo, as in the design.
           Align(
-            alignment: Alignment.bottomCenter,
+            alignment: Alignment.topCenter,
             child: Padding(
-              padding: const EdgeInsets.only(bottom: IgongoSpace.xl),
+              padding: const EdgeInsets.only(top: IgongoSpace.xl),
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   color: palette.surface,
