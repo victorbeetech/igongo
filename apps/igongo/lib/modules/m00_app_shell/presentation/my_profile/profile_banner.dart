@@ -1,11 +1,12 @@
-// The hotel banner at the top of My profile: a red panel with a wavy bottom
-// edge and the title "My profile". Until the hotel sends its own photo, the
-// panel is a red gradient placeholder of the same shape.
+// The hotel banner at the top of My profile: the hotel photo (GuestPhotos.banner)
+// under a red wash, with a wavy bottom edge and the title "My profile". The red
+// wash keeps the white title readable in light and dark mode.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../shared/theme/theme.dart';
+import '../../../../shared/ui/photo/guest_photos.dart';
 import '../../../../shared/ui/wave/wave_edge_clipper.dart';
 
 /// The red banner with the title and a wavy bottom edge.
@@ -24,17 +25,32 @@ class ProfileBanner extends StatelessWidget {
       clipper: const WaveEdgeClipper(),
       child: SizedBox(
         height: height,
-        // Step 2: the red fill (a placeholder until the hotel photo exists).
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [p.primary, p.primaryDark],
+        // Step 2: the hotel photo, cropped to fill, with a red wash over it.
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // Step 2a: the photo; if it cannot load, the red behind it still shows.
+            DecoratedBox(
+              decoration: BoxDecoration(color: p.primaryDark),
+              child: Image.asset(
+                GuestPhotos.banner,
+                fit: BoxFit.cover,
+                alignment: GuestPhotos.bannerAlignment,
+                errorBuilder: (_, _, _) => const SizedBox.shrink(),
+              ),
             ),
-          ),
-          child: Stack(
-            children: [
+            // Step 2b: the red wash, lighter at the top so the photo still shows.
+            DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [p.primary.withValues(alpha: 0.78), p.primaryDark.withValues(alpha: 0.92)],
+                ),
+              ),
+            ),
+            Stack(
+              children: [
               // Step 3: a faint building mark where the photo will go.
               Positioned(
                 right: IgongoSpace.lg,
@@ -58,8 +74,9 @@ class ProfileBanner extends StatelessWidget {
                   ],
                 ),
               ),
-            ],
-          ),
+              ],
+            ),
+          ],
         ),
       ),
     );
