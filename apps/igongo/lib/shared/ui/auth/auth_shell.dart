@@ -39,11 +39,13 @@ class AuthShell extends StatelessWidget {
                   offset: const Offset(0, -IgongoSpace.lg),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.md),
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: palette.surface,
+                    // A Material surface, so list tiles inside the card (such as the privacy checkbox) get their ink.
+                    child: Material(
+                      color: palette.surface,
+                      clipBehavior: Clip.antiAlias,
+                      shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(IgongoRadius.lg),
-                        border: Border.all(color: palette.border),
+                        side: BorderSide(color: palette.border),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(IgongoSpace.lg),

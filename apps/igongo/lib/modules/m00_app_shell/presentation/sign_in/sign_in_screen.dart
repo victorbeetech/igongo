@@ -104,8 +104,16 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         // Step 3: "Remember me" on the left, "Forgot password?" on the right.
         Row(
           children: [
-            Checkbox(value: _remember, onChanged: (v) => setState(() => _remember = v ?? false)),
-            Text('Remember me', style: context.text.bodySmall),
+            // MergeSemantics joins the box and its words, so screen readers say "Remember me" for the box.
+            MergeSemantics(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Checkbox(value: _remember, onChanged: (v) => setState(() => _remember = v ?? false)),
+                  Text('Remember me', style: context.text.bodySmall),
+                ],
+              ),
+            ),
             const Spacer(),
             IgongoButton(
               label: 'Forgot password?',
