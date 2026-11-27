@@ -30,11 +30,14 @@ class KitchenCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Step 1: the picture area, the same shape for every dish.
+          // Step 1: the picture area, the same shape for every dish. The placeholder
+          // photo stands in until the hotel's own dish photos are added.
           Expanded(
-            child: ColoredBox(
-              color: p.surfaceAlt,
-              child: Center(child: Icon(Icons.restaurant, color: p.primary, size: IgongoSpace.xxl)),
+            child: Image.asset(
+              'assets/images/placeholder_food.png',
+              fit: BoxFit.cover,
+              width: double.infinity,
+              semanticLabel: item.name,
             ),
           ),
           // Step 2: the name in bold, then the call to action.
