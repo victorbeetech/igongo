@@ -6,6 +6,7 @@ import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../shared/theme/theme.dart';
+import 'venue_card.dart';
 import 'venue_carousel.dart';
 
 /// The heading, and the auto-sliding carousel of venue cards.
@@ -51,7 +52,7 @@ class VenueRow extends StatelessWidget {
         const SizedBox(height: IgongoSpace.sm),
         // Step 2: the auto-sliding cards.
         SizedBox(
-          height: 170,
+          height: kVenueCardHeight,
           child: VenueCarousel(itemCount: n, itemBuilder: itemBuilder),
         ),
       ],

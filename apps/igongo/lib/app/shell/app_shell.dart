@@ -43,6 +43,8 @@ class AppShell extends ConsumerWidget {
     // Step 1a-2: a signed-in guest's My profile (Me tab) has no app bar either: its red banner
     // runs under the status bar and acts as the app bar, with safe-area spacing for the title.
     final guestProfile = spec.id == 'S00-31' && guestOnly;
+    // Step 1a-3: a signed-in guest's Food tab (S62-01) draws its own one-row top bar (venue, wish list, WhatsApp).
+    final guestFood = spec.id == 'S62-01' && guestOnly;
     // Step 1: the banner: offline when the preview says so.
     final banners = [
       if (prefs.state == ViewState.offline)
@@ -59,7 +61,12 @@ class AppShell extends ConsumerWidget {
       banners: banners,
       // The Bookings home (S67-01) draws its own slideshow at the top, so a guest sees no app bar there.
       // The Cart (S62-04) blends its photo banner into the top of the screen, so it has no app bar either.
-      showAppBar: !guestHome && !guestProfile && !(spec.id == 'S67-01' && guestOnly) && !ChromeRules.drawsOwnTop(spec),
+      showAppBar:
+          !guestHome &&
+          !guestProfile &&
+          !guestFood &&
+          !(spec.id == 'S67-01' && guestOnly) &&
+          !ChromeRules.drawsOwnTop(spec),
       // Step 3: tab screens never show a Back arrow; pushed pages do.
       isTab: signedIn && bottomBarTabIds(ref).contains(spec.id),
       body: body,
