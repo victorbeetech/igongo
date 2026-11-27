@@ -48,75 +48,83 @@ class CartItemCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(IgongoRadius.lg),
         boxShadow: [BoxShadow(color: palette.text.withValues(alpha: 0.08), blurRadius: 12, offset: const Offset(0, 4))],
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Step 2: the large photo on the left.
-          ClipRRect(
-            borderRadius: BorderRadius.circular(IgongoRadius.md),
-            child: SizedBox(width: 104, height: 104, child: GuestPhoto(label: line.name)),
-          ),
-          const SizedBox(width: IgongoSpace.md),
-          // Step 3: the name, the options, the date and the price, then the quantity and delete row.
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(line.name, style: context.text.titleMedium, maxLines: 2, overflow: TextOverflow.ellipsis),
-                if (line.options.isNotEmpty)
-                  Text(
-                    _optionWords(line.options),
-                    style: context.text.bodySmall?.copyWith(color: palette.textMuted),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                // The guest's note for the kitchen, when there is one.
-                if (line.notes case final note?)
-                  Text('Note: $note', style: context.text.bodySmall?.copyWith(color: palette.textMuted), maxLines: 2, overflow: TextOverflow.ellipsis),
-                // Step 3a: the day, tappable to choose another (a line from a reorder may have none yet).
-                InkWell(
-                  onTap: onDate,
-                  borderRadius: BorderRadius.circular(IgongoRadius.sm),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: IgongoSpace.xs),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.calendar_today_outlined, size: 16, color: palette.textMuted),
-                        const SizedBox(width: IgongoSpace.xs),
-                        Flexible(
-                          child: Text(
-                            date == null ? 'Choose a date' : dayWords(date),
-                            style: context.text.bodySmall,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                // Step 3b: the price of the line.
-                Text(
-                  ugx(line.lineTotal),
-                  style: context.text.titleSmall?.copyWith(color: palette.primaryText, fontWeight: FontWeight.w700),
-                ),
-                const SizedBox(height: IgongoSpace.sm),
-                // Step 3c: quantity on the left, delete on the right.
-                Row(
-                  children: [
-                    QuantityStepper(quantity: line.quantity, onChanged: onQuantity),
-                    const Spacer(),
-                    IconButton(
-                      tooltip: 'Remove ${line.name}',
-                      icon: Icon(Icons.delete_outline, color: palette.primary),
-                      onPressed: onDelete,
-                    ),
-                  ],
-                ),
-              ],
+      // Step 1b: the row is as tall as its tallest child (the text column), so the photo can fill it.
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Step 2: the photo on the left, stretched to the full height of the text rows and delete button.
+            ClipRRect(
+              borderRadius: BorderRadius.circular(IgongoRadius.md),
+              child: SizedBox(width: 104, child: GuestPhoto(label: line.name)),
             ),
-          ),
-        ],
+            const SizedBox(width: IgongoSpace.md),
+            // Step 3: the name, the options, the date and the price, then the quantity and delete row.
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(line.name, style: context.text.titleMedium, maxLines: 2, overflow: TextOverflow.ellipsis),
+                  if (line.options.isNotEmpty)
+                    Text(
+                      _optionWords(line.options),
+                      style: context.text.bodySmall?.copyWith(color: palette.textMuted),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  // The guest's note for the kitchen, when there is one.
+                  if (line.notes case final note?)
+                    Text(
+                      'Note: $note',
+                      style: context.text.bodySmall?.copyWith(color: palette.textMuted),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  // Step 3a: the day, tappable to choose another (a line from a reorder may have none yet).
+                  InkWell(
+                    onTap: onDate,
+                    borderRadius: BorderRadius.circular(IgongoRadius.sm),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: IgongoSpace.xs),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.calendar_today_outlined, size: 16, color: palette.textMuted),
+                          const SizedBox(width: IgongoSpace.xs),
+                          Flexible(
+                            child: Text(
+                              date == null ? 'Choose a date' : dayWords(date),
+                              style: context.text.bodySmall,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // Step 3b: the price of the line.
+                  Text(
+                    ugx(line.lineTotal),
+                    style: context.text.titleSmall?.copyWith(color: palette.primaryText, fontWeight: FontWeight.w700),
+                  ),
+                  const SizedBox(height: IgongoSpace.sm),
+                  // Step 3c: quantity on the left, delete on the right.
+                  Row(
+                    children: [
+                      QuantityStepper(quantity: line.quantity, onChanged: onQuantity),
+                      const Spacer(),
+                      IconButton(
+                        tooltip: 'Remove ${line.name}',
+                        icon: Icon(Icons.delete_outline, color: palette.primary),
+                        onPressed: onDelete,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
