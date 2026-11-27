@@ -1,18 +1,19 @@
-// The header at the top of every Auth screen, to match the Stitch reference:
+// The header at the top of every Auth screen, copied from the Bookings banner:
 // the hotel photo behind the status bar, a red gradient rising from the bottom,
-// a smooth white curve, and the Igongo logo on a floating white card that
-// overlaps the photo and the curve. Shared by Sign in and Create account.
+// and a soft wave along the bottom edge. The photo is cut by the wave, so the
+// white page shows through below it and blends into the form with no boundary.
+// The Igongo logo sits on a floating white card centred on the wave.
 
 import 'package:flutter/services.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../theme/theme.dart';
+import '../bar/wavy_bottom_clipper.dart';
 import '../logo/igongo_logo.dart';
 import 'auth_assets.dart';
-import 'auth_curve_clipper.dart';
 
-/// The Auth header: photo, red gradient, curved white section and floating logo card.
+/// The Auth header: photo, red gradient, wave edge and floating logo card.
 class IgongoAuthHeader extends StatelessWidget {
   /// Creates the header. [height] is the visible height below the status bar; when left out it scales with the phone's height.
   const IgongoAuthHeader({super.key, this.height});
@@ -20,9 +21,12 @@ class IgongoAuthHeader extends StatelessWidget {
   /// The visible height below the status bar, or null to scale with the phone.
   final double? height;
 
+  /// The status bar style for Auth screens: light icons over the dark photo.
+  static const statusBarStyle = SystemUiOverlayStyle.light;
+
   @override
   Widget build(BuildContext context) {
-    // Step 1: the palette, for the brand red and the white surface.
+    // Step 1: the palette, for the brand red and the white page.
     final palette = context.palette;
     // Step 2: the space the status bar takes. The photo runs behind it.
     final topInset = MediaQuery.paddingOf(context).top;
@@ -38,33 +42,37 @@ class IgongoAuthHeader extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          // Layer 1: the hotel photo, covering the whole header, behind the status bar.
-          Positioned.fill(child: Image.asset(authHutPhoto, fit: BoxFit.cover, alignment: Alignment.center)),
-          // Layer 2: the red gradient, clear at the top and reaching the brand red at the bottom.
+          // Layer 1: the white page colour, so the area under the wave is the same white as the form.
+          Positioned.fill(child: ColoredBox(color: palette.surface)),
+          // Layers 2 and 3: the photo and its red gradient, cut by the wave along the bottom edge (as the Bookings banner is).
           Positioned.fill(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: const [0.35, 0.65, 1.0],
-                  colors: [
-                    palette.primary.withValues(alpha: 0),
-                    palette.primary.withValues(alpha: 0.4),
-                    palette.primary.withValues(alpha: 0.8),
-                  ],
-                ),
+            child: ClipPath(
+              clipper: const WavyBottomClipper(),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  // Layer 2: the hotel photo, behind the status bar.
+                  Image.asset(authHutPhoto, fit: BoxFit.cover, alignment: Alignment.center),
+                  // Layer 3: the red gradient, clear at the top and reaching the brand red at the bottom.
+                  DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        stops: const [0.35, 0.65, 1.0],
+                        colors: [
+                          palette.primary.withValues(alpha: 0),
+                          palette.primary.withValues(alpha: 0.4),
+                          palette.primary.withValues(alpha: 0.8),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-          // Layer 3: the white section, cut by the curve, so it overlaps the bottom of the photo.
-          Positioned.fill(
-            child: ClipPath(
-              clipper: const IgongoCurveClipper(),
-              child: ColoredBox(color: palette.surface),
-            ),
-          ),
-          // Layer 4: the logo on a floating white card, centred horizontally on the curve.
+          // Layer 4: the logo on a floating white card, centred horizontally on the wave.
           Positioned(
             top: total * 0.68,
             left: 0,
@@ -89,7 +97,4 @@ class IgongoAuthHeader extends StatelessWidget {
       ),
     );
   }
-
-  /// The status bar style for Auth screens: light icons over the dark photo.
-  static const statusBarStyle = SystemUiOverlayStyle.light;
 }
