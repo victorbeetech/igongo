@@ -15,6 +15,7 @@ class MenuItem {
     required this.options,
     required this.allergens,
     this.description,
+    this.photoUrl,
   });
 
   /// Reads one from the API's JSON.
@@ -27,6 +28,7 @@ class MenuItem {
     options: [for (final g in json['options'] as List<dynamic>? ?? const []) OptionGroup.fromJson(g as Json)],
     allergens: [for (final a in json['allergens'] as List<dynamic>? ?? const []) '$a'],
     description: json['description'] as String?,
+    photoUrl: json['photoUrl'] as String?,
   );
 
   /// The item's ID.
@@ -52,4 +54,7 @@ class MenuItem {
 
   /// More about it.
   final String? description;
+
+  /// The dish's photo, or null (the app shows a placeholder).
+  final String? photoUrl;
 }
