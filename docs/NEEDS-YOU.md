@@ -164,6 +164,12 @@ To finish, either:
 
 Take a snapshot in Neon before the API deploy, because the new migrations run on the first scheduled tick.
 
+## Cart and checkout: ready to check (27 Nov 2026)
+
+**Status:** the guest cart is wired end to end. Add, change quantity, remove, the day of each item, the totals and Place order all go through the server, which prices every cart and checks the order. Payment is the one step left, because it needs the hotel's payment keys (see "Payments, food delivery and bookings" above). Until the keys are in, the pay sheet says the method is not set up yet; the order is still placed and shows in My orders.
+
+**What to check in the app:** add items from the food shop, change the quantity, pick a day for each item, remove one, watch the total change, then Proceed to Checkout, choose how you want it, and Place order.
+
 ## Receipt emails: add the Resend key (booking receipts)
 
 **What is needed:** a Resend API key, and a verified sender address on your domain (for example `Igongo <receipts@yourdomain>`).

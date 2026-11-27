@@ -36,3 +36,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  # Cart artwork from the design mock-up (empty cart state).
+  assets:
+    - assets/cart/cart-illustration.png

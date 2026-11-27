@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../shared/format/hotel_day.dart';
 import '../../../shared/format/ugx.dart';
 import '../../../shared/theme/theme.dart';
 import '../../../shared/ui/button/igongo_button.dart';
@@ -80,6 +81,8 @@ class _ItemSheetState extends ConsumerState<ItemSheet> {
                 for (final c in e.value) '${e.key}:$c',
             ],
             unitPrice: _unitPrice,
+            // Tomorrow, the hotel's day, until the guest picks another in the cart.
+            date: hotelDay().add(const Duration(days: 1)),
             notes: _note.text.trim().isEmpty ? null : _note.text.trim(),
           ),
         );
