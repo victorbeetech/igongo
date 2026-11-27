@@ -8,7 +8,8 @@ import { resetPassword } from "@/modules/m04-users-login/data/securityApi";
 import { ApiError } from "@/shared/api/ApiError";
 import { useAddress } from "@/shared/navigation/useAddress";
 import { Button } from "@/shared/ui/button/Button";
-import { TextInput } from "@/shared/ui/field/TextInput";
+import { PasswordInput } from "@/shared/ui/field/PasswordInput";
+import { passwordsMatch, PASSWORDS_DIFFER_MESSAGE } from "@/shared/validation/passwordsMatch";
 
 /** The new-password page. */
 export function ResetPasswordPage() {
@@ -19,11 +20,14 @@ export function ResetPasswordPage() {
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
   const [busy, setBusy] = useState(false);
+  // One eye shows or hides both boxes together.
+  const [shown, setShown] = useState(false);
 
   /** Saves the new password. */
   async function submit(event: FormEvent) {
     event.preventDefault();
-    if (password !== again) return setError("The two passwords are not the same.");
+    // Step 1: the confirm box must match before anything is sent.
+    if (!passwordsMatch(password, again)) return setError(PASSWORDS_DIFFER_MESSAGE);
     setBusy(true);
     setError(null);
     try {
@@ -56,8 +60,8 @@ export function ResetPasswordPage() {
   return (
     <form onSubmit={submit} className="grid gap-3 p-4 pt-2">
       <p className="text-caption text-muted">Choose a new password: at least 8 characters, with a letter and a number.</p>
-      <TextInput label="New password" type="password" value={password} onChange={setPassword} autoComplete="new-password" required />
-      <TextInput label="New password again" type="password" value={again} onChange={setAgain} autoComplete="new-password" required />
+      <PasswordInput label="New password" value={password} onChange={setPassword} shown={shown} onToggle={() => setShown(!shown)} autoComplete="new-password" required />
+      <PasswordInput label="New password again" value={again} onChange={setAgain} shown={shown} onToggle={() => setShown(!shown)} autoComplete="new-password" required />
       {error && <p role="alert" className="text-caption text-error">{error}</p>}
       <Button type="submit" disabled={busy} block>{busy ? "Saving…" : "Save the new password"}</Button>
     </form>

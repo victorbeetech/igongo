@@ -22,6 +22,7 @@ import { useAddress } from "@/shared/navigation/useAddress";
 import { ME_KEY } from "@/shared/session/useMe";
 import { MY_LAYOUT_KEY } from "@/shared/session/useMyLayout";
 import { Button } from "@/shared/ui/button/Button";
+import { PasswordInput } from "@/shared/ui/field/PasswordInput";
 import { TextInput } from "@/shared/ui/field/TextInput";
 import { SkeletonList } from "@/shared/ui/skeleton/SkeletonList";
 import { FirstSetupPanel } from "./FirstSetupPanel";
@@ -42,6 +43,8 @@ export function SignInPage({ screen }: { screen: ScreenContext }) {
   });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  // The eye on the password box.
+  const [showPassword, setShowPassword] = useState(false);
   // An error brought back in the address (a sign-out reason), else none.
   const returned = address.params.get("error") ?? address.params.get("reason");
   const [error, setError] = useState<string | null>(
@@ -95,11 +98,12 @@ export function SignInPage({ screen }: { screen: ScreenContext }) {
           hint="name@example.com"
           required
         />
-        <TextInput
+        <PasswordInput
           label="Password"
-          type="password"
           value={password}
           onChange={setPassword}
+          shown={showPassword}
+          onToggle={() => setShowPassword(!showPassword)}
           autoComplete="current-password"
           required
         />

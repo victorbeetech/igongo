@@ -13,9 +13,9 @@ import '../../../../shared/theme/theme.dart';
 import '../../../../shared/ui/auth/auth_shell.dart';
 import '../../../../shared/ui/button/igongo_button.dart';
 import '../../../../shared/ui/field/igongo_field.dart';
-import '../../../../shared/ui/field/password_eye.dart';
+import '../../../../shared/ui/field/password_field.dart';
 import '../../../../shared/ui/toast/igongo_toast.dart';
-import '../../../../shared/validation/passwords_match.dart';
+import '../../../../shared/validation/sign_up_problem.dart';
 
 /// The guest sign-up screen.
 class CreateAccountScreen extends ConsumerStatefulWidget {
@@ -50,15 +50,14 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
   }
 
   /// The first thing wrong with the form, or null when it can be sent.
-  String? _problem() {
-    if (_name.text.trim().isEmpty) return 'Enter your name.';
-    if (!_email.text.contains('@')) return 'Enter your email.';
-    if (_password.text.length < 8) return 'Use a password of at least 8 characters.';
-    // Step 1b: both boxes must hold the same text before anything is sent.
-    if (!passwordsMatch(_password.text, _passwordAgain.text)) return passwordsDifferMessage;
-    if (!_agreed) return 'Please agree to the privacy notice.';
-    return null;
-  }
+  /// The rule lives in [signUpProblem], so this screen and its tests share it.
+  String? _problem() => signUpProblem(
+    name: _name.text,
+    email: _email.text,
+    password: _password.text,
+    again: _passwordAgain.text,
+    agreed: _agreed,
+  );
 
   /// Flips the show/hide flag for both password boxes.
   void _toggleShown() => setState(() => _showPassword = !_showPassword);
@@ -99,22 +98,23 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
         controller: _email,
         keyboardType: TextInputType.emailAddress,
       ),
-      IgongoField(
+      // Step 2a: the password box, with the shared eye.
+      PasswordField(
         label: 'Password',
         hint: 'At least 8 characters, a letter and a number',
         icon: Icons.lock_outline,
-        obscure: !_showPassword,
         controller: _password,
-        suffix: PasswordEyeButton(shown: _showPassword, onPressed: _toggleShown),
+        shown: _showPassword,
+        onToggle: _toggleShown,
       ),
-      // Step 2b: the confirm box, required, same eye as above.
-      IgongoField(
+      // Step 2b: the confirm box, required; the same eye shows or hides it too.
+      PasswordField(
         label: 'Confirm password',
         hint: 'Type the password again',
         icon: Icons.lock_outline,
-        obscure: !_showPassword,
         controller: _passwordAgain,
-        suffix: PasswordEyeButton(shown: _showPassword, onPressed: _toggleShown),
+        shown: _showPassword,
+        onToggle: _toggleShown,
       ),
       // Step 3: consent to the privacy notice.
       CheckboxListTile(

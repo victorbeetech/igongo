@@ -18,8 +18,8 @@ import '../../../../shared/theme/theme.dart';
 import '../../../../shared/ui/auth/auth_or_divider.dart';
 import '../../../../shared/ui/auth/auth_shell.dart';
 import '../../../../shared/ui/button/igongo_button.dart';
-import '../../../../shared/ui/field/password_eye.dart';
 import '../../../../shared/ui/field/igongo_field.dart';
+import '../../../../shared/ui/field/password_field.dart';
 import '../../../../shared/ui/toast/igongo_toast.dart';
 import '../../application/sign_in_options_provider.dart';
 import '../../domain/sign_in_option.dart';
@@ -110,18 +110,14 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
           controller: _email,
           keyboardType: TextInputType.emailAddress,
         ),
-        IgongoField(
+        PasswordField(
           label: 'Password',
           hint: 'Password',
           icon: Icons.lock_outline,
-          obscure: !_showPassword,
           controller: _password,
+          shown: _showPassword,
+          onToggle: () => setState(() => _showPassword = !_showPassword),
           onSubmitted: (_) => _signIn(),
-          // The shared eye button flips _showPassword.
-          suffix: PasswordEyeButton(
-            shown: _showPassword,
-            onPressed: () => setState(() => _showPassword = !_showPassword),
-          ),
         ),
         // Step 3: "Remember me" on the left, "Forgot password?" on the right.
         Row(
