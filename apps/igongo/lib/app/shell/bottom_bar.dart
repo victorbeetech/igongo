@@ -22,7 +22,8 @@ class BottomBar extends ConsumerWidget {
   // Each tab: the screen it opens, its label and its icon.
   static const _home = ('home', 'Home', Icons.home_outlined);
   static const _me = ('S00-31', 'Me', Icons.person_outline);
-  static const _guestDefaults = [_home, ('S54-05', 'My bookings', Icons.receipt_long_outlined), _me];
+  // Guests: the Bookings home (S67-01) holds the booking grid and a link to My bookings.
+  static const _guestDefaults = [_home, ('S67-01', 'Bookings', Icons.event_available_outlined), _me];
   static const _staffDefaults = [_home, _me];
 
   @override
