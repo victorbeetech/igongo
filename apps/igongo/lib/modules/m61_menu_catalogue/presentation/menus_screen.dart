@@ -3,6 +3,7 @@
 // from the menu API (`/api/menu`). Signed out or in preview, the prototype shows.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../shared/catalog/catalog.dart';

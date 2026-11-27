@@ -9,7 +9,7 @@ final m61MenuCatalogueModule = ModuleSpec(
   code: '61',
   name: 'Menus & Catalogue',
   slug: 'menu-catalogue',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S61-01',
       name: 'Menus',
@@ -56,7 +56,7 @@ final m61MenuCatalogueModule = ModuleSpec(
     ),
   ],
   overrides: m61Overrides,
-  dialogs: [
+  dialogs: const [
     DialogSpec(
       id: 'D61-01',
       name: 'Publish menu',
@@ -66,7 +66,7 @@ final m61MenuCatalogueModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Beef pilau',
       'Fried beef (1 kg)',
