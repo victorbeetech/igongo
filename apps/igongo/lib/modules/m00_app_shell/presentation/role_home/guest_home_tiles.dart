@@ -8,6 +8,7 @@ const Set<String> hiddenGuestTileIds = {
   'S54-05', // My bookings and orders: the Bookings tab
   'S78-06', // My receipts: under Me
   'S57-01', // My points: under Me
+  'S74-03', // Chat with us: the floating WhatsApp button replaces it
 };
 
 /// [label] without bracketed text: "Order food (delivery...)" becomes "Order food".

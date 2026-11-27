@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../shared/catalog/catalog.dart';
+import '../../shared/contact/whatsapp_button.dart';
 import '../../shared/layout/igongo_scaffold.dart';
 import '../../shared/preferences/preferences.dart';
 import '../../shared/session/session_controller.dart';
@@ -57,6 +58,8 @@ class AppShell extends ConsumerWidget {
       // Step 3: tab screens never show a Back arrow; pushed pages do.
       isTab: signedIn && bottomBarTabIds(ref).contains(spec.id),
       body: body,
+      // Signed-in guests get the floating WhatsApp chat button.
+      floatingAction: signedIn && guestOnly ? const WhatsappButton() : null,
       drawer: signedIn && !guestOnly ? const RoleDrawer() : null,
       bottomBar: signedIn ? BottomBar(currentId: spec.id) : null,
       actions: [
