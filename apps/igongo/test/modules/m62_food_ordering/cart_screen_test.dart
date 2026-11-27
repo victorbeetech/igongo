@@ -14,7 +14,7 @@ void main() {
     usePhoneWindow(tester);
     await openApp(tester, '/food-ordering/cart', preview: false);
     expect(find.text('Your cart is empty'), findsOneWidget);
-    expect(find.text('Browse food'), findsOneWidget);
+    expect(find.text('Browse Services'), findsOneWidget);
   });
 
   test('the demo menu has an available dish and an unavailable one, and only the demo outlet counts', () {

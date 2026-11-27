@@ -66,7 +66,7 @@ Future<void> _openCheckout(WidgetTester tester) async {
   await _settle(tester);
   await tester.tap(find.text('Cart').last);
   await _settle(tester);
-  await tester.tap(find.text('Check out'));
+  await tester.tap(find.text('Proceed to Checkout'));
   await _settle(tester);
 }
 
@@ -103,7 +103,7 @@ void main() {
     await _settle(tester);
     expect(find.text('Rolex'), findsOneWidget);
     // Step 4: check out, choose takeaway, place the order.
-    await tester.tap(find.text('Check out'));
+    await tester.tap(find.text('Proceed to Checkout'));
     await _settle(tester);
     await tester.tap(find.text('Takeaway'));
     await _settle(tester);
