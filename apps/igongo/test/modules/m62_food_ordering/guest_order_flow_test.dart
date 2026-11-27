@@ -62,7 +62,7 @@ Future<void> _openCheckout(WidgetTester tester) async {
   await _settle(tester);
   await tester.tap(find.text('Rolex'));
   await _settle(tester);
-  await tester.tap(find.textContaining('Add UGX'));
+  await tester.tap(find.textContaining('Add to Order'));
   await _settle(tester);
   await tester.tap(find.text('Cart').last);
   await _settle(tester);
@@ -96,7 +96,7 @@ void main() {
     // Step 2: tap a dish and add it.
     await tester.tap(find.text('Rolex'));
     await _settle(tester);
-    await tester.tap(find.textContaining('Add UGX'));
+    await tester.tap(find.textContaining('Add to Order'));
     await _settle(tester);
     // Step 3: the cart tab holds it.
     await tester.tap(find.text('Cart').last);
@@ -192,13 +192,13 @@ void main() {
     await tester.tap(find.text('Grilled tilapia'));
     await _settle(tester);
     expect(find.byType(BackButton), findsOneWidget);
-    expect(find.text('Add a drink (optional)'), findsOneWidget);
-    expect(find.text('Make it yours (optional)'), findsOneWidget);
+    expect(find.text('Add a drink'), findsOneWidget);
+    expect(find.text('Special instructions'), findsOneWidget);
     // Nothing is compulsory: add with an add-on and a note.
     await tester.tap(find.textContaining('Passion juice'));
     await tester.enterText(find.byType(TextField), 'no tomatoes');
     await _settle(tester);
-    await tester.tap(find.textContaining('Add UGX'));
+    await tester.tap(find.textContaining('Add to Order'));
     await _settle(tester);
     await tester.tap(find.text('Cart').last);
     await _settle(tester);

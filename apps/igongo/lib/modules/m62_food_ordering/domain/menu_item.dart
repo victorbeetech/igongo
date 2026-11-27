@@ -16,6 +16,8 @@ class MenuItem {
     required this.allergens,
     this.description,
     this.photoUrl,
+    this.prepMinutes = 0,
+    this.tags = const [],
   });
 
   /// Reads one from the API's JSON.
@@ -29,6 +31,8 @@ class MenuItem {
     allergens: [for (final a in json['allergens'] as List<dynamic>? ?? const []) '$a'],
     description: json['description'] as String?,
     photoUrl: json['photoUrl'] as String?,
+    prepMinutes: (json['prepMinutes'] as num?)?.toInt() ?? 0,
+    tags: [for (final t in json['tags'] as List<dynamic>? ?? const []) '$t'],
   );
 
   /// The item's ID.
@@ -61,4 +65,10 @@ class MenuItem {
 
   /// The dish's photo, or null (the app shows a placeholder).
   final String? photoUrl;
+
+  /// Minutes to prepare, from the menu (0 when the restaurant has not set it).
+  final int prepMinutes;
+
+  /// Dietary and feature tags from the menu, such as `gluten-free`.
+  final List<String> tags;
 }
