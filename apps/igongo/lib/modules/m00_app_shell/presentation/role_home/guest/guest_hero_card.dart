@@ -7,7 +7,6 @@ import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../../shared/theme/theme.dart';
-import '../../../../../shared/ui/photo/guest_photo.dart';
 
 /// The featured stay card. [onBook] opens the room list.
 class GuestHeroCard extends StatelessWidget {
@@ -38,8 +37,8 @@ class GuestHeroCard extends StatelessWidget {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              // Step 1: the placeholder picture fills the card.
-              const GuestPhoto(),
+              // Step 1: the placeholder fill, a dark brand red that the text reads on (no icon, so nothing sits behind the title).
+              ColoredBox(color: p.primaryDark),
               // Step 2: a dark gradient from the bottom, so the text reads on any picture.
               DecoratedBox(
                 decoration: BoxDecoration(
