@@ -46,6 +46,8 @@ flutter:
     # Brand logos for the Google and Apple sign-in buttons, drawn from the design.
     - assets/images/google_logo.svg
     - assets/images/apple_logo.svg
+    # The WhatsApp icon for the floating chat button (see lib/shared/ui/whatsapp/whatsapp_icon.dart).
+    - assets/images/whatsapp_logo.svg
     # The owner's own photos (see lib/shared/ui/photo/guest_photos.dart).
     - assets/photos/
     # Cart artwork from the design mock-up (empty cart state).
