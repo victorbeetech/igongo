@@ -4,15 +4,17 @@
 // slides come from one place (GuestPhotos.promos) so they can be changed later.
 // Igongo red is the same in light and dark mode.
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../../shared/clock/app_clock.dart';
 import '../../../../shared/format/greeting.dart';
 import '../../../../shared/theme/theme.dart';
 import 'promo_slides.dart';
 
 /// The guest home's header. [name] is the signed-in guest's, or null when signed out.
-class GuestHeader extends StatelessWidget {
+class GuestHeader extends ConsumerWidget {
   /// Creates the header; [onBell] opens the notification inbox.
   const GuestHeader({super.key, this.name, required this.onBell});
 
@@ -26,8 +28,10 @@ class GuestHeader extends StatelessWidget {
   static const _bannerHeight = 240.0;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final p = context.palette;
+    // Step 0: the time now, from the app clock (pinned in tests).
+    final now = ref.watch(clockProvider)();
     final top = MediaQuery.paddingOf(context).top;
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(bottom: Radius.circular(IgongoSpace.xl)),
@@ -77,7 +81,7 @@ class GuestHeader extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      greetingFor(DateTime.now(), name),
+                      greetingFor(now, name),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       softWrap: false,
