@@ -78,15 +78,15 @@ class BookingsHomeScreen extends ConsumerWidget {
                   padding: EdgeInsets.zero,
                   children: [
                     // Step 2: the picture slideshow with its place and theme chips.
-                    Stack(
+                    const Stack(
                       children: [
-                        const BookingHero(),
-                        const Positioned(
+                        BookingHero(),
+                        Positioned(
                           top: IgongoSpace.md,
                           left: IgongoSpace.md,
                           child: HeroPlaceChip(text: heroPlaceName),
                         ),
-                        const Positioned(
+                        Positioned(
                           bottom: IgongoSpace.xl,
                           left: IgongoSpace.md,
                           child: HeroThemeChip(text: heroThemeLabel),
