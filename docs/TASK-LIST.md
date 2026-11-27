@@ -230,3 +230,21 @@ Several PARTLY rows depend on PR #34, #36, #37 and #38, which are not merged. Th
 3. Give the Resend API key (or set it in super admin later), and choose the sender address.
 4. Send the executive room bedroom photo, and say whether the cottage gate name is Mpororo Court or Kitami's Palace.
 5. Enable Cloudflare R2 storage, so safe uploads and banner and logo uploads can be built.
+
+## 11. Changes after 27 Nov 00:41 UTC (chat check, second pass)
+
+| # | Item (owner's words) | Status | Proof | Next step |
+|---|---|---|---|---|
+| 11.1 | Food screens: Food Panda layout, 2 per row, restaurant slideshow, image-only menu slideshow at 2.5 s, dish page | PARTLY | PR #39 (draft, CI green) | Owner checks; takeaway container charge needs server fee |
+| 11.2 | Cart screens: photo banner, empty state, item cards, summary, five-tab bar, header cart icon, service charge placeholder 5% | PARTLY | PR #37 (draft, tests pass) | GitHub holding checks for approval; owner reviews 18 regenerated screenshots |
+| 11.3 | Me screen: wavy header, profile card, stat tiles, sections, Points 450 placeholder | PARTLY | PR #38 (draft, CI green) | Owner checks |
+| 11.4 | Bookings screens: hero, Hotel Booking card, 9-tile grid, shortcuts, Recent Bookings | PARTLY | PR #34 (draft) | Two store screenshot tests stale; owner checks on Mac before merge |
+| 11.5 | Guest Home replaced with owner's design: greeting with location and bell, kitchen cards every 2 s, Today at Igongo below the fold | PARTLY | PR #40 (draft, not run) | Promo card has no source yet (owner to decide API or super admin list); owner accepts before merge |
+| 11.6 | "This weekend" promo card | NEEDS OWNER | PR #40 | Decide source |
+| 11.7 | WhatsApp button uses 0793128137 by default (256793128137 in links), super admin can change | PARTLY | PR #40 and PR #34 | Owner checks |
+| 11.8 | No dead code; comment everything; reuse existing widgets (owner rule for Home) | PARTLY | Rule sent to Home thread | Review in PR #40 |
+| 11.9 | Owner rule: merge only after owner accepts a preview | DONE (rule) | Owner message 27 Nov 01:11 UTC | Keep for every screen |
+| 11.10 | One Mac command per branch, each with its folder | DONE | Chat 27 Nov 01:03 UTC | Owner runs |
+| 11.11 | Free AI image tools for UI mock-ups (Gemini, Bing Image Creator, ChatGPT free, Adobe Firefly) | DONE (info) | Chat 27 Nov 00:50 UTC | Owner chooses |
+
+Items after 01:16 UTC are not checked yet.
