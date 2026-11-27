@@ -146,11 +146,6 @@ class OrderFoodScreen extends ConsumerWidget {
                           ),
                         ),
                       if (demo) const DemoNotice(),
-                      // Tomorrow's special: layout only, until the API has pre-orders.
-                      const Padding(
-                        padding: EdgeInsets.fromLTRB(IgongoSpace.lg, IgongoSpace.lg, IgongoSpace.lg, 0),
-                        child: PreOrderCard(),
-                      ),
                       // Step 6: the venues, from the real outlets; tapping one makes it the cart's venue.
                       Padding(
                         padding: const EdgeInsets.only(top: IgongoSpace.lg),
@@ -206,6 +201,11 @@ class OrderFoodScreen extends ConsumerWidget {
                           ),
                         ),
                       ],
+                      // Tomorrow's special: layout only, until the API has pre-orders.
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(IgongoSpace.lg, IgongoSpace.lg, IgongoSpace.lg, 0),
+                        child: PreOrderCard(),
+                      ),
                       // Step 8: out-of-stock dishes, dimmed and last, in a "Not available" card.
                       if (outToday.isNotEmpty) ...[
                         const SectionHeader('Not available'),
