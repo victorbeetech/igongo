@@ -4,7 +4,7 @@
  * adapter turns our `Actor` into that, and gives it its stores.
  */
 
-import { createPushSender, DrizzleDeviceTokenRepository, notificationsRouter } from "@igongo/notifications";
+import { createPushSender, DrizzleDeviceTokenRepository, DrizzleInboxRepository, notificationsRouter } from "@igongo/notifications";
 import { newId } from "@igongo/core";
 import { Hono } from "hono";
 import type { ApiEnv } from "../shell/api-env";
@@ -17,6 +17,7 @@ export function createNotificationsRouter() {
       repo: new DrizzleDeviceTokenRepository(api.var.db),
       sender: createPushSender(api.env),
       directory: { usersWithRoles: (roles: string[]) => s.access().holdersOf(roles) },
+      inbox: new DrizzleInboxRepository(api.var.db),
       now: () => new Date(),
       newId: () => newId("ntf"),
     };

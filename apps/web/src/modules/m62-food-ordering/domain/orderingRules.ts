@@ -10,4 +10,6 @@ export interface OrderingRules {
   minutesPerQueuedOrder: number;
   /** How many days ahead guests may schedule delivery, takeaway or room service (0: off). */
   scheduleAheadDays: number;
+  /** Takeaway container fee in shillings (0: containers are free). */
+  containerFee: number;
 }

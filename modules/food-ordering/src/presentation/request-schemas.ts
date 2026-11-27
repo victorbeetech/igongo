@@ -38,6 +38,14 @@ export const placeBody = cartBody.extend({
   requestKey: z.string().regex(/^[A-Za-z0-9-]{8,64}$/).optional(),
 });
 
+/** `PUT /orders/location`: the guest's saved delivery pin (both coordinates are required). */
+export const pinBody = z.object({
+  label: text(200),
+  zone: key.nullable(),
+  lat: z.number().min(-90).max(90),
+  lng: z.number().min(-180).max(180),
+});
+
 /** `POST /orders/:id/rating`. */
 export const ratingBody = z.object({ food: z.number().int().min(1).max(5), delivery: z.number().int().min(1).max(5).optional(), comment: text(500).optional() });
 
@@ -66,4 +74,5 @@ export const rulesBody = z.object({
   cancelWindowMinutes: z.number().int().min(0).max(24 * 60),
   minutesPerQueuedOrder: z.number().int().min(0).max(60),
   scheduleAheadDays: z.number().int().min(0).max(60).default(7),
+  containerFee: z.number().int().min(0).max(100000).default(0),
 });

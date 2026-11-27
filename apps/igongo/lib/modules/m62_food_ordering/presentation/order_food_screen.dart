@@ -1,34 +1,34 @@
-// S62-01..08 Order food, live, in the order of the Food Panda reference:
-//   1. the search box,
-//   2. the restaurants (a slider of same-size cards),
-//   3. today's menu (an image-only slideshow, 2.5 seconds per slide),
-//   4. the section tabs,
-//   5. the dishes, two cards per row.
-// A dish opens its own page (options, add-ons, drinks and a note) from its
-// card; the cart and checkout come only after that. Out-of-stock dishes show
-// "Out today" and cannot be opened. Signed out, the prototype design shows.
+// S62-01..08 Order food, live: pick an outlet, tap dishes to add them, then
+// check out. Out-of-stock dishes show but cannot be added. Signed out, the
+// prototype design shows.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../shared/catalog/catalog.dart';
+import '../../../shared/format/ugx.dart';
 import '../../../shared/live/live_view.dart';
-import '../../../shared/screens/parts/purpose_text.dart';
+import '../../../shared/screens/home/tile_grid.dart';
 import '../../../shared/screens/parts/screen_list_view.dart';
 import '../../../shared/screens/screen_layout.dart';
 import '../../../shared/ui/button/igongo_button.dart';
+import '../../../shared/ui/card/igongo_card.dart';
+import '../../../shared/ui/guest/guest_chip_row.dart';
+import '../../../shared/ui/guest/guest_product_card.dart';
+import '../../../shared/ui/guest/guest_search_header.dart';
+import '../../../shared/ui/guest/guest_restaurant_slides.dart';
+import '../../../shared/ui/photo/guest_photos.dart';
 import '../../../shared/ui/section/section_header.dart';
 import '../application/cart_controller.dart';
-import '../application/menu_section.dart';
 import '../application/orders_providers.dart';
+import '../demo/demo_menu.dart';
+import '../demo/demo_orders.dart';
+import '../domain/order_type.dart';
 import '../domain/outlet.dart';
 import 'checkout_sheet.dart';
-import 'item_sheet.dart';
-import 'parts/dish_grid.dart';
-import 'parts/menu_slideshow.dart';
-import 'parts/restaurant_slider.dart';
-import 'parts/section_tabs.dart';
+import 'demo_notice.dart';
+import 'item_page.dart';
 
 /// The guest's food ordering screen.
 class OrderFoodScreen extends ConsumerWidget {
@@ -41,6 +41,11 @@ class OrderFoodScreen extends ConsumerWidget {
   /// Opens [sheet] from the bottom.
   static Future<void> _open(BuildContext context, Widget sheet) =>
       showModalBottomSheet<void>(context: context, isScrollControlled: true, builder: (_) => sheet);
+
+  /// A restaurant's photo: Kaahwa Kanuzire has its own, the demo restaurant a placeholder, others none yet.
+  static String? _restaurantPhoto(Outlet o) => o.name.toLowerCase().contains('kaahwa')
+      ? GuestPhotos.hotelKaahwaKanuzire
+      : (isDemoOutlet(o.key) ? GuestPhotos.outletRestaurant : null);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => LiveView<List<Outlet>>(
@@ -57,58 +62,83 @@ class OrderFoodScreen extends ConsumerWidget {
       final count = cart.lines.fold(0, (n, l) => n + l.quantity);
       // Guests' average stars per dish (none until the first ratings come in).
       final stars = ref.watch(starsProvider).valueOrNull ?? const {};
-      // The search text narrows the dishes by name (not case sensitive).
+      // Step 1b: the search text narrows the dishes by name (not case sensitive).
       final query = ref.watch(menuSearchProvider).trim().toLowerCase();
-      // The section tab the guest picked (null means the first one).
-      final picked = ref.watch(menuSectionProvider);
+      final category = ref.watch(menuCategoryProvider);
+      final rules = ref.watch(orderingRulesProvider).valueOrNull;
+      final demo = isDemoOutlet(outlet);
+      // Step 1b: the order types an outlet offers, shown as badges on its row.
+      List<String> badgesOf(Outlet o) => [
+        for (final t in (isDemoOutlet(o.key) ? demoOrderTypes : (rules?.typesAt(o.key) ?? const <String>[])))
+          orderTypeWords(t),
+      ];
       return Column(
         children: [
           Expanded(
             child: ScreenListView(
               children: [
-                PurposeText(screen.spec.purpose),
-                // Step 1: the search box, above the restaurants and dishes.
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
-                  child: TextField(
-                    decoration: const InputDecoration(hintText: 'Search menu', prefixIcon: Icon(Icons.search)),
-                    onChanged: (text) => ref.read(menuSearchProvider.notifier).set(text),
-                  ),
-                ),
-                // Step 2: the restaurants, as a slider of same-size cards.
-                const SectionHeader('Restaurants'),
-                RestaurantSlider(
-                  outlets: outlets,
-                  selected: outlet,
-                  onPick: (key) => ref.read(cartProvider.notifier).useOutlet(key),
+                // Step 2: the red search band.
+                GuestSearchHeader(
+                  hint: 'Search the menu',
+                  onChanged: (text) => ref.read(menuSearchProvider.notifier).set(text),
                 ),
                 ...menu.when(
                   loading: () => [const LinearProgressIndicator()],
                   error: (e, _) => [Padding(padding: const EdgeInsets.all(IgongoSpace.lg), child: Text('$e'))],
                   data: (all) {
-                    // Only dishes whose name matches the search, in menu order.
+                    // Step 3: the section chips, then only the dishes that match the chip and the search.
+                    final sections = [
+                      for (final s in {
+                        for (final i in all)
+                          if (!i.isContainer) i.section,
+                      })
+                        s,
+                    ];
                     final items = [
                       for (final i in all)
-                        if (query.isEmpty || i.name.toLowerCase().contains(query)) i,
+                        if (!i.isContainer &&
+                            (category == null || i.section == category) &&
+                            (query.isEmpty || i.name.toLowerCase().contains(query)))
+                          i,
                     ];
-                    // Today's menu: the dishes on sale today, up to eight slides.
-                    final today = [
-                      for (final i in all)
-                        if (i.available) i,
-                    ].take(8).toList();
-                    // The section tabs, in menu order, and the one showing now.
-                    final sections = {for (final i in items) i.section}.toList();
-                    final current = sections.contains(picked) ? picked : (sections.isEmpty ? null : sections.first);
-                    final shown = [
+                    // Step 4: dishes on today first; out-of-stock dishes go last.
+                    final onToday = [
                       for (final i in items)
-                        if (i.section == current) i,
+                        if (i.available) i,
+                    ];
+                    final outToday = [
+                      for (final i in items)
+                        if (!i.available) i,
                     ];
                     return [
-                      // Step 3: today's menu, image only, edge to edge, on a 2.5-second slideshow.
-                      if (query.isEmpty && today.isNotEmpty) ...[
-                        const SectionHeader("Today's menu"),
-                        MenuSlideshow(items: today),
-                      ],
+                      if (sections.length > 1)
+                        GuestChipRow(
+                          labels: ['All', ...sections],
+                          selected: category ?? 'All',
+                          onSelected: (l) => ref.read(menuCategoryProvider.notifier).set(l == 'All' ? null : l),
+                        ),
+                      if (demo) const DemoNotice(),
+                      // Step 5: the restaurants as a slideshow; tap a slide to open that restaurant.
+                      const SectionHeader('Restaurants'),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, 0, IgongoSpace.lg, IgongoSpace.sm),
+                        child: GuestRestaurantSlides(
+                          slides: [
+                            for (final o in outlets)
+                              RestaurantSlide(
+                                title: o.name,
+                                detail: 'Open for app orders',
+                                badges: badgesOf(o),
+                                selected: o.key == outlet,
+                                photo: _restaurantPhoto(o),
+                                onTap: () {
+                                  ref.read(menuCategoryProvider.notifier).set(null);
+                                  ref.read(cartProvider.notifier).useOutlet(o.key);
+                                },
+                              ),
+                          ],
+                        ),
+                      ),
                       if (all.isEmpty)
                         const Padding(
                           padding: EdgeInsets.all(IgongoSpace.lg),
@@ -119,36 +149,54 @@ class OrderFoodScreen extends ConsumerWidget {
                           padding: EdgeInsets.all(IgongoSpace.lg),
                           child: Text('No dish matches your search.'),
                         ),
-                      // Step 4: the section tabs.
-                      if (current != null) ...[
-                        const SizedBox(height: IgongoSpace.md),
-                        SectionTabs(
-                          sections: sections,
-                          selected: current,
-                          onPick: (s) => ref.read(menuSectionProvider.notifier).pick(s),
-                        ),
-                        const SizedBox(height: IgongoSpace.sm),
-                      ],
-                      // Step 5: the dishes, two cards per row. A card opens the dish page.
-                      if (shown.isNotEmpty)
+                      // Step 6: the dishes as one grid, two to a row (sections are the chips above).
+                      if (onToday.isNotEmpty)
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
-                          child: DishGrid(
-                            items: shown,
-                            stars: stars,
-                            onOpen: (i) {
-                              ref.read(cartProvider.notifier).useOutlet(outlet);
-                              _open(context, ItemSheet(item: i));
-                            },
+                          padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, IgongoSpace.md, IgongoSpace.lg, 0),
+                          child: TileGrid(
+                            children: [
+                              for (final i in onToday)
+                                GuestProductCard(
+                                  name: i.name,
+                                  price: ugx(i.price),
+                                  description: i.description,
+                                  note: stars[i.id]?.words,
+                                  onTap: () {
+                                    ref.read(cartProvider.notifier).useOutlet(outlet);
+                                    openItemPage(context, i);
+                                  },
+                                ),
+                            ],
                           ),
                         ),
+                      // Out-of-stock dishes: dimmed, last, in a "Not available" card.
+                      if (outToday.isNotEmpty) ...[
+                        const SectionHeader('Not available'),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
+                          child: IgongoCard(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                for (final i in outToday)
+                                  Opacity(
+                                    opacity: 0.5,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: IgongoSpace.xs),
+                                      child: Text('${i.name} · ${ugx(i.price)}'),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ];
                   },
                 ),
               ],
             ),
           ),
-          // The checkout bar appears only once a dish is in the cart.
           if (count > 0)
             SafeArea(
               child: Padding(

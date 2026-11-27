@@ -55,6 +55,10 @@ class MenuItem {
   /// More about it.
   final String? description;
 
+  /// True for a takeaway container sold as a menu item (its name has "container").
+  /// Containers are offered on takeaway checkout, not shown as dishes.
+  bool get isContainer => name.toLowerCase().contains('container');
+
   /// The dish's photo, or null (the app shows a placeholder).
   final String? photoUrl;
 }

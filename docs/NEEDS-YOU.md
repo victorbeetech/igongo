@@ -193,6 +193,20 @@ No key is written in the repository. The code is `modules/payments/src/infrastru
 
 **Rotate the key before real bookings.** The owner will set `TICKET_SIGNING_KEY` himself. A value for this key was posted in chat during the build, so treat that value as exposed: generate a new key, set it with `wrangler secret put TICKET_SIGNING_KEY`, and redeploy the API before any real bookings are taken. Tickets issued before the rotation will show as Forged afterwards, so rotate before the first real booking.
 
+---
+
+## Map key for the delivery pin (about 10 minutes, your Google account)
+
+**Status:** the guest app saves the delivery point (latitude and longitude) with each delivery order, and remembers each guest's own saved place through the API. The map itself is not drawn yet, so the checkout shows "The map is not set up yet" and the guest types the place as before.
+
+**Why Claude could not do it:** a Google Maps key is tied to your Google Cloud account and billing. It is not something Claude can create or store.
+
+**Steps:**
+1. In Google Cloud console, enable **Maps SDK for Android** and **Maps SDK for iOS** for the project that holds the Igongo sign-in.
+2. Create an API key, and restrict it to the app IDs `ug.co.igongo.igongo` (Android package and iOS bundle).
+3. Build the app with the key, for example `flutter build apk --dart-define=IGONGO_MAPS_KEY=<your key>`. The key goes in the build command only, never in the repository. For GitHub builds, add it as a repository secret named `IGONGO_MAPS_KEY` and pass it with `--dart-define` in `.github/workflows/app.yml`.
+4. Tell Claude in the project chat that the key is in. Claude then adds the `google_maps_flutter` package and draws the map in `apps/igongo/lib/modules/m62_food_ordering/presentation/map/delivery_pin_map.dart`. The rest of the checkout is already wired.
+
 ## Guest tab bar: decided for review (27 Nov 2026)
 
 PR #37 (cart) merged with the **five-tab** guest bar (Home, Food, Bookings, Cart, Me), as in your mock-up and project memory. Main's bookings work had set three tabs (Home, Bookings, Me). If you want three, say so and Claude changes the bar in `apps/igongo/lib/app/shell/bottom_bar.dart`, then regenerates the screenshots.
