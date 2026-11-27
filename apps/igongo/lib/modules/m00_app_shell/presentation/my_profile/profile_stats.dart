@@ -1,7 +1,7 @@
-// The three stat tiles: Bookings, Orders and Points. Orders are read live
-// from the API. Bookings and Points show a dash until the API gives a total
-// for them: bookings are counted per booking module, and there is no points
-// system yet, so no number is made up.
+// The three stat tiles: Bookings, Orders and Points. Orders is read live from
+// the API. Bookings shows a dash until the API gives a total (bookings are
+// counted per booking module). Points shows a fixed placeholder (450) until the
+// points system exists as its own module.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
@@ -18,6 +18,11 @@ class ProfileStats extends ConsumerWidget {
   /// A dash, shown when a number is not known.
   static const _unknown = '—';
 
+  // PLACEHOLDER (owner's request): the points total is a fixed 450 for now.
+  // The points system is a separate module for later; replace this constant
+  // with the live total from that module, and do not add points logic here.
+  static const _pointsPlaceholder = '450';
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Step 1: the live order count (shows a dash while loading or if it fails).
@@ -32,7 +37,7 @@ class ProfileStats extends ConsumerWidget {
       children: [
         const Expanded(child: ProfileStatTile(icon: Icons.event_available_outlined, label: 'Bookings', value: _unknown)),
         Expanded(child: ProfileStatTile(icon: Icons.shopping_cart_outlined, label: 'Orders', value: orders)),
-        const Expanded(child: ProfileStatTile(icon: Icons.star_rounded, label: 'Points', value: _unknown)),
+        const Expanded(child: ProfileStatTile(icon: Icons.star_rounded, label: 'Points', value: _pointsPlaceholder)),
       ],
     );
   }
