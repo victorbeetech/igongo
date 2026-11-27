@@ -27,7 +27,7 @@ void main() {
     usePhoneWindow(tester);
     await openApp(tester, '/sign-in', preview: false);
     expect(find.textContaining('Prototype'), findsNothing);
-    await tester.tap(find.text('New here? Create an account'));
+    await tester.tap(find.text('Contact Us'));
     await tester.pumpAndSettle();
     expect(find.text('Create your account'), findsOneWidget);
   });

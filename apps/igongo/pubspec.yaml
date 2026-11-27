@@ -39,6 +39,8 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    # Images the app shows, such as the hut photo on the Auth screens.
+    - assets/images/auth_hut.jpg
     # The owner's own photos (see lib/shared/ui/photo/guest_photos.dart).
     - assets/photos/
     # Cart artwork from the design mock-up (empty cart state).
