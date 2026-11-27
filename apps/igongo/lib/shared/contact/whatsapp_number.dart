@@ -5,6 +5,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../api/api_client.dart';
+import '../session/session_controller.dart';
 
 /// The demo number (0793128137 in Uganda's international form).
 const String demoWhatsappNumber = '256793128137';
