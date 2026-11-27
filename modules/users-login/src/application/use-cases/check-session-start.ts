@@ -11,7 +11,8 @@
  * 4. The method is allowed for at least one of the person's roles.
  * 5. The super admin (and sensitive roles when the switch is on) with 2-step
  *    turned on signs in only with email and password, so 2-step is never skipped.
- * 6. Google and Apple never start a session for the super admin, whatever the
+ * 6. Google and Apple never start a session on the web portal (the app only).
+ * 7. Google and Apple never start a session for the super admin, whatever the
  *    switches say and whether or not 2-step is on. Checked before the method
  *    is looked at, so a social callback whose method cannot be read is refused too.
  */
@@ -55,7 +56,11 @@ export async function checkSessionStart(
   if (surface === "web" && account.kind !== "staff" && !(await isOwnerSettingUp(deps, account.email))) {
     throw new AppError("permission_denied", "The web portal is for hotel staff. Guests sign in in the Igongo app.");
   }
-  // Step 6: the super admin never starts a session through Google or Apple.
+  // Step 6: Google and Apple are for the app only, never the web portal.
+  if (via.social && surface === "web") {
+    throw new AppError("method_disabled", "Google and Apple sign-in is in the Igongo app only. Use your email and password on the web.");
+  }
+  // Step 7: the super admin never starts a session through Google or Apple.
   const roleKeys = (await deps.access.profileFor(userId)).roles.map((r) => r.key);
   if (via.social && roleKeys.includes(SUPER_ADMIN_ROLE_KEY)) {
     throw new AppError("method_disabled", "The super admin signs in with email and password only.");
