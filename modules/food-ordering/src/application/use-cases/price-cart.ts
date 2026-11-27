@@ -6,6 +6,7 @@
  *   2. every item must exist, be at this outlet and be available today,
  *   3. each line is priced with its options,
  *   4. a delivery gets its zone's fee and travel time,
+ *   4b. a takeaway adds the container fee the super admin set (0 = free),
  *   5. a promo or voucher code takes its discount off the food,
  *   6. a pre-order or scheduled order needs enough notice, within the days allowed,
  *   7. the ready time comes from prep times and the kitchen's queue.
@@ -37,6 +38,8 @@ export interface PricedCart {
   promo: PromoQuote | null;
   discount: number;
   deliveryFee: number;
+  /** The takeaway container fee the super admin set (0 = free). */
+  containerFee: number;
   total: number;
   readyAt: Date;
   rules: OrderingRules;
@@ -70,6 +73,8 @@ export async function priceCart(deps: OrderingDeps, cart: CartInput): Promise<Pr
     deliveryFee = quote.fee;
     travelMinutes = quote.minutes;
   }
+  // 4b. Takeaway containers: free unless the super admin set a fee.
+  const containerFee = cart.type === "takeaway" ? Math.max(0, rules.containerFee) : 0;
   // 5. Promo or voucher: never more than the food (the delivery fee is always paid).
   let promo: PromoQuote | null = null;
   if (cart.promoCode) {
@@ -93,5 +98,5 @@ export async function priceCart(deps: OrderingDeps, cart: CartInput): Promise<Pr
   }
   // 7. Ready time.
   const readyAt = readyTime({ now, prepMinutes: prep, queued: await deps.orders.queued(cart.outlet), arriveAt: scheduled ? (cart.arriveAt ?? null) : null, travelMinutes, rules });
-  return { lines, subtotal, promo, discount, deliveryFee, total: subtotal - discount + deliveryFee, readyAt, rules };
+  return { lines, subtotal, promo, discount, deliveryFee, containerFee, total: subtotal - discount + deliveryFee + containerFee, readyAt, rules };
 }

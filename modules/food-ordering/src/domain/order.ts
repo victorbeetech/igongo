@@ -34,7 +34,9 @@ export interface Order {
   /** The promo or voucher code used, in capitals, or null. */
   promoCode: string | null;
   deliveryFee: number;
-  /** subtotal - discount + deliveryFee, worked out on the server only. */
+  /** The takeaway container fee charged (0 when free). */
+  containerFee: number;
+  /** subtotal - discount + deliveryFee + containerFee, worked out on the server only. */
   total: number;
   paid: number;
   /**

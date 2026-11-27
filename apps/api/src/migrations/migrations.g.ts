@@ -179,6 +179,12 @@ export const MIGRATIONS: Migration[] = [
   "sql": "CREATE TABLE \"orders\".\"ratings\" (\n\t\"order_id\" text PRIMARY KEY NOT NULL,\n\t\"user_id\" text NOT NULL,\n\t\"name\" text NOT NULL,\n\t\"outlet\" text NOT NULL,\n\t\"item_ids\" text[] NOT NULL,\n\t\"food\" smallint NOT NULL,\n\t\"delivery\" smallint,\n\t\"comment\" text,\n\t\"hidden\" boolean DEFAULT false NOT NULL,\n\t\"created_at\" timestamp with time zone NOT NULL\n);\n--> statement-breakpoint\nALTER TABLE \"orders\".\"orders\" ADD COLUMN \"discount\" integer DEFAULT 0 NOT NULL;--> statement-breakpoint\nALTER TABLE \"orders\".\"orders\" ADD COLUMN \"promo_code\" text;--> statement-breakpoint\nALTER TABLE \"orders\".\"orders\" ADD COLUMN \"request_key\" text;--> statement-breakpoint\nCREATE INDEX \"ratings_outlet_idx\" ON \"orders\".\"ratings\" USING btree (\"outlet\",\"created_at\");--> statement-breakpoint\nCREATE UNIQUE INDEX \"orders_request_key\" ON \"orders\".\"orders\" USING btree (\"user_id\",\"request_key\");"
  },
  {
+  "module": "food-ordering",
+  "name": "0002_container_fee",
+  "checksum": "a5b954de37a74f3b",
+  "sql": "ALTER TABLE \"orders\".\"orders\" ADD COLUMN \"container_fee\" integer DEFAULT 0 NOT NULL;\n"
+ },
+ {
   "module": "delivery-riders",
   "name": "0000_init",
   "checksum": "c2b38ace91546101",

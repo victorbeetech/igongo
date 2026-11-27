@@ -10,7 +10,7 @@ import 'domain/place.dart';
 
 /// Module 67's hand-made screens.
 final m67Overrides = <String, ScreenOverride>{
-  'S67-01': (_, s) => BookingsHomeScreen(s),
+  'S67-01': (_, s) => BookingsHomeScreen(s, place),
   'S67-02': (_, s) => BookScreen(s, place),
   'S67-03': (_, s) => BookScreen(s, place),
   'S67-04': (_, s) => BookScreen(s, place),

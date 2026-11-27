@@ -33,6 +33,7 @@ export const orders = ordersSchema.table(
     discount: integer("discount").notNull().default(0),
     promoCode: text("promo_code"),
     deliveryFee: integer("delivery_fee").notNull(),
+    containerFee: integer("container_fee").notNull().default(0),
     total: integer("total").notNull(),
     paid: integer("paid").notNull(),
     arriveAt: timestamp("arrive_at", { withTimezone: true }),

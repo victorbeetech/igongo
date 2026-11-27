@@ -29,6 +29,8 @@ export interface OrderingRules {
   minutesPerQueuedOrder: number;
   /** How many days ahead a guest may schedule an order (0 turns scheduling off). */
   scheduleAheadDays: number;
+  /** The takeaway container fee in shillings: 0 gives containers free; above 0 it is added to every takeaway order. */
+  containerFee: number;
 }
 
 const PAYMENT_BY_TYPE: Record<OrderType, PaymentTiming> = { delivery: "before", room_service: "later", dine_in: "later", takeaway: "before", pre_order: "deposit" };
@@ -41,10 +43,11 @@ export const DEFAULT_ORDERING_RULES: OrderingRules = {
   cancelWindowMinutes: 5,
   minutesPerQueuedOrder: 3,
   scheduleAheadDays: 7,
+  containerFee: 0,
 };
 
-/** Order types a guest may schedule for later (pre-orders always have a time; dine-in is now). */
-export const SCHEDULABLE_TYPES: readonly OrderType[] = ["delivery", "takeaway", "room_service"];
+/** Order types a guest may schedule for later (pre-orders always have a time; dine-in guests give their arrival time). */
+export const SCHEDULABLE_TYPES: readonly OrderType[] = ["delivery", "takeaway", "room_service", "dine_in"];
 
 /** True when [type] can be ordered at [outlet]. */
 export function typeAllowed(rules: OrderingRules, type: OrderType, outlet: string): boolean {

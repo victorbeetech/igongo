@@ -70,6 +70,9 @@ class CartItemCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
+                // The guest's note for the kitchen, when there is one.
+                if (line.notes case final note?)
+                  Text('Note: $note', style: context.text.bodySmall?.copyWith(color: palette.textMuted), maxLines: 2, overflow: TextOverflow.ellipsis),
                 // Step 3a: the day, tappable to choose another (a line from a reorder may have none yet).
                 InkWell(
                   onTap: onDate,
