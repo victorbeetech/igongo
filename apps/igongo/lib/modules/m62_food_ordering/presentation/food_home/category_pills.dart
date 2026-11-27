@@ -1,5 +1,6 @@
 // The cuisine pills under the search row: "All" and one pill per menu section
-// from the real menu. The chosen pill is Igongo red; the others are soft.
+// from the real menu. Built on ChoiceChip so the theme styles them. The chosen
+// pill is Igongo red; the others are soft.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
@@ -32,31 +33,20 @@ class CategoryPills extends StatelessWidget {
         itemCount: labels.length,
         separatorBuilder: (_, _) => const SizedBox(width: IgongoSpace.sm),
         itemBuilder: (_, i) {
-          // Step 2: one pill, filled red when it is the chosen one.
+          // Step 2: one chip; filled red when it is the chosen one.
           final label = labels[i];
           final on = label == selected;
-          return Semantics(
-            button: true,
+          return ChoiceChip(
+            label: Text(label),
             selected: on,
-            child: Material(
-              color: on ? p.primary : p.surfaceAlt,
-              shape: StadiumBorder(side: BorderSide(color: on ? p.primary : p.border)),
-              clipBehavior: Clip.antiAlias,
-              child: InkWell(
-                onTap: () => onSelected(label),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.md),
-                  child: Center(
-                    child: Text(
-                      label,
-                      style: context.text.labelLarge?.copyWith(
-                        fontWeight: on ? FontWeight.w700 : FontWeight.w500,
-                        color: on ? p.onPrimary : p.textMuted,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+            onSelected: (_) => onSelected(label),
+            showCheckmark: false,
+            selectedColor: p.primary,
+            backgroundColor: p.surfaceAlt,
+            side: BorderSide(color: on ? p.primary : p.border),
+            labelStyle: context.text.labelLarge?.copyWith(
+              fontWeight: on ? FontWeight.w700 : FontWeight.w500,
+              color: on ? p.onPrimary : p.textMuted,
             ),
           );
         },

@@ -1,8 +1,9 @@
 // S62-01..08 The Food tab, live: pick a venue, tap dishes to add them, then check out.
 // Layout, top to bottom: the venue and cart row, the search row, the section pills,
 // the Resort Venues strip, the dish grid, out-of-stock dishes, a farm note. The
-// Your order bar sits at the bottom when the cart has dishes, and the WhatsApp
-// button floats over the list. Every venue, dish, price and section comes from the
+// Your order bar sits at the bottom when the cart has dishes. The app shell
+// already shows the WhatsApp button on guest screens, so this screen does not add
+// another one. Every venue, dish, price and section comes from the
 // menu API; nothing here is sample data. Signed out, the prototype design shows.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,7 +11,6 @@ import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../shared/catalog/catalog.dart';
-import '../../../shared/contact/whatsapp_button.dart';
 import '../../../shared/format/ugx.dart';
 import '../../../shared/live/live_view.dart';
 import '../../../shared/screens/home/tile_grid.dart';
@@ -88,155 +88,149 @@ class OrderFoodScreen extends ConsumerWidget {
       return Column(
         children: [
           Expanded(
-            child: Stack(
+            child: ScreenListView(
               children: [
-                ScreenListView(
-                  children: [
-                    // Step 3: the top row, the search row and the section pills.
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, IgongoSpace.sm, IgongoSpace.lg, 0),
-                      child: FoodHeader(
-                        venue: venueName,
-                        count: count,
-                        onCart: () => _open(context, const CheckoutSheet()),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, IgongoSpace.md, IgongoSpace.lg, 0),
-                      child: FoodSearchBar(
-                        onChanged: (text) => ref.read(menuSearchProvider.notifier).set(text),
-                        onFilter: () => showIgongoToast(context, 'Filters are coming soon.'),
-                      ),
-                    ),
-                    ...menu.when(
-                      loading: () => [const LinearProgressIndicator()],
-                      error: (e, _) => [Padding(padding: const EdgeInsets.all(IgongoSpace.lg), child: Text('$e'))],
-                      data: (all) {
-                        // Step 4: the sections (the pills), then only the dishes that match the pill and the search.
-                        final sections = [
-                          for (final s in {
-                            for (final i in all)
-                              if (!i.isContainer) i.section,
-                          })
-                            s,
-                        ];
-                        final items = [
-                          for (final i in all)
-                            if (!i.isContainer &&
-                                (category == null || i.section == category) &&
-                                (query.isEmpty || i.name.toLowerCase().contains(query)))
-                              i,
-                        ];
-                        // Step 5: dishes on today first; out-of-stock dishes go last.
-                        final onToday = [
-                          for (final i in items)
-                            if (i.available) i,
-                        ];
-                        final outToday = [
-                          for (final i in items)
-                            if (!i.available) i,
-                        ];
-                        return [
-                          if (sections.length > 1)
-                            Padding(
-                              padding: const EdgeInsets.only(top: IgongoSpace.md),
-                              child: CategoryPills(
-                                labels: ['All', ...sections],
-                                selected: category ?? 'All',
-                                onSelected: (l) => ref.read(menuCategoryProvider.notifier).set(l == 'All' ? null : l),
+                // Step 3: the top row, the search row and the section pills.
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, IgongoSpace.sm, IgongoSpace.lg, 0),
+                  child: FoodHeader(
+                    venue: venueName,
+                    count: count,
+                    onCart: () => _open(context, const CheckoutSheet()),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, IgongoSpace.md, IgongoSpace.lg, 0),
+                  child: FoodSearchBar(
+                    onChanged: (text) => ref.read(menuSearchProvider.notifier).set(text),
+                    onFilter: () => showIgongoToast(context, 'Filters are coming soon.'),
+                  ),
+                ),
+                ...menu.when(
+                  loading: () => [const LinearProgressIndicator()],
+                  error: (e, _) => [Padding(padding: const EdgeInsets.all(IgongoSpace.lg), child: Text('$e'))],
+                  data: (all) {
+                    // Step 4: the sections (the pills), then only the dishes that match the pill and the search.
+                    final sections = [
+                      for (final s in {
+                        for (final i in all)
+                          if (!i.isContainer) i.section,
+                      })
+                        s,
+                    ];
+                    final items = [
+                      for (final i in all)
+                        if (!i.isContainer &&
+                            (category == null || i.section == category) &&
+                            (query.isEmpty || i.name.toLowerCase().contains(query)))
+                          i,
+                    ];
+                    // Step 5: dishes on today first; out-of-stock dishes go last.
+                    final onToday = [
+                      for (final i in items)
+                        if (i.available) i,
+                    ];
+                    final outToday = [
+                      for (final i in items)
+                        if (!i.available) i,
+                    ];
+                    return [
+                      if (sections.length > 1)
+                        Padding(
+                          padding: const EdgeInsets.only(top: IgongoSpace.md),
+                          child: CategoryPills(
+                            labels: ['All', ...sections],
+                            selected: category ?? 'All',
+                            onSelected: (l) => ref.read(menuCategoryProvider.notifier).set(l == 'All' ? null : l),
+                          ),
+                        ),
+                      if (demo) const DemoNotice(),
+                      // Step 6: the venues, from the real outlets; tapping one makes it the cart's venue.
+                      Padding(
+                        padding: const EdgeInsets.only(top: IgongoSpace.lg),
+                        child: VenueRow(
+                          children: [
+                            for (final o in outlets)
+                              VenueCard(
+                                name: o.name,
+                                detail: 'Open for app orders',
+                                badges: _badgesOf(o, rules),
+                                selected: o.key == outlet,
+                                photo: _venuePhoto(o),
+                                onTap: () {
+                                  ref.read(menuCategoryProvider.notifier).set(null);
+                                  ref.read(cartProvider.notifier).useOutlet(o.key);
+                                },
                               ),
-                            ),
-                          if (demo) const DemoNotice(),
-                          // Step 6: the venues, from the real outlets; tapping one makes it the cart's venue.
-                          Padding(
-                            padding: const EdgeInsets.only(top: IgongoSpace.lg),
-                            child: VenueRow(
+                          ],
+                        ),
+                      ),
+                      if (all.isEmpty)
+                        const Padding(
+                          padding: EdgeInsets.all(IgongoSpace.lg),
+                          child: Text('Nothing on this menu yet.'),
+                        ),
+                      if (all.isNotEmpty && items.isEmpty)
+                        const Padding(
+                          padding: EdgeInsets.all(IgongoSpace.lg),
+                          child: Text('No dish matches your search.'),
+                        ),
+                      // Step 7: the dish grid, two to a row, under the chosen section's name.
+                      if (onToday.isNotEmpty) ...[
+                        FoodSectionTitle(
+                          title: category ?? "Chef's Signatures",
+                          subtitle: 'Freshly prepared to order',
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
+                          child: TileGrid(
+                            children: [
+                              for (final i in onToday)
+                                DishCard(
+                                  name: i.name,
+                                  price: ugx(i.price),
+                                  description: i.description ?? stars[i.id]?.words,
+                                  photo: i.photoUrl,
+                                  onAdd: () {
+                                    ref.read(cartProvider.notifier).useOutlet(outlet);
+                                    openItemPage(context, i);
+                                  },
+                                ),
+                            ],
+                          ),
+                        ),
+                      ],
+                      // Step 8: out-of-stock dishes, dimmed and last, in a "Not available" card.
+                      if (outToday.isNotEmpty) ...[
+                        const SectionHeader('Not available'),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
+                          child: IgongoCard(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                for (final o in outlets)
-                                  VenueCard(
-                                    name: o.name,
-                                    detail: 'Open for app orders',
-                                    badges: _badgesOf(o, rules),
-                                    selected: o.key == outlet,
-                                    photo: _venuePhoto(o),
-                                    onTap: () {
-                                      ref.read(menuCategoryProvider.notifier).set(null);
-                                      ref.read(cartProvider.notifier).useOutlet(o.key);
-                                    },
+                                for (final i in outToday)
+                                  Opacity(
+                                    opacity: 0.5,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: IgongoSpace.xs),
+                                      child: Text('${i.name} · ${ugx(i.price)}'),
+                                    ),
                                   ),
                               ],
                             ),
                           ),
-                          if (all.isEmpty)
-                            const Padding(
-                              padding: EdgeInsets.all(IgongoSpace.lg),
-                              child: Text('Nothing on this menu yet.'),
-                            ),
-                          if (all.isNotEmpty && items.isEmpty)
-                            const Padding(
-                              padding: EdgeInsets.all(IgongoSpace.lg),
-                              child: Text('No dish matches your search.'),
-                            ),
-                          // Step 7: the dish grid, two to a row, under the chosen section's name.
-                          if (onToday.isNotEmpty) ...[
-                            FoodSectionTitle(
-                              title: category ?? "Chef's Signatures",
-                              subtitle: 'Freshly prepared to order',
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
-                              child: TileGrid(
-                                children: [
-                                  for (final i in onToday)
-                                    DishCard(
-                                      name: i.name,
-                                      price: ugx(i.price),
-                                      description: i.description ?? stars[i.id]?.words,
-                                      photo: i.photoUrl,
-                                      onAdd: () {
-                                        ref.read(cartProvider.notifier).useOutlet(outlet);
-                                        openItemPage(context, i);
-                                      },
-                                    ),
-                                ],
-                              ),
-                            ),
-                          ],
-                          // Step 8: out-of-stock dishes, dimmed and last, in a "Not available" card.
-                          if (outToday.isNotEmpty) ...[
-                            const SectionHeader('Not available'),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
-                              child: IgongoCard(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    for (final i in outToday)
-                                      Opacity(
-                                        opacity: 0.5,
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: IgongoSpace.xs),
-                                          child: Text('${i.name} · ${ugx(i.price)}'),
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                          // Step 9: the farm note, then room so the last card clears the bar and the WhatsApp button.
-                          const Padding(
-                            padding: EdgeInsets.fromLTRB(IgongoSpace.lg, IgongoSpace.xl, IgongoSpace.lg, 0),
-                            child: FarmTip(),
-                          ),
-                          const SizedBox(height: 120),
-                        ];
-                      },
-                    ),
-                  ],
+                        ),
+                      ],
+                      // Step 9: the farm note, then room so the last card clears the Your order bar.
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(IgongoSpace.lg, IgongoSpace.xl, IgongoSpace.lg, 0),
+                        child: FarmTip(),
+                      ),
+                      const SizedBox(height: 120),
+                    ];
+                  },
                 ),
-                // Step 10: the WhatsApp button floats over the list, above the order bar.
-                const Positioned(right: IgongoSpace.lg, bottom: IgongoSpace.lg, child: WhatsappButton()),
               ],
             ),
           ),
