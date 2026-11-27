@@ -11,8 +11,8 @@ import type { GuestProfile } from "../../domain/guest-profile";
 import { NO_CONSENT, type MarketingConsent } from "../../domain/marketing-consent";
 import type { CrmDeps } from "../crm-deps";
 
-/** The fields a guest may change on their own profile. */
-export type MyDetails = Partial<Pick<GuestProfile, "name" | "phone" | "nationality" | "birthday" | "preferences" | "allergies">>;
+/** The fields a guest may change on their own profile (checked by the route's schema first). */
+export type MyDetails = Partial<Pick<GuestProfile, "name" | "phone" | "email" | "nationality" | "birthday" | "preferences" | "allergies">>;
 
 /** My profile; created the first time I open it. */
 export async function myProfile(deps: CrmDeps, me: { userId: string; name: string; email: string }): Promise<GuestProfile> {
