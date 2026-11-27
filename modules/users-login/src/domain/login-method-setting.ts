@@ -21,9 +21,8 @@ export interface LoginMethodSetting {
 export const METHOD_INFO: Record<LoginMethod, { label: string; platform: MethodPlatform; defaultOn: boolean }> = {
   email_password: { label: "Email and password", platform: "all", defaultOn: true },
   google: { label: "Sign in with Google", platform: "all", defaultOn: true },
-  // On by default now that the Apple keys are set; it is listed only when
-  // those keys exist (see isProviderReady), so it never shows without them.
-  apple: { label: "Sign in with Apple", platform: "all", defaultOn: true },
+  // Off until the Apple keys arrive; the code is ready.
+  apple: { label: "Sign in with Apple", platform: "all", defaultOn: false },
   // Off until the hotel agrees the SMS and WhatsApp providers and cost.
   phone_sms: { label: "Phone code by SMS", platform: "all", defaultOn: false },
   phone_whatsapp: { label: "Phone code by WhatsApp", platform: "all", defaultOn: false },
