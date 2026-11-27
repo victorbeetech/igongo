@@ -2,7 +2,6 @@
 // the file cannot be loaded) it shows a placeholder of the same shape: a soft
 // brand gradient with a picture icon. Screens never draw their own placeholder.
 
-import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../theme/theme.dart';

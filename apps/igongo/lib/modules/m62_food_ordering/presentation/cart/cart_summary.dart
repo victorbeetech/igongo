@@ -35,10 +35,9 @@ class CartSummary extends StatelessWidget {
           _Row(label: 'Subtotal', value: ugx(subtotal)),
           const SizedBox(height: IgongoSpace.sm),
           _Row(label: 'Service charge', value: 'Added at checkout', muted: true),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: IgongoSpace.md),
-            child: Divider(color: palette.border, height: 1),
-          ),
+          const SizedBox(height: IgongoSpace.md),
+          Divider(color: palette.border, height: 1),
+          const SizedBox(height: IgongoSpace.md),
           // Step 3: the total, in the brand red.
           _Row(label: 'Total', value: ugx(subtotal), big: true),
         ],
