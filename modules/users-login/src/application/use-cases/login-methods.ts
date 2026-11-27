@@ -5,7 +5,7 @@
 
 import type { LoginMethod } from "@igongo/contracts/users-login";
 import { recordChange, type ChangeContext } from "@igongo/core";
-import { METHOD_INFO, type LoginMethodSetting, type MethodPlatform } from "../../domain/login-method-setting";
+import { METHOD_INFO, isProviderReady, type LoginMethodSetting, type MethodPlatform, type ProviderReadiness } from "../../domain/login-method-setting";
 import type { LoginSettingsStore } from "../ports/login-settings-store";
 
 /** A method as the login screen sees it. */
@@ -18,12 +18,19 @@ export interface PublicMethod {
 /**
  * The switched-on methods, in order, for the login screen. Role limits are
  * not shown here (nobody is signed in yet); they are checked at sign-in.
+ *
+ * A social method (Google, Apple) is listed only when its keys are set up on
+ * the server: [providerReady] says which ones are. A switched-on method with no
+ * keys is left out, so the login screen never shows a button that cannot work.
  */
-export async function publicMethods(store: LoginSettingsStore): Promise<{ methods: PublicMethod[]; firstMethod: string; allowSelfRegistration: boolean }> {
+export async function publicMethods(
+  store: LoginSettingsStore,
+  providerReady: ProviderReadiness = { google: true, apple: true },
+): Promise<{ methods: PublicMethod[]; firstMethod: string; allowSelfRegistration: boolean }> {
   const [methods, policy] = await Promise.all([store.methods(), store.policy()]);
   return {
     methods: methods
-      .filter((m) => m.enabled)
+      .filter((m) => m.enabled && isProviderReady(m.method, providerReady))
       .sort((a, b) => a.sortOrder - b.sortOrder)
       .map((m) => ({ method: m.method, label: METHOD_INFO[m.method].label, platform: METHOD_INFO[m.method].platform })),
     firstMethod: policy.firstMethod,

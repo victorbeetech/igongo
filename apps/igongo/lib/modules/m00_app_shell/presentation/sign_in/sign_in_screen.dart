@@ -15,6 +15,8 @@ import '../../../../shared/ui/button/igongo_button.dart';
 import '../../../../shared/ui/field/igongo_field.dart';
 import '../../../../shared/ui/logo/igongo_logo.dart';
 import '../../../../shared/ui/toast/igongo_toast.dart';
+import '../../application/sign_in_options_provider.dart';
+import '../../domain/sign_in_option.dart';
 
 /// The sign-in screen.
 class SignInScreen extends ConsumerStatefulWidget {
@@ -42,6 +44,12 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     super.dispose();
   }
 
+  /// Step A: Google or Apple. The app's own sign-in for these is not set up yet
+  /// (it needs the native client IDs), so the button says so honestly.
+  void _socialNotReady(SignInOption option) {
+    showIgongoToast(context, '${option.label} is not set up in the app yet. Use email and password for now.');
+  }
+
   /// Signs in, then opens the person's home. Errors show the API's message.
   Future<void> _signIn() async {
     if (_email.text.trim().isEmpty || _password.text.isEmpty) {
@@ -60,7 +68,15 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) {
+    // Step B: the switched-on Google and Apple options, only when the server lists them.
+    final options = ref.watch(signInOptionsProvider).valueOrNull ?? const <SignInOption>[];
+    final social = options.where((o) => o.method == 'google' || o.method == 'apple').toList();
+    return _layout(context, social);
+  }
+
+  /// Lays out the sign-in screen; [social] is the Google and Apple options to show.
+  Widget _layout(BuildContext context, List<SignInOption> social) => Scaffold(
     body: SafeArea(
       child: Center(
         child: ConstrainedBox(
@@ -102,8 +118,32 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                 variant: ButtonVariant.text,
                 onPressed: () => screen.open('S00-17'),
               ),
+              // Step 3: Google and Apple, only when the server has them on and set up.
+              if (social.isNotEmpty) ...[
+                const SizedBox(height: IgongoSpace.lg),
+                Row(
+                  children: [
+                    const Expanded(child: Divider()),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.sm),
+                      child: Text('or', style: context.text.bodySmall),
+                    ),
+                    const Expanded(child: Divider()),
+                  ],
+                ),
+                const SizedBox(height: IgongoSpace.md),
+                for (final option in social) ...[
+                  IgongoButton(
+                    label: option.label,
+                    variant: ButtonVariant.secondary,
+                    expand: true,
+                    onPressed: () => _socialNotReady(option),
+                  ),
+                  const SizedBox(height: IgongoSpace.sm),
+                ],
+              ],
               const SizedBox(height: IgongoSpace.lg),
-              // Step 3: guest sign-up (staff accounts come from the hotel).
+              // Step 4: guest sign-up (staff accounts come from the hotel).
               IgongoButton(
                 label: 'New here? Create an account',
                 variant: ButtonVariant.text,

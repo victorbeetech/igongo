@@ -84,5 +84,17 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<!-- Reversed iOS client ID, so Google can send the user back to the app. -->
+				<string>com.googleusercontent.apps.802llnqis9nfa74280mkl9vjf7l89kep</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

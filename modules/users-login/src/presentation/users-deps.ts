@@ -7,6 +7,7 @@ import type { ChangeContext } from "@igongo/core";
 import type { AccountStore } from "../application/ports/account-store";
 import type { LoginSettingsStore } from "../application/ports/login-settings-store";
 import type { Auth } from "../infrastructure/auth/create-auth";
+import type { ProviderReadiness } from "../domain/login-method-setting";
 
 export interface UsersDeps {
   accounts: AccountStore;
@@ -20,4 +21,9 @@ export interface UsersDeps {
   /** HR's staff records, for the super admin's staff match. */
   staffRecords: StaffRecordMatcher;
   alerts: SecurityAlerts;
+  /**
+   * Which social providers (Google, Apple) have their keys set up. Optional so
+   * older callers and tests keep working; when missing, both count as ready.
+   */
+  socialReady?: () => Promise<ProviderReadiness>;
 }

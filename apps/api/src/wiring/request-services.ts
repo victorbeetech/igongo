@@ -86,6 +86,19 @@ export class RequestServices {
   }));
 
   // --- Users & Login ---
+  /**
+   * Which social sign-in providers have their keys set up (Google, Apple).
+   * If the sign-in settings are incomplete (for example no auth secret), both
+   * count as not ready, so the login screen hides their buttons.
+   */
+  readonly socialReady = async (): Promise<{ google: boolean; apple: boolean }> => {
+    try {
+      const cfg = await authConfigFrom(this.env, this.secrets());
+      return { google: cfg.google !== null, apple: cfg.apple !== null };
+    } catch {
+      return { google: false, apple: false };
+    }
+  };
   readonly accounts = once(() => new DrizzleAccountStore(this.db));
   readonly loginSettings = once(() => new DrizzleLoginSettingsStore(this.db));
   readonly auth = once(
