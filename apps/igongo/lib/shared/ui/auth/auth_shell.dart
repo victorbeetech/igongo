@@ -1,7 +1,7 @@
 // The frame for every Auth screen: the shared hero on top, then a white card
 // that holds the screen's own content. Screens pass only their content, so the
-// card, spacing and corner radius are the same everywhere. A screen that needs
-// to go back can show a back pill over the photo instead of an app bar.
+// card, spacing, corner radius and input boxes are the same everywhere. A screen
+// that needs to go back can show a back pill over the photo instead of an app bar.
 
 import 'package:material_ui/material_ui.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
@@ -36,56 +36,80 @@ class AuthShell extends StatelessWidget {
   /// The space between the items inside the card.
   final double gap;
 
+  /// The input boxes as the design shows them: a soft filled box with a thin border.
+  /// Only this Auth frame changes, so the rest of the app keeps its own inputs.
+  ThemeData _authTheme(BuildContext context) {
+    // Step 1: take the palette tokens, so no colour is typed in here.
+    final palette = context.palette;
+    // Step 2: the box border, shared by the resting and focused states.
+    const radius = BorderRadius.all(Radius.circular(IgongoRadius.md));
+    // Step 3: the theme copy that the Auth screens' text fields read.
+    return Theme.of(context).copyWith(
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: palette.surfaceAlt,
+        contentPadding: const EdgeInsets.symmetric(horizontal: IgongoSpace.md, vertical: IgongoSpace.md),
+        border: OutlineInputBorder(borderRadius: radius, borderSide: BorderSide(color: palette.border)),
+        enabledBorder: OutlineInputBorder(borderRadius: radius, borderSide: BorderSide(color: palette.border)),
+        focusedBorder: OutlineInputBorder(borderRadius: radius, borderSide: BorderSide(color: palette.primary)),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final palette = context.palette;
-    return Scaffold(
-      appBar: appBar,
-      // Step 1: keep the content a readable width on tablets and the web.
-      body: SafeArea(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 420),
-            // Step 2: the scrolling content, with the back pill (if any) laid over the top of it.
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                ListView(
-                  padding: EdgeInsets.zero,
-                  children: [
-                    // Step 2a: the photo and logo at the top.
-                    const AuthHero(),
-                    // Step 2b: the white card sits directly below the photo, so the wave at the photo's bottom edge shows.
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.md),
-                      // A Material surface, so list tiles inside the card (such as the privacy checkbox) get their ink.
-                      child: Material(
-                        color: palette.surface,
-                        clipBehavior: Clip.antiAlias,
-                        // Only the top corners curve, as in the design, so the sheet rises from the wave.
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(IgongoRadius.lg)),
-                        ),
-                        child: Padding(
-                          padding: cardPadding,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            spacing: gap,
-                            children: children,
+    return Theme(
+      // Step 0: the Auth input style applies to everything inside this frame.
+      data: _authTheme(context),
+      child: Scaffold(
+        appBar: appBar,
+        // Step 1: keep the content a readable width on tablets and the web.
+        body: SafeArea(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 420),
+              // Step 2: the scrolling content, with the back pill (if any) laid over the top of it.
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  ListView(
+                    padding: EdgeInsets.zero,
+                    children: [
+                      // Step 2a: the photo, the curve and the logo at the top.
+                      const AuthHero(),
+                      // Step 2b: the white card directly below the photo, so the curve shows above it.
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.md),
+                        // A Material surface, so list tiles inside the card (such as the privacy checkbox) get their ink.
+                        child: Material(
+                          color: palette.surface,
+                          clipBehavior: Clip.antiAlias,
+                          // Only the top corners curve, as in the design, so the sheet rises from the wave.
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(top: Radius.circular(IgongoRadius.lg)),
+                          ),
+                          child: Padding(
+                            padding: cardPadding,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              spacing: gap,
+                              children: children,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                // Step 3: the back pill sits over the photo, top left, only when a screen asks for it.
-                if (onBack != null)
-                  Positioned(
-                    top: IgongoSpace.sm,
-                    left: IgongoSpace.md,
-                    child: _BackPill(onBack: onBack!),
+                    ],
                   ),
-              ],
+                  // Step 3: the back pill sits over the photo, top left, only when a screen asks for it.
+                  if (onBack != null)
+                    Positioned(
+                      top: IgongoSpace.sm,
+                      left: IgongoSpace.md,
+                      child: _BackPill(onBack: onBack!),
+                    ),
+                ],
+              ),
             ),
           ),
         ),

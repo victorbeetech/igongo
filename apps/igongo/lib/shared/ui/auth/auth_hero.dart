@@ -14,13 +14,13 @@ import 'auth_assets.dart';
 /// The photo, gradient, white curve and logo badge at the top of an Auth screen.
 class AuthHero extends StatelessWidget {
   /// Creates the hero. [height] is the photo's height in logical pixels.
-  const AuthHero({super.key, this.height = 200});
+  const AuthHero({super.key, this.height = 224});
 
   /// The photo's height in logical pixels.
   final double height;
 
   /// How tall the red gradient is, counted up from the bottom edge. It fades out above this, so the photo stays clear at the top.
-  static const _gradientHeight = 120.0;
+  static const _gradientHeight = 112.0;
 
   @override
   Widget build(BuildContext context) {
