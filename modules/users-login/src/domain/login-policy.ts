@@ -49,7 +49,7 @@ export const DEFAULT_LOGIN_POLICY: LoginPolicy = {
   newAccountsNeedApproval: false,
   sessionDays: 30,
   firstMethod: "email_password",
-  passwordMinLength: 10,
+  passwordMinLength: 8,
   passwordNeedsLetterAndNumber: true,
   maxFailedAttempts: 5,
   lockoutMinutes: 15,
