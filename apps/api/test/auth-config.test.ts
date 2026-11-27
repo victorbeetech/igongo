@@ -9,7 +9,10 @@ import { authConfigFrom } from "../src/wiring/auth-config";
 import type { Env } from "../src/shell/env";
 
 /** A secret store with nothing saved: every key reads as not set. */
-const noSecrets: SecretReader = { get: async () => null };
+const noSecrets: SecretReader = {
+  get: async () => null,
+  getMany: async () => ({}),
+};
 
 /** The minimum Worker environment that passes the checks. */
 const baseEnv: Env = {
