@@ -52,7 +52,7 @@ One line per item, taken from the owner's own words in the project chat, the own
 | 1.32 | Premium animations before TestFlight | NOT DONE | docs/BUILD-CHECKLIST.md | Wait list |
 | 1.33 | App light and fast (speed phase before TestFlight) | NOT DONE | docs/BUILD-CHECKLIST.md | Wait list |
 | 1.34 | Super admin can switch Bookings and other banners later (banner slot) | PARTLY | PR #34 banner slot | Upload is on wait list |
-| 1.35 | Search, alerts, notifications icon behaviour | NOT DONE | docs/APP-WIRING.md | Build |
+| 1.35 | Search, alerts, notifications icon behaviour | PARTLY DONE: search results (S00-26) and the guest Alerts inbox (S00-28) are live on real data; the notifications icon badge is not yet | docs/APP-WIRING.md | Build the icon badge |
 | 1.36 | Preview panel for super admin only, at bottom of sidebar | PARTLY | PR #32 (roles) | Check placement |
 
 ## 2. Booking and tickets

@@ -68,3 +68,37 @@ export interface UserMessage {
  * fails the caller: with no Firebase keys yet it quietly sends nothing.
  */
 export type UserNotifier = (userIds: string[], message: UserMessage) => Promise<void>;
+
+/** One item of the Alerts inbox, as the app receives it from `GET /notifications/inbox`. */
+export interface InboxItemView {
+  /** The item's ID, used to mark it read. */
+  id: string;
+  /** Short heading, such as "Order ready". */
+  title: string;
+  /** The message itself. */
+  body: string;
+  /** The channel it was sent on. */
+  channel: PushChannelId;
+  /** The app screen it opens, such as `/orders/ord_1`, or null. */
+  link: string | null;
+  /** When it was created, as an ISO 8601 time. */
+  createdAt: string;
+  /** When the person opened it, or null while unread. */
+  readAt: string | null;
+}
+
+/** Answer of `GET /notifications/inbox`: one page, newest first, plus the badge count. */
+export interface InboxPageResponse {
+  /** The items on this page. */
+  items: InboxItemView[];
+  /** The caller's unread items, across all pages. */
+  unreadCount: number;
+  /** Pass as `before` for the next page, or null at the end. */
+  nextBefore: string | null;
+}
+
+/** Answer of `POST /notifications/inbox/read-all`. */
+export interface MarkAllReadResponse {
+  /** How many items changed from unread to read. */
+  marked: number;
+}

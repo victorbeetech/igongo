@@ -32,3 +32,13 @@ export const broadcastBody = z.object({
     z.object({ kind: z.literal("topic"), topic: z.string().regex(/^[a-zA-Z0-9-_.~%]{1,900}$/) }),
   ]),
 });
+
+/** `GET /notifications/inbox` query: a page size and the cursor from the last page. */
+export const inboxQuery = z.object({
+  limit: z.coerce.number().int().min(1).max(50).default(20),
+  // The cursor is read as a real time, so the repository compares dates, not text.
+  before: z.iso
+    .datetime()
+    .optional()
+    .transform((value) => (value ? new Date(value) : undefined)),
+});
