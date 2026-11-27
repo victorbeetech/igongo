@@ -45,7 +45,7 @@ class GuestProductCard extends StatelessWidget {
     final p = context.palette;
     final scale = MediaQuery.textScalerOf(context);
     // The text block is a fixed height (name, two description lines, price) that follows the text size.
-    final textHeight = scale.scale(16) + scale.scale(14) * 2 + scale.scale(20) + IgongoSpace.xs * 3;
+    final textHeight = scale.scale(22) + scale.scale(18) * 2 + scale.scale(26) + IgongoSpace.xs * 3;
     return Semantics(
       button: onTap != null,
       label: '$name, $price',

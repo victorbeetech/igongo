@@ -44,17 +44,26 @@ class GuestHeader extends StatelessWidget {
             // Step 2: a dedicated red gradient layer above the banner, whatever it shows, so the
             // greeting and the bell are always readable and a new banner can never hide them.
             Positioned(
-              left: 0,
-              right: 0,
-              top: 0,
-              height: top + 110,
+              // A pixel past every edge, so no seam can show at the top or the sides.
+              left: -1,
+              right: -1,
+              top: -1,
+              height: top + 140,
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [p.primary, p.primary.withValues(alpha: 0.7), p.primary.withValues(alpha: 0)],
-                    stops: const [0, 0.5, 1],
+                    // Eased steps, so the bottom edge fades into the banner with no hard step.
+                    colors: [
+                      p.primary,
+                      p.primary.withValues(alpha: 0.85),
+                      p.primary.withValues(alpha: 0.55),
+                      p.primary.withValues(alpha: 0.25),
+                      p.primary.withValues(alpha: 0.08),
+                      p.primary.withValues(alpha: 0),
+                    ],
+                    stops: const [0, 0.25, 0.5, 0.72, 0.9, 1],
                   ),
                 ),
               ),
