@@ -204,3 +204,13 @@ No key is written in the repository. The code is `modules/payments/src/infrastru
 **Later, when the hotel's card is ready:** open `apps/igongo/lib/modules/m62_food_ordering/presentation/map/map_setup.dart` and change `kMapTileUrl` (and `kMapAttribution`) to the paid map's tile address. The whole app follows that one change. Check the paid map's terms for the attribution text.
 
 **Note:** the OpenStreetMap tile server is free but asks for light use. Heavy use from the live app should move to a tile provider, so plan that change before the hotel opens.
+
+---
+
+## Decision: iOS minimum is now 15.5 (27 Nov 2026)
+
+**Status:** the iPhone app now needs iOS 15.5 or later. The map library (MapLibre) requires it, and the app used to support iOS 15.0.
+
+**What this costs:** iPhones on iOS 15.0 to 15.4 can no longer install the app. Most phones are on newer versions, so this is a small cost.
+
+**Your choice, later:** keep 15.5 (the default), or ask Claude to find another map package that supports iOS 15.0. To change it back, set `IPHONEOS_DEPLOYMENT_TARGET` in `apps/igongo/ios/Runner.xcodeproj/project.pbxproj` once the map package allows it.
