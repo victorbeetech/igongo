@@ -12,6 +12,8 @@ class ResortExperience {
     required this.icon,
     this.screenId,
     this.photo,
+    this.badge,
+    this.priceLabel = 'From',
   });
 
   /// The tile's name, such as `Spa & Sauna`.
@@ -28,4 +30,10 @@ class ResortExperience {
 
   /// The tile's picture (asset path), or null for the placeholder until the hotel sends one.
   final String? photo;
+
+  /// The small chip on the picture, such as `Chalet Stay` (fixed copy), or null for none.
+  final String? badge;
+
+  /// The word before the price, such as `From` or `Entry`.
+  final String priceLabel;
 }

@@ -4,6 +4,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:igongo/shared/bookings/domain/booking_status_label.dart';
+import 'package:igongo/shared/bookings/domain/placeholder_copy.dart';
 import 'package:igongo/shared/bookings/domain/resort_experiences.dart';
 import 'package:igongo/shared/bookings/presentation/home/experience_tile.dart';
 
@@ -26,6 +27,13 @@ void main() {
   test('the experiences without a screen yet have no screen number (placeholder)', () {
     final none = resortExperiences.where((e) => e.screenId == null).map((e) => e.label);
     expect(none, ['Eclipse Hill']);
+  });
+
+  test('the price slot shows a placeholder, never a number', () {
+    expect(RegExp(r'\d').hasMatch(pricePlaceholder), isFalse);
+    for (final e in resortExperiences) {
+      expect(e.priceLabel, isNotEmpty);
+    }
   });
 
   test('booking status codes read as words, and unknown codes show as they are', () {
