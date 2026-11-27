@@ -46,7 +46,9 @@ class GuestStoryBubble extends StatelessWidget {
                     children: [
                       const GuestPhoto(),
                       // Step 2: the play-style icon over the picture, centred.
-                      Center(child: Icon(icon, size: IgongoSpace.lg, color: p.primary)),
+                      Center(
+                        child: Icon(icon, size: IgongoSpace.lg, color: p.primary),
+                      ),
                     ],
                   ),
                 ),

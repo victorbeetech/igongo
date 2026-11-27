@@ -57,7 +57,10 @@ class GuestHeroCard extends StatelessWidget {
                 child: Row(
                   children: [
                     DecoratedBox(
-                      decoration: BoxDecoration(color: p.primary, borderRadius: BorderRadius.circular(IgongoRadius.pill)),
+                      decoration: BoxDecoration(
+                        color: p.primary,
+                        borderRadius: BorderRadius.circular(IgongoRadius.pill),
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.sm, vertical: IgongoSpace.xxs),
                         child: Text(
@@ -92,7 +95,11 @@ class GuestHeroCard extends StatelessWidget {
                         const SizedBox(width: IgongoSpace.xxs),
                         Text(
                           'COMING SOON',
-                          style: context.text.labelSmall?.copyWith(color: p.onPrimary, letterSpacing: 1.1, fontWeight: FontWeight.w700),
+                          style: context.text.labelSmall?.copyWith(
+                            color: p.onPrimary,
+                            letterSpacing: 1.1,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ],
                     ),
@@ -124,7 +131,10 @@ class GuestHeroCard extends StatelessWidget {
                         FilledButton(
                           onPressed: onBook,
                           style: FilledButton.styleFrom(backgroundColor: p.onPrimary, foregroundColor: p.primaryText),
-                          child: Text('Book a room', style: context.text.labelLarge?.copyWith(fontWeight: FontWeight.w700)),
+                          child: Text(
+                            'Book a room',
+                            style: context.text.labelLarge?.copyWith(fontWeight: FontWeight.w700),
+                          ),
                         ),
                       ],
                     ),

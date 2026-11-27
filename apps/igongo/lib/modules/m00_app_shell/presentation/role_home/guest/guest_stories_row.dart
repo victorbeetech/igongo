@@ -1,5 +1,5 @@
 // "Happening today at Igongo": a title with a live dot, then a row of story
-// bubbles. The bubbles are placeholders until the hotel adds its events.
+// bubbles that slides sideways. The bubbles are demo items until the hotel adds its events.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
@@ -12,13 +12,16 @@ class GuestStoriesRow extends StatelessWidget {
   /// Creates the row.
   const GuestStoriesRow({super.key});
 
-  /// The placeholder bubbles, each with its icon and label until real events exist.
-  static const _placeholders = <({IconData icon, String label})>[
-    (icon: Icons.play_arrow, label: 'Coming soon'),
-    (icon: Icons.pets_outlined, label: 'Coming soon'),
-    (icon: Icons.restaurant_outlined, label: 'Coming soon'),
-    (icon: Icons.terrain_outlined, label: 'Coming soon'),
-    (icon: Icons.pool_outlined, label: 'Coming soon'),
+  /// The demo bubbles: each has an icon, a demo title and its time. They are sample
+  /// text only, to show the slide; the hotel's real events replace them later.
+  static const _demoStories = <({IconData icon, String label})>[
+    (icon: Icons.sunny, label: 'Sunrise walk'),
+    (icon: Icons.pool_outlined, label: 'Pool party'),
+    (icon: Icons.restaurant_outlined, label: 'Chef\'s table'),
+    (icon: Icons.terrain_outlined, label: 'Guided hike'),
+    (icon: Icons.music_note_outlined, label: 'Live music'),
+    (icon: Icons.local_bar_outlined, label: 'Happy hour'),
+    (icon: Icons.spa_outlined, label: 'Spa offer'),
   ];
 
   @override
@@ -59,9 +62,9 @@ class GuestStoriesRow extends StatelessWidget {
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
-            itemCount: _placeholders.length,
+            itemCount: _demoStories.length,
             separatorBuilder: (_, _) => const SizedBox(width: IgongoSpace.sm),
-            itemBuilder: (_, i) => GuestStoryBubble(icon: _placeholders[i].icon, label: _placeholders[i].label),
+            itemBuilder: (_, i) => GuestStoryBubble(icon: _demoStories[i].icon, label: _demoStories[i].label),
           ),
         ),
       ],

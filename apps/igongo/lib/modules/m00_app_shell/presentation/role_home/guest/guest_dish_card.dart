@@ -56,7 +56,10 @@ class GuestDishCard extends StatelessWidget {
       width: _width,
       child: Material(
         color: p.surface,
-        shape: RoundedRectangleBorder(borderRadius: radius, side: BorderSide(color: p.border)),
+        shape: RoundedRectangleBorder(
+          borderRadius: radius,
+          side: BorderSide(color: p.border),
+        ),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: onTap,
@@ -67,7 +70,11 @@ class GuestDishCard extends StatelessWidget {
               Stack(
                 children: [
                   const SizedBox(height: _pictureHeight, width: double.infinity, child: GuestPhoto()),
-                  Positioned(top: IgongoSpace.sm, left: IgongoSpace.sm, child: _Pill(text: tag, fill: p.primary, ink: p.onPrimary)),
+                  Positioned(
+                    top: IgongoSpace.sm,
+                    left: IgongoSpace.sm,
+                    child: _Pill(text: tag, fill: p.primary, ink: p.onPrimary),
+                  ),
                   Positioned(
                     bottom: IgongoSpace.sm,
                     left: IgongoSpace.sm,
@@ -164,7 +171,10 @@ class _Pill extends StatelessWidget {
             Icon(icon, size: IgongoSpace.md, color: iconColor ?? ink),
             const SizedBox(width: IgongoSpace.xxs),
           ],
-          Text(text, style: context.text.labelSmall?.copyWith(color: ink, fontWeight: FontWeight.w700)),
+          Text(
+            text,
+            style: context.text.labelSmall?.copyWith(color: ink, fontWeight: FontWeight.w700),
+          ),
         ],
       ),
     ),

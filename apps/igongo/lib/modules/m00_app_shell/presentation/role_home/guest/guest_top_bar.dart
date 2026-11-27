@@ -1,5 +1,5 @@
 // The top row of the guest home: the greeting (time of day and first name), the place,
-// the points pill and the bell. Colours and text sizes come from the theme tokens only.
+// the search button and the bell. Colours and text sizes come from the theme tokens only.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
@@ -9,18 +9,21 @@ import '../../../../../shared/clock/app_clock.dart';
 import '../../../../../shared/format/greeting.dart';
 import '../../../../../shared/theme/theme.dart';
 import 'guest_bell_button.dart';
-import 'guest_points_pill.dart';
+import 'guest_search_button.dart';
 
 /// The guest home's top row. [name] is the signed-in guest's, or null when signed out.
 class GuestTopBar extends ConsumerWidget {
-  /// Creates the top row; [onBell] opens the notification inbox.
-  const GuestTopBar({super.key, this.name, required this.onBell});
+  /// Creates the top row; [onBell] opens the notification inbox and [onSearch] opens search.
+  const GuestTopBar({super.key, this.name, required this.onBell, required this.onSearch});
 
   /// The guest's name, shown after the greeting.
   final String? name;
 
   /// Called when the bell is tapped.
   final VoidCallback onBell;
+
+  /// Called when the search button is tapped.
+  final VoidCallback onSearch;
 
   /// Where the hotel is, shown under the greeting.
   static const hotelPlace = 'Mbarara, Uganda';
@@ -53,8 +56,8 @@ class GuestTopBar extends ConsumerWidget {
             ],
           ),
         ),
-        // Step 3: the points pill and the bell, on the right.
-        const GuestPointsPill(),
+        // Step 3: the search button and the bell, on the right.
+        GuestSearchButton(onPressed: onSearch),
         const SizedBox(width: IgongoSpace.sm),
         GuestBellButton(onPressed: onBell),
       ],
