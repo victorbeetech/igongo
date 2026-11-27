@@ -14,7 +14,10 @@ import '../application/bookings_providers.dart';
 import '../domain/booking.dart';
 import '../domain/booking_place.dart';
 import '../domain/resort_experiences.dart';
+import '../domain/placeholder_copy.dart';
 import 'booking_hero.dart';
+import 'home/hero_chips.dart';
+import 'home/whatsapp_button.dart';
 import 'home/active_reservation_card.dart';
 import 'home/booking_segment_tabs.dart';
 import 'home/bookings_home_header.dart';
@@ -64,54 +67,74 @@ class BookingsHomeScreen extends ConsumerWidget {
     return ColoredBox(
       // The warm cream page of the design (a theme token, dark in dark mode).
       color: context.palette.warmCream,
-      child: Column(
+      child: Stack(
         children: [
-          // Step 1: the title row, pinned above the scrolling page.
-          BookingsHomeHeader(onReceipts: () => screen.open(_receiptsId)),
-          Expanded(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                // Step 2: the picture slideshow with its page dots.
-                const BookingHero(),
-                Padding(
-                  padding: const EdgeInsets.all(IgongoSpace.md),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: IgongoSpace.md,
-                    children: [
-                      Text(
-                        'Experience the Regal Spirit of Ankole',
-                        style: context.text.headlineSmall?.copyWith(color: context.palette.primaryText),
+          // Step 1: the page: the title row above the scrolling content.
+          Column(
+            children: [
+              BookingsHomeHeader(onReceipts: () => screen.open(_receiptsId)),
+              Expanded(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    // Step 2: the picture slideshow with its place and theme chips.
+                    Stack(
+                      children: [
+                        const BookingHero(),
+                        const Positioned(
+                          top: IgongoSpace.md,
+                          left: IgongoSpace.md,
+                          child: HeroPlaceChip(text: heroPlaceName),
+                        ),
+                        const Positioned(
+                          bottom: IgongoSpace.xl,
+                          left: IgongoSpace.md,
+                          child: HeroThemeChip(text: heroThemeLabel),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(IgongoSpace.md),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: IgongoSpace.md,
+                        children: [
+                          Text(
+                            'Experience the Regal Spirit of Ankole',
+                            style: context.text.headlineSmall?.copyWith(color: context.palette.primaryText),
+                          ),
+                          // Step 3: the active reservation (the next stay) with its three actions.
+                          ActiveReservationCard(
+                            stay: stay,
+                            onDigitalKey: () => screen.open(_myBookingsId),
+                            onRoomOrder: () => screen.open(_foodId),
+                            onManage: () => screen.open(_myBookingsId),
+                            onBook: () => screen.open(_bookRoomId),
+                          ),
+                          // Step 4: the pill tabs.
+                          BookingSegmentTabs(
+                            activeCount: stay == null ? 0 : 1,
+                            receiptCount: all.length,
+                            open: screen.open,
+                          ),
+                          // Step 5: the eight resort experiences.
+                          ResortExperiencesGrid(experiences: resortExperiences, open: screen.open),
+                          // Step 6: the itinerary (the real bookings).
+                          ItinerarySection(
+                            bookings: recent,
+                            onOpen: () => screen.open(_myBookingsId),
+                            onReceipt: () => screen.open(_receiptsId),
+                          ),
+                        ],
                       ),
-                      // Step 3: the active reservation (the next stay) with its three actions.
-                      ActiveReservationCard(
-                        stay: stay,
-                        onDigitalKey: () => screen.open(_myBookingsId),
-                        onRoomOrder: () => screen.open(_foodId),
-                        onManage: () => screen.open(_myBookingsId),
-                        onBook: () => screen.open(_bookRoomId),
-                      ),
-                      // Step 4: the pill tabs.
-                      BookingSegmentTabs(
-                        activeCount: stay == null ? 0 : 1,
-                        receiptCount: all.length,
-                        open: screen.open,
-                      ),
-                      // Step 5: the eight resort experiences.
-                      ResortExperiencesGrid(experiences: resortExperiences, open: screen.open),
-                      // Step 6: the itinerary (the real bookings).
-                      ItinerarySection(
-                        bookings: recent,
-                        onOpen: () => screen.open(_myBookingsId),
-                        onReceipt: () => screen.open(_receiptsId),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
+          // Step 7: the WhatsApp button floats bottom right (no number yet, so no tap action).
+          const Positioned(right: IgongoSpace.lg, bottom: IgongoSpace.lg, child: WhatsAppButton()),
         ],
       ),
     );

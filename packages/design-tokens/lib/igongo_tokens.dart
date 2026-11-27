@@ -31,6 +31,7 @@ abstract final class IgongoColorsLight {
   static const clientViewBanner = Color(0xFF2F6690);
   static const primaryText = Color(0xFFB8292F);
   static const accent = Color(0xFFC2822B);
+  static const whatsapp = Color(0xFF25D366);
 }
 
 /// Colours for dark mode. Igongo red and deep red are the same in both modes.
@@ -61,6 +62,7 @@ abstract final class IgongoColorsDark {
   static const clientViewBanner = Color(0xFF8DB9DE);
   static const primaryText = Color(0xFFF6F1EC);
   static const accent = Color(0xFFE0A95A);
+  static const whatsapp = Color(0xFF25D366);
 }
 
 /// Text styles at the Standard text size: size, line height and weight.
