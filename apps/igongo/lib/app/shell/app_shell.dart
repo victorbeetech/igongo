@@ -55,7 +55,8 @@ class AppShell extends ConsumerWidget {
       title: spec.id == 'S00-21' ? 'Home' : spec.name,
       banners: banners,
       // The Bookings home (S67-01) draws its own slideshow at the top, so a guest sees no app bar there.
-      showAppBar: !guestHome && !(spec.id == 'S67-01' && guestOnly),
+      // The Cart (S62-04) blends its photo banner into the top of the screen, so it has no app bar either.
+      showAppBar: !guestHome && !(spec.id == 'S67-01' && guestOnly) && !ChromeRules.drawsOwnTop(spec),
       // Step 3: tab screens never show a Back arrow; pushed pages do.
       isTab: signedIn && bottomBarTabIds(ref).contains(spec.id),
       body: body,
