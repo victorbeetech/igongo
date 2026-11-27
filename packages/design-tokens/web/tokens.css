@@ -14,6 +14,8 @@
   --c-on-secondary: #FFFFFF;
   --c-brand-ink: #000000;
   --c-brand-cream: #F6F1EC;
+  --c-warm-cream: #FCF0E6;
+  --c-warm-card: #FCF3EB;
   --c-background: #F6F1EC;
   --c-surface: #FFFFFF;
   --c-surface-alt: #EFE8E1;
@@ -70,6 +72,8 @@
   --c-on-secondary: #1A1210;
   --c-brand-ink: #F6F1EC;
   --c-brand-cream: #F6F1EC;
+  --c-warm-cream: #1A1210;
+  --c-warm-card: #241A17;
   --c-background: #1A1210;
   --c-surface: #241A17;
   --c-surface-alt: #2E2320;
@@ -98,6 +102,8 @@
     --c-on-secondary: #1A1210;
     --c-brand-ink: #F6F1EC;
     --c-brand-cream: #F6F1EC;
+    --c-warm-cream: #1A1210;
+    --c-warm-card: #241A17;
     --c-background: #1A1210;
     --c-surface: #241A17;
     --c-surface-alt: #2E2320;

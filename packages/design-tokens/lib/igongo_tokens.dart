@@ -14,6 +14,8 @@ abstract final class IgongoColorsLight {
   static const onSecondary = Color(0xFFFFFFFF);
   static const brandInk = Color(0xFF000000);
   static const brandCream = Color(0xFFF6F1EC);
+  static const warmCream = Color(0xFFFCF0E6);
+  static const warmCard = Color(0xFFFCF3EB);
   static const background = Color(0xFFF6F1EC);
   static const surface = Color(0xFFFFFFFF);
   static const surfaceAlt = Color(0xFFEFE8E1);
@@ -41,6 +43,8 @@ abstract final class IgongoColorsDark {
   static const onSecondary = Color(0xFF1A1210);
   static const brandInk = Color(0xFFF6F1EC);
   static const brandCream = Color(0xFFF6F1EC);
+  static const warmCream = Color(0xFF1A1210);
+  static const warmCard = Color(0xFF241A17);
   static const background = Color(0xFF1A1210);
   static const surface = Color(0xFF241A17);
   static const surfaceAlt = Color(0xFF2E2320);

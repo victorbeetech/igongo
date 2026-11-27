@@ -34,6 +34,8 @@ export const actorMiddleware: MiddlewareHandler<ApiEnv> = async (c, next) => {
           path: c.req.path,
           account: { kind, email: user.email, twoFactorEnabled: user.twoFactorEnabled === true },
           roleKeys: access.roles.map((r) => r.key),
+          // The web portal also needs a staff role given by the super admin.
+          hasStaffRole: access.roles.some((r) => r.isStaff),
           sessionCreatedAt: new Date(session.session.createdAt),
           now: services.now,
           // Only looked up when it can matter: a non-staff account on the web.

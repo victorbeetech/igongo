@@ -9,9 +9,9 @@ void main() {
   testWidgets('a visitor browses the guest home and is offered sign-in', (tester) async {
     usePhoneWindow(tester);
     await openApp(tester, '/home', preview: false);
-    expect(find.text('Welcome to Igongo'), findsOneWidget);
+    expect(find.textContaining('Good '), findsOneWidget);
     expect(find.text('Sign in or create an account'), findsOneWidget);
-    expect(find.text('Rooms'), findsOneWidget);
+    expect(find.text('Book a room'), findsOneWidget);
     // No staff shortcuts, no role switch, no preview panel.
     expect(find.text('Shortcuts'), findsNothing);
     expect(find.byTooltip('Preview'), findsNothing);

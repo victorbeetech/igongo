@@ -163,3 +163,54 @@ To finish, either:
 2. Tell Claude to retry from the cloud once a BLAKE3 package can be installed in the session.
 
 Take a snapshot in Neon before the API deploy, because the new migrations run on the first scheduled tick.
+
+## Cart and checkout: ready to check (27 Nov 2026)
+
+**Status:** the guest cart is wired end to end. Add, change quantity, remove, the day of each item, the totals and Place order all go through the server, which prices every cart and checks the order. Payment is the one step left, because it needs the hotel's payment keys (see "Payments, food delivery and bookings" above). Until the keys are in, the pay sheet says the method is not set up yet; the order is still placed and shows in My orders.
+
+**What to check in the app:** add items from the food shop, change the quantity, pick a day for each item, remove one, watch the total change, then Proceed to Checkout, choose how you want it, and Place order.
+
+## Receipt emails: add the Resend key (booking receipts)
+
+**What is needed:** a Resend API key, and a verified sender address on your domain (for example `Igongo <receipts@yourdomain>`).
+
+**Why:** booking receipts are emailed to the guest after payment. Until the key is set, nothing is sent and the app works as before.
+
+**Exact steps:**
+1. In Resend, create an API key and verify the sending domain.
+2. Either set the Worker secret: `wrangler secret put RESEND_API_KEY` (in the API Worker), and `RECEIPT_FROM` as a variable with the sender address,
+3. or, as super admin, open Settings and set `resend.api_key` and `resend.sender` (these override the Worker secret).
+
+No key is written in the repository. The code is `modules/payments/src/infrastructure/email/resend-receipt-mailer.ts`.
+
+## Ticket signing key (booking tickets and scanning)
+
+**What is needed:** a long random secret that only the server knows. Any long random text works, for example 40 or more letters and digits.
+
+**Why:** the QR code on each booking ticket carries a signature made with this key. Staff scanning a ticket only accept codes whose signature matches, so a copied or edited ticket shows as Forged. Without the key, ticket checks answer "not configured" (HTTP 503) and the QR falls back to the plain booking code.
+
+**Exact steps:** set the Worker secret `TICKET_SIGNING_KEY` in the API Worker: `wrangler secret put TICKET_SIGNING_KEY`. Then redeploy the API. Do not share the key and do not store it in the repository. Changing it makes all tickets already issued show as Forged, so set it once.
+
+**Rotate the key before real bookings.** The owner will set `TICKET_SIGNING_KEY` himself. A value for this key was posted in chat during the build, so treat that value as exposed: generate a new key, set it with `wrangler secret put TICKET_SIGNING_KEY`, and redeploy the API before any real bookings are taken. Tickets issued before the rotation will show as Forged afterwards, so rotate before the first real booking.
+
+---
+
+## Delivery map: free for now, no key needed
+
+**Status:** the guest app draws the delivery map with MapLibre on OpenStreetMap tiles. It needs no Google key and no card. The guest taps the map to set the spot, and the point is saved with the order and remembered for the guest.
+
+**What you need to do:** nothing now. The map is free while the hotel's card is not ready.
+
+**Later, when the hotel's card is ready:** open `apps/igongo/lib/modules/m62_food_ordering/presentation/map/map_setup.dart` and change `kMapTileUrl` (and `kMapAttribution`) to the paid map's tile address. The whole app follows that one change. Check the paid map's terms for the attribution text.
+
+**Note:** the OpenStreetMap tile server is free but asks for light use. Heavy use from the live app should move to a tile provider, so plan that change before the hotel opens.
+
+---
+
+## Decision: iOS minimum is now 15.5 (27 Nov 2026)
+
+**Status:** the iPhone app now needs iOS 15.5 or later. The map library (MapLibre) requires it, and the app used to support iOS 15.0.
+
+**What this costs:** iPhones on iOS 15.0 to 15.4 can no longer install the app. Most phones are on newer versions, so this is a small cost.
+
+**Your choice, later:** keep 15.5 (the default), or ask Claude to find another map package that supports iOS 15.0. To change it back, set `IPHONEOS_DEPLOYMENT_TARGET` in `apps/igongo/ios/Runner.xcodeproj/project.pbxproj` once the map package allows it.

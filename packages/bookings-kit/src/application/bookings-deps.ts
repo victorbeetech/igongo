@@ -12,4 +12,6 @@ export interface BookingsDeps {
   bookings: BookingRepository;
   rules: BookingRulesStore;
   change: ChangeContext;
+  /** The secret that signs tickets (TICKET_SIGNING_KEY). Null or missing means ticket checks are off. */
+  ticketKey?: string | null;
 }

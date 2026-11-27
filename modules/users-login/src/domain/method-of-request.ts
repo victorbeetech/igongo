@@ -43,3 +43,11 @@ export function methodOfRequest(req: AuthRequestFacts): LoginMethod | null {
   }
   return null;
 }
+
+/**
+ * True for the Google or Apple redirect and callback paths. Used to refuse
+ * these sign-ins for the super admin even when the method cannot be read.
+ */
+export function isSocialRequestPath(path: string): boolean {
+  return path === "/sign-in/social" || path.startsWith("/callback/");
+}

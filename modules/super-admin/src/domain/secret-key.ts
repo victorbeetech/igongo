@@ -26,6 +26,7 @@ export const KNOWN_SECRET_KEYS = [
   "whatsapp.access_token",
   "whatsapp.phone_number_id",
   "resend.api_key",
+  "resend.sender",
   "mtn_momo.api_user",
   "mtn_momo.api_key",
   "mtn_momo.subscription_key",

@@ -15,6 +15,27 @@
       "when": 1795698463457,
       "tag": "0001_promos_ratings",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1795784863457,
+      "tag": "0002_container_fee",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1795753150365,
+      "tag": "0003_guest_carts",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1795756208532,
+      "tag": "0004_guest_locations",
+      "breakpoints": true
     }
   ]
 }

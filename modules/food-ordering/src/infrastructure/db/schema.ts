@@ -5,8 +5,9 @@
 
 import type { DeliveryPlace } from "@igongo/contracts/food-ordering";
 import { moduleSettingsTable } from "@igongo/core";
-import { boolean, index, integer, jsonb, pgSchema, smallint, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
+import { boolean, doublePrecision, index, integer, jsonb, pgSchema, smallint, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 import type { OrderLine } from "../../domain/order-line";
+import type { SavedCartLine } from "../../domain/saved-cart";
 import type { StatusChange } from "../../domain/status-change";
 
 export const ordersSchema = pgSchema("orders");
@@ -33,6 +34,7 @@ export const orders = ordersSchema.table(
     discount: integer("discount").notNull().default(0),
     promoCode: text("promo_code"),
     deliveryFee: integer("delivery_fee").notNull(),
+    containerFee: integer("container_fee").notNull().default(0),
     total: integer("total").notNull(),
     paid: integer("paid").notNull(),
     arriveAt: timestamp("arrive_at", { withTimezone: true }),
@@ -70,6 +72,31 @@ export const ratings = ordersSchema.table(
   // The menu shows each outlet's newest reviews.
   (t) => [index("ratings_outlet_idx").on(t.outlet, t.createdAt)],
 );
+
+/**
+ * Each guest's saved cart: one row per guest (their user ID is the key), so
+ * a guest only ever reads and writes their own. Lines are the app's last
+ * picks; checkout prices them again.
+ */
+export const carts = ordersSchema.table("carts", {
+  userId: text("user_id").primaryKey(),
+  outlet: text("outlet"),
+  lines: jsonb("lines").$type<SavedCartLine[]>().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull(),
+});
+
+/**
+ * Each guest's saved delivery pin (the map point they chose): one row per
+ * guest, keyed by their user ID, so a guest only ever reads their own.
+ */
+export const deliveryPins = ordersSchema.table("delivery_pins", {
+  userId: text("user_id").primaryKey(),
+  label: text("label").notNull(),
+  zone: text("zone"),
+  lat: doublePrecision("lat").notNull(),
+  lng: doublePrecision("lng").notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull(),
+});
 
 /** The ordering rules (key `rules`). */
 export const settings = moduleSettingsTable(ordersSchema);

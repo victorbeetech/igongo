@@ -27,7 +27,9 @@ dependencies:
   flutter_secure_storage: ^11.2.0
   nfc_manager: ^4.4.0
   image_picker: ^1.2.0
-  url_launcher: ^6.3.0
+  qr_flutter: ^4.1.0
+  url_launcher: ^6.3.2
+  maplibre_gl: ^0.28.0
 
 dev_dependencies:
   flutter_test:
@@ -36,6 +38,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  # Placeholder photos until the hotel sends its own pictures.
   assets:
-    - assets/images/placeholder_food.png
+    # The owner's own photos (see lib/shared/ui/photo/guest_photos.dart).
+    - assets/photos/
+    # Cart artwork from the design mock-up (empty cart state).
+    - assets/cart/cart-illustration.png

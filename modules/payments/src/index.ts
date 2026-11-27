@@ -14,5 +14,7 @@ export { paymentKpis } from "./infrastructure/payment-kpis";
 export { DrizzlePaymentRepository } from "./infrastructure/db/drizzle-payment-repository";
 export { SettingsMethodStore } from "./infrastructure/db/settings-method-store";
 export { paymentProviders } from "./infrastructure/providers/payment-providers";
+export { resendReceiptMailer, type ResendConfig } from "./infrastructure/email/resend-receipt-mailer";
+export type { ReceiptMailer, ReceiptResult } from "./application/ports/receipt-mailer";
 export { PAYMENT_PERMISSIONS } from "./presentation/permissions";
 export { paymentsRouter } from "./presentation/payments-router";

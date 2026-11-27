@@ -31,6 +31,8 @@ export const testEnv: Env = {
   WEB_ORIGINS: "http://web.test",
   BETTER_AUTH_SECRET: "a-test-secret-that-is-at-least-32-characters",
   SETTINGS_ENCRYPTION_KEY: toBase64(crypto.getRandomValues(new Uint8Array(32))),
+  // A random ticket signing key per run, so tests issue signed QR codes as production does.
+  TICKET_SIGNING_KEY: toBase64(crypto.getRandomValues(new Uint8Array(32))),
   BOOTSTRAP_ADMIN_EMAIL: "owner@example.com",
   PUSH_SENDER: "mock",
   FILES: fakeBucket(),

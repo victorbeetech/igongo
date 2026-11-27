@@ -9,17 +9,26 @@ import 'package:material_ui/material_ui.dart';
 import '../../../shared/catalog/catalog.dart';
 import '../../../shared/format/ugx.dart';
 import '../../../shared/live/live_view.dart';
-import '../../../shared/screens/parts/purpose_text.dart';
+import '../../../shared/screens/home/tile_grid.dart';
 import '../../../shared/screens/parts/screen_list_view.dart';
 import '../../../shared/screens/screen_layout.dart';
 import '../../../shared/ui/button/igongo_button.dart';
-import '../../../shared/ui/list_row/igongo_list_row.dart';
+import '../../../shared/ui/card/igongo_card.dart';
+import '../../../shared/ui/guest/guest_chip_row.dart';
+import '../../../shared/ui/guest/guest_product_card.dart';
+import '../../../shared/ui/guest/guest_search_header.dart';
+import '../../../shared/ui/guest/guest_restaurant_slides.dart';
+import '../../../shared/ui/photo/guest_photos.dart';
 import '../../../shared/ui/section/section_header.dart';
 import '../application/cart_controller.dart';
 import '../application/orders_providers.dart';
+import '../demo/demo_menu.dart';
+import '../demo/demo_orders.dart';
+import '../domain/order_type.dart';
 import '../domain/outlet.dart';
 import 'checkout_sheet.dart';
-import 'item_sheet.dart';
+import 'demo_notice.dart';
+import 'item_page.dart';
 
 /// The guest's food ordering screen.
 class OrderFoodScreen extends ConsumerWidget {
@@ -32,6 +41,11 @@ class OrderFoodScreen extends ConsumerWidget {
   /// Opens [sheet] from the bottom.
   static Future<void> _open(BuildContext context, Widget sheet) =>
       showModalBottomSheet<void>(context: context, isScrollControlled: true, builder: (_) => sheet);
+
+  /// A restaurant's photo: Kaahwa Kanuzire has its own, the demo restaurant a placeholder, others none yet.
+  static String? _restaurantPhoto(Outlet o) => o.name.toLowerCase().contains('kaahwa')
+      ? GuestPhotos.hotelKaahwaKanuzire
+      : (isDemoOutlet(o.key) ? GuestPhotos.outletRestaurant : null);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => LiveView<List<Outlet>>(
@@ -50,44 +64,81 @@ class OrderFoodScreen extends ConsumerWidget {
       final stars = ref.watch(starsProvider).valueOrNull ?? const {};
       // Step 1b: the search text narrows the dishes by name (not case sensitive).
       final query = ref.watch(menuSearchProvider).trim().toLowerCase();
+      final category = ref.watch(menuCategoryProvider);
+      final rules = ref.watch(orderingRulesProvider).valueOrNull;
+      final demo = isDemoOutlet(outlet);
+      // Step 1b: the order types an outlet offers, shown as badges on its row.
+      List<String> badgesOf(Outlet o) => [
+        for (final t in (isDemoOutlet(o.key) ? demoOrderTypes : (rules?.typesAt(o.key) ?? const <String>[])))
+          orderTypeWords(t),
+      ];
       return Column(
         children: [
           Expanded(
             child: ScreenListView(
               children: [
-                PurposeText(screen.spec.purpose),
-                // Step 2: the search box, above the outlets and dishes.
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
-                  child: TextField(
-                    decoration: const InputDecoration(hintText: 'Search menu', prefixIcon: Icon(Icons.search)),
-                    onChanged: (text) => ref.read(menuSearchProvider.notifier).set(text),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
-                  child: Wrap(
-                    spacing: IgongoSpace.sm,
-                    children: [
-                      for (final o in outlets)
-                        ChoiceChip(
-                          label: Text(o.name),
-                          selected: o.key == outlet,
-                          onSelected: (_) => ref.read(cartProvider.notifier).useOutlet(o.key),
-                        ),
-                    ],
-                  ),
+                // Step 2: the red search band.
+                GuestSearchHeader(
+                  hint: 'Search the menu',
+                  onChanged: (text) => ref.read(menuSearchProvider.notifier).set(text),
                 ),
                 ...menu.when(
                   loading: () => [const LinearProgressIndicator()],
                   error: (e, _) => [Padding(padding: const EdgeInsets.all(IgongoSpace.lg), child: Text('$e'))],
                   data: (all) {
-                    // Step 3: only the dishes whose name matches the search.
+                    // Step 3: the section chips, then only the dishes that match the chip and the search.
+                    final sections = [
+                      for (final s in {
+                        for (final i in all)
+                          if (!i.isContainer) i.section,
+                      })
+                        s,
+                    ];
                     final items = [
                       for (final i in all)
-                        if (query.isEmpty || i.name.toLowerCase().contains(query)) i,
+                        if (!i.isContainer &&
+                            (category == null || i.section == category) &&
+                            (query.isEmpty || i.name.toLowerCase().contains(query)))
+                          i,
+                    ];
+                    // Step 4: dishes on today first; out-of-stock dishes go last.
+                    final onToday = [
+                      for (final i in items)
+                        if (i.available) i,
+                    ];
+                    final outToday = [
+                      for (final i in items)
+                        if (!i.available) i,
                     ];
                     return [
+                      if (sections.length > 1)
+                        GuestChipRow(
+                          labels: ['All', ...sections],
+                          selected: category ?? 'All',
+                          onSelected: (l) => ref.read(menuCategoryProvider.notifier).set(l == 'All' ? null : l),
+                        ),
+                      if (demo) const DemoNotice(),
+                      // Step 5: the restaurants as a slideshow; tap a slide to open that restaurant.
+                      const SectionHeader('Restaurants'),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, 0, IgongoSpace.lg, IgongoSpace.sm),
+                        child: GuestRestaurantSlides(
+                          slides: [
+                            for (final o in outlets)
+                              RestaurantSlide(
+                                title: o.name,
+                                detail: 'Open for app orders',
+                                badges: badgesOf(o),
+                                selected: o.key == outlet,
+                                photo: _restaurantPhoto(o),
+                                onTap: () {
+                                  ref.read(menuCategoryProvider.notifier).set(null);
+                                  ref.read(cartProvider.notifier).useOutlet(o.key);
+                                },
+                              ),
+                          ],
+                        ),
+                      ),
                       if (all.isEmpty)
                         const Padding(
                           padding: EdgeInsets.all(IgongoSpace.lg),
@@ -98,20 +149,47 @@ class OrderFoodScreen extends ConsumerWidget {
                           padding: EdgeInsets.all(IgongoSpace.lg),
                           child: Text('No dish matches your search.'),
                         ),
-                      for (final section in {for (final i in items) i.section}) ...[
-                        SectionHeader(section),
-                        for (final i in items.where((i) => i.section == section))
-                          IgongoListRow(
-                            title: i.name,
-                            subtitle: [ugx(i.price), ?stars[i.id]?.words].join(' · '),
-                            status: i.available ? null : 'Out today',
-                            onTap: i.available
-                                ? () {
+                      // Step 6: the dishes as one grid, two to a row (sections are the chips above).
+                      if (onToday.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, IgongoSpace.md, IgongoSpace.lg, 0),
+                          child: TileGrid(
+                            children: [
+                              for (final i in onToday)
+                                GuestProductCard(
+                                  name: i.name,
+                                  price: ugx(i.price),
+                                  description: i.description,
+                                  note: stars[i.id]?.words,
+                                  onTap: () {
                                     ref.read(cartProvider.notifier).useOutlet(outlet);
-                                    _open(context, ItemSheet(item: i));
-                                  }
-                                : null,
+                                    openItemPage(context, i);
+                                  },
+                                ),
+                            ],
                           ),
+                        ),
+                      // Out-of-stock dishes: dimmed, last, in a "Not available" card.
+                      if (outToday.isNotEmpty) ...[
+                        const SectionHeader('Not available'),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
+                          child: IgongoCard(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                for (final i in outToday)
+                                  Opacity(
+                                    opacity: 0.5,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: IgongoSpace.xs),
+                                      child: Text('${i.name} · ${ugx(i.price)}'),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     ];
                   },

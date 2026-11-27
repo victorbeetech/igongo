@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../shared/catalog/catalog.dart';
+import '../../shared/contact/whatsapp_button.dart';
 import '../../shared/layout/igongo_scaffold.dart';
 import '../../shared/preferences/preferences.dart';
 import '../../shared/session/session_controller.dart';
@@ -36,6 +37,9 @@ class AppShell extends ConsumerWidget {
     // Step 1b: a signed-in guest sees the guest tabs, not the staff menu. Preview and signed-out builds keep the menu.
     final session = ref.watch(sessionProvider).valueOrNull;
     final guestOnly = session != null && !session.isStaff && !session.isSuperAdmin;
+    // Step 1a: a guest's home (signed in, or a real visitor) has no app bar: its own header, with the
+    // greeting and the bell, sits where the "Home" title was.
+    final guestHome = spec.id == 'S00-21' && (guestOnly || (session == null && !ViewRules.previewOn(prefs, session)));
     // Step 1: the banner: offline when the preview says so.
     final banners = [
       if (prefs.state == ViewState.offline)
@@ -50,7 +54,13 @@ class AppShell extends ConsumerWidget {
     return IgongoScaffold(
       title: spec.id == 'S00-21' ? 'Home' : spec.name,
       banners: banners,
+      // The Bookings home (S67-01) draws its own slideshow at the top, so a guest sees no app bar there.
+      showAppBar: !guestHome && !(spec.id == 'S67-01' && guestOnly),
+      // Step 3: tab screens never show a Back arrow; pushed pages do.
+      isTab: signedIn && bottomBarTabIds(ref).contains(spec.id),
       body: body,
+      // Signed-in guests get the floating WhatsApp chat button.
+      floatingAction: signedIn && guestOnly ? const WhatsappButton() : null,
       drawer: signedIn && !guestOnly ? const RoleDrawer() : null,
       bottomBar: signedIn ? BottomBar(currentId: spec.id) : null,
       actions: [

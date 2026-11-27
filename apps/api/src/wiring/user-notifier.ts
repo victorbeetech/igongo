@@ -11,7 +11,7 @@
 
 import type { UserNotifier } from "@igongo/contracts/notifications";
 import { newId, type Database, type Logger } from "@igongo/core";
-import { createPushSender, DrizzleDeviceTokenRepository, sendPush } from "@igongo/notifications";
+import { createPushSender, DrizzleDeviceTokenRepository, DrizzleInboxRepository, recordInboxItems, sendPush } from "@igongo/notifications";
 import type { Env } from "../shell/env";
 
 export function userNotifier(db: Database, env: Env, logger: Logger): UserNotifier {
@@ -19,7 +19,9 @@ export function userNotifier(db: Database, env: Env, logger: Logger): UserNotifi
     const people = [...new Set(userIds)].filter(Boolean);
     if (!people.length) return;
     try {
-      // Roles are never used here, so the directory has nobody to resolve.
+      // Step 1: keep the message in each person's Alerts inbox, so it stays there after the push.
+      await recordInboxItems({ inbox: new DrizzleInboxRepository(db), now: () => new Date(), newId: () => newId("ntf") }, people, message);
+      // Step 2: push it to their phones. Roles are never used here, so the directory has nobody to resolve.
       const deps = { repo: new DrizzleDeviceTokenRepository(db), sender: createPushSender(env), directory: { usersWithRoles: async () => [] } };
       await sendPush(deps, { kind: "users", userIds: people }, { notificationId: newId("ntf"), ...message });
     } catch (error) {

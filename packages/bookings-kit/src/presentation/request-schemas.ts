@@ -47,7 +47,10 @@ export const cancelBody = z.object({ reason: z.string().trim().min(2).max(300) }
 export const approveBody = z.object({ total: money.optional() });
 
 /** `POST /check-in`: the code typed, or the QR text `IGG-BK:<code>`. */
-export const checkInBody = z.object({ code: z.string().trim().min(4).max(40) });
+export const checkInBody = z.object({ code: z.string().trim().min(4).max(120) });
+
+/** `POST /tickets/verify` and `POST /tickets/check-in`: the ticket text, as scanned or typed. */
+export const ticketBody = z.object({ ticket: z.string().trim().min(4).max(200) });
 
 /** `PUT /rules`. */
 export const rulesBody = z.object({ depositPercent: z.number().int().min(0).max(100), requireApproval: z.boolean(), cancelHoursBefore: z.number().int().min(0).max(24 * 60), maxUnits: z.number().int().min(1).max(1000) });
