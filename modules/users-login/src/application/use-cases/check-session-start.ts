@@ -7,7 +7,8 @@
  * 1. The account is active (not pending, locked or suspended).
  * 2. The method is switched on for the whole system.
  * 3. On the web portal, the account is a staff account (guests use the
- *    app). The owner is let in once, for the first set-up.
+ *    app) and holds at least one staff role, given by the super admin. The
+ *    owner is let in once, for the first set-up.
  * 4. The method is allowed for at least one of the person's roles.
  * 5. The super admin (and sensitive roles when the switch is on) with 2-step
  *    turned on signs in only with email and password, so 2-step is never skipped.
@@ -52,16 +53,18 @@ export async function checkSessionStart(
   if (!account || !canSignIn(account.status)) {
     throw new AppError("permission_denied", account?.status === "pending" ? "Your account is waiting for approval." : "This account is locked. Please contact the hotel.");
   }
-  // 3. The web portal is for staff.
-  if (surface === "web" && account.kind !== "staff" && !(await isOwnerSettingUp(deps, account.email))) {
-    throw new AppError("permission_denied", "The web portal is for hotel staff. Guests sign in in the Igongo app.");
+  const profile = await deps.access.profileFor(userId);
+  const roleKeys = profile.roles.map((r) => r.key);
+  // 3. The web portal is for staff with a staff role given by the super admin.
+  if (surface === "web" && !(await isOwnerSettingUp(deps, account.email))) {
+    if (account.kind !== "staff") throw new AppError("permission_denied", "The web portal is for hotel staff. Guests sign in in the Igongo app.");
+    if (!profile.roles.some((r) => r.isStaff)) throw new AppError("permission_denied", "Your staff access is not set up yet. Ask the super admin to give you a role.");
   }
   // Step 6: Google and Apple are for the app only, never the web portal.
   if (via.social && surface === "web") {
     throw new AppError("method_disabled", "Google and Apple sign-in is in the Igongo app only. Use your email and password on the web.");
   }
   // Step 7: the super admin never starts a session through Google or Apple.
-  const roleKeys = (await deps.access.profileFor(userId)).roles.map((r) => r.key);
   if (via.social && roleKeys.includes(SUPER_ADMIN_ROLE_KEY)) {
     throw new AppError("method_disabled", "The super admin signs in with email and password only.");
   }

@@ -3,8 +3,9 @@
  * session is known. Pure function: the gateway gives it the facts and acts
  * on the answer.
  *
- * 1. The web portal is staff only. A guest account is refused there, so
- *    guests use the app. (Before the first set-up, the owner is let in.)
+ * 1. The web portal is staff only: a staff account that holds a staff role
+ *    given by the super admin. A guest account is refused there, so guests
+ *    use the app. (Before the first set-up, the owner is let in.)
  * 2. A web sign-in for staff lasts at most `staffWebSessionHours`.
  * 3. The super admin, and staff in sensitive roles when the switch is on,
  *    must turn on 2-step before they can do anything but set it up.
@@ -20,6 +21,8 @@ export interface RequestFacts {
   path: string;
   account: { kind: string; email: string; twoFactorEnabled: boolean };
   roleKeys: string[];
+  /** True when the person holds at least one staff role. */
+  hasStaffRole: boolean;
   sessionCreatedAt: Date;
   now: Date;
   /** True while nobody is super admin and this is the owner's email: the one-time set-up. */
@@ -44,6 +47,9 @@ export function requestGate(f: RequestFacts, policy: LoginPolicy): GateVerdict {
   // 1. Guests never use the web portal (signing out still works).
   if (f.surface === "web" && f.account.kind !== "staff" && !f.ownerSettingUp && !f.path.startsWith("/api/auth/")) {
     return { allow: false, status: 403, code: "staff_only", message: "The web portal is for hotel staff. Guests use the Igongo app.", endSession: true };
+  }
+  if (f.surface === "web" && !f.hasStaffRole && !f.ownerSettingUp && !open) {
+    return { allow: false, status: 403, code: "staff_role_required", message: "Your staff access is not set up yet. Ask the super admin to give you a role.", endSession: true };
   }
   // 2. Short web sessions for staff (shared gate and reception PCs).
   const ageHours = (f.now.getTime() - f.sessionCreatedAt.getTime()) / 3_600_000;

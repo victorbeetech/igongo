@@ -53,12 +53,13 @@ export interface RoleAssigner {
 }
 
 /**
- * Says whether an account is a staff account. Staff roles may only be given
- * to staff accounts, and a guest account becomes staff only when the super
- * admin matches it to a staff record (Users & Login implements this).
+ * Turns an account into a staff account when the super admin gives it a
+ * staff role. The person must have signed up in the app and verified their
+ * email first; the account is refused otherwise. Already-staff accounts are
+ * left alone. (Users & Login implements this.)
  */
 export interface StaffAccountCheck {
-  isStaffAccount(userId: string): Promise<boolean>;
+  makeStaff(userId: string): Promise<void>;
 }
 
 /** The role key of the all-powerful Super Admin. */

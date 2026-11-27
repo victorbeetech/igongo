@@ -11,9 +11,9 @@ import type { AssignmentRepository } from "../ports/assignment-repository";
 import type { RoleRepository } from "../ports/role-repository";
 
 /**
- * The stores, plus the staff-account check: a staff role (such as Waiter)
- * can only go to a staff account, so a guest who signed up in the app can
- * never be given staff access without the super admin's staff match.
+ * The stores, plus the staff-account check: giving a staff role (such as
+ * Waiter) upgrades the person's account to staff, so the web portal opens
+ * for them. Only a verified app sign-up can be upgraded.
  */
 type Deps = { roles: RoleRepository; assignments: AssignmentRepository; staffAccounts: StaffAccountCheck };
 
@@ -29,10 +29,8 @@ export interface AssignRoleInput {
 export async function assignRole(deps: Deps, ctx: ChangeContext, input: AssignRoleInput): Promise<void> {
   const role = await deps.roles.get(input.roleId);
   if (!role || role.archivedAt) throw new AppError("not_found", "Role not found or archived.");
-  // A staff role needs a staff account (matched to a staff record).
-  if (role.isStaff && !(await deps.staffAccounts.isStaffAccount(input.userId))) {
-    throw new AppError("permission_denied", "Staff roles can only be given to staff accounts. Match the person to their staff record first.");
-  }
+  // A staff role makes the account a staff account (refused unless its email is verified).
+  if (role.isStaff) await deps.staffAccounts.makeStaff(input.userId);
   if (input.startsAt && input.endsAt && input.endsAt <= input.startsAt) throw new AppError("bad_request", "The end date must be after the start date.");
   await deps.assignments.upsert({
     userId: input.userId,

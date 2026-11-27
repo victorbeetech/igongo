@@ -39,7 +39,10 @@ describe("the web portal is for staff only", () => {
     await t.call("/sign-up/email", ann);
     expect((await t.call("/sign-in/email", { email: ann.email, password: ann.password }, undefined, { web: true })).status).toBe(403);
     expect((await t.call("/sign-in/email", { email: ann.email, password: ann.password })).status).toBe(200);
-    await staff(t);
+    // Staff on the web also need a staff role given by the super admin.
+    const sam = await staff(t);
+    expect((await t.call("/sign-in/email", { email: "sam@igongo.test", password: "Kitchen pass 9" }, undefined, { web: true })).status).toBe(403);
+    t.deps.access.held.set(sam.id, ["hr-manager"]);
     expect((await t.call("/sign-in/email", { email: "sam@igongo.test", password: "Kitchen pass 9" }, undefined, { web: true })).status).toBe(200);
   });
 
@@ -179,11 +182,16 @@ describe("the staff match", () => {
 
 describe("the request gate", () => {
   const now = new Date("2026-11-26T12:00:00Z");
-  const base = { surface: "web" as const, path: "/api/hr/staff", account: { kind: "staff", email: "sam@igongo.test", twoFactorEnabled: true }, roleKeys: ["hr-manager"], sessionCreatedAt: now, now, ownerSettingUp: false };
+  const base = { surface: "web" as const, path: "/api/hr/staff", account: { kind: "staff", email: "sam@igongo.test", twoFactorEnabled: true }, roleKeys: ["hr-manager"], hasStaffRole: true, sessionCreatedAt: now, now, ownerSettingUp: false };
 
   it("refuses guests on the web, but not in the app", () => {
     expect(requestGate({ ...base, account: { ...base.account, kind: "client" } }, DEFAULT_LOGIN_POLICY)).toMatchObject({ allow: false, code: "staff_only" });
     expect(requestGate({ ...base, surface: "app", account: { ...base.account, kind: "client" } }, DEFAULT_LOGIN_POLICY)).toEqual({ allow: true });
+  });
+
+  it("refuses staff on the web until the super admin gives them a staff role", () => {
+    expect(requestGate({ ...base, hasStaffRole: false }, DEFAULT_LOGIN_POLICY)).toMatchObject({ allow: false, code: "staff_role_required" });
+    expect(requestGate({ ...base, hasStaffRole: false, surface: "app" }, DEFAULT_LOGIN_POLICY)).toEqual({ allow: true });
   });
 
   it("ends long web sessions for staff", () => {

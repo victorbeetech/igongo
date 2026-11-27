@@ -15,7 +15,7 @@ function depsFor(roleKeys: string[], twoFactorEnabled: boolean): SessionStartDep
   const account = { id: "user_1", email: "owner@example.com", kind: "staff", status: "active", twoFactorEnabled, emailVerified: true };
   return {
     accounts: { get: async () => account } as unknown as SessionStartDeps["accounts"],
-    access: { profileFor: async () => ({ roles: roleKeys.map((key) => ({ key })) }) } as unknown as SessionStartDeps["access"],
+    access: { profileFor: async () => ({ roles: roleKeys.map((key) => ({ key, isStaff: true })) }) } as unknown as SessionStartDeps["access"],
     settings: {
       method: async () => ({ enabled: true }),
       policy: async () => ({ twoFactorForSensitiveRoles: true, sensitiveRoleKeys: [] }),
