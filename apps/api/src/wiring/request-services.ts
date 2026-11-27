@@ -83,6 +83,13 @@ export class RequestServices {
         return null;
       }
     },
+    getMany: async (keys: string[]): Promise<Record<string, string | null>> => {
+      try {
+        return await secretReader(this.console(), await this.sealer()).getMany(keys);
+      } catch {
+        return Object.fromEntries(keys.map((k) => [k, null]));
+      }
+    },
   }));
 
   // --- Users & Login ---

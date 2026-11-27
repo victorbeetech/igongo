@@ -20,6 +20,8 @@ export interface ModuleSwitchReader {
 export interface SecretReader {
   /** The plain value, or null when the super admin has not set it. */
   get(key: string): Promise<string | null>;
+  /** Several plain values read in ONE database query; keys not set map to null. */
+  getMany(keys: string[]): Promise<Record<string, string | null>>;
 }
 
 /** Modules that can never be switched off (their specs say so). */
