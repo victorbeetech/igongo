@@ -59,8 +59,16 @@ class CartController extends Notifier<Cart> {
   /// Saves the whole cart to the server, once the saved cart is loaded and only while signed in.
   void _persist() {
     if (!_synced || ref.read(sessionProvider).valueOrNull == null) return;
-    // A failed save is ignored here: the next change saves the whole cart again.
-    unawaited(ref.read(cartApiProvider).save(state).catchError((_) {}));
+    unawaited(_save());
+  }
+
+  /// Sends the current cart to the server. A failed save is ignored here: the next change saves the whole cart again.
+  Future<void> _save() async {
+    try {
+      await ref.read(cartApiProvider).save(state);
+    } catch (_) {
+      // Offline or the server is busy: nothing to show here; the next change saves again.
+    }
   }
 
   /// Sets the cart to [next] and saves it.
