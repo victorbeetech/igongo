@@ -227,13 +227,9 @@ No key is written in the repository. The code is `modules/payments/src/infrastru
 
 ## Google and Apple logos for the sign-in buttons (27 Nov 2026)
 
-**Status:** the Sign in and Create account buttons show the words "Google" and "Apple" only. The designs have the brand logos.
+**Status:** done. The logos are the vector marks from the approved design, in `apps/igongo/assets/images/google_logo.svg` and `apple_logo.svg`.
 
-**What is needed:** the official Google "G" logo and the Apple logo as SVG or PNG files, with the brand's usage rules.
-
-**Why:** the brand logos are part of the approved design, and the words alone do not match it.
-
-**Exact steps:** add the two files to `apps/igongo/assets/images/` (for example `google_logo.svg` and `apple_logo.svg`). Tell Claude the file names, and the buttons in `apps/igongo/lib/shared/ui/auth/social_auth_row.dart` will show them.
+**Optional, later:** if the hotel or the owner has the official brand files, replace those two SVG files with the official ones. The buttons follow the file names, so nothing else changes.
 
 ## Contact Us link on the sign-in and create account screens (27 Nov 2026)
 

@@ -94,8 +94,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     final options = ref.watch(signInOptionsProvider).valueOrNull ?? const <SignInOption>[];
     final social = availableSocialOptions(options);
     return AuthShell(
-      // Step 2: the design's placeholder hero, and the card spacing from the design (24 sides, 12 top).
-      heroPlaceholder: true,
+      // Step 2: the card spacing from the design (24 sides, 12 top).
       cardPadding: const EdgeInsets.fromLTRB(IgongoSpace.xl, IgongoSpace.md, IgongoSpace.xl, IgongoSpace.lg),
       children: [
         // Step 3: the title and a short line under it, centred as in the design.

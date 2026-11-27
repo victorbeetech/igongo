@@ -1,41 +1,30 @@
-// The logo slot on the Google and Apple buttons. Until the official logo files
-// are added (see docs/NEEDS-YOU.md), it shows a neutral square with the
-// provider's first letter. Later the square is replaced by the logo, in one place.
+// The logo on the Google and Apple sign-in buttons. The two logos are the
+// vector marks from the approved design, kept as SVG files in assets/images.
+// The Apple mark takes the theme's text colour, so it reads in light and dark.
 
-import 'package:igongo_tokens/igongo_tokens.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../theme/theme.dart';
 
-/// A small square logo slot for a sign-in provider, drawn as a placeholder for now.
+/// A small provider logo, drawn from its SVG file at the size the design uses.
 class ProviderLogoSlot extends StatelessWidget {
-  /// Creates the slot for [method], the server's key (`google` or `apple`).
+  /// Creates the logo for [method], the server's key (`google` or `apple`).
   const ProviderLogoSlot({super.key, required this.method});
 
-  /// The server's key for the provider; picks the placeholder letter.
+  /// The server's key for the provider; picks the logo file.
   final String method;
+
+  /// The logo files by provider key.
+  static const _files = {'google': 'assets/images/google_logo.svg', 'apple': 'assets/images/apple_logo.svg'};
 
   @override
   Widget build(BuildContext context) {
-    final palette = context.palette;
-    // Step 1: the placeholder letter for this provider.
-    final letter = method == 'apple' ? 'A' : 'G';
-    // Step 2: the neutral square. Excluded from screen readers, because the button's label already says the name.
+    // Step 1: the Apple mark is one colour, so it takes the theme's text colour; Google keeps its own colours.
+    final tint = method == 'apple' ? ColorFilter.mode(context.palette.text, BlendMode.srcIn) : null;
+    // Step 2: the logo at the design's 16 pixels. Excluded from screen readers, because the button's label already says the name.
     return ExcludeSemantics(
-      child: SizedBox(
-        width: 18,
-        height: 18,
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: palette.surfaceAlt,
-            borderRadius: BorderRadius.circular(IgongoRadius.sm),
-            border: Border.all(color: palette.border),
-          ),
-          child: Center(
-            child: Text(letter, style: context.text.labelSmall?.copyWith(color: palette.textMuted)),
-          ),
-        ),
-      ),
+      child: SvgPicture.asset(_files[method] ?? _files['google']!, width: 16, height: 16, colorFilter: tint),
     );
   }
 }

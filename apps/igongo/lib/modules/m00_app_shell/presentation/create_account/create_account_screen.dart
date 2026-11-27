@@ -111,8 +111,7 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
     return AuthShell(
       // Step 2a: the back pill over the photo returns to the screen before this one.
       onBack: () => Navigator.of(context).maybePop(),
-      // Step 2b: the design's placeholder hero, and the card spacing from the design (24 sides, 12 top).
-      heroPlaceholder: true,
+      // Step 2b: the card spacing from the design (24 sides, 12 top).
       cardPadding: const EdgeInsets.fromLTRB(IgongoSpace.xl, IgongoSpace.md, IgongoSpace.xl, IgongoSpace.lg),
       children: [
         // Step 2: the title and what this is, centred as in the design.

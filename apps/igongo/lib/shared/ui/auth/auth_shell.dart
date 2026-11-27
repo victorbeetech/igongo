@@ -17,7 +17,6 @@ class AuthShell extends StatelessWidget {
     required this.children,
     this.appBar,
     this.onBack,
-    this.heroPlaceholder = false,
     this.cardPadding = const EdgeInsets.all(IgongoSpace.lg),
     this.gap = IgongoSpace.md,
   });
@@ -30,9 +29,6 @@ class AuthShell extends StatelessWidget {
 
   /// Called when the back pill is tapped. Null hides the pill.
   final VoidCallback? onBack;
-
-  /// True to show the neutral placeholder instead of the hut photo at the top.
-  final bool heroPlaceholder;
 
   /// The space inside the white card, around its content.
   final EdgeInsetsGeometry cardPadding;
@@ -58,7 +54,7 @@ class AuthShell extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   children: [
                     // Step 2a: the photo and logo at the top.
-                    AuthHero(placeholder: heroPlaceholder),
+                    const AuthHero(),
                     // Step 2b: the white card that holds the content, pulled up over the photo.
                     Transform.translate(
                       offset: const Offset(0, -IgongoSpace.lg),
@@ -68,9 +64,9 @@ class AuthShell extends StatelessWidget {
                         child: Material(
                           color: palette.surface,
                           clipBehavior: Clip.antiAlias,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(IgongoRadius.lg),
-                            side: BorderSide(color: palette.border),
+                          // Only the top corners curve, as in the design, so the sheet rises from the wave.
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(top: Radius.circular(IgongoRadius.lg)),
                           ),
                           child: Padding(
                             padding: cardPadding,

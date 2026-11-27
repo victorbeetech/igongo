@@ -56,7 +56,7 @@ class SocialAuthRow extends StatelessWidget {
             Expanded(
               child: IgongoButton(
                 label: _labelFor(method),
-                // The logo slot comes first, as in the design; a placeholder until the logo files are added.
+                // The logo comes first, as in the design.
                 leading: ProviderLogoSlot(method: method),
                 variant: ButtonVariant.secondary,
                 expand: true,
