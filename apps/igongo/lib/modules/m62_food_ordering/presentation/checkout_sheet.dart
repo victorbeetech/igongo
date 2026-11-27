@@ -23,7 +23,10 @@ import '../application/cart_controller.dart';
 import '../application/orders_providers.dart';
 import '../demo/demo_menu.dart';
 import '../demo/demo_orders.dart';
+import '../application/saved_pin_providers.dart';
 import '../domain/cart_quote.dart';
+import '../domain/delivery_pin.dart';
+import 'map/delivery_pin_map.dart';
 import '../domain/order_type.dart';
 
 /// The checkout sheet for the cart.
@@ -78,6 +81,25 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
   /// True when the guest confirmed the zone and place now showing.
   bool get _isConfirmed => _confirmedFor != null && _confirmedFor == '$_zone|${_text(_place)}';
 
+  /// The map point chosen for the delivery, or null.
+  DeliveryPin? _pin;
+
+  /// The map point, only while the zone and place still match the pin it was chosen for (else null).
+  DeliveryPin? get _confirmedPin {
+    final pin = _pin;
+    if (pin == null || pin.label != _text(_place) || pin.zone != _zone) return null;
+    return pin;
+  }
+
+  /// Fills the zone and place from the guest's saved pin, and keeps its map point.
+  void _useSavedPin(DeliveryPin pin) {
+    setState(() {
+      _zone = pin.zone;
+      _place.text = pin.label;
+      _pin = pin;
+    });
+  }
+
   /// The cart and details as the API takes them.
   Json _body(String outlet, String type) {
     final place = _text(_place);
@@ -88,7 +110,8 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
       'lines': [for (final l in ref.read(cartProvider).lines) l.toJson()],
       // Dine-in, takeaway, delivery and pre-order all send the guest's time to the API.
       'arriveAt': ?_arriveAt?.toUtc().toIso8601String(),
-      if (type == 'delivery') 'deliverTo': {'label': place ?? '', 'zone': _zone, 'lat': null, 'lng': null},
+      // Delivery sends the map point too, when the guest chose one on the map for this place.
+      if (type == 'delivery') 'deliverTo': {'label': place ?? '', 'zone': _zone, 'lat': _confirmedPin?.lat, 'lng': _confirmedPin?.lng},
       if (type == 'room_service') 'deliverTo': {'label': 'Room $place', 'zone': null, 'lat': null, 'lng': null},
       if (type == 'dine_in') 'table': place,
       'notes': ?notes,
@@ -246,6 +269,12 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
                     ),
                 ],
               ),
+            // Delivery: the guest's saved pin can be reused, and the map (when set up) picks a point.
+            if (_type == 'delivery') ...[
+              if (ref.watch(savedPinProvider).valueOrNull case final saved?)
+                ActionChip(label: Text('Use my saved place: ${saved.label}'), onPressed: () => _useSavedPin(saved)),
+              DeliveryPinMap(pin: _confirmedPin, onPinned: (pin) => setState(() => _pin = pin)),
+            ],
             if (_type == 'delivery' || _type == 'room_service' || _type == 'dine_in')
               IgongoField(
                 label: switch (_type) {

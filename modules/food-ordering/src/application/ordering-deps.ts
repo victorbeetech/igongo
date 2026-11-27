@@ -6,6 +6,7 @@ import type { UserNotifier } from "@igongo/contracts/notifications";
 import type { PromoDesk } from "@igongo/contracts/promotions-vouchers";
 import type { ChangeContext } from "@igongo/core";
 import type { CartRepository } from "./ports/cart-repository";
+import type { LocationRepository } from "./ports/location-repository";
 import type { OrderRepository } from "./ports/order-repository";
 import type { RatingRepository } from "./ports/rating-repository";
 import type { RulesStore } from "./ports/rules-store";
@@ -14,6 +15,8 @@ export interface OrderingDeps {
   orders: OrderRepository;
   /** Guests' saved carts (one per guest, each only their own). */
   carts: CartRepository;
+  /** Guests' saved delivery pins (one per guest, each only their own). */
+  locations: LocationRepository;
   ratings: RatingRepository;
   rules: RulesStore;
   /** Menus & Catalogue, through its contract. */

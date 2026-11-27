@@ -9,6 +9,9 @@
  *   GET   /orders/cart            my saved cart (empty when none)
  *   PUT   /orders/cart            replace my saved cart (kept across app restarts)
  *   DELETE /orders/cart           empty my saved cart
+ *   GET   /orders/location        my saved delivery pin, or null
+ *   PUT   /orders/location        save my delivery pin (the map point)
+ *   DELETE /orders/location       remove my saved delivery pin
  *   GET   /orders/stars           each dish's average stars, for the menu
  *   GET   /orders/reviews         newest reviews (all=1: staff, with hidden ones)
  *   POST  /orders/reviews/:id/hide  staff hide or show a review
@@ -33,13 +36,14 @@ import { placeOrder } from "../application/use-cases/place-order";
 import { hideReview, rateOrder } from "../application/use-cases/rate-order";
 import { reorder } from "../application/use-cases/reorder";
 import { clearSavedCart, readSavedCart, saveCart } from "../application/use-cases/guest-cart";
+import { clearSavedLocation, readSavedLocation, saveLocation } from "../application/use-cases/guest-location";
 import { priceCart } from "../application/use-cases/price-cart";
 import { orderNumber, type Order } from "../domain/order";
 import type { OrderRating } from "../domain/order-rating";
 import { nextStatuses } from "../domain/order-flow";
 import { ORDER_PERMISSIONS as P } from "./permissions";
 import { savedCartBody } from "./cart-schemas";
-import { boardQuery, cancelBody, cartBody, hideBody, placeBody, ratingBody, reviewsQuery, rulesBody, statusBody } from "./request-schemas";
+import { boardQuery, cancelBody, cartBody, hideBody, pinBody, placeBody, ratingBody, reviewsQuery, rulesBody, statusBody } from "./request-schemas";
 
 /** True when [actor] works the orders (board, kitchen or front of house). Guests hold these only as `own`. */
 const isOrderStaff = (actor: Actor) => [P.view, P.kitchen, P.kitchenView, P.edit].some((p) => canForOthers(actor, p));
@@ -103,6 +107,13 @@ export function ordersRouter(deps: (c: Context<ActorEnv>) => OrderingDeps) {
     })
     .delete("/cart", requireSignIn, async (c) => {
       await clearSavedCart(deps(c), actorOf(c).userId);
+      return c.body(null, 204);
+    })
+    // Saved delivery pin: always the caller's own, as with the cart above.
+    .get("/location", requireSignIn, async (c) => c.json(await readSavedLocation(deps(c), actorOf(c).userId)))
+    .put("/location", requireSignIn, zValidator("json", pinBody), async (c) => c.json(await saveLocation(deps(c), actorOf(c).userId, c.req.valid("json"))))
+    .delete("/location", requireSignIn, async (c) => {
+      await clearSavedLocation(deps(c), actorOf(c).userId);
       return c.body(null, 204);
     })
     .get("/stars", async (c) => c.json({ items: await deps(c).ratings.stars() }))
