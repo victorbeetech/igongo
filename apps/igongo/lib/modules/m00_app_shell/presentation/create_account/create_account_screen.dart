@@ -46,7 +46,7 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
   String? _problem() {
     if (_name.text.trim().isEmpty) return 'Enter your name.';
     if (!_email.text.contains('@')) return 'Enter your email.';
-    if (_password.text.length < 10) return 'Use a password of at least 10 characters.';
+    if (_password.text.length < 8) return 'Use a password of at least 8 characters.';
     if (!_agreed) return 'Please agree to the privacy notice.';
     return null;
   }
@@ -89,7 +89,7 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
       ),
       IgongoField(
         label: 'Password',
-        hint: 'At least 10 characters, a letter and a number',
+        hint: 'At least 8 characters, a letter and a number',
         icon: Icons.lock_outline,
         obscure: true,
         controller: _password,

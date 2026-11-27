@@ -12,6 +12,7 @@
  */
 
 import { SUPER_ADMIN_ROLE_KEY } from "@igongo/contracts/roles-permissions";
+import { canSignIn } from "./account-status";
 import type { LoginPolicy } from "./login-policy";
 import type { RequestSurface } from "./request-surface";
 
@@ -19,7 +20,8 @@ export interface RequestFacts {
   surface: RequestSurface;
   /** The API path, such as `/api/users/me`. */
   path: string;
-  account: { kind: string; email: string; twoFactorEnabled: boolean };
+  /** `status` is re-read on every request, so a suspended account loses an open session at once. */
+  account: { kind: string; email: string; twoFactorEnabled: boolean; status: string };
   roleKeys: string[];
   /** True when the person holds at least one staff role. */
   hasStaffRole: boolean;
@@ -44,6 +46,10 @@ export function needsStrongSignIn(roleKeys: string[], policy: Pick<LoginPolicy, 
 
 export function requestGate(f: RequestFacts, policy: LoginPolicy): GateVerdict {
   const open = OPEN_EXACT.includes(f.path) || OPEN_PREFIXES.some((p) => f.path.startsWith(p));
+  // 0. Revocation: a pending, locked or suspended account loses its open session on the next request.
+  if (!canSignIn(f.account.status)) {
+    return { allow: false, status: 401, code: "account_not_active", message: "This account is not active. Please contact the hotel.", endSession: true };
+  }
   // 1. Guests never use the web portal (signing out still works).
   if (f.surface === "web" && f.account.kind !== "staff" && !f.ownerSettingUp && !f.path.startsWith("/api/auth/")) {
     return { allow: false, status: 403, code: "staff_only", message: "The web portal is for hotel staff. Guests use the Igongo app.", endSession: true };

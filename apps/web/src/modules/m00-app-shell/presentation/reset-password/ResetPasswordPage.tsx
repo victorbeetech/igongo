@@ -55,7 +55,7 @@ export function ResetPasswordPage() {
   }
   return (
     <form onSubmit={submit} className="grid gap-3 p-4 pt-2">
-      <p className="text-caption text-muted">Choose a new password: at least 10 characters, with a letter and a number.</p>
+      <p className="text-caption text-muted">Choose a new password: at least 8 characters, with a letter and a number.</p>
       <TextInput label="New password" type="password" value={password} onChange={setPassword} autoComplete="new-password" required />
       <TextInput label="New password again" type="password" value={again} onChange={setAgain} autoComplete="new-password" required />
       {error && <p role="alert" className="text-caption text-error">{error}</p>}
