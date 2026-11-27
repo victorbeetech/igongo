@@ -21,12 +21,16 @@ export interface Env extends PushEnv {
   /** Comma-separated web addresses allowed to call with cookies. */
   WEB_ORIGINS?: string;
   GOOGLE_CLIENT_ID?: string;
+  /** Comma-separated Google client IDs of the iPhone and Android apps (public values). */
+  GOOGLE_APP_CLIENT_IDS?: string;
   /** Apple push key ID and team ID (the key itself is APNS_PRIVATE_KEY). */
   APNS_KEY_ID?: string;
   APPLE_TEAM_ID?: string;
   /** Sign in with Apple: the login key's ID and the web Services ID. */
   APPLE_KEY_ID?: string;
   APPLE_SERVICES_ID?: string;
+  /** The iPhone app's bundle ID (ug.co.igongo.igongo): the audience of Apple ID tokens from the app. */
+  APPLE_APP_BUNDLE_ID?: string;
   // --- Secrets ---
   BETTER_AUTH_SECRET?: string;
   SETTINGS_ENCRYPTION_KEY?: string;

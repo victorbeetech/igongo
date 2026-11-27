@@ -22,7 +22,11 @@ export async function authConfigFrom(env: Env, secrets: SecretReader): Promise<A
   const stored = await secrets.getMany(["google.client_id", "google.client_secret", "apple.team_id", "apple.key_id", "apple.client_id", "apple.private_key", "apple.app_bundle_id"]);
   const googleId = stored["google.client_id"] ?? env.GOOGLE_CLIENT_ID;
   const googleSecret = stored["google.client_secret"] ?? env.GOOGLE_CLIENT_SECRET;
-  const bundle = stored["apple.app_bundle_id"];
+  // The iPhone bundle ID: the console key first, then the Worker's own value.
+  const appBundle = stored["apple.app_bundle_id"] ?? env.APPLE_APP_BUNDLE_ID;
+  // The app's own client IDs come after the web one, so ID tokens from the phone apps verify too.
+  const googleAppIds = splitList(env.GOOGLE_APP_CLIENT_IDS);
+  const googleClientIds = googleId ? [googleId, ...googleAppIds.filter((id) => id !== googleId)] : googleId;
   // Apple: console keys first, then the Worker's own values.
   const apple = {
     teamId: stored["apple.team_id"] ?? env.APPLE_TEAM_ID,
@@ -34,10 +38,15 @@ export async function authConfigFrom(env: Env, secrets: SecretReader): Promise<A
     baseURL: config.baseURL,
     secret: config.authSecret,
     trustedOrigins: config.webOrigins,
-    google: googleId && googleSecret ? { clientId: googleId, clientSecret: googleSecret } : null,
+    google: googleClientIds && googleSecret ? { clientId: googleClientIds, clientSecret: googleSecret } : null,
     apple:
       apple.teamId && apple.keyId && apple.clientId && apple.privateKey
-        ? { teamId: apple.teamId, keyId: apple.keyId, clientId: apple.clientId, privateKey: apple.privateKey, ...(bundle ? { appBundleIdentifier: bundle } : {}) }
+        ? { teamId: apple.teamId, keyId: apple.keyId, clientId: apple.clientId, privateKey: apple.privateKey, ...(appBundle ? { appBundleIdentifier: appBundle } : {}) }
         : null,
   };
+}
+
+/** Splits a comma-separated variable into trimmed, non-empty entries. Unset gives none. */
+function splitList(value: string | undefined): string[] {
+  return (value ?? "").split(",").map((v) => v.trim()).filter((v) => v.length > 0);
 }
