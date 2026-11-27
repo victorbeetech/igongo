@@ -10,6 +10,9 @@ import type { CodeChannel, CodeSender } from "../../application/ports/code-sende
 /** The Resend endpoint for sending one email. */
 export const RESEND_SEND_ENDPOINT = "https://api.resend.com/emails";
 
+/** The default sender for sign-in emails: the verified igongo.victorbee.com domain. The super admin can override it. */
+export const DEFAULT_EMAIL_SENDER = "Igongo <no-reply@igongo.victorbee.com>";
+
 /** What the email sender needs. Both are read at send time, so a change in the super admin's settings applies at once. */
 export interface ResendCodeConfig {
   /** The API key: the super admin's setting first, else the RESEND_API_KEY secret. */

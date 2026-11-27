@@ -1,7 +1,7 @@
 // The Resend email sender for codes and reset links. Mocked HTTP: no real email is sent.
 
 import { describe, expect, it, vi } from "vitest";
-import { resendCodeSender, RESEND_SEND_ENDPOINT } from "../src/infrastructure/senders/resend-code-sender";
+import { DEFAULT_EMAIL_SENDER, resendCodeSender, RESEND_SEND_ENDPOINT } from "../src/infrastructure/senders/resend-code-sender";
 
 const okFetch = () => vi.fn(async () => new Response("{}", { status: 200 }));
 
@@ -10,6 +10,10 @@ describe("Resend code sender", () => {
     expect(await resendCodeSender({ apiKey: async () => null, from: async () => "Igongo <a@b.c>" }).ready("email")).toBe(false);
     expect(await resendCodeSender({ apiKey: async () => "k", from: async () => null }).ready("email")).toBe(false);
     expect(await resendCodeSender({ apiKey: async () => "k", from: async () => "Igongo <a@b.c>" }).ready("email")).toBe(true);
+  });
+
+  it("uses the verified igongo.victorbee.com default sender", async () => {
+    expect(DEFAULT_EMAIL_SENDER).toBe("Igongo <no-reply@igongo.victorbee.com>");
   });
 
   it("is never ready for SMS or WhatsApp", async () => {
