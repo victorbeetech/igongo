@@ -72,7 +72,7 @@ class MyProfileScreen extends ConsumerWidget {
         // Step 1: the banner, with the card (or the sign-in prompt) overlapping its wavy edge.
         Stack(
           children: [
-            const Positioned(top: 0, left: 0, right: 0, child: const ProfileBanner(height: _bannerHeight)),
+            const Positioned(top: 0, left: 0, right: 0, child: ProfileBanner(height: _bannerHeight)),
             Padding(
               padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, _cardTop, IgongoSpace.lg, 0),
               child: session == null
