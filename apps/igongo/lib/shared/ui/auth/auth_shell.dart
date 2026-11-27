@@ -70,6 +70,8 @@ class AuthShell extends StatelessWidget {
         data: _authTheme(context),
         child: Scaffold(
           appBar: appBar,
+          // Step 0d: the page is white too, so nothing below the form shows a different background.
+          backgroundColor: palette.surface,
           // Step 1: no top safe area, so the header's photo runs behind the status bar.
           body: SafeArea(
             top: false,
@@ -85,24 +87,16 @@ class AuthShell extends StatelessWidget {
                       children: [
                         // Step 2a: the photo, the curve and the floating logo card at the top.
                         const IgongoAuthHeader(),
-                        // Step 2b: the white card below the header, so the white curve flows into the form.
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.md),
-                          // A Material surface, so list tiles inside the card (such as the privacy checkbox) get their ink.
-                          child: Material(
-                            color: palette.surface,
-                            clipBehavior: Clip.antiAlias,
-                            // Only the top corners curve, as in the design, so the sheet rises from the wave.
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(top: Radius.circular(IgongoRadius.lg)),
-                            ),
-                            child: Padding(
-                              padding: cardPadding,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                spacing: gap,
-                                children: children,
-                              ),
+                        // Step 2b: the form sits on the same white as the curve, full width, so there is no container edge.
+                        // A Material surface, so list tiles inside the form (such as the privacy checkbox) get their ink.
+                        Material(
+                          color: palette.surface,
+                          child: Padding(
+                            padding: cardPadding,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              spacing: gap,
+                              children: children,
                             ),
                           ),
                         ),
