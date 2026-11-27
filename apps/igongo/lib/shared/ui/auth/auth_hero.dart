@@ -30,7 +30,7 @@ class AuthHero extends StatelessWidget {
           // Step 2: the logo sits at the top centre, in its colour version over the photo.
           const Align(
             alignment: Alignment.topCenter,
-            child: Padding(
+            child: const Padding(
               padding: EdgeInsets.only(top: IgongoSpace.md),
               child: IgongoLogo(shape: LogoShape.stacked, height: 72),
             ),
