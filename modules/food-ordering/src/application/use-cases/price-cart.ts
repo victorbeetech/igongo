@@ -16,6 +16,7 @@ import type { DeliveryPlace, OrderType } from "@igongo/contracts/food-ordering";
 import type { PromoQuote } from "@igongo/contracts/promotions-vouchers";
 import { AppError } from "@igongo/core";
 import type { OrderLine } from "../../domain/order-line";
+import { checkLineDay } from "../../domain/line-day";
 import { readyTime, SCHEDULABLE_TYPES, typeAllowed, type OrderingRules } from "../../domain/ordering-rules";
 import { priceLine } from "../../domain/price-line";
 import type { OrderingDeps } from "../ordering-deps";
@@ -23,7 +24,7 @@ import type { OrderingDeps } from "../ordering-deps";
 export interface CartInput {
   outlet: string;
   type: OrderType;
-  lines: { itemId: string; quantity: number; options: string[]; notes?: string }[];
+  lines: { itemId: string; quantity: number; options: string[]; notes?: string; date?: string }[];
   /** Arrival (pre-order) or the wanted time (scheduled order). */
   arriveAt?: Date;
   deliverTo?: DeliveryPlace;
@@ -56,8 +57,9 @@ export async function priceCart(deps: OrderingDeps, cart: CartInput): Promise<Pr
     const item = items.get(l.itemId);
     if (!item || item.outlet !== cart.outlet) throw new AppError("not_found", "An item in the cart is not on this menu.");
     if (!item.available) throw new AppError("conflict", `${item.name} is not available today.`);
-    // 3. Price.
-    return priceLine(item, l.quantity, l.options, l.notes ?? null);
+    // 3. Price, and the day the guest wants it (the hotel's day, checked).
+    if (l.date) checkLineDay(l.date, now);
+    return { ...priceLine(item, l.quantity, l.options, l.notes ?? null), date: l.date ?? null };
   });
   const subtotal = lines.reduce((s, l) => s + l.lineTotal, 0);
   // 4. Delivery fee and travel time.

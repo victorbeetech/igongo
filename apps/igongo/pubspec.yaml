@@ -40,3 +40,5 @@ flutter:
   assets:
     # The owner's own photos (see lib/shared/ui/photo/guest_photos.dart).
     - assets/photos/
+    # Cart artwork from the design mock-up (empty cart state).
+    - assets/cart/cart-illustration.png

@@ -75,3 +75,9 @@ Slots without a photo show a plain placeholder icon. To swap one: put the file i
 - The super admin uploads a new in-app logo or banner from the web, and the app shows it without a new release.
 - Not built yet: wait until the web admin upload and the app's image reading are in place.
 - The launcher icon cannot change this way. It is built into the app, so a new icon needs a new build and a store update.
+
+## 8. Service charge (super admin switch and rate)
+- The Cart summary shows a service charge line. It is a PLACEHOLDER today: `apps/igongo/lib/modules/m62_food_ordering/domain/service_charge_placeholder.dart` (5 per cent, UGX 0). No charge is calculated yet.
+- Later: the super admin switches the service charge on or off and sets the rate, from the super admin settings.
+- When it is on, the server prices the charge in the quote (`priceCart`) and the Cart shows the server's amount. The app never works out the charge itself.
+- Then remove the placeholder file and its uses, and check the total adds up on the server and in the app.

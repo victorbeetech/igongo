@@ -21,7 +21,15 @@ on:
       - packages/brand/**
       - packages/design-tokens/**
       - .github/workflows/app.yml
+  # Run by hand from the Actions tab (or with the API) on a branch. Set
+  # regenerate to true to re-make the screenshot images on Linux and commit
+  # only the changed images back to that branch (see the regenerate job).
   workflow_dispatch:
+    inputs:
+      regenerate:
+        description: "Re-make the screenshot images on Linux and commit them to this branch"
+        type: boolean
+        default: false
 
 # A newer push to the same branch cancels the older run.
 concurrency:
@@ -77,3 +85,42 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           cache: true
       - run: flutter build ios --release --no-codesign
+
+  # Manual only: re-makes the app's screenshot images on Linux with the pinned
+  # Flutter, then commits only the changed images to the branch this run is on:
+  #   - apps/igongo/test/golden/goldens (the key screens, light and dark)
+  #   - packages/brand/store/screenshots (the store listing screens)
+  # Review the new images in the pull request afterwards.
+  regenerate:
+    if: github.event_name == 'workflow_dispatch' && inputs.regenerate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      # Step 1: the branch this run was started on, with its full history.
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      # Step 2: the pinned Flutter, as the jobs above use it.
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+      # Step 3: packages for the app.
+      - run: flutter pub get
+      # Step 4: run every test and save the new images in place of the old ones.
+      - run: flutter test --update-goldens
+      # Step 5: commit only the changed images (golden folder and store screenshots), if any.
+      - name: Commit regenerated images
+        working-directory: .
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -- apps/igongo/test/golden packages/brand/store
+          if git diff --cached --quiet; then
+            echo "No image changed."
+          else
+            git commit -m "Regenerate app screenshots on Linux (Flutter 3.50.1)"
+            git push origin "HEAD:${{ github.ref_name }}"
+          fi

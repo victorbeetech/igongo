@@ -87,7 +87,7 @@ class _ItemPageState extends ConsumerState<ItemPage> {
                 for (final c in e.value) '${e.key}:$c',
             ],
             unitPrice: _unitPrice,
-            note: note.isEmpty ? null : note,
+            notes: note.isEmpty ? null : note,
           ),
         );
     Navigator.of(context).pop();
