@@ -11,6 +11,7 @@ import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../shared/api/api_client.dart';
+import '../../../shared/api/api_exception.dart';
 import '../../../shared/format/request_key.dart';
 import '../../../shared/format/ugx.dart';
 import '../../../shared/payments/presentation/pay_sheet.dart';
@@ -115,7 +116,7 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
       ref.invalidate(savedPinProvider);
     } on ApiException {
       // Step 4: the order still uses the point; only the "saved" copy failed.
-      if (mounted) showIgongoToast(context, "Could not save your place. This order still uses it.");
+      if (mounted) showIgongoToast(context, 'Could not save your place. This order still uses it.');
     }
   }
 
