@@ -56,8 +56,9 @@ class NextStayCard extends StatelessWidget {
         children: [
           // Step 1: the date tile: "TOM" (or the weekday), the day and the month.
           Container(
-            width: 54,
-            height: 75,
+            // At least 75 tall; it grows with big text instead of overflowing.
+            constraints: const BoxConstraints(minWidth: 54, minHeight: 75),
+            padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.xs, vertical: IgongoSpace.xs),
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: p.surface,
