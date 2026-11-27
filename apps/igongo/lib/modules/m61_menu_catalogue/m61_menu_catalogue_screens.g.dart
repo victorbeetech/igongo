@@ -2,13 +2,14 @@
 // Module 61: Menus & Catalogue. Screens, dialogs and sample data for the clickable UI.
 
 import '../../shared/catalog/catalog.dart';
+import 'm61_menu_catalogue_overrides.dart';
 
 /// Module 61, Menus & Catalogue: every screen and dialog, with its sample data.
-const m61MenuCatalogueModule = ModuleSpec(
+final m61MenuCatalogueModule = ModuleSpec(
   code: '61',
   name: 'Menus & Catalogue',
   slug: 'menu-catalogue',
-  screens: [
+  screens: const [
     ScreenSpec(
       id: 'S61-01',
       name: 'Menus',
@@ -54,7 +55,8 @@ const m61MenuCatalogueModule = ModuleSpec(
       fields: [],
     ),
   ],
-  dialogs: [
+  overrides: m61Overrides,
+  dialogs: const [
     DialogSpec(
       id: 'D61-01',
       name: 'Publish menu',
@@ -64,7 +66,7 @@ const m61MenuCatalogueModule = ModuleSpec(
       opens: [],
     ),
   ],
-  mock: ModuleMock(
+  mock: const ModuleMock(
     items: [
       'Beef pilau',
       'Fried beef (1 kg)',
