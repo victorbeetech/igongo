@@ -4,6 +4,7 @@
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
+import 'igongo_page_transitions.dart';
 import 'igongo_palette.dart';
 import 'igongo_text.dart';
 
@@ -158,6 +159,8 @@ abstract final class IgongoTheme {
         minVerticalPadding: IgongoSpace.sm,
       ),
       drawerTheme: DrawerThemeData(backgroundColor: p.surface),
+      // Every route uses the soft fade on every platform (see igongo_page_transitions.dart).
+      pageTransitionsTheme: IgongoPageTransitions.theme,
     );
   }
 }
