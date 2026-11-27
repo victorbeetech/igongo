@@ -28,9 +28,9 @@ class BottomBar extends ConsumerWidget {
 
   static const _home = ('home', 'Home', Icons.home_outlined);
   static const _me = ('S00-31', 'Me', Icons.person_outline);
-  static const _food = ('S62-01', 'Food', Icons.restaurant_menu_outlined);
+  static const _food = ('S62-01', 'Food', Icons.restaurant_outlined);
   static const _bookings = ('S67-01', 'Bookings', Icons.event_available_outlined);
-  static const _cart = ('S62-04', 'Cart', Icons.shopping_cart_outlined);
+  static const _cart = ('S62-04', 'Cart', Icons.shopping_bag_outlined);
 
   /// The guest tabs, always the same.
   static const _guestTabs = <_Tab>[_home, _food, _bookings, _cart, _me];
