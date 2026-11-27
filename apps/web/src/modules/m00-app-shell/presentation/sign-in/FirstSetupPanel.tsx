@@ -6,13 +6,11 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ShieldCheck } from "lucide-react";
-import { claimSetup, signInSocial } from "@/modules/m04-users-login/data/authApi";
+import { claimSetup } from "@/modules/m04-users-login/data/authApi";
 import { useApiMutation } from "@/shared/api/useApiMutation";
 import { api } from "@/shared/api/apiClient";
-import { absoluteUrl } from "@/shared/navigation/absoluteUrl";
 import { useAddress } from "@/shared/navigation/useAddress";
 import { ME_KEY } from "@/shared/session/useMe";
-import { GoogleIcon } from "@/shared/ui/brand-icons/GoogleIcon";
 import { Button } from "@/shared/ui/button/Button";
 
 /** The set-up panel. */
@@ -32,7 +30,8 @@ export function FirstSetupPanel() {
           Finish set-up as {email}
         </Button>
       ) : (
-        <Button variant="secondary" block icon={<GoogleIcon />} onClick={() => void signInSocial("google", absoluteUrl("/sign-in"))}>Owner: sign in with Google</Button>
+        // Google and Apple are app only. The owner signs in here with email and password first.
+        <p className="text-caption text-muted">Sign in with your email and password first, then finish the set-up here.</p>
       )}
     </section>
   );

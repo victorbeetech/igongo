@@ -13,7 +13,7 @@ import { auditRecorder, DrizzleAuditStore } from "@igongo/audit-trail";
 import { memoryBlobStore, r2BlobStore, type BlobStore } from "@igongo/files-media";
 import type { AuditRecorder } from "@igongo/contracts/audit-trail";
 import type { StaffAccountCheck } from "@igongo/contracts/roles-permissions";
-import { createLogger, SecretBox, type ChangeContext, type Database } from "@igongo/core";
+import { AppError, createLogger, SecretBox, type ChangeContext, type Database } from "@igongo/core";
 import { accessService, DrizzleAssignmentRepository, DrizzleRoleRepository } from "@igongo/roles-permissions";
 import { DrizzleConsoleStore, moduleSwitchReader, secretReader } from "@igongo/super-admin";
 import {
@@ -62,7 +62,16 @@ export class RequestServices {
   readonly roles = once(() => new DrizzleRoleRepository(this.db));
   readonly assignments = once(() => new DrizzleAssignmentRepository(this.db));
   /** Staff roles only go to staff accounts: Users & Login says which accounts are staff. */
-  readonly staffAccounts = once((): StaffAccountCheck => ({ isStaffAccount: async (id) => (await this.accounts().get(id))?.kind === "staff" }));
+  // Giving a staff role upgrades a verified app sign-up to a staff account.
+  readonly staffAccounts = once((): StaffAccountCheck => ({
+    makeStaff: async (id) => {
+      const account = await this.accounts().get(id);
+      if (!account) throw new AppError("not_found", "Account not found.");
+      if (account.kind === "staff") return;
+      if (!account.emailVerified) throw new AppError("bad_request", "The person must verify their email in the app before they can be given a staff role.");
+      await this.accounts().setKind(id, "staff");
+    },
+  }));
   readonly access = once(() =>
     accessService({ roles: this.roles(), assignments: this.assignments(), staffAccounts: this.staffAccounts() }, { audit: this.audit(), now: this.now, requestId: this.requestId }),
   );

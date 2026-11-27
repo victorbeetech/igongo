@@ -12,6 +12,8 @@ const hotel = z.object({
   shortName: z.string().max(40),
   address: z.string().max(300),
   phone: z.string().max(40),
+  /** The company WhatsApp number guests chat with (digits with the country code, such as 256793128137). */
+  whatsapp: z.string().regex(/^\+?[0-9 ]{0,20}$/),
   email: z.string().max(120),
   tin: z.string().max(40),
   registration: z.string().max(80),
@@ -44,7 +46,7 @@ export const SECTION_NAMES = Object.keys(SETTINGS_SECTIONS) as SettingsSection[]
 
 /** Starting values, used until the super admin saves a section. */
 export const SETTINGS_DEFAULTS: { [K in SettingsSection]: z.infer<(typeof SETTINGS_SECTIONS)[K]> } = {
-  hotel: { name: "Igongo Country Hotel & Cultural Centre", shortName: "Igongo", address: "Mbarara, Uganda", phone: "", email: "", tin: "", registration: "" },
+  hotel: { name: "Igongo Country Hotel & Cultural Centre", shortName: "Igongo", address: "Mbarara, Uganda", phone: "", whatsapp: "256793128137", email: "", tin: "", registration: "" },
   branding: { logo: "stacked", announcement: "", loginWelcome: "Welcome to Igongo", minimumAppVersion: "0.0.0" },
   regional: { timeZone: "Africa/Kampala", currency: "UGX", dateFormat: "DD/MM/YYYY", businessDayCutoff: "04:00", financialYearStartMonth: 7 },
 };

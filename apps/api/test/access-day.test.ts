@@ -63,9 +63,10 @@ describe("becoming staff", () => {
     // HR enrols Grace's staff record (no account yet).
     const record = (await t.hr("POST", "/api/hr/staff", { name: "Grace Nakato", department: "kitchen", phone: "0772 123 456" })).body as { staffId: string; staffNumber: string };
     const { grace, userId } = await guestInApp(t);
-    // HR cannot link a guest account, and nobody can give it a staff role.
-    expect((await t.hr("PATCH", `/api/hr/staff/${record.staffId}`, { userId })).status).toBe(403);
-    expect((await t.owner("POST", `/api/access/users/${userId}/roles`, { roleId: "role_waiter" })).status).toBe(403);
+    // HR cannot link an unverified guest account (linking gives the staff base role, which needs a verified email).
+    expect((await t.hr("PATCH", `/api/hr/staff/${record.staffId}`, { userId })).status).toBe(400);
+    // A staff role for an unverified app sign-up is refused (the email must be verified first).
+    expect((await t.owner("POST", `/api/access/users/${userId}/roles`, { roleId: "role_waiter" })).status).toBe(400);
     // HR cannot do the match either: it is the super admin's.
     const match = { userId, staffNumber: record.staffNumber, phone: "+256772123456" };
     expect((await t.hr("POST", "/api/security/staff-match", match)).status).toBe(403);

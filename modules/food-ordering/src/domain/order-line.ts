@@ -17,4 +17,6 @@ export interface OrderLine {
   options: ChosenOption[];
   notes: string | null;
   lineTotal: number;
+  /** The day the guest wants this line (the hotel's date, YYYY-MM-DD), or null when not chosen. */
+  date?: string | null;
 }

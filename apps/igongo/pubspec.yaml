@@ -28,6 +28,8 @@ dependencies:
   nfc_manager: ^4.4.0
   image_picker: ^1.2.0
   qr_flutter: ^4.1.0
+  url_launcher: ^6.3.2
+  maplibre_gl: ^0.28.0
 
 dev_dependencies:
   flutter_test:
@@ -36,6 +38,10 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  # Images the app shows, such as the hut photo on the Auth screens.
   assets:
+    # Images the app shows, such as the hut photo on the Auth screens.
     - assets/images/auth_hut.jpg
+    # The owner's own photos (see lib/shared/ui/photo/guest_photos.dart).
+    - assets/photos/
+    # Cart artwork from the design mock-up (empty cart state).
+    - assets/cart/cart-illustration.png

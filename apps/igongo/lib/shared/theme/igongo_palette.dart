@@ -29,6 +29,8 @@ class IgongoPalette extends ThemeExtension<IgongoPalette> {
     required this.onError,
     required this.info,
     required this.brandCream,
+    required this.warmCream,
+    required this.warmCard,
   });
 
   /// Light mode. Igongo red is the same as in dark mode.
@@ -53,6 +55,8 @@ class IgongoPalette extends ThemeExtension<IgongoPalette> {
     onError: IgongoColorsLight.onError,
     info: IgongoColorsLight.info,
     brandCream: IgongoColorsLight.brandCream,
+    warmCream: IgongoColorsLight.warmCream,
+    warmCard: IgongoColorsLight.warmCard,
   );
 
   /// Dark mode. Only backgrounds, text, borders and status colours change.
@@ -77,6 +81,8 @@ class IgongoPalette extends ThemeExtension<IgongoPalette> {
     onError: IgongoColorsDark.onError,
     info: IgongoColorsDark.info,
     brandCream: IgongoColorsDark.brandCream,
+    warmCream: IgongoColorsDark.warmCream,
+    warmCard: IgongoColorsDark.warmCard,
   );
 
   /// Igongo red: buttons, bars, badges and the logo.
@@ -141,6 +147,12 @@ class IgongoPalette extends ThemeExtension<IgongoPalette> {
   /// The brand cream, for text on dark brand surfaces such as the staff card.
   final Color brandCream;
 
+  /// The warm cream page behind the Bookings home (the dark page in dark mode).
+  final Color warmCream;
+
+  /// The warm cream card on the Bookings home (a dark surface in dark mode).
+  final Color warmCard;
+
   /// Every colour by its token name, for the design system showcase.
   Map<String, Color> get named => {
     'primary': primary,
@@ -195,6 +207,8 @@ class IgongoPalette extends ThemeExtension<IgongoPalette> {
       onError: mix(onError, other.onError),
       info: mix(info, other.info),
       brandCream: mix(brandCream, other.brandCream),
+      warmCream: mix(warmCream, other.warmCream),
+      warmCard: mix(warmCard, other.warmCard),
     );
   }
 }

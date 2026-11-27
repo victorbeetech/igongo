@@ -4,6 +4,7 @@ import { Hono } from "hono";
 import { describe, expect, it } from "vitest";
 import { MemoryAudienceDirectory } from "../src/infrastructure/memory/memory-audience-directory";
 import { MemoryDeviceTokenRepository } from "../src/infrastructure/memory/memory-device-token-repository";
+import { MemoryInboxRepository } from "../src/infrastructure/memory/memory-inbox-repository";
 import { MockPushSender } from "../src/infrastructure/memory/mock-push-sender";
 import { notificationsRouter } from "../src/presentation/notifications-router";
 import { PERMISSIONS, type NotificationsVariables, type RequestActor } from "../src/presentation/request-actor";
@@ -14,7 +15,7 @@ const TOKEN = "fcm-token-0123456789-abcdef";
 function api(actor?: RequestActor) {
   const repo = new MemoryDeviceTokenRepository();
   const sender = new MockPushSender();
-  const deps = { repo, sender, directory: new MemoryAudienceDirectory(), now: () => new Date(), newId: () => "n1" };
+  const deps = { repo, sender, directory: new MemoryAudienceDirectory(), inbox: new MemoryInboxRepository(), now: () => new Date(), newId: () => "n1" };
   const app = new Hono<{ Variables: NotificationsVariables }>();
   app.use(async (c, next) => {
     c.set("actor", actor);

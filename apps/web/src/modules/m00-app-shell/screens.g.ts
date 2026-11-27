@@ -122,8 +122,7 @@ export const m00AppShell: ModuleSpec = {
       "route": "/sign-in-with-google",
       "kind": "form",
       "surfaces": [
-        "app",
-        "web"
+        "app"
       ],
       "opens": [
         "S00-19",
@@ -139,8 +138,7 @@ export const m00AppShell: ModuleSpec = {
       "route": "/sign-in-with-apple",
       "kind": "form",
       "surfaces": [
-        "app",
-        "web"
+        "app"
       ],
       "opens": [
         "home"

@@ -6,6 +6,7 @@
  *   2. every item must exist, be at this outlet and be available today,
  *   3. each line is priced with its options,
  *   4. a delivery gets its zone's fee and travel time,
+ *   4b. a takeaway adds the container fee the super admin set (0 = free),
  *   5. a promo or voucher code takes its discount off the food,
  *   6. a pre-order or scheduled order needs enough notice, within the days allowed,
  *   7. the ready time comes from prep times and the kitchen's queue.
@@ -15,6 +16,7 @@ import type { DeliveryPlace, OrderType } from "@igongo/contracts/food-ordering";
 import type { PromoQuote } from "@igongo/contracts/promotions-vouchers";
 import { AppError } from "@igongo/core";
 import type { OrderLine } from "../../domain/order-line";
+import { checkLineDay } from "../../domain/line-day";
 import { readyTime, SCHEDULABLE_TYPES, typeAllowed, type OrderingRules } from "../../domain/ordering-rules";
 import { priceLine } from "../../domain/price-line";
 import type { OrderingDeps } from "../ordering-deps";
@@ -22,7 +24,7 @@ import type { OrderingDeps } from "../ordering-deps";
 export interface CartInput {
   outlet: string;
   type: OrderType;
-  lines: { itemId: string; quantity: number; options: string[]; notes?: string }[];
+  lines: { itemId: string; quantity: number; options: string[]; notes?: string; date?: string }[];
   /** Arrival (pre-order) or the wanted time (scheduled order). */
   arriveAt?: Date;
   deliverTo?: DeliveryPlace;
@@ -36,6 +38,8 @@ export interface PricedCart {
   promo: PromoQuote | null;
   discount: number;
   deliveryFee: number;
+  /** The takeaway container fee the super admin set (0 = free). */
+  containerFee: number;
   total: number;
   readyAt: Date;
   rules: OrderingRules;
@@ -53,8 +57,9 @@ export async function priceCart(deps: OrderingDeps, cart: CartInput): Promise<Pr
     const item = items.get(l.itemId);
     if (!item || item.outlet !== cart.outlet) throw new AppError("not_found", "An item in the cart is not on this menu.");
     if (!item.available) throw new AppError("conflict", `${item.name} is not available today.`);
-    // 3. Price.
-    return priceLine(item, l.quantity, l.options, l.notes ?? null);
+    // 3. Price, and the day the guest wants it (the hotel's day, checked).
+    if (l.date) checkLineDay(l.date, now);
+    return { ...priceLine(item, l.quantity, l.options, l.notes ?? null), date: l.date ?? null };
   });
   const subtotal = lines.reduce((s, l) => s + l.lineTotal, 0);
   // 4. Delivery fee and travel time.
@@ -68,6 +73,8 @@ export async function priceCart(deps: OrderingDeps, cart: CartInput): Promise<Pr
     deliveryFee = quote.fee;
     travelMinutes = quote.minutes;
   }
+  // 4b. Takeaway containers: free unless the super admin set a fee.
+  const containerFee = cart.type === "takeaway" ? Math.max(0, rules.containerFee) : 0;
   // 5. Promo or voucher: never more than the food (the delivery fee is always paid).
   let promo: PromoQuote | null = null;
   if (cart.promoCode) {
@@ -91,5 +98,5 @@ export async function priceCart(deps: OrderingDeps, cart: CartInput): Promise<Pr
   }
   // 7. Ready time.
   const readyAt = readyTime({ now, prepMinutes: prep, queued: await deps.orders.queued(cart.outlet), arriveAt: scheduled ? (cart.arriveAt ?? null) : null, travelMinutes, rules });
-  return { lines, subtotal, promo, discount, deliveryFee, total: subtotal - discount + deliveryFee, readyAt, rules };
+  return { lines, subtotal, promo, discount, deliveryFee, containerFee, total: subtotal - discount + deliveryFee + containerFee, readyAt, rules };
 }

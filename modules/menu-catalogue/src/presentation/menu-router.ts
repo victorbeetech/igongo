@@ -5,6 +5,7 @@
  *   GET    /menu/outlets            outlets in the client view (S62-01)
  *   GET    /menu/items?outlet&all   the menu (S61-01, S62-02); `all=1` for staff
  *   GET    /menu/items/:id          one item (S62-03)
+ *   GET    /menu/search?q           global search: dishes and outlets the client view shows (S00-25)
  *   POST   /menu/items              add an item (S61-03)
  *   PATCH  /menu/items/:id          change an item (S61-03)
  *   POST   /menu/items/:id/stock    out of stock today, or back (S61-04)
@@ -16,9 +17,10 @@ import { actorOf, AppError, canForOthers, recordChange, requireStaffPermission, 
 import { Hono, type Context } from "hono";
 import type { MenuDeps } from "../application/menu-deps";
 import { addItem, editItem, setInStock } from "../application/use-cases/save-item";
+import { searchMenu } from "../application/use-cases/search-menu";
 import { isAvailable, type MenuItem } from "../domain/menu-item";
 import { MENU_PERMISSIONS as P } from "./permissions";
-import { itemBody, itemPatch, itemsQuery, settingsBody, stockBody } from "./request-schemas";
+import { itemBody, itemPatch, itemsQuery, searchQuery, settingsBody, stockBody } from "./request-schemas";
 
 /** True when the caller (maybe nobody) is staff holding [permission] (guests hold menu view as `public`). */
 function callerCan(c: Context<ActorEnv>, permission: string): boolean {
@@ -50,6 +52,8 @@ export function menuRouter(deps: (c: Context<ActorEnv>) => MenuDeps) {
       if (!item || (!callerCan(c, P.view) && (!item.active || !item.visibleToClients))) throw new AppError("not_found", "Menu item not found.");
       return c.json(shown(item, d.change.now));
     })
+    // Global search: public like the menu itself, and it returns only what the client view shows.
+    .get("/search", zValidator("query", searchQuery), async (c) => c.json(await searchMenu(deps(c), c.req.valid("query").q)))
     .post("/items", requireStaffPermission(P.create), zValidator("json", itemBody), async (c) => c.json(await addItem(deps(c), c.req.valid("json")), 201))
     .patch("/items/:id", requireStaffPermission(P.edit), zValidator("json", itemPatch), async (c) => c.json(await editItem(deps(c), c.req.param("id"), c.req.valid("json"))))
     .post("/items/:id/stock", zValidator("json", stockBody), async (c) => {

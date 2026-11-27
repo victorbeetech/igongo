@@ -113,6 +113,12 @@ export const MIGRATIONS: Migration[] = [
   "sql": "CREATE SCHEMA \"notifications\";\n--> statement-breakpoint\nCREATE TYPE \"notifications\".\"device_platform\" AS ENUM('android', 'ios', 'web');--> statement-breakpoint\nCREATE TABLE \"notifications\".\"device_tokens\" (\n\t\"token\" text PRIMARY KEY NOT NULL,\n\t\"user_id\" text NOT NULL,\n\t\"platform\" \"notifications\".\"device_platform\" NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"last_seen_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n--> statement-breakpoint\nCREATE INDEX \"device_tokens_user_id_idx\" ON \"notifications\".\"device_tokens\" USING btree (\"user_id\");"
  },
  {
+  "module": "notifications",
+  "name": "0001_fuzzy_marvel_boy",
+  "checksum": "b59172b4d53d2eb2",
+  "sql": "CREATE TABLE \"notifications\".\"inbox_items\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"user_id\" text NOT NULL,\n\t\"title\" text NOT NULL,\n\t\"body\" text NOT NULL,\n\t\"channel\" text NOT NULL,\n\t\"link\" text,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"read_at\" timestamp with time zone\n);\n--> statement-breakpoint\nCREATE INDEX \"inbox_items_user_created_idx\" ON \"notifications\".\"inbox_items\" USING btree (\"user_id\",\"created_at\");"
+ },
+ {
   "module": "hr-records",
   "name": "0000_staff",
   "checksum": "dc06061c17a78d8f",
@@ -177,6 +183,24 @@ export const MIGRATIONS: Migration[] = [
   "name": "0001_promos_ratings",
   "checksum": "37ef708bf95e3cba",
   "sql": "CREATE TABLE \"orders\".\"ratings\" (\n\t\"order_id\" text PRIMARY KEY NOT NULL,\n\t\"user_id\" text NOT NULL,\n\t\"name\" text NOT NULL,\n\t\"outlet\" text NOT NULL,\n\t\"item_ids\" text[] NOT NULL,\n\t\"food\" smallint NOT NULL,\n\t\"delivery\" smallint,\n\t\"comment\" text,\n\t\"hidden\" boolean DEFAULT false NOT NULL,\n\t\"created_at\" timestamp with time zone NOT NULL\n);\n--> statement-breakpoint\nALTER TABLE \"orders\".\"orders\" ADD COLUMN \"discount\" integer DEFAULT 0 NOT NULL;--> statement-breakpoint\nALTER TABLE \"orders\".\"orders\" ADD COLUMN \"promo_code\" text;--> statement-breakpoint\nALTER TABLE \"orders\".\"orders\" ADD COLUMN \"request_key\" text;--> statement-breakpoint\nCREATE INDEX \"ratings_outlet_idx\" ON \"orders\".\"ratings\" USING btree (\"outlet\",\"created_at\");--> statement-breakpoint\nCREATE UNIQUE INDEX \"orders_request_key\" ON \"orders\".\"orders\" USING btree (\"user_id\",\"request_key\");"
+ },
+ {
+  "module": "food-ordering",
+  "name": "0002_container_fee",
+  "checksum": "a5b954de37a74f3b",
+  "sql": "ALTER TABLE \"orders\".\"orders\" ADD COLUMN \"container_fee\" integer DEFAULT 0 NOT NULL;\n"
+ },
+ {
+  "module": "food-ordering",
+  "name": "0003_guest_carts",
+  "checksum": "2d685c303949ae57",
+  "sql": "CREATE TABLE \"orders\".\"carts\" (\n\t\"user_id\" text PRIMARY KEY NOT NULL,\n\t\"outlet\" text,\n\t\"lines\" jsonb NOT NULL,\n\t\"updated_at\" timestamp with time zone NOT NULL\n);\n"
+ },
+ {
+  "module": "food-ordering",
+  "name": "0004_guest_locations",
+  "checksum": "30d2b0ec42163bb3",
+  "sql": "CREATE TABLE \"orders\".\"delivery_pins\" (\n\t\"user_id\" text PRIMARY KEY NOT NULL,\n\t\"label\" text NOT NULL,\n\t\"zone\" text,\n\t\"lat\" double precision NOT NULL,\n\t\"lng\" double precision NOT NULL,\n\t\"updated_at\" timestamp with time zone NOT NULL\n);\n"
  },
  {
   "module": "delivery-riders",
