@@ -11,10 +11,10 @@ import '../domain/order.dart';
 import '../domain/order_line.dart';
 import 'demo_menu.dart';
 
-/// The order types the demo outlet offers.
 /// The demo's takeaway container price (the real fee is the super admin's rule; 0 there means free).
 const demoContainerFee = 1000;
 
+/// The order types the demo outlet offers.
 const List<String> demoOrderTypes = ['dine_in', 'takeaway', 'delivery'];
 
 /// The demo orders placed this run, newest first.
