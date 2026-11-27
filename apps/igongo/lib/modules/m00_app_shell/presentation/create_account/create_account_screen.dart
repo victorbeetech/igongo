@@ -158,8 +158,10 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
         // Step 6: the main action.
         IgongoButton(label: _busy ? 'Creating…' : 'Create account', expand: true, onPressed: _busy ? null : _create),
         // Step 7: the footer, with the link back to sign in and the Contact Us placeholder.
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        // A Wrap, so the items flow onto a second line at large text sizes instead of overflowing.
+        Wrap(
+          alignment: WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Text('Already have an account?', style: context.text.bodySmall),
             IgongoButton(
@@ -169,8 +171,9 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
             ),
           ],
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        Wrap(
+          alignment: WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Text('Need help?', style: context.text.bodySmall),
             const ContactUsLink(),

@@ -140,8 +140,10 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         // Step 6: the Sign In button.
         IgongoButton(label: _busy ? 'Signing in…' : 'Sign In →', expand: true, onPressed: _busy ? null : _signIn),
         // Step 7: the footer, with the guest sign-up link and the Contact Us placeholder.
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        // A Wrap, so the items flow onto a second line at large text sizes instead of overflowing.
+        Wrap(
+          alignment: WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Text("Don't have an account?", style: context.text.bodySmall),
             IgongoButton(
