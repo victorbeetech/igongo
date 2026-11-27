@@ -1,19 +1,20 @@
 // S00-05 Sign in: one entry point for everyone. Email and password sign in
 // for real against the Igongo API (the session is kept in the phone's secure
-// storage). New guests create an account on S00-18. Google and Apple join
-// here once their app sign-in is set up (see docs/APP-WIRING.md).
+// storage). New guests create an account on S00-18. Google and Apple sit
+// under the form when the server has them on (see docs/APP-WIRING.md).
+// The look is the shared Auth frame, the same as the other Auth screens.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../shared/api/api_exception.dart';
 import '../../../../shared/catalog/catalog.dart';
 import '../../../../shared/session/session_controller.dart';
 import '../../../../shared/theme/theme.dart';
+import '../../../../shared/ui/auth/auth_or_divider.dart';
+import '../../../../shared/ui/auth/auth_shell.dart';
 import '../../../../shared/ui/button/igongo_button.dart';
 import '../../../../shared/ui/field/igongo_field.dart';
-import '../../../../shared/ui/logo/igongo_logo.dart';
 import '../../../../shared/ui/toast/igongo_toast.dart';
 import '../../application/sign_in_options_provider.dart';
 import '../../domain/sign_in_option.dart';
@@ -34,6 +35,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   final _email = TextEditingController();
   final _password = TextEditingController();
   bool _busy = false;
+  bool _showPassword = false; // The eye on the password box.
+  bool _remember = true; // The "Remember me" box. The session is already kept on the phone.
 
   ScreenContext get screen => widget.screen;
 
@@ -44,7 +47,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     super.dispose();
   }
 
-  /// Step A: Google or Apple. The app's own sign-in for these is not set up yet
+  /// Google or Apple: the app's own sign-in for these is not set up yet
   /// (it needs the native client IDs), so the button says so honestly.
   void _socialNotReady(SignInOption option) {
     showIgongoToast(context, '${option.label} is not set up in the app yet. Use email and password for now.');
@@ -69,90 +72,74 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Step B: the switched-on Google and Apple options, only when the server lists them.
+    // The switched-on Google and Apple options, only when the server lists them.
     final options = ref.watch(signInOptionsProvider).valueOrNull ?? const <SignInOption>[];
     final social = options.where((o) => o.method == 'google' || o.method == 'apple').toList();
-    return _layout(context, social);
-  }
-
-  /// Lays out the sign-in screen; [social] is the Google and Apple options to show.
-  Widget _layout(BuildContext context, List<SignInOption> social) => Scaffold(
-    body: SafeArea(
-      child: Center(
-        child: ConstrainedBox(
-          // Keep the form a readable width on tablets and the web.
-          constraints: const BoxConstraints(maxWidth: 420),
-          child: ListView(
-            padding: const EdgeInsets.all(IgongoSpace.xl),
-            children: [
-              // Step 1: the logo and a short welcome.
-              const IgongoLogo(shape: LogoShape.stacked, height: 120),
-              const SizedBox(height: IgongoSpace.lg),
-              Text('Sign in', textAlign: TextAlign.center, style: context.text.headlineSmall),
-              Text(
-                'Guests and hotel staff sign in here with their own account.',
-                textAlign: TextAlign.center,
-                style: context.text.bodySmall,
-              ),
-              const SizedBox(height: IgongoSpace.xl),
-              // Step 2: email and password, signed in for real.
-              IgongoField(
-                label: 'Email',
-                hint: 'name@example.com',
-                icon: Icons.mail_outline,
-                controller: _email,
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: IgongoSpace.md),
-              IgongoField(
-                label: 'Password',
-                icon: Icons.lock_outline,
-                obscure: true,
-                controller: _password,
-                onSubmitted: (_) => _signIn(),
-              ),
-              const SizedBox(height: IgongoSpace.md),
-              IgongoButton(label: _busy ? 'Signing in…' : 'Sign in', expand: true, onPressed: _busy ? null : _signIn),
-              IgongoButton(
-                label: 'Forgot password?',
-                variant: ButtonVariant.text,
-                onPressed: () => screen.open('S00-17'),
-              ),
-              // Step 3: Google and Apple, only when the server has them on and set up.
-              if (social.isNotEmpty) ...[
-                const SizedBox(height: IgongoSpace.lg),
-                Row(
-                  children: [
-                    const Expanded(child: Divider()),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.sm),
-                      child: Text('or', style: context.text.bodySmall),
-                    ),
-                    const Expanded(child: Divider()),
-                  ],
-                ),
-                const SizedBox(height: IgongoSpace.md),
-                for (final option in social) ...[
-                  IgongoButton(
-                    label: option.label,
-                    variant: ButtonVariant.secondary,
-                    expand: true,
-                    onPressed: () => _socialNotReady(option),
-                  ),
-                  const SizedBox(height: IgongoSpace.sm),
-                ],
-              ],
-              const SizedBox(height: IgongoSpace.lg),
-              // Step 4: guest sign-up (staff accounts come from the hotel).
-              IgongoButton(
-                label: 'New here? Create an account',
-                variant: ButtonVariant.text,
-                onPressed: () => screen.open('S00-18'),
-              ),
-            ],
+    return AuthShell(
+      children: [
+        // Step 1: the title and a short line under it.
+        Text('Welcome Back', style: context.text.headlineSmall),
+        Text('Sign in to continue to your account', style: context.text.bodySmall),
+        // Step 2: email and password, signed in for real.
+        IgongoField(
+          label: 'Email address',
+          hint: 'name@example.com',
+          icon: Icons.mail_outline,
+          controller: _email,
+          keyboardType: TextInputType.emailAddress,
+        ),
+        IgongoField(
+          label: 'Password',
+          hint: 'Password',
+          icon: Icons.lock_outline,
+          obscure: !_showPassword,
+          controller: _password,
+          onSubmitted: (_) => _signIn(),
+          suffix: IconButton(
+            tooltip: _showPassword ? 'Hide password' : 'Show password',
+            icon: Icon(_showPassword ? Icons.visibility_off_outlined : Icons.visibility_outlined, size: 18),
+            onPressed: () => setState(() => _showPassword = !_showPassword),
           ),
         ),
-      ),
-    ),
-  );
+        // Step 3: "Remember me" on the left, "Forgot password?" on the right.
+        Row(
+          children: [
+            Checkbox(value: _remember, onChanged: (v) => setState(() => _remember = v ?? false)),
+            Text('Remember me', style: context.text.bodySmall),
+            const Spacer(),
+            IgongoButton(
+              label: 'Forgot password?',
+              variant: ButtonVariant.text,
+              onPressed: () => screen.open('S00-17'),
+            ),
+          ],
+        ),
+        // Step 4: the Sign In button.
+        IgongoButton(label: _busy ? 'Signing in…' : 'Sign In →', expand: true, onPressed: _busy ? null : _signIn),
+        // Step 5: Google and Apple, only when the server has them on and set up.
+        if (social.isNotEmpty) ...[
+          const AuthOrDivider(),
+          for (final option in social)
+            IgongoButton(
+              label: option.label,
+              variant: ButtonVariant.secondary,
+              expand: true,
+              onPressed: () => _socialNotReady(option),
+            ),
+        ],
+        // Step 6: guest sign-up (staff accounts come from the hotel).
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("Don't have an account?", style: context.text.bodySmall),
+            IgongoButton(
+              label: 'Contact Us',
+              variant: ButtonVariant.text,
+              onPressed: () => screen.open('S00-18'),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 }

@@ -20,6 +20,7 @@ class IgongoField extends StatelessWidget {
     this.keyboardType,
     this.onSubmitted,
     this.onChanged,
+    this.suffix,
   });
 
   /// The label above the box.
@@ -49,6 +50,9 @@ class IgongoField extends StatelessWidget {
   /// Called on every change, for forms without a controller.
   final ValueChanged<String>? onChanged;
 
+  /// A widget at the end of the box, such as the show-password eye.
+  final Widget? suffix;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -63,7 +67,10 @@ class IgongoField extends StatelessWidget {
           onChanged: onChanged,
           obscureText: obscure,
           maxLines: obscure ? 1 : lines,
-          decoration: InputDecoration(hintText: hint ?? label, prefixIcon: icon == null ? null : Icon(icon, size: 18)),
+          decoration: InputDecoration(
+            hintText: hint ?? label, prefixIcon: icon == null ? null : Icon(icon, size: 18),
+            suffixIcon: suffix,
+          ),
         ),
       ],
     );

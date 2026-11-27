@@ -103,14 +103,20 @@ export function SignInPage({ screen }: { screen: ScreenContext }) {
           autoComplete="current-password"
           required
         />
-        <Button type="submit" disabled={busy} block>
-          {busy ? "Signing in…" : "Sign in"}
-        </Button>
-        <div className="text-right">
+        {/* Step 1: "Remember me" on the left, "Forgot password?" on the right, as the board shows. */}
+        <div className="flex items-center justify-between">
+          <label className="flex items-center gap-2 text-caption">
+            <input type="checkbox" defaultChecked className="size-4 accent-primary" />
+            Remember me
+          </label>
           <Button variant="text" href={hrefFor("S00-17", here)}>
             Forgot password?
           </Button>
         </div>
+        {/* Step 2: the Sign In button. */}
+        <Button type="submit" disabled={busy} block>
+          {busy ? "Signing in…" : "Sign In →"}
+        </Button>
       </form>
       {methods.isError && (
         <p role="alert" className="text-caption text-error">

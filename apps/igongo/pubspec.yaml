@@ -36,3 +36,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  # Images the app shows, such as the hut photo on the Auth screens.
+  assets:
+    - assets/images/auth_hut.jpg
