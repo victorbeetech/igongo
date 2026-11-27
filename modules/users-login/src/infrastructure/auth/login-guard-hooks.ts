@@ -31,7 +31,7 @@ import { isOwnerSettingUp } from "../../application/use-cases/claim-first-super-
 import { countFailure, refuseIfLocked } from "../../application/use-cases/login-lockout";
 import { noteSignInDevice } from "../../application/use-cases/note-sign-in-device";
 import { isAppleRelay, normalizeEmail, tidyName } from "../../domain/email-address";
-import { methodOfRequest } from "../../domain/method-of-request";
+import { isSocialRequestPath, methodOfRequest } from "../../domain/method-of-request";
 import { passwordProblem } from "../../domain/password-rules";
 import { surfaceOf } from "../../domain/request-surface";
 import type { AuthDeps } from "./auth-deps";
@@ -197,7 +197,7 @@ export function loginGuardHooks(deps: AuthDeps, webOrigins: string[]): Pick<Bett
         create: {
           before: async (session, ctx) => {
             // The one gate every sign-in passes, whatever the method.
-            await asApiError(() => checkSessionStart(deps, session.userId, methodOf(ctx), surface(ctx)));
+            await asApiError(() => checkSessionStart(deps, session.userId, methodOf(ctx), surface(ctx), { social: isSocialRequestPath(ctx?.path ?? "") }));
           },
           after: async (session, ctx) => {
             const method = methodOf(ctx);
