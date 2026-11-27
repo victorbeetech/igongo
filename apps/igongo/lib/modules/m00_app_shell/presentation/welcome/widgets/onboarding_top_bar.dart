@@ -21,7 +21,7 @@ class OnboardingTopBar extends StatelessWidget {
     // Step 1: the leading item on the left, and the Skip text button pushed to the right.
     return Row(
       children: [
-        Flexible(child: leading),
+        leading,
         const Spacer(),
         IgongoButton(label: 'Skip', variant: ButtonVariant.text, onPressed: onSkip),
       ],

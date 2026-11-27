@@ -37,10 +37,15 @@ class WelcomeStepOne extends StatelessWidget {
       child: Column(
         children: [
           // Step 2: the label on the left and Skip on the right.
-          OnboardingTopBar(leading: const OnboardingPill(label: 'Welcome'), onSkip: onSkip),
+          OnboardingTopBar(leading: const OnboardingPill(label: 'Welcome', icon: Icons.arrow_back_ios_new), onSkip: onSkip),
           const SizedBox(height: IgongoSpace.md),
           // Step 3: the hero photo, with the place tag and the emblem on the wave.
-          const OnboardingHero(placeTag: 'Western Uganda', placeIcon: Icons.local_activity),
+          const OnboardingHero(
+            height: 288,
+            label: 'Western Uganda',
+            topLeft: OnboardingPill(label: 'Western Uganda', icon: Icons.local_activity, onDark: true),
+            emblemOnWave: true,
+          ),
           const SizedBox(height: IgongoSpace.lg),
           // Step 4: the eyebrow, the title and the subtitle, centred.
           const OnboardingEyebrow(text: 'Discover Ankole Heritage'),

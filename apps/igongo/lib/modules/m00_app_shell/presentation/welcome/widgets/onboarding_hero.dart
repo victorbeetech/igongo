@@ -1,6 +1,7 @@
-// The hero photo of an onboarding screen: a photo with a wavy bottom edge, a
-// place tag at the top, an optional badge, and the Igongo emblem sitting on
-// the wave. Until the hotel's photo is set, the shared placeholder shows.
+// The hero photo of an onboarding screen: a photo with a wavy bottom edge,
+// with optional tags and badges in its corners. The first screen can also
+// show the Igongo emblem sitting on the wave. Until the hotel's photo is set,
+// the shared placeholder shows.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
@@ -9,41 +10,44 @@ import '../../../../../shared/theme/theme.dart';
 import '../../../../../shared/ui/logo/igongo_logo.dart';
 import '../../../../../shared/ui/photo/guest_photo.dart';
 import '../../../../../shared/ui/wave/wave_edge_clipper.dart';
-import 'onboarding_pill.dart';
 
-/// The height of the hero, the same on every onboarding screen so the buttons sit in one place.
-const _heroHeight = 260.0;
-
-/// The hero photo, with its place tag, badge and emblem.
+/// The hero photo with its corner items and, optionally, the emblem on the wave.
 class OnboardingHero extends StatelessWidget {
-  /// Creates the hero. [placeTag] names the place; [badge] is an optional
-  /// card on the lower left; [emblem] shows the Igongo logo on the wave.
+  /// Creates the hero. [height] is the screen's own size; the corner items are optional.
   const OnboardingHero({
     super.key,
-    required this.placeTag,
-    this.placeIcon,
-    this.badge,
-    this.emblem = true,
+    required this.height,
+    this.label = 'Hotel photo',
+    this.topLeft,
+    this.bottomLeft,
+    this.bottomRight,
+    this.emblemOnWave = false,
   });
 
-  /// The name of the place, shown as a tag at the top left.
-  final String placeTag;
+  /// The hero's height, set per screen to match its design.
+  final double height;
 
-  /// An optional icon for the place tag.
-  final IconData? placeIcon;
+  /// What the photo shows, read by screen readers.
+  final String label;
 
-  /// An optional badge on the lower left, above the wave.
-  final Widget? badge;
+  /// An item in the top left corner, such as a tag or the logo chip.
+  final Widget? topLeft;
 
-  /// Whether the Igongo emblem sits on the wave.
-  final bool emblem;
+  /// An item in the bottom left corner, above the wave.
+  final Widget? bottomLeft;
+
+  /// An item in the bottom right corner, above the wave.
+  final Widget? bottomRight;
+
+  /// Whether the Igongo logo card sits centred across the wave.
+  final bool emblemOnWave;
 
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
     // Step 1: the photo area, cut along a wave at the bottom so the page shows through below it.
     return SizedBox(
-      height: _heroHeight,
+      height: height,
       child: Stack(
         children: [
           Positioned.fill(
@@ -53,7 +57,7 @@ class OnboardingHero extends StatelessWidget {
                 fit: StackFit.expand,
                 children: [
                   // Step 2: the photo, or the shared placeholder until the hotel supplies one.
-                  GuestPhoto(label: placeTag),
+                  GuestPhoto(label: label),
                   // Step 3: a red scrim from the bottom, so the white words read on the photo.
                   DecoratedBox(
                     decoration: BoxDecoration(
@@ -68,23 +72,13 @@ class OnboardingHero extends StatelessWidget {
               ),
             ),
           ),
-          // Step 4: the place tag at the top left.
-          Positioned(
-            top: IgongoSpace.md,
-            left: IgongoSpace.md,
-            child: OnboardingPill(label: placeTag, icon: placeIcon, onDark: true),
-          ),
-          // Step 5: the badge, if this screen has one, above the wave on the left.
-          if (badge != null)
-            Positioned(left: IgongoSpace.md, bottom: IgongoSpace.xl, child: badge!),
-          // Step 6: the emblem card, centred across the wave.
-          if (emblem)
-            const Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: Center(child: _EmblemCard()),
-            ),
+          // Step 4: the corner items, each in its own corner of the photo.
+          if (topLeft != null) Positioned(top: IgongoSpace.md, left: IgongoSpace.md, child: topLeft!),
+          if (bottomLeft != null) Positioned(left: IgongoSpace.md, bottom: IgongoSpace.xl, child: bottomLeft!),
+          if (bottomRight != null) Positioned(right: IgongoSpace.md, bottom: IgongoSpace.xl, child: bottomRight!),
+          // Step 5: the emblem card, centred across the wave, for the first screen.
+          if (emblemOnWave)
+            const Positioned(left: 0, right: 0, bottom: 0, child: Center(child: _EmblemCard())),
         ],
       ),
     );
