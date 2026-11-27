@@ -115,8 +115,9 @@ class GuestHeroSlide extends StatelessWidget {
                   ),
                   FilledButton(
                     onPressed: onBook,
-                    style: FilledButton.styleFrom(backgroundColor: p.onPrimary, foregroundColor: p.primaryText),
-                    child: Text('Book a room', style: context.text.labelLarge?.copyWith(fontWeight: FontWeight.w700)),
+                    // Step 4a: a light button with the Igongo red words; red on light reads in both modes.
+                    style: FilledButton.styleFrom(backgroundColor: p.onPrimary, foregroundColor: p.primary),
+                    child: Text('Book a room', style: context.text.labelLarge?.copyWith(color: p.primary, fontWeight: FontWeight.w700)),
                   ),
                 ],
               ),
