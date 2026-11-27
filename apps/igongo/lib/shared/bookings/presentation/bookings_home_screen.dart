@@ -54,9 +54,9 @@ class BookingsHomeScreen extends ConsumerWidget {
     // Signed out or still loading: the sections just show their empty states.
     final all = ref.watch(myBookingsProvider(rooms)).valueOrNull ?? const <Booking>[];
     final recent = [...all]..sort((a, b) => (b.date ?? '').compareTo(a.date ?? ''));
-    // The page is the warmer brand cream, like the reference.
+    // The page is the warm cream of the reference (a theme token, dark in dark mode).
     return ColoredBox(
-      color: context.palette.brandCream,
+      color: context.palette.warmCream,
       child: ListView(
       padding: EdgeInsets.zero,
       children: [

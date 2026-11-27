@@ -6,7 +6,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../theme/theme.dart';
 
-/// A rounded surface with a soft shadow.
+/// A rounded cream surface with a soft shadow.
 class SoftCard extends StatelessWidget {
   /// Creates a card around [child]; give [onTap] to make it tappable.
   const SoftCard({super.key, required this.child, this.onTap, this.padding = EdgeInsets.zero});
@@ -23,7 +23,8 @@ class SoftCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
-    final radius = BorderRadius.circular(IgongoRadius.lg);
+    // A little rounder than the standard card, like the reference (the token plus 4).
+    final radius = BorderRadius.circular(IgongoRadius.lg + 4);
     return DecoratedBox(
       // Step 1: the soft shadow, low and wide, in the text colour at a few percent.
       decoration: BoxDecoration(
@@ -32,7 +33,7 @@ class SoftCard extends StatelessWidget {
       ),
       // Step 2: the surface itself, with the ripple clipped to the corners.
       child: Material(
-        color: p.surface,
+        color: p.warmCard,
         borderRadius: radius,
         clipBehavior: Clip.antiAlias,
         child: InkWell(

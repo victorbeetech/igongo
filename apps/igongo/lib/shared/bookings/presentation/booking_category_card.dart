@@ -27,7 +27,8 @@ class BookingCategoryCard extends StatelessWidget {
       button: true,
       label: category.label,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(IgongoRadius.lg),
+        // A touch rounder than the small radius, like the reference tiles.
+        borderRadius: BorderRadius.circular(IgongoRadius.md + 2),
         child: InkWell(
           onTap: onTap,
           child: Stack(
