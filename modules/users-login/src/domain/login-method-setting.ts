@@ -35,6 +35,24 @@ export const METHOD_INFO: Record<LoginMethod, { label: string; platform: MethodP
   card_qr: { label: "Scan a staff card QR code", platform: "app", defaultOn: false },
 };
 
+/**
+ * Which social sign-in providers have their keys set up on the server.
+ * Email and the other methods need no outside keys, so they are always ready.
+ */
+export interface ProviderReadiness {
+  google: boolean;
+  apple: boolean;
+}
+
+/** The methods that need a provider's keys before they can be used. */
+const NEEDS_PROVIDER: ReadonlySet<LoginMethod> = new Set<LoginMethod>(["google", "apple"]);
+
+/** True when [method] can be offered: it needs no keys, or its keys are set up. */
+export function isProviderReady(method: LoginMethod, ready: ProviderReadiness): boolean {
+  if (!NEEDS_PROVIDER.has(method)) return true;
+  return method === "google" ? ready.google : ready.apple;
+}
+
 /** True when a person holding [roleKeys] may use [setting]. */
 export function methodAllowedFor(setting: LoginMethodSetting, roleKeys: string[]): boolean {
   if (!setting.enabled) return false;
