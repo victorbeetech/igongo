@@ -7,6 +7,9 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
+import 'package:go_router/go_router.dart';
+
+import '../../../../app/catalog/catalog_index.dart';
 import '../../../../shared/catalog/catalog.dart';
 import '../../../../shared/live/live_view.dart';
 import '../../../../shared/screens/screen_layout.dart';
@@ -14,10 +17,11 @@ import '../../../../shared/ui/guest/guest_search_header.dart';
 import '../../../../shared/ui/message/state_message.dart';
 import '../../application/global_search_providers.dart';
 import '../../domain/menu_search_results.dart';
+import '../../domain/search_limits.dart';
 import 'search_results_view.dart';
 
-/// Shortest search text that is sent to the server.
-const int _minQueryLength = 2;
+/// The results screen (S00-26) that the search key opens.
+const String _resultsScreenId = 'S00-26';
 
 /// Pause after the last key press before the search is sent, so typing does not send a request per letter.
 const Duration _typingPause = Duration(milliseconds: 350);
@@ -48,6 +52,16 @@ class _GlobalSearchScreenState extends ConsumerState<GlobalSearchScreen> {
     super.dispose();
   }
 
+  /// The search key: opens the full results screen for the text, when it is long enough.
+  void _onSubmitted(String text) {
+    final query = text.trim();
+    if (query.length < minSearchLength) return;
+    final results = CatalogIndex.instance.screens[_resultsScreenId];
+    if (results == null) return;
+    // The text travels in the address (`?q=...`), so the results can be shared and reloaded.
+    context.push(Uri(path: CatalogIndex.instance.locationOf(results), queryParameters: {'q': query}).toString());
+  }
+
   /// Called on every key press: restarts the pause, then searches the text typed.
   void _onTyped(String text) {
     _debounce?.cancel();
@@ -60,7 +74,7 @@ class _GlobalSearchScreenState extends ConsumerState<GlobalSearchScreen> {
   Widget build(BuildContext context) => Column(
     children: [
       // Step 2: the red band with the search box, the same as the food shop's.
-      GuestSearchHeader(hint: 'Search dishes and outlets', onChanged: _onTyped),
+      GuestSearchHeader(hint: 'Search dishes and outlets', onChanged: _onTyped, onSubmitted: _onSubmitted),
       Expanded(child: _body()),
     ],
   );
@@ -68,7 +82,7 @@ class _GlobalSearchScreenState extends ConsumerState<GlobalSearchScreen> {
   /// The body under the search box: a prompt, or the live results for the search text.
   Widget _body() {
     // Step 3: too short to search yet, so show a prompt.
-    if (_query.length < _minQueryLength) {
+    if (_query.length < minSearchLength) {
       return const StateMessage(
         icon: Icons.search,
         title: 'Search the menu',

@@ -9,14 +9,17 @@ import '../../theme/theme.dart';
 
 /// A red band holding one search box.
 class GuestSearchHeader extends StatelessWidget {
-  /// Creates the band; [onChanged] gets the text as it is typed.
-  const GuestSearchHeader({super.key, required this.hint, required this.onChanged});
+  /// Creates the band; [onChanged] gets the text as it is typed, and [onSubmitted] the text when the search key is pressed.
+  const GuestSearchHeader({super.key, required this.hint, required this.onChanged, this.onSubmitted});
 
   /// The box's hint, such as "Search the menu".
   final String hint;
 
   /// Called with the text on every change.
   final ValueChanged<String> onChanged;
+
+  /// Called with the text when the guest presses the search key, or null to do nothing then.
+  final ValueChanged<String>? onSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +32,7 @@ class GuestSearchHeader extends StatelessWidget {
       ),
       child: TextField(
         onChanged: onChanged,
+        onSubmitted: onSubmitted,
         textInputAction: TextInputAction.search,
         decoration: InputDecoration(
           hintText: hint,

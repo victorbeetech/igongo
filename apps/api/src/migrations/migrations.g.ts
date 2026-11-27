@@ -113,6 +113,12 @@ export const MIGRATIONS: Migration[] = [
   "sql": "CREATE SCHEMA \"notifications\";\n--> statement-breakpoint\nCREATE TYPE \"notifications\".\"device_platform\" AS ENUM('android', 'ios', 'web');--> statement-breakpoint\nCREATE TABLE \"notifications\".\"device_tokens\" (\n\t\"token\" text PRIMARY KEY NOT NULL,\n\t\"user_id\" text NOT NULL,\n\t\"platform\" \"notifications\".\"device_platform\" NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"last_seen_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n--> statement-breakpoint\nCREATE INDEX \"device_tokens_user_id_idx\" ON \"notifications\".\"device_tokens\" USING btree (\"user_id\");"
  },
  {
+  "module": "notifications",
+  "name": "0001_fuzzy_marvel_boy",
+  "checksum": "b59172b4d53d2eb2",
+  "sql": "CREATE TABLE \"notifications\".\"inbox_items\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"user_id\" text NOT NULL,\n\t\"title\" text NOT NULL,\n\t\"body\" text NOT NULL,\n\t\"channel\" text NOT NULL,\n\t\"link\" text,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"read_at\" timestamp with time zone\n);\n--> statement-breakpoint\nCREATE INDEX \"inbox_items_user_created_idx\" ON \"notifications\".\"inbox_items\" USING btree (\"user_id\",\"created_at\");"
+ },
+ {
   "module": "hr-records",
   "name": "0000_staff",
   "checksum": "dc06061c17a78d8f",
