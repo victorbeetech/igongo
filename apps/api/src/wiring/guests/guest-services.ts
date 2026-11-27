@@ -23,7 +23,7 @@ import { craftsBookshopDeps } from "@igongo/crafts-bookshop";
 import { DrizzleProfileRepository, SettingsCrmStore, type CrmDeps } from "@igongo/crm-guests";
 import { deliveryDesk, DrizzleJobRepository, DrizzleRiderRepository, SettingsDeliveryRulesStore, type DeliveryDeps } from "@igongo/delivery-riders";
 import { eventsConferencesDeps } from "@igongo/events-conferences";
-import { DrizzleOrderRepository, DrizzleRatingRepository, orderPayable, orderTracker, SettingsRulesStore, type OrderingDeps } from "@igongo/food-ordering";
+import { DrizzleCartRepository, DrizzleOrderRepository, DrizzleRatingRepository, orderPayable, orderTracker, SettingsRulesStore, type OrderingDeps } from "@igongo/food-ordering";
 import { DrizzleItemRepository, menuReader, SettingsMenuStore, type MenuDeps } from "@igongo/menu-catalogue";
 import { museumDeps } from "@igongo/museum";
 import { DrizzlePaymentRepository, paymentProviders, resendReceiptMailer, SettingsMethodStore, type PaymentsDeps } from "@igongo/payments";
@@ -82,7 +82,7 @@ export class GuestServices {
   ordering(): OrderingDeps {
     const m = this.menu();
     return {
-      orders: new DrizzleOrderRepository(this.db), ratings: new DrizzleRatingRepository(this.db), rules: new SettingsRulesStore(this.db),
+      orders: new DrizzleOrderRepository(this.db), carts: new DrizzleCartRepository(this.db), ratings: new DrizzleRatingRepository(this.db), rules: new SettingsRulesStore(this.db),
       menu: menuReader(m.items, m.settings, this.change.now), delivery: this.deliveryDesk(), promos: this.promoDesk(), notify: this.notify, change: this.change,
     };
   }

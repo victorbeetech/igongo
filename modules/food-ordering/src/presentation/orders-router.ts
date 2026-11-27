@@ -6,6 +6,9 @@
  *   POST  /orders/quote           price and ready time of a cart (S62-04, S62-06)
  *   POST  /orders                 place an order (S62-08), or take one for a guest (S62-14)
  *   GET   /orders/mine            my orders, each marked rated or not (S62-11)
+ *   GET   /orders/cart            my saved cart (empty when none)
+ *   PUT   /orders/cart            replace my saved cart (kept across app restarts)
+ *   DELETE /orders/cart           empty my saved cart
  *   GET   /orders/stars           each dish's average stars, for the menu
  *   GET   /orders/reviews         newest reviews (all=1: staff, with hidden ones)
  *   POST  /orders/reviews/:id/hide  staff hide or show a review
@@ -29,11 +32,13 @@ import { advanceOrder, cancelOrder } from "../application/use-cases/change-order
 import { placeOrder } from "../application/use-cases/place-order";
 import { hideReview, rateOrder } from "../application/use-cases/rate-order";
 import { reorder } from "../application/use-cases/reorder";
+import { clearSavedCart, readSavedCart, saveCart } from "../application/use-cases/guest-cart";
 import { priceCart } from "../application/use-cases/price-cart";
 import { orderNumber, type Order } from "../domain/order";
 import type { OrderRating } from "../domain/order-rating";
 import { nextStatuses } from "../domain/order-flow";
 import { ORDER_PERMISSIONS as P } from "./permissions";
+import { savedCartBody } from "./cart-schemas";
 import { boardQuery, cancelBody, cartBody, hideBody, placeBody, ratingBody, reviewsQuery, rulesBody, statusBody } from "./request-schemas";
 
 /** True when [actor] works the orders (board, kitchen or front of house). Guests hold these only as `own`. */
@@ -89,6 +94,16 @@ export function ordersRouter(deps: (c: Context<ActorEnv>) => OrderingDeps) {
       const items = await d.orders.list({ userId: actorOf(c).userId, limit: 100 });
       const rated = await d.ratings.ratedAmong(items.map((o) => o.id));
       return c.json({ items: items.map((o) => ({ ...shown(o), rated: rated.has(o.id) })) });
+    })
+    // Saved cart: always the caller's own (the user ID comes from the session, never the URL or body).
+    .get("/cart", requireSignIn, async (c) => c.json(await readSavedCart(deps(c), actorOf(c).userId)))
+    .put("/cart", requireSignIn, zValidator("json", savedCartBody), async (c) => {
+      const body = c.req.valid("json");
+      return c.json(await saveCart(deps(c), actorOf(c).userId, body.outlet, body.lines));
+    })
+    .delete("/cart", requireSignIn, async (c) => {
+      await clearSavedCart(deps(c), actorOf(c).userId);
+      return c.body(null, 204);
     })
     .get("/stars", async (c) => c.json({ items: await deps(c).ratings.stars() }))
     .get("/reviews", zValidator("query", reviewsQuery), async (c) => {

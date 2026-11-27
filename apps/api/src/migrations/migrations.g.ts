@@ -185,6 +185,12 @@ export const MIGRATIONS: Migration[] = [
   "sql": "ALTER TABLE \"orders\".\"orders\" ADD COLUMN \"container_fee\" integer DEFAULT 0 NOT NULL;\n"
  },
  {
+  "module": "food-ordering",
+  "name": "0003_guest_carts",
+  "checksum": "2d685c303949ae57",
+  "sql": "CREATE TABLE \"orders\".\"carts\" (\n\t\"user_id\" text PRIMARY KEY NOT NULL,\n\t\"outlet\" text,\n\t\"lines\" jsonb NOT NULL,\n\t\"updated_at\" timestamp with time zone NOT NULL\n);\n"
+ },
+ {
   "module": "delivery-riders",
   "name": "0000_init",
   "checksum": "c2b38ace91546101",

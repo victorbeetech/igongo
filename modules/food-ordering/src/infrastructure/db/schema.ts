@@ -7,6 +7,7 @@ import type { DeliveryPlace } from "@igongo/contracts/food-ordering";
 import { moduleSettingsTable } from "@igongo/core";
 import { boolean, index, integer, jsonb, pgSchema, smallint, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 import type { OrderLine } from "../../domain/order-line";
+import type { SavedCartLine } from "../../domain/saved-cart";
 import type { StatusChange } from "../../domain/status-change";
 
 export const ordersSchema = pgSchema("orders");
@@ -71,6 +72,18 @@ export const ratings = ordersSchema.table(
   // The menu shows each outlet's newest reviews.
   (t) => [index("ratings_outlet_idx").on(t.outlet, t.createdAt)],
 );
+
+/**
+ * Each guest's saved cart: one row per guest (their user ID is the key), so
+ * a guest only ever reads and writes their own. Lines are the app's last
+ * picks; checkout prices them again.
+ */
+export const carts = ordersSchema.table("carts", {
+  userId: text("user_id").primaryKey(),
+  outlet: text("outlet"),
+  lines: jsonb("lines").$type<SavedCartLine[]>().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull(),
+});
 
 /** The ordering rules (key `rules`). */
 export const settings = moduleSettingsTable(ordersSchema);
