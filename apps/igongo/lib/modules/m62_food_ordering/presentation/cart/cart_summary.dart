@@ -30,8 +30,9 @@ class CartSummary extends ConsumerWidget {
     final CartQuote? quote = async.valueOrNull;
     final loading = async.isLoading && quote == null;
     final failed = async.hasError && quote == null;
-    // Step 2: until the server answers, the lines' own prices show (they are the same prices).
-    final local = lines.fold<int>(0, (sum, l) => sum + l.lineTotal);
+    // Step 2: the app never works out a price; until the server answers, or when it
+    // cannot, the amounts show as a dash.
+    String amount(int? value) => value == null ? '—' : ugx(value);
     return Container(
       padding: const EdgeInsets.all(IgongoSpace.lg),
       decoration: BoxDecoration(
@@ -42,7 +43,7 @@ class CartSummary extends ConsumerWidget {
       child: Column(
         children: [
           // Step 3: subtotal, then any discount, then the service charge.
-          _Row(label: 'Subtotal', value: loading ? '…' : ugx(quote?.subtotal ?? local)),
+          _Row(label: 'Subtotal', value: loading ? '…' : amount(quote?.subtotal)),
           if (quote != null && quote.discount > 0) ...[
             const SizedBox(height: IgongoSpace.sm),
             _Row(label: quote.promoLabel ?? 'Discount', value: '− ${ugx(quote.discount)}'),
@@ -57,8 +58,15 @@ class CartSummary extends ConsumerWidget {
           Divider(color: palette.border, height: 1),
           const SizedBox(height: IgongoSpace.md),
           // Step 4: the total, in the brand red, from the server.
-          _Row(label: 'Total', value: loading ? '…' : ugx(quote?.total ?? local), big: true),
-          // Step 5: say why a total could not be worked out.
+          _Row(label: 'Total', value: loading ? '…' : amount(quote?.total), big: true),
+          // Step 5: say why a total could not be worked out, or that it waits for a choice at checkout.
+          if (!loading && quote == null && !failed) ...[
+            const SizedBox(height: IgongoSpace.sm),
+            Text(
+              'Your total is worked out at checkout, with the delivery fee and any code.',
+              style: context.text.bodySmall?.copyWith(color: palette.textMuted),
+            ),
+          ],
           if (failed) ...[
             const SizedBox(height: IgongoSpace.sm),
             Text(

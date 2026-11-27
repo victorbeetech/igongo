@@ -15,6 +15,10 @@ DateTime hotelDay([DateTime? now]) {
   return DateTime(local.year, local.month, local.day);
 }
 
+/// [day] as the API takes it, YYYY-MM-DD (the hotel's date, no time).
+String dayKey(DateTime day) =>
+    '${day.year.toString().padLeft(4, '0')}-${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}';
+
 /// Words for [day] against [today] (the hotel's today by default), such as
 /// "Today, 27 Nov 2026", "Tomorrow, 28 Nov 2026" or "Fri 4 Dec 2026".
 String dayWords(DateTime day, {DateTime? today}) {

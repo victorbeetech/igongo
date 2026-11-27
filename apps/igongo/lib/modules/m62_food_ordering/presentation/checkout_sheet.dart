@@ -11,6 +11,7 @@ import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../shared/api/api_client.dart';
+import '../../../shared/api/api_exception.dart';
 import '../../../shared/format/request_key.dart';
 import '../../../shared/format/ugx.dart';
 import '../../../shared/payments/presentation/pay_sheet.dart';
@@ -42,6 +43,7 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
   /// This checkout's key: the same order comes back if "Place order" is tapped twice.
   final _requestKey = newRequestKey();
   CartQuote? _quote;
+  String? _quoteError;
   String? _type;
   String? _zone;
   DateTime? _arriveAt;
@@ -70,7 +72,8 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
   /// Text of [c], or null when empty.
   static String? _text(TextEditingController c) => c.text.trim().isEmpty ? null : c.text.trim();
 
-  /// The cart and details as the API takes them.
+  /// The cart and details as the API takes them. The place is validated before ordering;
+  /// a quote may be asked earlier, so a missing place gets a placeholder label there.
   Json _body(String outlet, String type) {
     final place = _text(_place);
     return {
@@ -78,29 +81,41 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
       'type': type,
       'lines': [for (final l in ref.read(cartProvider).lines) l.toJson()],
       'arriveAt': ?_arriveAt?.toUtc().toIso8601String(),
-      if (type == 'delivery') 'deliverTo': {'label': place ?? '', 'zone': _zone, 'lat': null, 'lng': null},
-      if (type == 'room_service') 'deliverTo': {'label': 'Room $place', 'zone': null, 'lat': null, 'lng': null},
-      if (type == 'dine_in') 'table': place,
+      if (type == 'delivery') 'deliverTo': {'label': place ?? 'To be confirmed', 'zone': _zone, 'lat': null, 'lng': null},
+      if (type == 'room_service') 'deliverTo': {'label': 'Room ${place ?? ''}'.trim(), 'zone': null, 'lat': null, 'lng': null},
+      if (type == 'dine_in' && place != null) 'table': place,
       'notes': ?_text(_notes),
       'allergies': ?_text(_allergies),
       'promoCode': ?_text(_promo),
     };
   }
 
-  /// Asks the server for the price with the code (and the delivery fee).
-  Future<void> _applyCode(String outlet) async {
+  /// Asks the server to price the cart for the chosen type, zone and code. Silent:
+  /// the total shows when the server answers, and the reason shows when it cannot.
+  Future<void> _requote(String outlet) async {
     final type = _type;
-    if (type == null) return showIgongoToast(context, 'Choose how you want it first.');
-    if (type == 'delivery' && _zone == null) return showIgongoToast(context, 'Choose the zone first.');
+    if (type == null || (type == 'delivery' && _zone == null)) {
+      setState(() {
+        _quote = null;
+        _quoteError = null;
+      });
+      return;
+    }
     try {
       final quote = await ref.read(ordersApiProvider).quote(_body(outlet, type));
-      if (mounted) setState(() => _quote = quote);
-    } on Exception catch (e) {
-      if (mounted) {
-        setState(() => _quote = null);
-        showIgongoToast(context, '$e');
-      }
+      if (mounted) setState(() { _quote = quote; _quoteError = null; });
+    } on ApiException catch (e) {
+      if (mounted) setState(() { _quote = null; _quoteError = e.message; });
     }
+  }
+
+  /// "Apply": asks the server to price the code, and says why it does not work.
+  Future<void> _applyCode(String outlet) async {
+    if (_type == null) return showIgongoToast(context, 'Choose how you want it first.');
+    if (_type == 'delivery' && _zone == null) return showIgongoToast(context, 'Choose the zone first.');
+    await _requote(outlet);
+    final error = _quoteError;
+    if (error != null && mounted) showIgongoToast(context, error);
   }
 
   /// Places the order, then pays when money is due now.
@@ -141,8 +156,8 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
       } else {
         showIgongoToast(context, 'Order ${order.number} placed');
       }
-    } on Exception catch (e) {
-      if (mounted) showIgongoToast(context, '$e');
+    } on ApiException catch (e) {
+      if (mounted) showIgongoToast(context, e.message);
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -155,7 +170,6 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
     final rules = ref.watch(orderingRulesProvider).valueOrNull;
     final zones = ref.watch(zonesProvider).valueOrNull ?? const [];
     final types = rules?.typesAt(outlet) ?? const <String>[];
-    final total = cart.lines.fold(0, (sum, l) => sum + l.unitPrice * l.quantity);
     return Padding(
       padding: EdgeInsets.fromLTRB(
         IgongoSpace.lg,
@@ -178,11 +192,13 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
                   IconButton(
                     tooltip: 'Remove',
                     icon: const Icon(Icons.close),
-                    onPressed: () => ref.read(cartProvider.notifier).removeAt(i),
+                    onPressed: () {
+                      ref.read(cartProvider.notifier).removeAt(i);
+                      _requote(outlet);
+                    },
                   ),
                 ],
               ),
-            Text('About ${ugx(total)} before delivery', style: context.text.bodySmall),
             if (rules == null) const LinearProgressIndicator(),
             if (rules != null && types.isEmpty) const Text('This outlet takes no app orders right now.'),
             Wrap(
@@ -192,7 +208,10 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
                   ChoiceChip(
                     label: Text(orderTypeWords(t)),
                     selected: _type == t,
-                    onSelected: (_) => setState(() => _type = t),
+                    onSelected: (_) {
+                      setState(() => _type = t);
+                      _requote(outlet);
+                    },
                   ),
               ],
             ),
@@ -204,7 +223,10 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
                     ChoiceChip(
                       label: Text('${z.name} +${ugx(z.fee)}'),
                       selected: _zone == z.zone,
-                      onSelected: (_) => setState(() => _zone = z.zone),
+                      onSelected: (_) {
+                        setState(() => _zone = z.zone);
+                        _requote(outlet);
+                      },
                     ),
                 ],
               ),
@@ -240,14 +262,21 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
                 IgongoButton(label: 'Apply', variant: ButtonVariant.secondary, onPressed: () => _applyCode(outlet)),
               ],
             ),
+            // The total is the server's; until it answers, or when it cannot, the guest is told why.
             if (_quote case final q?)
               Text(
                 [
+                  'Food ${ugx(q.subtotal)}',
                   if (q.discount > 0) '${q.promoLabel ?? 'Code'}: −${ugx(q.discount)}',
                   if (q.deliveryFee > 0) 'Delivery ${ugx(q.deliveryFee)}',
                   'Total ${ugx(q.total)}',
                 ].join(' · '),
                 style: context.text.titleMedium,
+              )
+            else
+              Text(
+                _quoteError ?? (_type == null ? 'Choose how you want it to see your total.' : 'Working out your total…'),
+                style: context.text.bodySmall,
               ),
             IgongoButton(
               label: _busy ? 'Placing…' : 'Place order',

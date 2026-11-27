@@ -1,6 +1,8 @@
 // One line of the guest's cart before ordering. The API prices the cart
 // again; [unitPrice] is only what the screen shows.
 
+import '../../../shared/format/hotel_day.dart';
+
 /// A cart line.
 class CartLine {
   /// Creates a line. [date] is the day the guest wants it (null until chosen, e.g. after a reorder).
@@ -50,6 +52,11 @@ class CartLine {
   /// What this line costs: its unit price times how many.
   int get lineTotal => unitPrice * quantity;
 
-  /// The line as the API takes it.
-  Map<String, Object> toJson() => {'itemId': itemId, 'quantity': quantity, 'options': options};
+  /// The line as the API takes it (its day as YYYY-MM-DD, when chosen).
+  Map<String, Object> toJson() => {
+    'itemId': itemId,
+    'quantity': quantity,
+    'options': options,
+    if (date case final d?) 'date': dayKey(d),
+  };
 }
