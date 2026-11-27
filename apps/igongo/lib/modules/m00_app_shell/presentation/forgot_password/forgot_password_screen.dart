@@ -4,7 +4,6 @@
 // Check Your Email view (a state of this screen, so no new screen number).
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../shared/api/api_config.dart';

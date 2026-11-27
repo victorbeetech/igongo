@@ -28,11 +28,11 @@ class AuthHero extends StatelessWidget {
         children: [
           Image.asset(authHutPhoto, fit: BoxFit.cover, semanticLabel: 'Igongo hotel hut'),
           // Step 2: the logo sits at the top centre, in its colour version over the photo.
-          Align(
+          const Align(
             alignment: Alignment.topCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(top: IgongoSpace.md),
-              child: const IgongoLogo(shape: LogoShape.stacked, height: 72),
+            child: const Padding(
+              padding: EdgeInsets.only(top: IgongoSpace.md),
+              child: IgongoLogo(shape: LogoShape.stacked, height: 72),
             ),
           ),
           // Step 3: a red wave along the bottom edge, drawn with the shared wave clip.
