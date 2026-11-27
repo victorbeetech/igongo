@@ -23,9 +23,11 @@ class ExperienceTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final p = context.palette;
     final radius = BorderRadius.circular(IgongoRadius.md + 4);
+    // The tile is one screen-reader node: its name, and the button role when tappable.
     return Semantics(
       button: onTap != null,
       label: experience.label,
+      excludeSemantics: true,
       child: DecoratedBox(
         // Step 1: a soft shadow and a fine warm border, as on the reference cards.
         decoration: BoxDecoration(
