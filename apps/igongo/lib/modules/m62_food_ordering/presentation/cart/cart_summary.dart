@@ -75,16 +75,13 @@ class CartSummary extends ConsumerWidget {
 /// One label and value row of the summary.
 class _Row extends StatelessWidget {
   /// Creates a row.
-  const _Row({required this.label, required this.value, this.muted = false, this.big = false});
+  const _Row({required this.label, required this.value, this.big = false});
 
   /// The left-hand words.
   final String label;
 
   /// The right-hand value.
   final String value;
-
-  /// Whether the value is a note, shown in the muted colour.
-  final bool muted;
 
   /// Whether this is the total, shown larger and in red.
   final bool big;
@@ -98,7 +95,7 @@ class _Row extends StatelessWidget {
     return Row(
       children: [
         Expanded(child: Text(label, style: big ? context.text.titleMedium : context.text.bodyMedium)),
-        Text(value, style: muted ? context.text.bodySmall?.copyWith(color: palette.textMuted) : style),
+        Text(value, style: style),
       ],
     );
   }
