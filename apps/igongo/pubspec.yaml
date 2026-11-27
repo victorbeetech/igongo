@@ -27,6 +27,7 @@ dependencies:
   flutter_secure_storage: ^11.2.0
   nfc_manager: ^4.4.0
   image_picker: ^1.2.0
+  qr_flutter: ^4.1.0
 
 dev_dependencies:
   flutter_test:

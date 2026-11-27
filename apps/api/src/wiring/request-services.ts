@@ -86,6 +86,19 @@ export class RequestServices {
   }));
 
   // --- Users & Login ---
+  /**
+   * Which social sign-in providers have their keys set up (Google, Apple).
+   * If the sign-in settings are incomplete (for example no auth secret), both
+   * count as not ready, so the login screen hides their buttons.
+   */
+  readonly socialReady = async (): Promise<{ google: boolean; apple: boolean }> => {
+    try {
+      const cfg = await authConfigFrom(this.env, this.secrets());
+      return { google: cfg.google !== null, apple: cfg.apple !== null };
+    } catch {
+      return { google: false, apple: false };
+    }
+  };
   readonly accounts = once(() => new DrizzleAccountStore(this.db));
   readonly loginSettings = once(() => new DrizzleLoginSettingsStore(this.db));
   readonly auth = once(
@@ -123,7 +136,7 @@ export class RequestServices {
   /** The guest modules for [actor]'s change context. */
   guestModules(actor: { userId: string; name: string } | undefined): GuestServices {
     const cfg = this.config;
-    return new GuestServices(this.db, this.changeContext(actor), this.modules(), this.secrets(), { api: cfg.baseURL, web: cfg.webOrigins[0] ?? cfg.baseURL }, this.notifier());
+    return new GuestServices(this.db, this.changeContext(actor), this.modules(), this.secrets(), { api: cfg.baseURL, web: cfg.webOrigins[0] ?? cfg.baseURL }, this.notifier(), { apiKey: this.env.RESEND_API_KEY, from: this.env.RECEIPT_FROM }, this.env.TICKET_SIGNING_KEY ?? null);
   }
 
   // --- Managers and money (files, faults, checkups, payroll, advances, bonuses, earnings, reports, chat, records) ---

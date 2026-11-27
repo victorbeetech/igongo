@@ -8,11 +8,13 @@ import '../../../shared/format/hotel_day.dart';
 import '../../../shared/format/ugx.dart';
 import '../../../shared/theme/theme.dart';
 import '../../../shared/ui/button/igongo_button.dart';
+import '../../../shared/ui/field/igongo_field.dart';
 import '../../../shared/ui/toast/igongo_toast.dart';
 import '../application/cart_controller.dart';
 import '../domain/cart_line.dart';
 import '../domain/menu_item.dart';
 import '../domain/option_group.dart';
+import 'parts/photo_placeholder.dart';
 
 /// The options sheet for [item].
 class ItemSheet extends ConsumerStatefulWidget {
@@ -28,6 +30,15 @@ class ItemSheet extends ConsumerStatefulWidget {
 
 class _ItemSheetState extends ConsumerState<ItemSheet> {
   int _quantity = 1;
+
+  /// The guest's note for the kitchen on this dish.
+  final _note = TextEditingController();
+
+  @override
+  void dispose() {
+    _note.dispose();
+    super.dispose();
+  }
 
   /// Picked choice keys per group.
   final Map<String, Set<String>> _picks = {};
@@ -72,6 +83,7 @@ class _ItemSheetState extends ConsumerState<ItemSheet> {
             unitPrice: _unitPrice,
             // Tomorrow, the hotel's day, until the guest picks another in the cart.
             date: hotelDay().add(const Duration(days: 1)),
+            notes: _note.text.trim().isEmpty ? null : _note.text.trim(),
           ),
         );
     Navigator.of(context).pop();
@@ -86,6 +98,14 @@ class _ItemSheetState extends ConsumerState<ItemSheet> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: IgongoSpace.md,
         children: [
+          // The photo area (a placeholder when the dish has no photo).
+          AspectRatio(
+            aspectRatio: 16 / 10,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(IgongoSpace.md),
+              child: PhotoPlaceholder(url: widget.item.photoUrl, icon: Icons.fastfood),
+            ),
+          ),
           Text(widget.item.name, style: context.text.titleLarge),
           if (widget.item.description case final d?) Text(d),
           if (widget.item.allergens.isNotEmpty)
@@ -116,6 +136,8 @@ class _ItemSheetState extends ConsumerState<ItemSheet> {
               IconButton(tooltip: 'More', icon: const Icon(Icons.add), onPressed: () => setState(() => _quantity++)),
             ],
           ),
+          // The note for the kitchen (for example "no onions").
+          IgongoField(label: 'Note for the kitchen', controller: _note),
           IgongoButton(label: 'Add ${ugx(_unitPrice * _quantity)}', expand: true, onPressed: _add),
         ],
       ),

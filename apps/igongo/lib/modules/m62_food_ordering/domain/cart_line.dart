@@ -6,6 +6,7 @@ import '../../../shared/format/hotel_day.dart';
 /// A cart line.
 class CartLine {
   /// Creates a line. [date] is the day the guest wants it (null until chosen, e.g. after a reorder).
+  /// [notes] is the guest's note for the kitchen on this dish, or null.
   const CartLine({
     required this.itemId,
     required this.name,
@@ -13,6 +14,7 @@ class CartLine {
     required this.options,
     required this.unitPrice,
     this.date,
+    this.notes,
   });
 
   /// The menu item's ID.
@@ -33,6 +35,9 @@ class CartLine {
   /// The day the guest wants this line (the hotel's day), or null when not chosen yet.
   final DateTime? date;
 
+  /// The guest's note for the kitchen on this dish, or null.
+  final String? notes;
+
   /// A copy with any given field changed; the others stay as they are.
   CartLine _copy({int? quantity, DateTime? date}) => CartLine(
     itemId: itemId,
@@ -41,6 +46,7 @@ class CartLine {
     options: options,
     unitPrice: unitPrice,
     date: date ?? this.date,
+    notes: notes,
   );
 
   /// The same line with [quantity] changed (the screen's +/- buttons use this).
@@ -52,11 +58,12 @@ class CartLine {
   /// What this line costs: its unit price times how many.
   int get lineTotal => unitPrice * quantity;
 
-  /// The line as the API takes it (its day as YYYY-MM-DD, when chosen).
+  /// The line as the API takes it: its day as YYYY-MM-DD and the note, each only when there is one.
   Map<String, Object> toJson() => {
     'itemId': itemId,
     'quantity': quantity,
     'options': options,
     if (date case final d?) 'date': dayKey(d),
+    'notes': ?notes,
   };
 }

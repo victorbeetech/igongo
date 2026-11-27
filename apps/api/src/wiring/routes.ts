@@ -55,6 +55,7 @@ function usersDeps(c: Context<ActorEnv>): UsersDeps {
     bootstrapEmail: s.bootstrapEmail,
     staffRecords: s.staffRecords(c.var.actor),
     alerts: s.securityAlerts(),
+    socialReady: () => s.socialReady(),
   };
 }
 

@@ -1,7 +1,8 @@
 /**
  * Login method switches, mounted by the gateway at `/api/login-methods`.
  *
- *   GET   /           the switched-on methods, for the login screen (public)
+ *   GET   /           the switched-on methods, for the login screen (public);
+ *                     Google and Apple only when their keys are set up
  *   GET   /admin      every method with its switch, roles and order, and the policy
  *   PATCH /policy     change the login policy (self sign-up, approval, session days)
  *   PATCH /:method    switch a method on or off, limit it to roles, reorder
@@ -18,7 +19,12 @@ import type { UsersDeps } from "./users-deps";
 
 export function loginMethodsRouter(deps: (c: Context<ActorEnv>) => UsersDeps) {
   return new Hono<ActorEnv>()
-    .get("/", async (c) => c.json(await publicMethods(deps(c).settings)))
+    .get("/", async (c) => {
+      const d = deps(c);
+      // Ask the server which social providers have keys; none asked means both ready.
+      const ready = d.socialReady ? await d.socialReady() : undefined;
+      return c.json(await publicMethods(d.settings, ready));
+    })
     .get("/admin", requirePermission(P.viewMethods), async (c) => {
       const s = deps(c).settings;
       const methods = (await s.methods()).map((m) => ({ ...m, ...METHOD_INFO[m.method] }));

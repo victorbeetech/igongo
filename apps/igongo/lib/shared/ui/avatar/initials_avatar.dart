@@ -3,6 +3,7 @@
 
 import 'package:material_ui/material_ui.dart';
 
+import '../../format/initials.dart';
 import '../../theme/theme.dart';
 
 /// A round avatar showing up to two initials.
@@ -18,9 +19,8 @@ class InitialsAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Step 1: the first letters of the first two words.
-    final words = name.split(RegExp(r'[\s·]+')).where((w) => w.isNotEmpty && RegExp(r'[A-Za-z]').hasMatch(w[0]));
-    final initials = words.take(2).map((w) => w[0].toUpperCase()).join();
+    // Step 1: the initials come from the shared rule.
+    final initials = initialsOf(name);
     // Step 2: a soft brand fill with readable text in both modes.
     final p = context.palette;
     return Container(
