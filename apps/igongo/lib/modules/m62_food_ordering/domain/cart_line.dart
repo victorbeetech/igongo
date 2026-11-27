@@ -1,6 +1,7 @@
 // One line of the guest's cart before ordering. The API prices the cart
 // again; [unitPrice] is only what the screen shows.
 
+import '../../../shared/api/api_client.dart';
 import '../../../shared/format/hotel_day.dart';
 
 /// A cart line.
@@ -66,4 +67,27 @@ class CartLine {
     if (date case final d?) 'date': dayKey(d),
     'notes': ?notes,
   };
+
+  /// The line as the saved cart keeps it: the same as [toJson] plus the name and
+  /// unit price (what the screen last showed) and the note, each even when empty.
+  Map<String, Object?> toSavedJson() => {
+    'itemId': itemId,
+    'name': name,
+    'quantity': quantity,
+    'unitPrice': unitPrice,
+    'options': options,
+    'date': date == null ? null : dayKey(date!),
+    'notes': notes,
+  };
+
+  /// A line from the saved cart (the reverse of [toSavedJson]).
+  factory CartLine.fromJson(Json json) => CartLine(
+    itemId: '${json['itemId']}',
+    name: '${json['name']}',
+    quantity: (json['quantity'] as num?)?.toInt() ?? 1,
+    unitPrice: (json['unitPrice'] as num?)?.toInt() ?? 0,
+    options: [for (final o in json['options'] as List<dynamic>? ?? const []) '$o'],
+    date: json['date'] == null ? null : DateTime.parse('${json['date']}'),
+    notes: json['notes'] as String?,
+  );
 }

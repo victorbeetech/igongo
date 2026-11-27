@@ -7,7 +7,8 @@
  *   2. decide where it starts: waiting for payment (full or deposit) or
  *      straight to the kitchen,
  *   3. give it the next ticket number and save it,
- *   4. use up the voucher and record it.
+ *   4. use up the voucher and record it,
+ *   5. a guest's order empties their saved cart.
  */
 
 import { newId, recordChange } from "@igongo/core";
@@ -15,6 +16,7 @@ import { orderNumber, type Order, type OrderChannel } from "../../domain/order";
 import { paidBeforeKitchen } from "../../domain/ordering-rules";
 import type { OrderingDeps } from "../ordering-deps";
 import { priceCart, type CartInput } from "./price-cart";
+import { clearSavedCart } from "./guest-cart";
 
 export interface PlaceInput extends CartInput {
   customer: { userId: string | null; name: string; phone: string | null };
@@ -50,6 +52,8 @@ export async function placeOrder(deps: OrderingDeps, input: PlaceInput): Promise
   await deps.orders.add(order);
   // 4. Voucher and record.
   if (cart.promo) await deps.promos?.redeem(cart.promo.code, order.id);
+  // 5. The guest's saved cart is now an order: empty it (staff orders never touch a guest's cart).
+  if (input.channel === "app" && input.customer.userId) await clearSavedCart(deps, input.customer.userId);
   await recordChange(deps.change, { module: "food-ordering", action: "order.placed", recordType: "order", recordId: order.id, summary: `Order ${orderNumber(order.seq)} (${order.type.replace(/_/g, " ")}) for ${order.customerName}: ${order.total} UGX${order.promoCode ? ` with ${order.promoCode}` : ""}` });
   return order;
 }
