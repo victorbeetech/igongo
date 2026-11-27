@@ -33,7 +33,8 @@ void main() {
       _visit(_booking('upcoming', '2026-12-20', 'confirmed')),
       _visit(_booking('gone', '2026-12-01', 'cancelled')),
     ], today);
-    expect(visits.map((v) => v.booking.id), ['old', 'gone']);
+    // Newest day first: the cancelled 1 Dec booking comes before the 2 Oct stay.
+    expect(visits.map((v) => v.booking.id), ['gone', 'old']);
   });
 
   test('sorts newest day first', () {
