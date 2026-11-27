@@ -1,7 +1,6 @@
 // The results of one global search: the matching dishes, then the outlets.
 // Tapping either one opens the food ordering screen (S62-01), where the menu is.
 
-import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../app/navigation/open_target.dart';
