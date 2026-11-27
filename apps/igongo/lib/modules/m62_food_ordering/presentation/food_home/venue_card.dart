@@ -10,6 +10,12 @@ import '../../../../shared/theme/theme.dart';
 import '../../../../shared/ui/photo/photo_slot.dart';
 import 'placeholder_value.dart';
 
+/// The width of one venue card in the Resort Venues row.
+const double kVenueCardWidth = 176;
+
+/// The height of every venue card, so all cards in the row match whatever the text.
+const double kVenueCardHeight = 170;
+
 /// A venue card for the Resort Venues row.
 class VenueCard extends StatelessWidget {
   /// Creates the card.
@@ -51,7 +57,8 @@ class VenueCard extends StatelessWidget {
       selected: selected,
       label: name,
       child: SizedBox(
-        width: 176,
+        width: kVenueCardWidth,
+        height: kVenueCardHeight,
         child: Material(
           color: p.surface,
           shape: RoundedRectangleBorder(
@@ -72,7 +79,10 @@ class VenueCard extends StatelessWidget {
                       top: IgongoSpace.xs,
                       left: IgongoSpace.xs,
                       child: DecoratedBox(
-                        decoration: BoxDecoration(color: Color(0x66000000), borderRadius: BorderRadius.all(Radius.circular(IgongoRadius.sm))),
+                        decoration: BoxDecoration(
+                          color: Color(0x66000000),
+                          borderRadius: BorderRadius.all(Radius.circular(IgongoRadius.sm)),
+                        ),
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: IgongoSpace.xs, vertical: IgongoSpace.xxs),
                           child: PlaceholderValue(text: 'Featured —'),
@@ -121,7 +131,10 @@ class VenueCard extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(IgongoRadius.pill),
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.xs, vertical: IgongoSpace.xxs),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: IgongoSpace.xs,
+                                    vertical: IgongoSpace.xxs,
+                                  ),
                                   child: Text(b, style: text.labelSmall?.copyWith(color: p.onPrimaryContainer)),
                                 ),
                               ),

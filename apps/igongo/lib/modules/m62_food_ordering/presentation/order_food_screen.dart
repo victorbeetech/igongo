@@ -33,7 +33,7 @@ import 'food_home/category_pills.dart';
 import 'food_home/dish_card.dart';
 import 'food_home/farm_tip.dart';
 import 'food_home/pre_order_card.dart';
-import 'food_home/food_header.dart';
+import 'food_home/food_top_bar.dart';
 import 'food_home/food_search_bar.dart';
 import 'food_home/food_section_title.dart';
 import 'food_home/order_summary_bar.dart';
@@ -91,18 +91,12 @@ class OrderFoodScreen extends ConsumerWidget {
       final rules = ref.watch(orderingRulesProvider).valueOrNull;
       return Column(
         children: [
+          // Step 3: the one-row top bar (venue, wish list, WhatsApp); the cart is in the bottom bar.
+          FoodTopBar(venue: venueName),
           Expanded(
             child: ScreenListView(
               children: [
-                // Step 3: the top row, the search row and the section pills.
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, IgongoSpace.sm, IgongoSpace.lg, 0),
-                  child: FoodHeader(
-                    venue: venueName,
-                    count: count,
-                    onCart: () => _open(context, const CheckoutSheet()),
-                  ),
-                ),
+                // Step 3b: the search row and the section pills.
                 Padding(
                   padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, IgongoSpace.md, IgongoSpace.lg, 0),
                   child: FoodSearchBar(
