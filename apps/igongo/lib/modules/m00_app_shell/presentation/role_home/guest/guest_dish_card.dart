@@ -20,6 +20,7 @@ class GuestDishCard extends StatelessWidget {
     required this.tag,
     required this.rating,
     required this.prepTime,
+    this.asset,
     this.onTap,
   });
 
@@ -41,19 +42,28 @@ class GuestDishCard extends StatelessWidget {
   /// The prep time shown on the picture's bottom right, such as "25 mins".
   final String prepTime;
 
+  /// The demo picture's asset path, or null for the placeholder.
+  final String? asset;
+
   /// Called when the card or its add button is tapped.
   final VoidCallback? onTap;
 
-  /// The card's width and the picture's height, in logical pixels.
-  static const _width = 260.0;
-  static const _pictureHeight = 120.0;
+  /// The card's width, public so the row can scroll by one card.
+  static const width = 260.0;
+
+  /// Every card has this height, so the row's cards line up.
+  static const _cardHeight = 296.0;
+
+  /// The picture's height, in logical pixels.
+  static const _pictureHeight = 160.0;
 
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
     final radius = BorderRadius.circular(IgongoRadius.lg);
     return SizedBox(
-      width: _width,
+      width: width,
+      height: _cardHeight,
       child: Material(
         color: p.surface,
         shape: RoundedRectangleBorder(
@@ -69,7 +79,11 @@ class GuestDishCard extends StatelessWidget {
               // Step 1: the placeholder picture with its tag, rating and prep time on top.
               Stack(
                 children: [
-                  const SizedBox(height: _pictureHeight, width: double.infinity, child: GuestPhoto()),
+                  SizedBox(
+                    height: _pictureHeight,
+                    width: double.infinity,
+                    child: GuestPhoto(asset: asset),
+                  ),
                   Positioned(
                     top: IgongoSpace.sm,
                     left: IgongoSpace.sm,
@@ -87,31 +101,35 @@ class GuestDishCard extends StatelessWidget {
                   ),
                 ],
               ),
-              // Step 2: the name and a short description.
-              Padding(
-                padding: const EdgeInsets.fromLTRB(IgongoSpace.md, IgongoSpace.sm, IgongoSpace.md, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: context.text.titleSmall?.copyWith(color: p.text, fontWeight: FontWeight.w700),
-                    ),
-                    if (description.isNotEmpty)
+              // Step 2: the name and a short description. It takes the space left over,
+              // so every card is the same height whatever its text.
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(IgongoSpace.md, IgongoSpace.sm, IgongoSpace.md, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Text(
-                        description,
-                        maxLines: 2,
+                        name,
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: context.text.bodySmall?.copyWith(color: p.textMuted),
+                        style: context.text.titleSmall?.copyWith(color: p.text, fontWeight: FontWeight.w700),
                       ),
-                  ],
+                      if (description.isNotEmpty)
+                        Text(
+                          description,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: context.text.bodySmall?.copyWith(color: p.textMuted),
+                        ),
+                    ],
+                  ),
                 ),
               ),
-              // Step 3: the price on the left, the add button on the right.
+              // Step 3: the price on the left, the add button on the right. The space
+              // above and below is kept small, so the text part has no empty gap.
               Padding(
-                padding: const EdgeInsets.all(IgongoSpace.md),
+                padding: const EdgeInsets.fromLTRB(IgongoSpace.md, IgongoSpace.xs, IgongoSpace.md, IgongoSpace.sm),
                 child: Row(
                   children: [
                     Expanded(

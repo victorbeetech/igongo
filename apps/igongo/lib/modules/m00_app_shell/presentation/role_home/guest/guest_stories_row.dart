@@ -14,14 +14,14 @@ class GuestStoriesRow extends StatelessWidget {
 
   /// The demo bubbles: each has an icon, a demo title and its time. They are sample
   /// text only, to show the slide; the hotel's real events replace them later.
-  static const _demoStories = <({IconData icon, String label})>[
-    (icon: Icons.sunny, label: 'Sunrise walk'),
-    (icon: Icons.pool_outlined, label: 'Pool party'),
-    (icon: Icons.restaurant_outlined, label: 'Chef\'s table'),
-    (icon: Icons.terrain_outlined, label: 'Guided hike'),
-    (icon: Icons.music_note_outlined, label: 'Live music'),
-    (icon: Icons.local_bar_outlined, label: 'Happy hour'),
-    (icon: Icons.spa_outlined, label: 'Spa offer'),
+  static const _demoStories = <({IconData icon, String label, String asset})>[
+    (icon: Icons.sunny, label: 'Sunrise walk', asset: 'assets/photos/hotel-terrace-view.jpg'),
+    (icon: Icons.pool_outlined, label: 'Pool party', asset: 'assets/photos/hotel-pool.jpg'),
+    (icon: Icons.restaurant_outlined, label: 'Chef\'s table', asset: 'assets/photos/outlet-restaurant.jpg'),
+    (icon: Icons.terrain_outlined, label: 'Guided hike', asset: 'assets/photos/hotel-cultural-hut.jpg'),
+    (icon: Icons.music_note_outlined, label: 'Live music', asset: 'assets/photos/hotel-night-lights.jpg'),
+    (icon: Icons.local_bar_outlined, label: 'Happy hour', asset: 'assets/photos/hotel-kaahwa-front.jpg'),
+    (icon: Icons.spa_outlined, label: 'Spa offer', asset: 'assets/photos/room-bathroom-shower.jpg'),
   ];
 
   @override
@@ -64,7 +64,11 @@ class GuestStoriesRow extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
             itemCount: _demoStories.length,
             separatorBuilder: (_, _) => const SizedBox(width: IgongoSpace.sm),
-            itemBuilder: (_, i) => GuestStoryBubble(icon: _demoStories[i].icon, label: _demoStories[i].label),
+            itemBuilder: (_, i) => GuestStoryBubble(
+              icon: _demoStories[i].icon,
+              label: _demoStories[i].label,
+              asset: _demoStories[i].asset,
+            ),
           ),
         ),
       ],
