@@ -5,6 +5,7 @@
 // approved Create your account design. Uses the shared Auth frame.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../shared/api/api_exception.dart';
@@ -110,10 +111,17 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
     return AuthShell(
       // Step 2a: the back pill over the photo returns to the screen before this one.
       onBack: () => Navigator.of(context).maybePop(),
+      // Step 2b: the design's placeholder hero, and the card spacing from the design (24 sides, 12 top).
+      heroPlaceholder: true,
+      cardPadding: const EdgeInsets.fromLTRB(IgongoSpace.xl, IgongoSpace.md, IgongoSpace.xl, IgongoSpace.lg),
       children: [
-        // Step 2: the title and what this is.
-        Text('Create your account', style: context.text.headlineSmall),
-        Text('Book rooms and events, order food and track it.', style: context.text.bodySmall),
+        // Step 2: the title and what this is, centred as in the design.
+        Text('Create your account', textAlign: TextAlign.center, style: context.text.headlineSmall),
+        Text(
+          'Book rooms and events, order food and track it.',
+          textAlign: TextAlign.center,
+          style: context.text.bodySmall,
+        ),
         // Step 3: Google and Apple at the top, always shown; the ones not set up say so when tapped.
         SocialAuthRow(available: social, busy: _busy, onPressed: _signUpSocial),
         // Step 4: the fields.
@@ -164,11 +172,7 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Text('Already have an account?', style: context.text.bodySmall),
-            IgongoButton(
-              label: 'Sign in',
-              variant: ButtonVariant.text,
-              onPressed: () => widget.screen.open('S00-05'),
-            ),
+            IgongoButton(label: 'Sign in', variant: ButtonVariant.text, onPressed: () => widget.screen.open('S00-05')),
           ],
         ),
         Wrap(

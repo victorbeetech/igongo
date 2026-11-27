@@ -9,6 +9,7 @@ import '../../social_sign_in/sign_in_option.dart';
 import '../button/igongo_button.dart';
 import '../toast/igongo_toast.dart';
 import 'auth_or_divider.dart';
+import 'provider_logo_slot.dart';
 
 /// The two social buttons in a row, then the "or" divider.
 class SocialAuthRow extends StatelessWidget {
@@ -55,6 +56,8 @@ class SocialAuthRow extends StatelessWidget {
             Expanded(
               child: IgongoButton(
                 label: _labelFor(method),
+                // The logo slot comes first, as in the design; a placeholder until the logo files are added.
+                leading: ProviderLogoSlot(method: method),
                 variant: ButtonVariant.secondary,
                 expand: true,
                 onPressed: busy ? null : () => _tap(context, method),

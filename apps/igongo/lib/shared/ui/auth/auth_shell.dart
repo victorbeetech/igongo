@@ -12,7 +12,15 @@ import 'auth_hero.dart';
 /// The Auth frame: [hero] on top, then [children] inside the rounded card.
 class AuthShell extends StatelessWidget {
   /// Creates the frame around the screen's [children]. Pass [onBack] to show a back pill over the photo.
-  const AuthShell({super.key, required this.children, this.appBar, this.onBack});
+  const AuthShell({
+    super.key,
+    required this.children,
+    this.appBar,
+    this.onBack,
+    this.heroPlaceholder = false,
+    this.cardPadding = const EdgeInsets.all(IgongoSpace.lg),
+    this.gap = IgongoSpace.md,
+  });
 
   /// The screen's content, placed inside the card in order.
   final List<Widget> children;
@@ -22,6 +30,15 @@ class AuthShell extends StatelessWidget {
 
   /// Called when the back pill is tapped. Null hides the pill.
   final VoidCallback? onBack;
+
+  /// True to show the neutral placeholder instead of the hut photo at the top.
+  final bool heroPlaceholder;
+
+  /// The space inside the white card, around its content.
+  final EdgeInsetsGeometry cardPadding;
+
+  /// The space between the items inside the card.
+  final double gap;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +58,7 @@ class AuthShell extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   children: [
                     // Step 2a: the photo and logo at the top.
-                    const AuthHero(),
+                    AuthHero(placeholder: heroPlaceholder),
                     // Step 2b: the white card that holds the content, pulled up over the photo.
                     Transform.translate(
                       offset: const Offset(0, -IgongoSpace.lg),
@@ -56,10 +73,10 @@ class AuthShell extends StatelessWidget {
                             side: BorderSide(color: palette.border),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(IgongoSpace.lg),
+                            padding: cardPadding,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
-                              spacing: IgongoSpace.md,
+                              spacing: gap,
                               children: children,
                             ),
                           ),

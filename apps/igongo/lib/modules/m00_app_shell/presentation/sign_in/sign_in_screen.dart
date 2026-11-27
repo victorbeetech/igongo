@@ -5,6 +5,7 @@
 // approved Sign In design: social row, form, remember me, Sign In, footer.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../shared/api/api_exception.dart';
@@ -93,10 +94,13 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     final options = ref.watch(signInOptionsProvider).valueOrNull ?? const <SignInOption>[];
     final social = availableSocialOptions(options);
     return AuthShell(
+      // Step 2: the design's placeholder hero, and the card spacing from the design (24 sides, 12 top).
+      heroPlaceholder: true,
+      cardPadding: const EdgeInsets.fromLTRB(IgongoSpace.xl, IgongoSpace.md, IgongoSpace.xl, IgongoSpace.lg),
       children: [
-        // Step 2: the title and a short line under it.
-        Text('Welcome Back', style: context.text.headlineSmall),
-        Text('Sign in to continue', style: context.text.bodySmall),
+        // Step 3: the title and a short line under it, centred as in the design.
+        Text('Welcome Back', textAlign: TextAlign.center, style: context.text.headlineSmall),
+        Text('Sign in to continue', textAlign: TextAlign.center, style: context.text.bodySmall),
         // Step 3: Google and Apple at the top, always shown; the ones not set up say so when tapped.
         SocialAuthRow(available: social, busy: _busy, onPressed: _signInSocial),
         // Step 4: email and password, signed in for real.
@@ -146,11 +150,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Text("Don't have an account?", style: context.text.bodySmall),
-            IgongoButton(
-              label: 'Sign Up',
-              variant: ButtonVariant.text,
-              onPressed: () => screen.open('S00-18'),
-            ),
+            IgongoButton(label: 'Sign Up', variant: ButtonVariant.text, onPressed: () => screen.open('S00-18')),
             Text('•', style: context.text.bodySmall),
             const ContactUsLink(),
           ],

@@ -16,6 +16,7 @@ class IgongoButton extends StatelessWidget {
     required this.label,
     this.onPressed,
     this.icon,
+    this.leading,
     this.variant = ButtonVariant.primary,
     this.expand = false,
   });
@@ -29,6 +30,9 @@ class IgongoButton extends StatelessWidget {
   /// An optional icon before the label.
   final IconData? icon;
 
+  /// An optional widget before the label, such as a brand logo slot. Takes priority over [icon].
+  final Widget? leading;
+
   /// How important the action is.
   final ButtonVariant variant;
 
@@ -37,8 +41,17 @@ class IgongoButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Step 1: the label, with the icon when there is one.
-    final child = icon == null
+    // Step 1: the label, with the leading widget or the icon when there is one.
+    final child = leading != null
+        ? Row(
+            mainAxisSize: MainAxisSize.min,
+            spacing: 8,
+            children: [
+              leading!,
+              Flexible(child: Text(label)),
+            ],
+          )
+        : icon == null
         ? Text(label)
         : Row(
             mainAxisSize: MainAxisSize.min,
