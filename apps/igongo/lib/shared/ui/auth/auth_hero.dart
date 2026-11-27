@@ -1,5 +1,6 @@
-// The top of every Auth screen: the hut photo, a red gradient rising from its
-// bottom edge, the Igongo logo on it, and a red wave along the bottom edge.
+// The top of every Auth screen, as in the approved design: the hut photo clear
+// at the top, a red gradient rising from its bottom edge, a white curve along
+// the bottom, and the Igongo logo on a white badge that sits on that curve.
 // Shared so Sign in, Forgot password, Check email and Create account all look the same.
 
 import 'package:material_ui/material_ui.dart';
@@ -10,7 +11,7 @@ import '../logo/igongo_logo.dart';
 import '../wave/wave_edge_clipper.dart';
 import 'auth_assets.dart';
 
-/// The photo, gradient, logo and wave banner at the top of an Auth screen.
+/// The photo, gradient, white curve and logo badge at the top of an Auth screen.
 class AuthHero extends StatelessWidget {
   /// Creates the hero. [height] is the photo's height in logical pixels.
   const AuthHero({super.key, this.height = 200});
@@ -18,21 +19,24 @@ class AuthHero extends StatelessWidget {
   /// The photo's height in logical pixels.
   final double height;
 
+  /// How tall the red gradient is, counted up from the bottom edge. It fades out above this, so the photo stays clear at the top.
+  static const _gradientHeight = 120.0;
+
   @override
   Widget build(BuildContext context) {
     final palette = context.palette;
-    // Step 1: the photo fills the box, cropped to the middle so the hut stays in view.
     return SizedBox(
       height: height,
       child: Stack(
         fit: StackFit.expand,
         children: [
+          // Step 1: the photo fills the box, cropped to the middle so the hut stays clear and in view.
           Image.asset(authHutPhoto, fit: BoxFit.cover, semanticLabel: 'Igongo hotel hut'),
-          // Step 2: a red gradient that fades in from the bottom edge, so the wave sits on red as in the design.
+          // Step 2: the red gradient rises from the bottom edge and fades out before the top of the photo.
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: 96,
+              height: _gradientHeight,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.bottomCenter,
@@ -42,20 +46,32 @@ class AuthHero extends StatelessWidget {
               ),
             ),
           ),
-          // Step 3: the logo sits at the top centre, in its colour version over the photo.
-          const Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: EdgeInsets.only(top: IgongoSpace.md),
-              child: IgongoLogo(shape: LogoShape.stacked, height: 72),
-            ),
-          ),
-          // Step 4: a red wave along the bottom edge, drawn with the shared wave clip.
+          // Step 3: a white curve along the bottom edge, so the white sheet rises out of the photo.
           Align(
             alignment: Alignment.bottomCenter,
             child: ClipPath(
               clipper: const WaveEdgeClipper(depth: 14),
-              child: Container(height: 26, color: palette.primary),
+              child: Container(height: 26, color: palette.surface),
+            ),
+          ),
+          // Step 4: the logo on a white badge, centred on the curve, as in the design.
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: IgongoSpace.xl),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: palette.surface,
+                  borderRadius: BorderRadius.circular(IgongoRadius.lg),
+                  boxShadow: [
+                    BoxShadow(color: palette.text.withValues(alpha: 0.15), blurRadius: 12, offset: const Offset(0, 4)),
+                  ],
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: IgongoSpace.md, vertical: IgongoSpace.sm),
+                  child: IgongoLogo(shape: LogoShape.stacked, height: 48),
+                ),
+              ),
             ),
           ),
         ],
