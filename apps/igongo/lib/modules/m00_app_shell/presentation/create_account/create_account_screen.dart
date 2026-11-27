@@ -109,7 +109,8 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
     final options = ref.watch(signInOptionsProvider).valueOrNull ?? const <SignInOption>[];
     final social = availableSocialOptions(options);
     return AuthShell(
-      appBar: AppBar(),
+      // Step 2a: the back pill over the photo returns to the screen before this one.
+      onBack: () => Navigator.of(context).maybePop(),
       children: [
         // Step 2: the title and what this is.
         Text('Create your account', style: context.text.headlineSmall),

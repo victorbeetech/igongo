@@ -222,3 +222,23 @@ No key is written in the repository. The code is `modules/payments/src/infrastru
 **What this costs:** iPhones on iOS 15.0 to 15.4 can no longer install the app. Most phones are on newer versions, so this is a small cost.
 
 **Your choice, later:** keep 15.5 (the default), or ask Claude to find another map package that supports iOS 15.0. To change it back, set `IPHONEOS_DEPLOYMENT_TARGET` in `apps/igongo/ios/Runner.xcodeproj/project.pbxproj` once the map package allows it.
+
+---
+
+## Google and Apple logos for the sign-in buttons (27 Nov 2026)
+
+**Status:** the Sign in and Create account buttons show the words "Google" and "Apple" only. The designs have the brand logos.
+
+**What is needed:** the official Google "G" logo and the Apple logo as SVG or PNG files, with the brand's usage rules.
+
+**Why:** the brand logos are part of the approved design, and the words alone do not match it.
+
+**Exact steps:** add the two files to `apps/igongo/assets/images/` (for example `google_logo.svg` and `apple_logo.svg`). Tell Claude the file names, and the buttons in `apps/igongo/lib/shared/ui/auth/social_auth_row.dart` will show them.
+
+## Contact Us link on the sign-in and create account screens (27 Nov 2026)
+
+**Status:** both designs have a "Contact Us" link in the footer. The app has no contact screen to open, so the link is left out.
+
+**What is needed:** a decision on where "Contact Us" should go: a contact screen in the app, a phone number, or an email address.
+
+**Exact steps:** reply with the choice. Claude then adds the link to both footers in `sign_in_screen.dart` and `create_account_screen.dart`.
