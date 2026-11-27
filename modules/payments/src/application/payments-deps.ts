@@ -5,6 +5,7 @@ import type { ChangeContext } from "@igongo/core";
 import type { MethodSettingsStore } from "./ports/method-settings-store";
 import type { PaymentProvider } from "./ports/payment-provider";
 import type { PaymentRepository } from "./ports/payment-repository";
+import type { ReceiptMailer } from "./ports/receipt-mailer";
 
 export interface PaymentsDeps {
   payments: PaymentRepository;
@@ -18,4 +19,6 @@ export interface PaymentsDeps {
   apiBase: string;
   /** The web portal's address, for card payers coming back. */
   webBase: string;
+  /** Sends the receipt email after a success. Optional: no mailer means no email. */
+  receipts?: ReceiptMailer;
 }
