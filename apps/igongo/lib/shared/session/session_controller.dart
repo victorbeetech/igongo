@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../api/api_client.dart';
 import '../api/api_config.dart';
 import '../api/api_exception.dart';
+import '../social_sign_in/social_id_token.dart';
 import 'session.dart';
 import 'first_run_store.dart';
 import 'session_store.dart';
@@ -48,6 +49,16 @@ class SessionController extends AsyncNotifier<Session?> {
       'email': email.trim().toLowerCase(),
       'password': password,
     });
+    await _start(reply);
+  }
+
+  /// Signs in with a Google or Apple ID token from the phone's native sign-in.
+  /// The API checks the token with the provider and refuses the super admin.
+  /// @throws ApiException with the API's message (unknown account, refused...)
+  Future<void> signInWithSocial(SocialIdToken social) async {
+    // Step 1: send the provider's token to Better Auth's native ID-token sign-in.
+    final reply = await ref.read(apiClientProvider).post('/api/auth/sign-in/social', social.toRequestBody());
+    // Step 2: the same session start as email sign-in (token saved, person loaded).
     await _start(reply);
   }
 

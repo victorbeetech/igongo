@@ -24,11 +24,15 @@
     "WEB_ORIGINS": "https://igongo.victorbee.com,http://localhost:3000",
     // Public by design (it is in every Google sign-in link).
     "GOOGLE_CLIENT_ID": "707707727967-gdpm3r7q6ckrlorrmoq9a2obchqkm4a7.apps.googleusercontent.com",
+    // Google client IDs of the iPhone and Android apps (public), so native sign-in ID tokens verify.
+    "GOOGLE_APP_CLIENT_IDS": "707707727967-802llnqis9nfa74280mkl9vjf7l89kep.apps.googleusercontent.com,707707727967-ur411vo11lv1ce9undl07q8al2rhttl1.apps.googleusercontent.com",
     // Apple push (APNs) key ID and team; the key itself is the secret APNS_PRIVATE_KEY.
     "APNS_KEY_ID": "J52S98JL2W",
     "APPLE_TEAM_ID": "UNNDMY45JR",
     // Sign in with Apple: the web Services ID (the .p8 key is the secret APPLE_PRIVATE_KEY).
     "APPLE_SERVICES_ID": "com.victorbee.igongo.web",
-    "APPLE_KEY_ID": "92F73K6327"
+    "APPLE_KEY_ID": "92F73K6327",
+    // The iPhone app's bundle ID: Apple ID tokens from the app carry it as their audience.
+    "APPLE_APP_BUNDLE_ID": "ug.co.igongo.igongo"
   }
 }

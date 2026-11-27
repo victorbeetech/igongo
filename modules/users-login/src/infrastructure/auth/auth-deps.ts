@@ -21,7 +21,11 @@ export interface AuthConfig {
   secret: string;
   /** Web addresses allowed to call the API with cookies. */
   trustedOrigins: string[];
-  google: { clientId: string; clientSecret: string } | null;
+  /**
+   * Google: the web client ID is first (it pairs with the secret). The iPhone
+   * and Android app client IDs follow, so native ID tokens are accepted too.
+   */
+  google: { clientId: string | string[]; clientSecret: string } | null;
   apple: (AppleKeys & { appBundleIdentifier?: string }) | null;
 }
 

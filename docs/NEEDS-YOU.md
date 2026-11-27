@@ -30,9 +30,17 @@ Never paste a password, private key or secret into the chat. Where a secret is n
 3. Back on the sign-in page, click **Finish set-up**. You are now the super admin. Only your Google email can do this, and only once.
 4. (Since 26 Nov, once the new API is deployed) the portal then asks you to add a password and turn on 2-step sign-in with an authenticator app, and shows recovery codes to keep safe. Add a second super admin later so you can never be locked out.
 
-### Google and Apple sign-in inside the phone app (later)
+### Google and Apple sign-in inside the phone app (27 Nov 2026)
 
-The phone app signs in with email and password today. Google and Apple inside the app need two more Google OAuth client IDs (iOS and Android, from Google Cloud console > Credentials) and the app's bundle ID added to Sign in with Apple. Claude will list the exact clicks when that step starts.
+Built in the app and the API (the buttons call the phone's own sign-in, then the API checks the token). Google works on iPhone and Android. Sign in with Apple works on iPhone only. Nothing is tested on a real phone yet. Three things only you can do:
+
+1. **Google, Android client (5 minutes):** Google Cloud console > APIs & Services > Credentials > the Android OAuth client `707707727967-ur411vo11lv1ce9undl07q8al2rhttl1`. Check the package name is `ug.co.igongo.igongo`, and add the SHA-1 fingerprint of the signing key (the debug key for test builds, and the Play upload key before the Play release). Without it Google shows an error on Android.
+2. **Apple, iPhone app ID (2 minutes):** developer.apple.com > Identifiers > `ug.co.igongo.igongo` > tick **Sign in with Apple**, then Save. Xcode's automatic signing usually does this on archive. The API already accepts this bundle ID.
+3. **Real-phone test (10 minutes):** on an iPhone and an Android phone, open the app, tap **Continue with Google** (and on iPhone **Sign in with Apple**), pick an account. Expect the home screen. Use a guest account. The super admin account must be refused with a message, and that is the expected result.
+
+**Not built yet, your decision:** Sign in with Apple on Android. It needs a web flow with the Services ID `com.victorbee.igongo.web` and its return URL, which is a separate piece of work. Until then Android shows only Google.
+
+After merge, the API deploy must run for the new settings (`GOOGLE_APP_CLIENT_IDS` and `APPLE_APP_BUNDLE_ID` are Worker variables in `apps/api/wrangler.jsonc`). Check Cloudflare Workers > igongo-api > Settings > Variables that the Apple sign-in key secret (`APPLE_PRIVATE_KEY`) is still there; it was stored earlier.
 
 ### Apple sign-in (when you have the values)
 
