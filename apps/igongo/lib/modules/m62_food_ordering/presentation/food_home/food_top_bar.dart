@@ -6,7 +6,6 @@
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
-import '../../../../shared/contact/whatsapp_chat_button.dart';
 import '../../../../shared/theme/theme.dart';
 import '../../../../shared/ui/toast/igongo_toast.dart';
 
@@ -47,8 +46,6 @@ class FoodTopBar extends StatelessWidget {
                 onPressed: () => showIgongoToast(context, 'Wish list is coming soon.'),
                 icon: Icon(Icons.favorite_border, color: p.onPrimary),
               ),
-              // Step 4: the WhatsApp chat button, the same one the other guest screens use.
-              const WhatsappChatButton(),
             ],
           ),
         ),

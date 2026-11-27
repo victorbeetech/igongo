@@ -1,16 +1,15 @@
 // The top row of the guest home: the greeting (time of day and first name), the place,
-// the search button, the bell and the WhatsApp chat button. Colours and text sizes come from the theme tokens only.
+// then the search and bell round buttons. The WhatsApp button floats at the bottom (see the app shell).
+// Colours and text sizes come from the theme tokens only.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../../shared/clock/app_clock.dart';
-import '../../../../../shared/contact/whatsapp_chat_button.dart';
 import '../../../../../shared/format/greeting.dart';
 import '../../../../../shared/theme/theme.dart';
-import 'guest_bell_button.dart';
-import 'guest_search_button.dart';
+import '../../../../../shared/ui/icons/round_icon_button.dart';
 
 /// The guest home's top row. [name] is the signed-in guest's, or null when signed out.
 class GuestTopBar extends ConsumerWidget {
@@ -57,12 +56,10 @@ class GuestTopBar extends ConsumerWidget {
             ],
           ),
         ),
-        // Step 3: the search button and the bell, on the right.
-        GuestSearchButton(onPressed: onSearch),
+        // Step 3: the search button and the bell, on the right, the same round style.
+        RoundIconButton(icon: Icons.search, tooltip: 'Search', onPressed: onSearch),
         const SizedBox(width: IgongoSpace.sm),
-        GuestBellButton(onPressed: onBell),
-        // Step 4: the same WhatsApp chat button the other guest screens show in their top bar.
-        const WhatsappChatButton(),
+        RoundIconButton(icon: Icons.notifications_none, tooltip: 'Notifications', showDot: true, onPressed: onBell),
       ],
     );
   }
