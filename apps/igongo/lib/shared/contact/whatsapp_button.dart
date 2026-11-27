@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../theme/theme.dart';
 import '../ui/toast/igongo_toast.dart';
+import '../ui/whatsapp/whatsapp_icon.dart';
 import 'whatsapp_number.dart';
 
 /// The floating "chat on WhatsApp" button.
@@ -33,7 +34,8 @@ class WhatsappButton extends ConsumerWidget {
         final opened = await launchUrl(link, mode: LaunchMode.externalApplication).catchError((_) => false);
         if (!opened && context.mounted) showIgongoToast(context, 'Could not open WhatsApp.');
       },
-      child: const Icon(Icons.chat_bubble_outline),
+      // The WhatsApp icon in the button's text colour, so it reads in light and dark.
+      child: WhatsappIcon(colour: p.onPrimary),
     );
   }
 }
