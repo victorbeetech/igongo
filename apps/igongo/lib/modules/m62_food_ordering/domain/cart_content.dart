@@ -1,18 +1,17 @@
 // The fixed content of the Cart screens: the banner slides and the popular
-// services. Each slide's photo comes from GuestPhotos.
+// services. Each slide's photo is an asset path from assets/photos/ (the same
+// files GuestPhotos lists); a slide with no asset shows the placeholder.
 
-import '../../../shared/ui/photo/guest_photos.dart';
 import 'cart_slide.dart';
 import 'popular_service.dart';
 
-/// The banner slides, in order. Each one is a service of the hotel, with a
-/// photo from the owner's set (see GuestPhotos).
+/// The banner slides, in order. Each one is a service of the hotel.
 const cartBannerSlides = <CartSlide>[
-  CartSlide(title: 'Igongo Country Hotel', asset: GuestPhotos.hotelEntrance),
-  CartSlide(title: 'Rooms', asset: GuestPhotos.roomDeluxe),
-  CartSlide(title: 'Food', asset: GuestPhotos.foodFish),
-  CartSlide(title: 'Spa', asset: GuestPhotos.hotelPool),
-  CartSlide(title: 'Events', asset: GuestPhotos.hotelTerraceView),
+  CartSlide(title: 'Igongo Country Hotel', asset: 'assets/photos/hotel-entrance.jpg'),
+  CartSlide(title: 'Rooms', asset: 'assets/photos/room-deluxe.jpg'),
+  CartSlide(title: 'Food', asset: 'assets/photos/food-fish.jpg'),
+  CartSlide(title: 'Spa', asset: 'assets/photos/hotel-pool.jpg'),
+  CartSlide(title: 'Events', asset: 'assets/photos/hotel-gardens.jpg'),
 ];
 
 /// The services shown under an empty cart, each opening its own screen.

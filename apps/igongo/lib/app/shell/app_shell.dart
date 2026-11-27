@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../shared/catalog/catalog.dart';
-import '../../shared/contact/whatsapp_button.dart';
+import '../../shared/contact/whatsapp_chat_button.dart';
 import '../../shared/layout/igongo_scaffold.dart';
 import '../../shared/preferences/preferences.dart';
 import '../../shared/session/session_controller.dart';
@@ -58,15 +58,16 @@ class AppShell extends ConsumerWidget {
       title: spec.id == 'S00-21' ? 'Home' : spec.name,
       banners: banners,
       // The Bookings home (S67-01) draws its own slideshow at the top, so a guest sees no app bar there.
-      showAppBar: !guestHome && !guestProfile && !(spec.id == 'S67-01' && guestOnly),
+      // The Cart (S62-04) blends its photo banner into the top of the screen, so it has no app bar either.
+      showAppBar: !guestHome && !guestProfile && !(spec.id == 'S67-01' && guestOnly) && !ChromeRules.drawsOwnTop(spec),
       // Step 3: tab screens never show a Back arrow; pushed pages do.
       isTab: signedIn && bottomBarTabIds(ref).contains(spec.id),
       body: body,
-      // Signed-in guests get the floating WhatsApp chat button.
-      floatingAction: signedIn && guestOnly ? const WhatsappButton() : null,
       drawer: signedIn && !guestOnly ? const RoleDrawer() : null,
       bottomBar: signedIn ? BottomBar(currentId: spec.id) : null,
       actions: [
+        // Signed-in guests get the same WhatsApp chat button as the top bar on the home.
+        if (signedIn && guestOnly) const WhatsappChatButton(),
         // Search joins real accounts once it is live (docs/APP-WIRING.md).
         if (signedIn && ViewRules.previewOn(prefs, ref.watch(sessionProvider).valueOrNull))
           IconButton(tooltip: 'Search', icon: const Icon(Icons.search), onPressed: () => openTarget(context, 'S00-25')),

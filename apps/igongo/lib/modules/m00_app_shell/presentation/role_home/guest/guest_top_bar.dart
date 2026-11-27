@@ -1,11 +1,12 @@
 // The top row of the guest home: the greeting (time of day and first name), the place,
-// the points pill and the bell. Colours and text sizes come from the theme tokens only.
+// the points pill, the bell and the WhatsApp chat button. Colours and text sizes come from the theme tokens only.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../../shared/clock/app_clock.dart';
+import '../../../../../shared/contact/whatsapp_chat_button.dart';
 import '../../../../../shared/format/greeting.dart';
 import '../../../../../shared/theme/theme.dart';
 import 'guest_bell_button.dart';
@@ -57,6 +58,8 @@ class GuestTopBar extends ConsumerWidget {
         const GuestPointsPill(),
         const SizedBox(width: IgongoSpace.sm),
         GuestBellButton(onPressed: onBell),
+        // Step 4: the same WhatsApp chat button the other guest screens show in their top bar.
+        const WhatsappChatButton(),
       ],
     );
   }
