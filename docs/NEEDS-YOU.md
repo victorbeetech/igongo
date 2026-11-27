@@ -214,3 +214,10 @@ No key is written in the repository. The code is `modules/payments/src/infrastru
 **What this costs:** iPhones on iOS 15.0 to 15.4 can no longer install the app. Most phones are on newer versions, so this is a small cost.
 
 **Your choice, later:** keep 15.5 (the default), or ask Claude to find another map package that supports iOS 15.0. To change it back, set `IPHONEOS_DEPLOYMENT_TARGET` in `apps/igongo/ios/Runner.xcodeproj/project.pbxproj` once the map package allows it.
+
+## Guest app: still open after the 27 Nov review pass
+
+- **Payments (module 77), 5 screens not wired.** Pay, Mobile money prompt, Record cash payment, Payment link and Till still show "not in the app yet". Next build step. Uses the existing payments API (`/api/payments`).
+- **"This weekend" promo card on guest Home.** Owner decision (27 Nov): the card reads a list the super admin types in, with no external API. Add a super-admin setting to manage the promo items, and make the Home card read them live. Queued after Payments.
+- **Chat with us (module 74).** Needs the Meta WhatsApp Business keys, which the owner supplies later. Do not build a stub.
+- **Out of stock today (module 61, S61-04).** Needs the kitchen on/off API, which is not built yet.
