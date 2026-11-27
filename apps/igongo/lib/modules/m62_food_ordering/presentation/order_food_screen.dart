@@ -53,10 +53,15 @@ class OrderFoodScreen extends ConsumerWidget {
   static Future<void> _open(BuildContext context, Widget sheet) =>
       showModalBottomSheet<void>(context: context, isScrollControlled: true, builder: (_) => sheet);
 
-  /// A venue's photo: Kaahwa Kanuzire has its own, the demo venue a placeholder, others none yet.
-  static String? _venuePhoto(Outlet o) => o.name.toLowerCase().contains('kaahwa')
-      ? GuestPhotos.hotelKaahwaKanuzire
-      : (isDemoOutlet(o.key) ? GuestPhotos.outletRestaurant : null);
+  /// A venue's photo: each demo venue has its own hotel photo, Kaahwa Kanuzire
+  /// uses its restaurant photo, and any other venue shows the placeholder until it has one.
+  static String? _venuePhoto(Outlet o) {
+    // Step 1: Kaahwa Kanuzire is matched by name (the real outlet has no photo field yet).
+    if (o.name.toLowerCase().contains('kaahwa')) return GuestPhotos.hotelKaahwaKanuzire;
+    // Step 2: the demo venues each get a different hotel photo.
+    if (!isDemoOutlet(o.key)) return null;
+    return o.key == demoGrillKey ? GuestPhotos.hotelTerraceView : GuestPhotos.outletRestaurant;
+  }
 
   /// Words for the order types a venue takes, shown as small tags on its card.
   static List<String> _badgesOf(Outlet o, OrderingRules? rules) => [
