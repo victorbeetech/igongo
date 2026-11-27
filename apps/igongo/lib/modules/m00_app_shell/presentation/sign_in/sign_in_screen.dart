@@ -18,6 +18,7 @@ import '../../../../shared/theme/theme.dart';
 import '../../../../shared/ui/auth/auth_or_divider.dart';
 import '../../../../shared/ui/auth/auth_shell.dart';
 import '../../../../shared/ui/button/igongo_button.dart';
+import '../../../../shared/ui/field/password_eye.dart';
 import '../../../../shared/ui/field/igongo_field.dart';
 import '../../../../shared/ui/toast/igongo_toast.dart';
 import '../../application/sign_in_options_provider.dart';
@@ -116,9 +117,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
           obscure: !_showPassword,
           controller: _password,
           onSubmitted: (_) => _signIn(),
-          suffix: IconButton(
-            tooltip: _showPassword ? 'Hide password' : 'Show password',
-            icon: Icon(_showPassword ? Icons.visibility_off_outlined : Icons.visibility_outlined, size: 18),
+          // The shared eye button flips _showPassword.
+          suffix: PasswordEyeButton(
+            shown: _showPassword,
             onPressed: () => setState(() => _showPassword = !_showPassword),
           ),
         ),
