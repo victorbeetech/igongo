@@ -55,9 +55,9 @@ class RoleHomeScreen extends ConsumerWidget {
             padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, IgongoSpace.sm, IgongoSpace.lg, 0),
             child: GuestSearchBar(onTap: () => screen.open('S00-25')),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, IgongoSpace.sm, IgongoSpace.lg, 0),
-            child: const GuestStatusStrip(),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(IgongoSpace.lg, IgongoSpace.sm, IgongoSpace.lg, 0),
+            child: GuestStatusStrip(),
           ),
         ] else
           Padding(
@@ -113,7 +113,7 @@ class RoleHomeScreen extends ConsumerWidget {
           ),
         ] else ...[
           // Staff: the role's tiles, then the staff shortcuts.
-          SectionHeader('Today'),
+          const SectionHeader('Today'),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
             child: TileGrid(

@@ -51,7 +51,7 @@ class GuestDishCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Step 1: the placeholder picture across the top.
-              SizedBox(height: _pictureHeight, width: double.infinity, child: const GuestPhoto()),
+              const SizedBox(height: _pictureHeight, width: double.infinity, child: GuestPhoto()),
               // Step 2: the name and a short description.
               Padding(
                 padding: const EdgeInsets.fromLTRB(IgongoSpace.md, IgongoSpace.sm, IgongoSpace.md, 0),
