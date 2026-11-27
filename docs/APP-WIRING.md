@@ -77,7 +77,7 @@ Updated 26 Nov 2026 (second pass). Made from the app's own screen list, so it ma
 | 57 Loyalty & Membership | 3 | 3 | - |
 | 59 Promotions, Vouchers & Gift Cards | 4 | 4 | - |
 | 60 Guest Requests & Help Desk | 4 | 4 | - |
-| 61 Menus & Catalogue | 2 | 0 | Menus, Out of stock today |
+| 61 Menus & Catalogue | 4 | 1 | Out of stock today |
 | 62 Food Ordering | 15 | 15 | - |
 | 63 Kitchen Display & Production | 4 | 4 | - |
 | 64 Tables & Dine-in | 6 | 1 | Floor plan, Reservations, Waiting list, Table detail, Open bills |
@@ -97,4 +97,4 @@ Updated 26 Nov 2026 (second pass). Made from the app's own screen list, so it ma
 | 81 Reports & Analytics | 3 | 3 | - |
 | 84 Stock & Inventory | 11 | 10 | Item detail |
 
-Total: 361 screens in the app, 247 with live data.
+Total: 361 screens in the app, 248 with live data.
