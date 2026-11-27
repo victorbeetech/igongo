@@ -1,5 +1,5 @@
-// A guest's area card on the home: a cream rounded card with a red icon disc,
-// the area's name and an arrow. Photos are not used here.
+// A guest's area card on the home: a white rounded card with a red icon disc,
+// the area's name (up to two lines) and an arrow. Photos are not used here.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
@@ -28,7 +28,7 @@ class AreaCard extends StatelessWidget {
       button: true,
       label: label,
       child: Material(
-        color: p.surfaceAlt,
+        color: p.surface,
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: radius,
@@ -38,33 +38,30 @@ class AreaCard extends StatelessWidget {
         child: InkWell(
           // The whole card opens the area.
           onTap: onTap,
-          // Every tile is the same height, with one line of text.
-          child: SizedBox(
-            height: 60,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.sm, vertical: IgongoSpace.sm),
-              // The red icon disc, the name, then the arrow.
-              child: Row(
-                spacing: IgongoSpace.sm,
-                children: [
-                  // A small disc so two cards fit across a phone.
-                  CircleAvatar(
-                    radius: 16,
-                    backgroundColor: p.primary,
-                    foregroundColor: p.onPrimary,
-                    child: Icon(icon, size: 18),
+          child: Padding(
+            padding: const EdgeInsets.all(IgongoSpace.md),
+            // Step 1: the red icon disc, then the name, then the arrow.
+            child: Row(
+              children: [
+                DecoratedBox(
+                  decoration: BoxDecoration(color: p.primary, shape: BoxShape.circle),
+                  child: Padding(
+                    padding: const EdgeInsets.all(IgongoSpace.sm),
+                    child: Icon(icon, size: IgongoSpace.lg, color: p.onPrimary),
                   ),
-                  Expanded(
-                    child: Text(
-                      label,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: context.text.bodyMedium?.copyWith(color: p.text),
-                    ),
+                ),
+                const SizedBox(width: IgongoSpace.sm),
+                // Step 2: the name, up to two lines, so long names still fit.
+                Expanded(
+                  child: Text(
+                    label,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.text.labelLarge?.copyWith(color: p.text, fontWeight: FontWeight.w700),
                   ),
-                  Icon(Icons.chevron_right, size: 18, color: p.textMuted),
-                ],
-              ),
+                ),
+                Icon(Icons.chevron_right, size: IgongoSpace.lg, color: p.textMuted),
+              ],
             ),
           ),
         ),
