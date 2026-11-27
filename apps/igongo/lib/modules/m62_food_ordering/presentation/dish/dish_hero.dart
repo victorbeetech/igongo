@@ -1,5 +1,6 @@
-// The top of the dish page: the dish photo with its prep-time badge, and a soft
-// fade at the bottom that melts into the page behind the overview card.
+// The top of the dish page: the dish photo, a Chef's Signature badge (a
+// placeholder until the menu marks chef's picks), the prep-time badge, and a
+// soft fade at the bottom that melts into the page behind the overview card.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
@@ -7,10 +8,11 @@ import 'package:material_ui/material_ui.dart';
 import '../../../../shared/theme/theme.dart';
 import '../../../../shared/ui/photo/photo_slot.dart';
 import 'dish_badge.dart';
+import 'dish_placeholder.dart';
 
 /// The photo at the top of the dish page.
 class DishHero extends StatelessWidget {
-  /// Creates the hero for a dish with [photoUrl] (null shows the placeholder) and [prepMinutes] (0 hides the badge).
+  /// Creates the hero for a dish with [photoUrl] (null shows the placeholder) and [prepMinutes] (0 hides the prep badge).
   const DishHero({super.key, required this.photoUrl, required this.prepMinutes, required this.height});
 
   /// The dish photo's address, or null for the placeholder.
@@ -48,10 +50,21 @@ class DishHero extends StatelessWidget {
               ),
             ),
           ),
-          // Step 3: the prep-time badge, only when the menu has a time for this dish.
+          // Step 3: the Chef's Signature badge, a placeholder until the menu can mark it.
+          Positioned(
+            left: IgongoSpace.lg,
+            bottom: IgongoSpace.lg,
+            child: DishBadge(
+              label: "Chef's Signature: $dishComingSoon",
+              icon: Icons.star_rounded,
+              background: palette.primary,
+              foreground: palette.onPrimary,
+            ),
+          ),
+          // Step 4: the prep-time badge, only when the menu has a time for this dish.
           if (prepMinutes > 0)
             Positioned(
-              left: IgongoSpace.lg,
+              right: IgongoSpace.lg,
               bottom: IgongoSpace.lg,
               child: DishBadge(
                 label: 'Prep: $prepMinutes mins',

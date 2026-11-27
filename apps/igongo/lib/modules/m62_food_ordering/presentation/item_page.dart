@@ -61,9 +61,6 @@ class _ItemPageState extends ConsumerState<ItemPage> {
   /// The picked choice keys per option group.
   DishPicks _picks = {};
 
-  /// True when the guest has marked the dish as a favourite (kept on this screen only).
-  bool _favourite = false;
-
   /// True once the guest has scrolled past the photo.
   bool _titleShown = false;
 
@@ -165,13 +162,7 @@ class _ItemPageState extends ConsumerState<ItemPage> {
             top: 0,
             left: 0,
             right: 0,
-            child: DishTopBar(
-              name: item.name,
-              titleShown: _titleShown,
-              favourite: _favourite,
-              onBack: () => Navigator.of(context).maybePop(),
-              onToggleFavourite: () => setState(() => _favourite = !_favourite),
-            ),
+            child: DishTopBar(name: item.name, titleShown: _titleShown, onBack: () => Navigator.of(context).maybePop()),
           ),
           // Layer 3: the order bar sits at the bottom.
           Positioned(

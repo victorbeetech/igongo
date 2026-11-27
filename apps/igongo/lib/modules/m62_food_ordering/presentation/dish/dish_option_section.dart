@@ -1,6 +1,6 @@
 // One customisation section on the dish page: a card with the group's name, a
 // Required or Optional mark, and its choices. Single-choice groups show radio
-// buttons (pick one); multi-choice groups show checkboxes (pick any).
+// buttons (pick one); multi-choice groups show a 2-column grid of checkboxes (pick any).
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
@@ -10,6 +10,7 @@ import '../../../../shared/theme/theme.dart';
 import '../../domain/option_choice.dart';
 import '../../domain/option_group.dart';
 import 'dish_badge.dart';
+import 'dish_choice_grid.dart';
 
 /// One option group as a card of choices.
 class DishOptionSection extends StatelessWidget {
@@ -76,15 +77,8 @@ class DishOptionSection extends StatelessWidget {
           const SizedBox(height: IgongoSpace.md),
           // Step 3: the choices, as radio buttons or checkboxes.
           if (group.multiple)
-            for (final c in group.choices)
-              _OptionRow(
-                choice: c,
-                selected: picked.contains(c.key),
-                control: IgnorePointer(
-                  child: Checkbox(value: picked.contains(c.key), onChanged: (_) {}),
-                ),
-                onTap: () => onToggle(c.key),
-              )
+            // Multi-choice groups (such as beverages and extras) are a 2-column grid of checkbox cards.
+            DishChoiceGrid(choices: group.choices, picked: picked, onToggle: onToggle)
           else
             RadioGroup<String>(
               groupValue: picked.isEmpty ? null : picked.first,

@@ -1,6 +1,7 @@
 // The bar over the top of the dish page: Back on the left, the dish name
 // (shown once the guest scrolls past the photo) in the middle, and the
-// favourite and share buttons on the right.
+// favourite and share buttons on the right. Favourite and share are shown
+// but disabled until they are wired.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
@@ -8,18 +9,12 @@ import 'package:material_ui/material_ui.dart';
 import '../../../../shared/theme/theme.dart';
 import 'dish_glass_button.dart';
 import 'dish_glass_frame.dart';
+import 'dish_placeholder.dart';
 
 /// The floating top bar. [titleShown] fades the dish name in.
 class DishTopBar extends StatelessWidget {
   /// Creates the bar for the dish called [name].
-  const DishTopBar({
-    super.key,
-    required this.name,
-    required this.titleShown,
-    required this.favourite,
-    required this.onBack,
-    required this.onToggleFavourite,
-  });
+  const DishTopBar({super.key, required this.name, required this.titleShown, required this.onBack});
 
   /// The dish name, shown in the middle once the photo has scrolled away.
   final String name;
@@ -27,14 +22,8 @@ class DishTopBar extends StatelessWidget {
   /// True once the guest has scrolled past the photo.
   final bool titleShown;
 
-  /// True when the guest has marked the dish as a favourite.
-  final bool favourite;
-
   /// Goes back to the menu.
   final VoidCallback onBack;
-
-  /// Flips the favourite mark.
-  final VoidCallback onToggleFavourite;
 
   @override
   Widget build(BuildContext context) {
@@ -76,15 +65,10 @@ class DishTopBar extends StatelessWidget {
                 ),
               ),
             ),
-            // Step 3: favourite (a local mark) and share (not built yet, so disabled).
-            DishGlassButton(
-              icon: favourite ? Icons.favorite : Icons.favorite_border,
-              tooltip: favourite ? 'Remove from favourites' : 'Add to favourites',
-              color: favourite ? palette.primary : null,
-              onPressed: onToggleFavourite,
-            ),
+            // Step 3: favourite and share, shown but disabled until they are wired.
+            const DishGlassButton(icon: Icons.favorite_border, tooltip: dishComingSoon),
             const SizedBox(width: IgongoSpace.sm),
-            const DishGlassButton(icon: Icons.ios_share, tooltip: 'Share dish', onPressed: null),
+            const DishGlassButton(icon: Icons.ios_share, tooltip: dishComingSoon),
           ],
         ),
       ),

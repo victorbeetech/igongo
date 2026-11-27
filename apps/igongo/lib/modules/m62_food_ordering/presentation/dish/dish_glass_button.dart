@@ -6,10 +6,10 @@ import 'package:material_ui/material_ui.dart';
 import '../../../../shared/theme/theme.dart';
 import 'dish_glass_frame.dart';
 
-/// One round icon button over the photo.
+/// One round icon button over the photo (disabled while its feature is not wired).
 class DishGlassButton extends StatelessWidget {
   /// Creates the button. A null [onPressed] shows it disabled.
-  const DishGlassButton({super.key, required this.icon, required this.tooltip, this.onPressed, this.color});
+  const DishGlassButton({super.key, required this.icon, required this.tooltip, this.onPressed});
 
   /// The icon shown.
   final IconData icon;
@@ -20,15 +20,12 @@ class DishGlassButton extends StatelessWidget {
   /// What happens on tap; null disables the button.
   final VoidCallback? onPressed;
 
-  /// The icon colour; defaults to the theme's text colour.
-  final Color? color;
-
   @override
   Widget build(BuildContext context) => Tooltip(
     message: tooltip,
     child: DishGlassFrame(
       child: IconButton(
-        icon: Icon(icon, size: 20, color: color ?? context.palette.text),
+        icon: Icon(icon, size: 20, color: context.palette.text),
         onPressed: onPressed,
       ),
     ),
