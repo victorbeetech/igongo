@@ -21,6 +21,13 @@ class CartController extends Notifier<Cart> {
   /// Adds [line].
   void add(CartLine line) => state = (outlet: state.outlet, lines: [...state.lines, line]);
 
+  /// Sets line [index] to [quantity], never below one (the +/- buttons).
+  void setQuantity(int index, int quantity) {
+    final lines = [...state.lines];
+    lines[index] = lines[index].withQuantity(quantity < 1 ? 1 : quantity);
+    state = (outlet: state.outlet, lines: lines);
+  }
+
   /// Removes line number [index].
   void removeAt(int index) => state = (outlet: state.outlet, lines: [...state.lines]..removeAt(index));
 

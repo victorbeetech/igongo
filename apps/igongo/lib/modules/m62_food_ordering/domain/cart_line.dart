@@ -27,6 +27,18 @@ class CartLine {
   /// Shillings each, with options.
   final int unitPrice;
 
+  /// The same line with [quantity] changed (the screen's +/- buttons use this).
+  CartLine withQuantity(int quantity) => CartLine(
+    itemId: itemId,
+    name: name,
+    quantity: quantity,
+    options: options,
+    unitPrice: unitPrice,
+  );
+
+  /// What this line costs: its unit price times how many.
+  int get lineTotal => unitPrice * quantity;
+
   /// The line as the API takes it.
   Map<String, Object> toJson() => {'itemId': itemId, 'quantity': quantity, 'options': options};
 }
