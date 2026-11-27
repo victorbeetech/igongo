@@ -53,7 +53,7 @@ class _BookingSegmentTabsState extends State<BookingSegmentTabs> {
     final pills = [
       _Pill('Active Stays (${widget.activeCount})', Icons.check_circle_outline, 'S67-06'),
       _Pill('E-Receipts (${widget.receiptCount})', Icons.receipt_long_outlined, 'S78-06'),
-      _Pill('Past Visits', Icons.history, 'S67-06'),
+      const _Pill('Past Visits', Icons.history, 'S67-06'),
       const _Pill('Heritage Club', Icons.loyalty_outlined, null),
     ];
     return SingleChildScrollView(
