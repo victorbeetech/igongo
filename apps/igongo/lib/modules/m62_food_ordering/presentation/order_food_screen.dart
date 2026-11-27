@@ -29,7 +29,6 @@ import '../domain/order_type.dart';
 import '../domain/ordering_rules.dart';
 import '../domain/outlet.dart';
 import 'checkout_sheet.dart';
-import 'demo_notice.dart';
 import 'food_home/category_pills.dart';
 import 'food_home/dish_card.dart';
 import 'food_home/farm_tip.dart';
@@ -85,7 +84,6 @@ class OrderFoodScreen extends ConsumerWidget {
       final query = ref.watch(menuSearchProvider).trim().toLowerCase();
       final category = ref.watch(menuCategoryProvider);
       final rules = ref.watch(orderingRulesProvider).valueOrNull;
-      final demo = isDemoOutlet(outlet);
       return Column(
         children: [
           Expanded(
@@ -145,7 +143,6 @@ class OrderFoodScreen extends ConsumerWidget {
                             onSelected: (l) => ref.read(menuCategoryProvider.notifier).set(l == 'All' ? null : l),
                           ),
                         ),
-                      if (demo) const DemoNotice(),
                       // Step 6: the venues, from the real outlets; tapping one makes it the cart's venue.
                       Padding(
                         padding: const EdgeInsets.only(top: IgongoSpace.lg),

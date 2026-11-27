@@ -13,8 +13,9 @@ const Duration kVenueSlideInterval = Duration(milliseconds: 2500);
 /// How long the slide from one venue to the next takes.
 const Duration kVenueSlideDuration = Duration(milliseconds: 450);
 
-/// The share of the strip width one card takes, so neighbours peek in at each side.
-const double kVenueViewportFraction = 0.55;
+/// The share of the strip width one card takes. Half the width leaves a small gap
+/// between the middle card and its neighbours, which peek in at each side.
+const double kVenueViewportFraction = 0.5;
 
 /// Builds one venue card. [highlighted] is true for the card in the middle.
 typedef VenueItemBuilder = Widget Function(BuildContext context, int index, bool highlighted);

@@ -88,8 +88,8 @@ void main() {
       overrides: [sessionProvider.overrideWith(_Guest.new), ordersApiProvider.overrideWithValue(_NoOutletsApi())],
     );
     await tester.pump(const Duration(milliseconds: 500));
-    // Step 1: the demo menu shows, labelled, with the guest bar (5 tabs).
-    expect(find.textContaining('Demo menu'), findsOneWidget);
+    // Step 1: the demo menu shows its dishes, with the guest bar (5 tabs).
+    expect(find.text('Rolex'), findsOneWidget);
     for (final tab in ['Home', 'Food', 'Bookings', 'Cart', 'Me']) {
       expect(find.text(tab), findsWidgets);
     }
