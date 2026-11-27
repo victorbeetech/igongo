@@ -97,7 +97,7 @@ class OrderFoodScreen extends ConsumerWidget {
                         if (i.available) i,
                     ].take(8).toList();
                     // The section tabs, in menu order, and the one showing now.
-                    final sections = [for (final i in items) i.section].toSet().toList();
+                    final sections = {for (final i in items) i.section}.toList();
                     final current = sections.contains(picked) ? picked : (sections.isEmpty ? null : sections.first);
                     final shown = [
                       for (final i in items)
