@@ -15,13 +15,24 @@ import { freshDb, memoryAudit } from "./helpers";
 const now = new Date("2026-11-25T10:00:00Z");
 
 describe("Roles & Permissions", () => {
-  let deps: { roles: DrizzleRoleRepository; assignments: DrizzleAssignmentRepository; staffAccounts: { isStaffAccount: (id: string) => Promise<boolean> } };
+  let upgraded: string[];
+  let deps: { roles: DrizzleRoleRepository; assignments: DrizzleAssignmentRepository; staffAccounts: { makeStaff: (id: string) => Promise<void> } };
   let audit: ReturnType<typeof memoryAudit>;
   let ctx: { actorId: string; audit: ReturnType<typeof memoryAudit>; now: Date };
   beforeEach(async () => {
     const { db } = await freshDb();
-    // Everyone but "gina" is a staff account in these tests.
-    deps = { roles: new DrizzleRoleRepository(db), assignments: new DrizzleAssignmentRepository(db), staffAccounts: { isStaffAccount: async (id) => id !== "gina" } };
+    // "gina" signed up in the app but has not verified her email, so she cannot be upgraded.
+    upgraded = [];
+    deps = {
+      roles: new DrizzleRoleRepository(db),
+      assignments: new DrizzleAssignmentRepository(db),
+      staffAccounts: {
+        makeStaff: async (id) => {
+          if (id === "gina") throw new Error("The person must verify their email");
+          upgraded.push(id);
+        },
+      },
+    };
     audit = memoryAudit();
     ctx = { actorId: "admin", audit, now };
   });
@@ -70,9 +81,14 @@ describe("Roles & Permissions", () => {
     expect(rows.find((r) => r.roleId === "role_super-admin")?.holders).toEqual(["sam"]);
   });
 
-  it("gives staff roles only to staff accounts, and never removes the last super admin", async () => {
-    // Gina signed up in the app as a guest: no staff role without the staff match.
-    await expect(assignRole(deps, ctx, { userId: "gina", roleId: "role_waiter" })).rejects.toThrow(/staff accounts/);
+  it("upgrades a verified app sign-up to staff when a staff role is given", async () => {
+    await assignRole(deps, ctx, { userId: "ann", roleId: "role_waiter" });
+    expect(upgraded).toEqual(["ann"]);
+  });
+
+  it("refuses a staff role for an unverified sign-up, and never removes the last super admin", async () => {
+    // Gina signed up in the app but has not verified her email: no staff role.
+    await expect(assignRole(deps, ctx, { userId: "gina", roleId: "role_waiter" })).rejects.toThrow(/verify their email/);
     // Guest-side roles (not staff) are fine.
     await assignRole(deps, ctx, { userId: "gina", roleId: "role_guest" });
     // One super admin cannot be removed; with a second one it can.
