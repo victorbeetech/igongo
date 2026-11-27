@@ -25,14 +25,15 @@ export const actorMiddleware: MiddlewareHandler<ApiEnv> = async (c, next) => {
     if (session) {
       const access = await services.access().profileFor(session.user.id);
       // 1. The access rules, before any route sees the caller.
-      const user = session.user as typeof session.user & { kind?: string; twoFactorEnabled?: boolean | null };
+      const user = session.user as typeof session.user & { kind?: string; status?: string; twoFactorEnabled?: boolean | null };
       const surface = surfaceOf(headers, services.config.webOrigins);
       const kind = user.kind ?? "client";
       const verdict = requestGate(
         {
           surface,
           path: c.req.path,
-          account: { kind, email: user.email, twoFactorEnabled: user.twoFactorEnabled === true },
+          // A missing status counts as not active: fail closed.
+          account: { kind, email: user.email, twoFactorEnabled: user.twoFactorEnabled === true, status: user.status ?? "" },
           roleKeys: access.roles.map((r) => r.key),
           // The web portal also needs a staff role given by the super admin.
           hasStaffRole: access.roles.some((r) => r.isStaff),

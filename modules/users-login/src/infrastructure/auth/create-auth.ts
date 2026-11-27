@@ -18,6 +18,7 @@ import { hashPassword, verifyPassword } from "@igongo/core";
 import * as schema from "../db/schema";
 import { appleClientSecret } from "./apple-client-secret";
 import type { AuthConfig, AuthDeps } from "./auth-deps";
+import { RATE_LIMIT_RULES } from "../../domain/rate-limit-rules";
 import { deviceSignInPlugin } from "./device-sign-in-plugin";
 import { FRESH_SIGN_IN_SECONDS, loginGuardHooks } from "./login-guard-hooks";
 
@@ -76,7 +77,8 @@ export async function createAuth(config: AuthConfig, deps: AuthDeps) {
     // can never be removed (Better Auth refuses it).
     account: { accountLinking: { enabled: true, trustedProviders: [], requireLocalEmailVerified: true, allowDifferentEmails: true } },
     // Limits shared by every Worker instance, stored in Postgres.
-    rateLimit: { enabled: true, storage: "database", window: 60, max: 60, customRules: { "/sign-in/*": { window: 60, max: 10 }, "/phone-number/*": { window: 60, max: 5 }, "/pin/sign-in": { window: 60, max: 10 } } },
+    // Default for every other path; the sign-in, code and reset paths use the shared rules.
+    rateLimit: { enabled: true, storage: "database", window: 60, max: 60, customRules: RATE_LIMIT_RULES },
     plugins: [
       twoFactor({ issuer: "Igongo" }),
       phoneNumber({

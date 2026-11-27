@@ -182,7 +182,7 @@ describe("the staff match", () => {
 
 describe("the request gate", () => {
   const now = new Date("2026-11-26T12:00:00Z");
-  const base = { surface: "web" as const, path: "/api/hr/staff", account: { kind: "staff", email: "sam@igongo.test", twoFactorEnabled: true }, roleKeys: ["hr-manager"], hasStaffRole: true, sessionCreatedAt: now, now, ownerSettingUp: false };
+  const base = { surface: "web" as const, path: "/api/hr/staff", account: { kind: "staff", email: "sam@igongo.test", twoFactorEnabled: true, status: "active" }, roleKeys: ["hr-manager"], hasStaffRole: true, sessionCreatedAt: now, now, ownerSettingUp: false };
 
   it("refuses guests on the web, but not in the app", () => {
     expect(requestGate({ ...base, account: { ...base.account, kind: "client" } }, DEFAULT_LOGIN_POLICY)).toMatchObject({ allow: false, code: "staff_only" });
