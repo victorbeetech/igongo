@@ -17,6 +17,21 @@ void main() {
     expect(find.text('Browse Services'), findsOneWidget);
   });
 
+  testWidgets('the wishlist heart on the banner toggles between saved and not saved', (tester) async {
+    usePhoneWindow(tester);
+    await openApp(tester, '/food-ordering/cart', preview: false);
+    // Step 1: the heart starts off, offering to save.
+    expect(find.byTooltip('Save to wishlist'), findsOneWidget);
+    // Step 2: one tap saves it, and the label flips to offer removal.
+    await tester.tap(find.byTooltip('Save to wishlist'));
+    await tester.pump();
+    expect(find.byTooltip('Remove from wishlist'), findsOneWidget);
+    // Step 3: a second tap turns it off again.
+    await tester.tap(find.byTooltip('Remove from wishlist'));
+    await tester.pump();
+    expect(find.byTooltip('Save to wishlist'), findsOneWidget);
+  });
+
   test('the demo menu has an available dish and an unavailable one, and only the demo outlet counts', () {
     expect(demoMenuItems.any((i) => i.available), isTrue);
     expect(demoMenuItems.any((i) => !i.available), isTrue);
