@@ -14,6 +14,7 @@ import '../../../../shared/social_sign_in/sign_in_option.dart';
 import '../../../../shared/social_sign_in/social_sign_in_flow.dart';
 import '../../../../shared/theme/theme.dart';
 import '../../../../shared/ui/auth/auth_shell.dart';
+import '../../../../shared/ui/auth/contact_us_link.dart';
 import '../../../../shared/ui/auth/social_auth_row.dart';
 import '../../../../shared/ui/button/igongo_button.dart';
 import '../../../../shared/ui/field/igongo_field.dart';
@@ -96,8 +97,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         // Step 2: the title and a short line under it.
         Text('Welcome Back', style: context.text.headlineSmall),
         Text('Sign in to continue', style: context.text.bodySmall),
-        // Step 3: Google and Apple at the top, only when the server has them on and set up.
-        if (social.isNotEmpty) SocialAuthRow(options: social, busy: _busy, onPressed: _signInSocial),
+        // Step 3: Google and Apple at the top, always shown; the ones not set up say so when tapped.
+        SocialAuthRow(available: social, busy: _busy, onPressed: _signInSocial),
         // Step 4: email and password, signed in for real.
         IgongoField(
           label: 'Email address',
@@ -138,7 +139,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
         ),
         // Step 6: the Sign In button.
         IgongoButton(label: _busy ? 'Signing in…' : 'Sign In →', expand: true, onPressed: _busy ? null : _signIn),
-        // Step 7: the footer, with the guest sign-up link.
+        // Step 7: the footer, with the guest sign-up link and the Contact Us placeholder.
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -148,6 +149,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
               variant: ButtonVariant.text,
               onPressed: () => screen.open('S00-18'),
             ),
+            Text('•', style: context.text.bodySmall),
+            const ContactUsLink(),
           ],
         ),
       ],

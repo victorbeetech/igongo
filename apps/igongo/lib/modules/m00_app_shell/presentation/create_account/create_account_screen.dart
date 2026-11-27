@@ -14,6 +14,7 @@ import '../../../../shared/social_sign_in/sign_in_option.dart';
 import '../../../../shared/social_sign_in/social_sign_in_flow.dart';
 import '../../../../shared/theme/theme.dart';
 import '../../../../shared/ui/auth/auth_shell.dart';
+import '../../../../shared/ui/auth/contact_us_link.dart';
 import '../../../../shared/ui/auth/social_auth_row.dart';
 import '../../../../shared/ui/button/igongo_button.dart';
 import '../../../../shared/ui/field/igongo_field.dart';
@@ -42,8 +43,9 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
   final _passwordAgain = TextEditingController();
   bool _agreed = false;
   bool _busy = false;
-  // One eye shows or hides both password boxes together.
+  // Each password box has its own eye, as the design shows.
   bool _showPassword = false;
+  bool _showConfirmPassword = false;
 
   @override
   void dispose() {
@@ -63,9 +65,6 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
     again: _passwordAgain.text,
     agreed: _agreed,
   );
-
-  /// Flips the show/hide flag for both password boxes.
-  void _toggleShown() => setState(() => _showPassword = !_showPassword);
 
   /// Google or Apple sign-up on this phone. A cancelled sheet does nothing; other errors show as a toast.
   Future<void> _signUpSocial(SignInOption option) async {
@@ -115,8 +114,8 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
         // Step 2: the title and what this is.
         Text('Create your account', style: context.text.headlineSmall),
         Text('Book rooms and events, order food and track it.', style: context.text.bodySmall),
-        // Step 3: Google and Apple at the top, only when on and set up.
-        if (social.isNotEmpty) SocialAuthRow(options: social, busy: _busy, onPressed: _signUpSocial),
+        // Step 3: Google and Apple at the top, always shown; the ones not set up say so when tapped.
+        SocialAuthRow(available: social, busy: _busy, onPressed: _signUpSocial),
         // Step 4: the fields.
         IgongoField(label: 'Full name', hint: 'Enter full name', icon: Icons.person_outline, controller: _name),
         IgongoField(
@@ -126,27 +125,27 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
           controller: _email,
           keyboardType: TextInputType.emailAddress,
         ),
-        // Step 4a: the password box, with the shared eye and the rule under it.
+        // Step 4a: the password box, with its own eye and the rule under it.
         PasswordField(
           label: 'Password',
           hint: 'Create strong password',
           icon: Icons.lock_outline,
           controller: _password,
           shown: _showPassword,
-          onToggle: _toggleShown,
+          onToggle: () => setState(() => _showPassword = !_showPassword),
         ),
         Text(
           'At least 8 characters, a letter and a number',
           style: context.text.bodySmall?.copyWith(color: context.palette.textMuted),
         ),
-        // Step 4b: the confirm box, required; the same eye shows or hides it too.
+        // Step 4b: the confirm box, required, with its own eye.
         PasswordField(
           label: 'Confirm password',
           hint: 'Repeat your password',
           icon: Icons.lock_outline,
           controller: _passwordAgain,
-          shown: _showPassword,
-          onToggle: _toggleShown,
+          shown: _showConfirmPassword,
+          onToggle: () => setState(() => _showConfirmPassword = !_showConfirmPassword),
         ),
         // Step 5: consent to the privacy notice.
         CheckboxListTile(
@@ -158,7 +157,7 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
         ),
         // Step 6: the main action.
         IgongoButton(label: _busy ? 'Creating…' : 'Create account', expand: true, onPressed: _busy ? null : _create),
-        // Step 7: the footer, with the link back to sign in.
+        // Step 7: the footer, with the link back to sign in and the Contact Us placeholder.
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -168,6 +167,13 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
               variant: ButtonVariant.text,
               onPressed: () => widget.screen.open('S00-05'),
             ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Need help?', style: context.text.bodySmall),
+            const ContactUsLink(),
           ],
         ),
       ],
