@@ -22,6 +22,7 @@ import 'guest_home_tiles.dart';
 import 'guest_tile_list.dart';
 import 'role_header.dart';
 import 'role_shortcuts.dart';
+import 'today_placeholder.dart';
 
 /// The home screen of the current role.
 class RoleHomeScreen extends ConsumerWidget {
@@ -57,11 +58,11 @@ class RoleHomeScreen extends ConsumerWidget {
             ),
           ),
         // Step 1c: guests get the meals slideshow edge to edge (no side margins), like the banner.
-        if (role.isClient)
-          Padding(
-            padding: const EdgeInsets.only(top: IgongoSpace.lg),
-            child: FoodShopCard(onTap: () => screen.open('S62-01')),
-          ),
+        if (role.isClient) ...[
+          // Step 1d: the dishes, with a link to the full menu.
+          SectionHeader('From our kitchen', action: 'Full menu', onAction: () => screen.open('S62-01')),
+          FoodShopCard(onTap: () => screen.open('S62-01')),
+        ],
         // Step 2: the role's tiles (no made-up counts: each screen shows its own live numbers).
         SectionHeader(role.isClient ? 'Explore Igongo' : 'Today'),
         Padding(
@@ -69,6 +70,8 @@ class RoleHomeScreen extends ConsumerWidget {
           child: role.isClient
               // Guests: same-size one-line area cards, two to a row (more on wider screens).
               ? GuestTileList(
+                  // Four across, as in the approved design.
+                  columns: 4,
                   children: [
                     for (final tile in role.tiles)
                       if (!hiddenGuestTileIds.contains(tile.screenId))
@@ -90,6 +93,12 @@ class RoleHomeScreen extends ConsumerWidget {
                   ],
                 ),
         ),
+        // Step 3b: guests get the "Today at Igongo" placeholder below the fold.
+        if (role.isClient)
+          const Padding(
+            padding: EdgeInsets.all(IgongoSpace.lg),
+            child: TodayPlaceholder(),
+          ),
         // Step 3: the staff shortcuts; guests see the client app instead.
         if (!role.isClient) ...[
           const SectionHeader('Shortcuts'),
