@@ -31,7 +31,7 @@ class FoodHeader extends StatelessWidget {
         const SizedBox(width: IgongoSpace.xs),
         Expanded(
           child: Text(
-            venue,
+            'Cottage — • $venue',
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: context.text.labelLarge?.copyWith(fontWeight: FontWeight.w700, color: p.text),

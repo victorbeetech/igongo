@@ -1,12 +1,15 @@
 // One dish in the Food tab's grid: the picture (a placeholder until the dish has
-// one), the name, a short description, the price and a + button. Tapping the card
-// or + opens the dish page, where options are picked before it goes in the cart.
+// one), a prep-time placeholder, the name, a star placeholder, a short
+// description, the price and a + button. Tapping the card or + opens the dish
+// page, where options are picked before it goes in the cart. Prep time and stars
+// are placeholders until the API provides them.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../shared/theme/theme.dart';
 import '../../../../shared/ui/photo/photo_slot.dart';
+import 'placeholder_value.dart';
 
 /// A dish card for the Food tab's grid.
 class DishCard extends StatelessWidget {
@@ -51,19 +54,41 @@ class DishCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Step 2: the picture across the top of the card.
-                PhotoSlot(width: double.infinity, height: 116, asset: photo, icon: Icons.restaurant_outlined),
-                // Step 3: name, description, then the price with the + button.
+                // Step 2: the picture, with the prep-time placeholder on its corner.
+                Stack(
+                  children: [
+                    PhotoSlot(width: double.infinity, height: 116, asset: photo, icon: Icons.restaurant_outlined),
+                    Positioned(
+                      right: IgongoSpace.xs,
+                      bottom: IgongoSpace.xs,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(color: p.surface, borderRadius: BorderRadius.circular(IgongoRadius.sm)),
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: IgongoSpace.xs, vertical: IgongoSpace.xxs),
+                          child: PlaceholderValue(icon: Icons.timer_outlined, text: '— min'),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                // Step 3: name with a star placeholder, description, then the price with the + button.
                 Padding(
                   padding: const EdgeInsets.all(IgongoSpace.sm),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        name,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: text.titleSmall?.copyWith(fontWeight: FontWeight.w700, color: p.text),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              name,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: text.titleSmall?.copyWith(fontWeight: FontWeight.w700, color: p.text),
+                            ),
+                          ),
+                          const PlaceholderValue(icon: Icons.star_outline),
+                        ],
                       ),
                       if (line.isNotEmpty) ...[
                         const SizedBox(height: IgongoSpace.xxs),

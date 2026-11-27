@@ -33,6 +33,7 @@ import 'demo_notice.dart';
 import 'food_home/category_pills.dart';
 import 'food_home/dish_card.dart';
 import 'food_home/farm_tip.dart';
+import 'food_home/pre_order_card.dart';
 import 'food_home/food_header.dart';
 import 'food_home/food_search_bar.dart';
 import 'food_home/food_section_title.dart';
@@ -179,7 +180,7 @@ class OrderFoodScreen extends ConsumerWidget {
                       if (onToday.isNotEmpty) ...[
                         FoodSectionTitle(
                           title: category ?? "Chef's Signatures",
-                          subtitle: 'Freshly prepared to order',
+                          subtitle: 'Freshly prepared to order • Executive Chef —',
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
@@ -200,6 +201,11 @@ class OrderFoodScreen extends ConsumerWidget {
                           ),
                         ),
                       ],
+                      // Tomorrow's special: layout only, until the API has pre-orders.
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(IgongoSpace.lg, IgongoSpace.lg, IgongoSpace.lg, 0),
+                        child: PreOrderCard(),
+                      ),
                       // Step 8: out-of-stock dishes, dimmed and last, in a "Not available" card.
                       if (outToday.isNotEmpty) ...[
                         const SectionHeader('Not available'),
