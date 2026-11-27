@@ -39,20 +39,22 @@ class GuestHeader extends StatelessWidget {
             // Step 1: the promotions slideshow, with no margins, over the whole red header.
             ColoredBox(
               color: p.primary,
-              child: const PromoSlides(height: double.infinity),
+              child: const PromoSlides(),
             ),
-            // Step 2: a red gradient at the top keeps the greeting readable on any photo.
+            // Step 2: a dedicated red gradient layer above the banner, whatever it shows, so the
+            // greeting and the bell are always readable and a new banner can never hide them.
             Positioned(
               left: 0,
               right: 0,
               top: 0,
-              height: top + 90,
+              height: top + 110,
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [p.primary, p.primary.withValues(alpha: 0)],
+                    colors: [p.primary, p.primary.withValues(alpha: 0.7), p.primary.withValues(alpha: 0)],
+                    stops: const [0, 0.5, 1],
                   ),
                 ),
               ),
