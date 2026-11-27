@@ -49,4 +49,13 @@ describe("encrypted keys", () => {
     expect(JSON.stringify(audit)).not.toContain("demo");
     await expect(setSecret(store, box, ctx, "Bad Key", "x")).rejects.toThrow(/provider.field/);
   });
+
+  it("reads several keys at once: set keys come back decrypted, unset keys as null", async () => {
+    const { store, ctx } = await setup();
+    const box = await SecretBox.fromBase64Key(toBase64(crypto.getRandomValues(new Uint8Array(32))));
+    await setSecret(store, box, ctx, "apple.team_id", "TEAM-DEMO-1");
+    await setSecret(store, box, ctx, "apple.key_id", "KEY-DEMO-2");
+    const got = await secretReader(store, box).getMany(["apple.team_id", "apple.key_id", "google.client_id"]);
+    expect(got).toEqual({ "apple.team_id": "TEAM-DEMO-1", "apple.key_id": "KEY-DEMO-2", "google.client_id": null });
+  });
 });

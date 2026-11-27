@@ -52,5 +52,14 @@ export function secretReader(store: ConsoleStore, sealer: Sealer): SecretReader 
       const s = await store.secret(key);
       return s ? sealer.open(s.sealed) : null;
     },
+    // One read of the whole (small) secrets table, then decrypt only the asked-for keys.
+    // Each separate `get` is a database round trip, which costs Worker CPU on every request.
+    async getMany(keys) {
+      const wanted = new Set(keys);
+      const rows = (await store.secrets()).filter((s) => wanted.has(s.key));
+      const values = await Promise.all(rows.map(async (s) => [s.key, await sealer.open(s.sealed)] as const));
+      const found = new Map<string, string>(values);
+      return Object.fromEntries(keys.map((k) => [k, found.get(k) ?? null]));
+    },
   };
 }
