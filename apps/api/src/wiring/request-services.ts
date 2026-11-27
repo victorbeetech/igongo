@@ -25,6 +25,7 @@ import {
   DrizzlePinStore,
   notConfiguredCardDirectory,
   notConfiguredCodeSender,
+  resendCodeSender,
   type Auth,
 } from "@igongo/users-login";
 import type { Env } from "../shell/env";
@@ -126,7 +127,11 @@ export class RequestServices {
         access: this.access(),
         pins: new DrizzlePinStore(this.db),
         cards: notConfiguredCardDirectory,
-        codes: notConfiguredCodeSender,
+        // Email codes and reset links go through Resend once its key and sender are set (SMS and WhatsApp stay off).
+        codes: resendCodeSender({
+          apiKey: async () => (await this.secrets().get("resend.api_key")) ?? this.env.RESEND_API_KEY ?? null,
+          from: async () => (await this.secrets().get("resend.sender")) ?? this.env.RECEIPT_FROM ?? null,
+        }),
         audit: this.audit(),
         failedLogins: new DrizzleFailedLoginStore(this.db),
         devices: new DrizzleKnownDeviceStore(this.db),

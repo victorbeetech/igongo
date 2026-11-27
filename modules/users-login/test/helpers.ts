@@ -55,7 +55,7 @@ export async function testAuth({ emailReady = true }: { emailReady?: boolean } =
     pins: new DrizzlePinStore(db),
     cards: notConfiguredCardDirectory,
     // Codes and links are kept in memory, as if emailed.
-    codes: { send: async (channel: string, to: string, message: string) => void sent.push({ channel, to, message }), ready: () => emailReady },
+    codes: { send: async (channel: string, to: string, message: string) => void sent.push({ channel, to, message }), ready: async () => emailReady },
     audit: { record: async (e: AuditEntryInput) => void audit.push(e) },
     failedLogins: new DrizzleFailedLoginStore(db),
     devices: new DrizzleKnownDeviceStore(db),

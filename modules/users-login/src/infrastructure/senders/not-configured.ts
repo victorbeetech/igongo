@@ -1,7 +1,7 @@
 /**
- * Stand-ins used until the outside services are set up: SMS, WhatsApp and
- * email codes (Phase 8) and staff cards (module 16). They refuse clearly
- * with `not_configured`, so the methods stay switched off without errors.
+ * Stand-ins used until the outside services are set up: SMS and WhatsApp
+ * codes and staff cards (module 16). They refuse clearly with
+ * `not_configured`, so the methods stay switched off without errors.
  */
 
 import { AppError } from "@igongo/core";
@@ -13,7 +13,7 @@ export const notConfiguredCodeSender: CodeSender = {
   async send(channel: CodeChannel) {
     throw new AppError("not_configured", `Sending codes by ${channel} is not set up yet.`);
   },
-  ready() {
+  async ready() {
     return false;
   },
 };

@@ -15,6 +15,7 @@ export { DrizzleKnownDeviceStore } from "./infrastructure/db/drizzle-known-devic
 export { DrizzleLoginSettingsStore } from "./infrastructure/db/drizzle-login-settings-store";
 export { DrizzlePinStore } from "./infrastructure/db/drizzle-pin-store";
 export { notConfiguredCardDirectory, notConfiguredCodeSender } from "./infrastructure/senders/not-configured";
+export { resendCodeSender, type ResendCodeConfig } from "./infrastructure/senders/resend-code-sender";
 export { loginMethodsRouter } from "./presentation/login-methods-router";
 export { USER_PERMISSIONS } from "./presentation/permissions";
 export { securityRouter } from "./presentation/security-router";

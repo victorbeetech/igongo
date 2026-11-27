@@ -100,7 +100,7 @@ export function loginGuardHooks(deps: AuthDeps, webOrigins: string[]): Pick<Bett
         if (problem) throw new APIError("BAD_REQUEST", { message: problem, code: "WEAK_PASSWORD" });
         // 3b. A reset link needs email to be set up. Refused the same way for every
         // address, so the answer never tells whether an account exists.
-        if (ctx.path === "/request-password-reset" && !deps.codes.ready("email")) {
+        if (ctx.path === "/request-password-reset" && !(await deps.codes.ready("email"))) {
           throw new APIError("SERVICE_UNAVAILABLE", { message: "Password reset by email is not set up yet. Please ask the hotel to reset it for you.", code: "EMAIL_NOT_SET_UP" });
         }
         // 4. A locked email cannot even try.
