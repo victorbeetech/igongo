@@ -100,6 +100,8 @@ class RoleHomeScreen extends ConsumerWidget {
                   if (!hiddenGuestTileIds.contains(tile.screenId))
                     AreaCard(
                       label: shortTileLabel(tile.label),
+                      // The subtitle is a placeholder until the layout carries one.
+                      subtitle: 'Coming soon',
                       icon: ModuleIcons.of(tile.screenId.substring(1, 3)),
                       onTap: () => screen.open(tile.screenId),
                     ),
