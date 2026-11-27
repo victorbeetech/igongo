@@ -63,7 +63,7 @@ class OnboardingInfoCard extends StatelessWidget {
         children: [
           badge,
           Expanded(child: words),
-          if (trailing != null) trailing!,
+          ?trailing,
         ],
       ),
     );
