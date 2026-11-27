@@ -18,13 +18,13 @@ Updated 26 Nov 2026 (second pass). Made from the app's own screen list, so it ma
 1. Google and Apple sign-in inside the app (they work on the web portal). They need the Google and Apple app sign-in set-up.
 2. The guest tiles not live yet: Chat with us. Everything else on the guest home is live.
 3. Staff screens listed below, module by module. Most are managers' screens (staff directory, attendance today, advance requests, fault board, reports to sign, cards); managers use the web portal for these for now.
-4. Search, Alerts inbox, phone-code sign-in, PIN and fingerprint sign-in, offline sync.
+4. Search results (the global search box over the menu is live: dishes and outlets), Alerts inbox, phone-code sign-in, PIN and fingerprint sign-in, offline sync.
 
 **Per module**
 
 | Module | Screens in the app | Live data | Not wired yet (shows "not in the app yet") |
 |---|---|---|---|
-| 00 App shell and shared screens | 45 | 11 | Language picker, Sign in with Google, Sign in with Apple, Verify email, Link sign-in methods, Phone number entry, OTP code entry, Password entry, PIN entry, Tap card to sign in, Biometric unlock, Two-factor check, Role switcher, Panic button, Global search, Search results, Everything about, Notification inbox, Notification detail, Approvals inbox, Notification preferences, Help and support, About, Offline banner, Sync status |
+| 00 App shell and shared screens | 45 | 12 | Language picker, Sign in with Google, Sign in with Apple, Verify email, Link sign-in methods, Phone number entry, OTP code entry, Password entry, PIN entry, Tap card to sign in, Biometric unlock, Two-factor check, Role switcher, Panic button, Search results, Everything about, Notification inbox, Notification detail, Approvals inbox, Notification preferences, Help and support, About, Offline banner, Sync status |
 | 02 Roles & Permissions | 1 | 0 | View as role |
 | 03 App Layout & Navigation | 1 | 0 | Layout preview |
 | 04 Users, Accounts & Login | 1 | 0 | My data |
