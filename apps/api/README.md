@@ -20,7 +20,7 @@ Live at **https://igongo-api.victorbee.com** (`GET /health`). Hono on Cloudflare
 
 ## Deploy
 
-From a computer with `npx wrangler login`: `pnpm --filter @igongo/api deploy`. New migrations: add a temporary `* * * * *` cron (Workers > igongo-api > Settings > Triggers) and remove it once `public.igongo_migrations` shows them; the scheduled handler applies them. Cloud sessions use the [deploy bridge](../../tools/cf-deploy-bridge/README.md).
+From a computer with `npx wrangler login`: `pnpm --filter @igongo/api run deploy` (plain `deploy` is a pnpm command, so `run` is needed). New migrations: add a temporary `* * * * *` cron (Workers > igongo-api > Settings > Triggers) and remove it once `public.igongo_migrations` shows them; the scheduled handler applies them. Cloud sessions use the [deploy bridge](../../tools/cf-deploy-bridge/README.md).
 
 ## Tests
 

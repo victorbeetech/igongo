@@ -27,7 +27,10 @@ describe("method switches", () => {
 });
 
 describe("MTN MoMo adapter", () => {
-  const keys = { get: async (k: string) => `key-${k}` };
+  const keys = {
+    get: async (k: string) => `key-${k}`,
+    getMany: async (ks: string[]) => Object.fromEntries(ks.map((k) => [k, `key-${k}`])),
+  };
   it("asks for a token, then reads the status from MTN", async () => {
     const calls: string[] = [];
     const fake = async (url: string) => {
@@ -39,7 +42,7 @@ describe("MTN MoMo adapter", () => {
     expect(calls).toEqual(["https://sandbox.momodeveloper.mtn.com/collection/token/", "https://sandbox.momodeveloper.mtn.com/collection/v1_0/requesttopay/ref-1"]);
   });
   it("says which keys are missing", async () => {
-    const none = { get: async () => null };
+    const none = { get: async () => null, getMany: async (ks: string[]) => Object.fromEntries(ks.map((k) => [k, null])) };
     await expect(mtnMomoProvider(none, async () => "live", fetch).check("r", "p")).rejects.toThrow(/mtn_momo.api_user/);
   });
 });
