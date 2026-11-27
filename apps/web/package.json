@@ -14,7 +14,8 @@
     "deploy:cloudflare": "pnpm build:cloudflare && wrangler deploy",
     "start": "next start",
     "lint": "eslint --max-warnings 0 . && tsc --noEmit",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:unit": "node --experimental-strip-types --test test/*.test.ts"
   },
   "dependencies": {
     "@igongo/design-tokens": "workspace:*",
