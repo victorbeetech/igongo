@@ -26,14 +26,21 @@ const String demoOutletKey = 'demo-restaurant';
 /// The key of the second demo restaurant (it shares the demo dishes).
 const String demoKaahwaKey = 'demo-kaahwa';
 
+/// The key of the third demo restaurant (it also shares the demo dishes).
+const String demoGrillKey = 'demo-grill';
+
 /// The demo outlet list, shown only when the server has no outlets.
 const List<Outlet> demoOutlets = [
   Outlet(key: demoOutletKey, name: 'Demo restaurant'),
   Outlet(key: demoKaahwaKey, name: 'Kaahwa Kanuzire'),
+  Outlet(key: demoGrillKey, name: 'Lakeside Grill'),
 ];
 
+/// Every demo outlet key, used to tell a demo outlet from a real one.
+const List<String> demoOutletKeys = [demoOutletKey, demoKaahwaKey, demoGrillKey];
+
 /// Whether [outlet] is a demo outlet and the demo is switched on.
-bool isDemoOutlet(String outlet) => demoMenuOn && (outlet == demoOutletKey || outlet == demoKaahwaKey);
+bool isDemoOutlet(String outlet) => demoMenuOn && demoOutletKeys.contains(outlet);
 
 /// The demo delivery zone (so delivery can be tried).
 const List<DeliveryZone> demoZones = [
