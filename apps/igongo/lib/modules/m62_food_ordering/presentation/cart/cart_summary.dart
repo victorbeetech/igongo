@@ -34,7 +34,7 @@ class CartSummary extends StatelessWidget {
           // Step 2: subtotal, then the service charge, which the server adds at checkout.
           _Row(label: 'Subtotal', value: ugx(subtotal)),
           const SizedBox(height: IgongoSpace.sm),
-          _Row(label: 'Service charge', value: 'Added at checkout', muted: true),
+          const _Row(label: 'Service charge', value: 'Added at checkout', muted: true),
           const SizedBox(height: IgongoSpace.md),
           Divider(color: palette.border, height: 1),
           const SizedBox(height: IgongoSpace.md),
