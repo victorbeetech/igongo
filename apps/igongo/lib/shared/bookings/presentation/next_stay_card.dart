@@ -7,7 +7,6 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../format/day_key.dart';
 import '../../theme/theme.dart';
-import '../../ui/button/igongo_button.dart';
 import '../../ui/card/igongo_card.dart';
 import '../../ui/photo/guest_photos.dart';
 import '../../ui/photo/photo_slot.dart';
@@ -89,7 +88,19 @@ class NextStayCard extends StatelessWidget {
                       : '${_whenWords(day, today)} • $nights ${nights == 1 ? 'Night' : 'Nights'}',
                   style: context.text.bodySmall?.copyWith(color: p.textMuted),
                 ),
-                IgongoButton(label: day == null ? 'Book a room' : 'View Booking', expand: true, onPressed: day == null ? onBook : onView),
+                // A red pill with the words and a double arrow, as on the reference.
+                FilledButton(
+                  onPressed: day == null ? onBook : onView,
+                  style: FilledButton.styleFrom(shape: const StadiumBorder()),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Flexible(child: Text(day == null ? 'Book a room' : 'View Booking', overflow: TextOverflow.ellipsis)),
+                      const Icon(Icons.keyboard_double_arrow_right, size: 18),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),

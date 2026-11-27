@@ -1,6 +1,6 @@
-// One tile on the Bookings home: a picture filling the tile, a cream disc with
-// a red icon in the middle and the name along the bottom. The whole tile is one
-// tap target. Without a photo the tile shows the plain placeholder.
+// One tile on the Bookings home: a picture filling the tile and a cream disc
+// with a red icon in the middle, as on the reference (the name is read aloud by
+// screen readers). The whole tile is one tap target. Without a photo the tile shows the plain placeholder.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
@@ -42,22 +42,6 @@ class BookingCategoryCard extends StatelessWidget {
                   backgroundColor: p.brandCream,
                   foregroundColor: p.primary,
                   child: Icon(category.icon),
-                ),
-              ),
-              // Step 3: the name on a red strip along the bottom, kept to one line.
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  width: double.infinity,
-                  color: p.primary.withValues(alpha: 0.85),
-                  padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.xs, vertical: IgongoSpace.xxs),
-                  child: Text(
-                    category.label,
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.text.labelSmall?.copyWith(color: p.onPrimary),
-                  ),
                 ),
               ),
             ],

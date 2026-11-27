@@ -50,7 +50,7 @@ class RecentBookings extends StatelessWidget {
               child: Row(
                 spacing: IgongoSpace.md,
                 children: [
-                  const PhotoSlot(width: 84, height: 64, asset: GuestPhotos.hotelEntrance, icon: Icons.bed_outlined),
+                  const PhotoSlot(width: 76, height: 56, asset: GuestPhotos.hotelEntrance, icon: Icons.bed_outlined),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
