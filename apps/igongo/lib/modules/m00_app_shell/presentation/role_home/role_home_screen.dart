@@ -47,9 +47,13 @@ class RoleHomeScreen extends ConsumerWidget {
       children: [
         // Step 1: the greeting. Guests get the top row, search bar and status strip.
         if (role.isClient) ...[
-          Padding(
-            padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, IgongoSpace.md, IgongoSpace.lg, 0),
-            child: GuestTopBar(name: name, onBell: () => screen.open('S00-28')),
+          // Step 1a: the top row sits below the status bar and any notch, so it is never hidden under them.
+          SafeArea(
+            bottom: false,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, IgongoSpace.md, IgongoSpace.lg, 0),
+              child: GuestTopBar(name: name, onBell: () => screen.open('S00-28')),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, IgongoSpace.sm, IgongoSpace.lg, 0),
@@ -109,10 +113,7 @@ class RoleHomeScreen extends ConsumerWidget {
             ),
           ),
           // Step 6: the heritage story card at the foot of the home.
-          const Padding(
-            padding: EdgeInsets.all(IgongoSpace.lg),
-            child: GuestDidYouKnow(),
-          ),
+          const Padding(padding: EdgeInsets.all(IgongoSpace.lg), child: GuestDidYouKnow()),
         ] else ...[
           // Staff: the role's tiles, then the staff shortcuts.
           const SectionHeader('Today'),
