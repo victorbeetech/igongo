@@ -101,8 +101,11 @@ class _BackPill extends StatelessWidget {
       child: InkWell(
         customBorder: const StadiumBorder(),
         onTap: onBack,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.md, vertical: IgongoSpace.xs),
+        // Step 1: the tap area is at least 48 tall, so the accessibility rule for touch targets passes.
+        child: Container(
+          constraints: const BoxConstraints(minHeight: 48),
+          alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.md),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             spacing: IgongoSpace.xs,
