@@ -1,8 +1,7 @@
-// The food shop entry on the guest home: a slideshow of meals. Each slide is a
+// The food shop entry on the guest home: an edge-to-edge slideshow of meals. Each slide is a
 // dish photo and name; tapping a slide opens that dish, and an empty menu shows
 // one food photo that opens the food home (S62-01).
 
-import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../m62_food_ordering/presentation/menu_carousel.dart';
@@ -18,9 +17,7 @@ class FoodShopCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Semantics(
     label: 'Meals to order',
-    child: ClipRRect(
-      borderRadius: BorderRadius.circular(IgongoRadius.lg),
-      child: MenuCarousel(onEmptyTap: onTap),
-    ),
+    // No side margins and no rounded corners: it runs to the phone edges.
+    child: MenuCarousel(onEmptyTap: onTap),
   );
 }

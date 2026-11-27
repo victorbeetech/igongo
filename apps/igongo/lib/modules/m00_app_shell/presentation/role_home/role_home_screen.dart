@@ -56,10 +56,10 @@ class RoleHomeScreen extends ConsumerWidget {
               onPressed: () => screen.open('S00-05'),
             ),
           ),
-        // Step 1c: guests get the food shop as a large card first; it opens the food home.
+        // Step 1c: guests get the meals slideshow edge to edge (no side margins), like the banner.
         if (role.isClient)
           Padding(
-            padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, IgongoSpace.lg, IgongoSpace.lg, 0),
+            padding: const EdgeInsets.only(top: IgongoSpace.lg),
             child: FoodShopCard(onTap: () => screen.open('S62-01')),
           ),
         // Step 2: the role's tiles (no made-up counts: each screen shows its own live numbers).
