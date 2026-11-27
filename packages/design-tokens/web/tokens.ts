@@ -28,7 +28,8 @@ export const tokens = {
       "onError": "#FFFFFF",
       "info": "#2F6690",
       "clientViewBanner": "#2F6690",
-      "primaryText": "#B8292F"
+      "primaryText": "#B8292F",
+      "accent": "#C2822B"
     },
     "dark": {
       "primary": "#B8292F",
@@ -55,7 +56,8 @@ export const tokens = {
       "onError": "#1A1210",
       "info": "#8DB9DE",
       "clientViewBanner": "#8DB9DE",
-      "primaryText": "#F6F1EC"
+      "primaryText": "#F6F1EC",
+      "accent": "#E0A95A"
     }
   },
   "font": {

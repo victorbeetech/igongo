@@ -1,6 +1,7 @@
-// The Bookings home (the Bookings tab): a big picture slideshow, the guest's
-// next stay, nine tiles three across, three shortcuts and the recent bookings.
-// It has no app bar: the slideshow fills the top, like the guest home.
+// The Bookings home (the Bookings tab), laid out as the design: a title row, the
+// picture slideshow, the active reservation card, pill tabs, the eight Resort
+// Experiences tiles and "Your Itinerary & Bookings". Bookings come from the real
+// API; the pictures are placeholders until the hotel sends them.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
@@ -11,13 +12,14 @@ import '../../format/day_key.dart';
 import '../../theme/theme.dart';
 import '../application/bookings_providers.dart';
 import '../domain/booking.dart';
-import '../domain/booking_categories.dart';
 import '../domain/booking_place.dart';
-import 'booking_category_card.dart';
+import '../domain/resort_experiences.dart';
 import 'booking_hero.dart';
-import 'booking_shortcuts.dart';
-import 'next_stay_card.dart';
-import 'recent_bookings.dart';
+import 'home/active_reservation_card.dart';
+import 'home/booking_segment_tabs.dart';
+import 'home/bookings_home_header.dart';
+import 'home/itinerary_section.dart';
+import 'home/resort_experiences_grid.dart';
 
 /// The Bookings home for [screen]; [rooms] is where the stays live in the API.
 class BookingsHomeScreen extends ConsumerWidget {
@@ -27,7 +29,7 @@ class BookingsHomeScreen extends ConsumerWidget {
   /// The screen's context, for opening the tiles and My bookings.
   final ScreenContext screen;
 
-  /// The room booking place (the next stay and recent bookings come from it).
+  /// The room booking place (the next stay and the bookings list come from it).
   final BookingPlace rooms;
 
   /// The number of the My bookings screen.
@@ -38,6 +40,9 @@ class BookingsHomeScreen extends ConsumerWidget {
 
   /// The room booking screen.
   static const _bookRoomId = 'S67-02';
+
+  /// The food ordering screen (used for Room Order).
+  static const _foodId = 'S62-01';
 
   /// The guest's next stay: the soonest booking from today on that is not cancelled.
   static Booking? nextStay(List<Booking> all, DateTime today) {
@@ -53,54 +58,62 @@ class BookingsHomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Signed out or still loading: the sections just show their empty states.
     final all = ref.watch(myBookingsProvider(rooms)).valueOrNull ?? const <Booking>[];
+    // Newest first for the itinerary list.
     final recent = [...all]..sort((a, b) => (b.date ?? '').compareTo(a.date ?? ''));
-    // The page is the warm cream of the reference (a theme token, dark in dark mode).
+    final stay = nextStay(all, DateTime.now());
     return ColoredBox(
+      // The warm cream page of the design (a theme token, dark in dark mode).
       color: context.palette.warmCream,
-      child: ListView(
-      padding: EdgeInsets.zero,
-      children: [
-        // Step 1: the slideshow at the top.
-        const BookingHero(),
-        Padding(
-          padding: const EdgeInsets.all(IgongoSpace.md),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: IgongoSpace.md,
-            children: [
-              // Step 2: the next stay.
-              NextStayCard(
-                stay: nextStay(all, DateTime.now()),
-                onView: () => screen.open(_myBookingsId),
-                onBook: () => screen.open(_bookRoomId),
-              ),
-              // Step 3: nine tiles, three across, all the same size.
-              GridView.count(
-                crossAxisCount: 3,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisSpacing: IgongoSpace.sm,
-                mainAxisSpacing: IgongoSpace.sm,
-                // Slightly wider than tall, like the reference tiles.
-                childAspectRatio: 1.43,
-                children: [
-                  for (final c in bookingCategories)
-                    BookingCategoryCard(category: c, onTap: () => screen.open(c.screenId)),
-                ],
-              ),
-              // Step 4: the three shortcuts.
-              BookingShortcuts(
-                onHistory: () => screen.open(_myBookingsId),
-                onReceipts: () => screen.open(_receiptsId),
-                onPastVisits: () => screen.open(_myBookingsId),
-              ),
-              // Step 5: the recent bookings.
-              RecentBookings(bookings: recent, onOpen: () => screen.open(_myBookingsId)),
-            ],
+      child: Column(
+        children: [
+          // Step 1: the title row, pinned above the scrolling page.
+          BookingsHomeHeader(onReceipts: () => screen.open(_receiptsId)),
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                // Step 2: the picture slideshow with its page dots.
+                const BookingHero(),
+                Padding(
+                  padding: const EdgeInsets.all(IgongoSpace.md),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: IgongoSpace.md,
+                    children: [
+                      Text(
+                        'Experience the Regal Spirit of Ankole',
+                        style: context.text.headlineSmall?.copyWith(color: context.palette.primaryText),
+                      ),
+                      // Step 3: the active reservation (the next stay) with its three actions.
+                      ActiveReservationCard(
+                        stay: stay,
+                        onDigitalKey: () => screen.open(_myBookingsId),
+                        onRoomOrder: () => screen.open(_foodId),
+                        onManage: () => screen.open(_myBookingsId),
+                        onBook: () => screen.open(_bookRoomId),
+                      ),
+                      // Step 4: the pill tabs.
+                      BookingSegmentTabs(
+                        activeCount: stay == null ? 0 : 1,
+                        receiptCount: all.length,
+                        open: screen.open,
+                      ),
+                      // Step 5: the eight resort experiences.
+                      ResortExperiencesGrid(experiences: resortExperiences, open: screen.open),
+                      // Step 6: the itinerary (the real bookings).
+                      ItinerarySection(
+                        bookings: recent,
+                        onOpen: () => screen.open(_myBookingsId),
+                        onReceipt: () => screen.open(_receiptsId),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
-    ),
+        ],
+      ),
     );
   }
 }
