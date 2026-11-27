@@ -2,7 +2,8 @@
 // the hotel photo behind the status bar, a red gradient rising from the bottom,
 // and a soft wave along the bottom edge. The photo is cut by the wave, so the
 // white page shows through below it and blends into the form with no boundary.
-// The Igongo logo sits on a floating white card centred on the wave.
+// The Igongo logo sits on a floating white card centred on the wave, so the
+// curve runs behind the logo.
 
 import 'package:flutter/services.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
@@ -21,6 +22,9 @@ class IgongoAuthHeader extends StatelessWidget {
   /// The visible height below the status bar, or null to scale with the phone.
   final double? height;
 
+  /// How far the wave's middle sits above the bottom of the photo, in logical pixels (matches the Bookings banner's wave).
+  static const _waveLift = 16.0;
+
   /// The status bar style for Auth screens: light icons over the dark photo.
   static const statusBarStyle = SystemUiOverlayStyle.light;
 
@@ -32,12 +36,16 @@ class IgongoAuthHeader extends StatelessWidget {
     final topInset = MediaQuery.paddingOf(context).top;
     // Step 3: a responsive height: about 28% of the phone's height, kept between 190 and 260 logical pixels.
     final visible = height ?? (MediaQuery.sizeOf(context).height * 0.28).clamp(190.0, 260.0);
-    final total = visible + topInset;
+    final photoHeight = visible + topInset;
     // Step 4: the logo grows a little with the header, between 36 and 52 pixels tall.
     final logoHeight = (visible * 0.18).clamp(36.0, 52.0);
+    // Step 5: the logo card is logo plus a small padding on each side.
+    final cardHeight = logoHeight + IgongoSpace.sm * 2;
+    // Step 6: the card hangs below the photo by the part that is under the wave's middle, so the header box grows by that much.
+    final hang = (cardHeight / 2 - _waveLift).clamp(0.0, double.infinity);
 
     return SizedBox(
-      height: total,
+      height: photoHeight + hang,
       width: double.infinity,
       child: Stack(
         clipBehavior: Clip.none,
@@ -45,7 +53,11 @@ class IgongoAuthHeader extends StatelessWidget {
           // Layer 1: the white page colour, so the area under the wave is the same white as the form.
           Positioned.fill(child: ColoredBox(color: palette.surface)),
           // Layers 2 and 3: the photo and its red gradient, cut by the wave along the bottom edge (as the Bookings banner is).
-          Positioned.fill(
+          Positioned(
+            left: 0,
+            right: 0,
+            top: 0,
+            height: photoHeight,
             child: ClipPath(
               clipper: const WavyBottomClipper(),
               child: Stack(
@@ -72,9 +84,9 @@ class IgongoAuthHeader extends StatelessWidget {
               ),
             ),
           ),
-          // Layer 4: the logo on a floating white card, centred horizontally on the wave.
+          // Layer 4: the logo on a floating white card, centred horizontally and vertically on the wave, so the curve runs behind it.
           Positioned(
-            top: total * 0.68,
+            top: photoHeight - _waveLift - cardHeight / 2,
             left: 0,
             right: 0,
             child: Center(
