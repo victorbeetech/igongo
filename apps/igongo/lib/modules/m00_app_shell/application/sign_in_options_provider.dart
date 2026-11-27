@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../shared/session/session_controller.dart';
 import '../data/login_methods_api.dart';
-import '../domain/sign_in_option.dart';
+import '../../../shared/social_sign_in/sign_in_option.dart';
 
 /// The API wrapper for login methods, using the shared API client.
 final loginMethodsApiProvider = Provider<LoginMethodsApi>(
