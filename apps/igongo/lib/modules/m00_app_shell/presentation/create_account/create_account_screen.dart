@@ -13,7 +13,9 @@ import '../../../../shared/theme/theme.dart';
 import '../../../../shared/ui/auth/auth_shell.dart';
 import '../../../../shared/ui/button/igongo_button.dart';
 import '../../../../shared/ui/field/igongo_field.dart';
+import '../../../../shared/ui/field/password_eye.dart';
 import '../../../../shared/ui/toast/igongo_toast.dart';
+import '../../../../shared/validation/passwords_match.dart';
 
 /// The guest sign-up screen.
 class CreateAccountScreen extends ConsumerStatefulWidget {
@@ -31,14 +33,19 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
   final _name = TextEditingController();
   final _email = TextEditingController();
   final _password = TextEditingController();
+  // The second password box: must match the first before the form is sent.
+  final _passwordAgain = TextEditingController();
   bool _agreed = false;
   bool _busy = false;
+  // One eye shows or hides both password boxes together.
+  bool _showPassword = false;
 
   @override
   void dispose() {
     _name.dispose();
     _email.dispose();
     _password.dispose();
+    _passwordAgain.dispose();
     super.dispose();
   }
 
@@ -47,9 +54,14 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
     if (_name.text.trim().isEmpty) return 'Enter your name.';
     if (!_email.text.contains('@')) return 'Enter your email.';
     if (_password.text.length < 8) return 'Use a password of at least 8 characters.';
+    // Step 1b: both boxes must hold the same text before anything is sent.
+    if (!passwordsMatch(_password.text, _passwordAgain.text)) return passwordsDifferMessage;
     if (!_agreed) return 'Please agree to the privacy notice.';
     return null;
   }
+
+  /// Flips the show/hide flag for both password boxes.
+  void _toggleShown() => setState(() => _showPassword = !_showPassword);
 
   /// Creates the account and signs in, then opens the guest home.
   Future<void> _create() async {
@@ -91,8 +103,18 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
         label: 'Password',
         hint: 'At least 8 characters, a letter and a number',
         icon: Icons.lock_outline,
-        obscure: true,
+        obscure: !_showPassword,
         controller: _password,
+        suffix: PasswordEyeButton(shown: _showPassword, onPressed: _toggleShown),
+      ),
+      // Step 2b: the confirm box, required, same eye as above.
+      IgongoField(
+        label: 'Confirm password',
+        hint: 'Type the password again',
+        icon: Icons.lock_outline,
+        obscure: !_showPassword,
+        controller: _passwordAgain,
+        suffix: PasswordEyeButton(shown: _showPassword, onPressed: _toggleShown),
       ),
       // Step 3: consent to the privacy notice.
       CheckboxListTile(
