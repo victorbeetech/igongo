@@ -40,9 +40,15 @@ class EmptyCartView extends StatelessWidget {
         ),
         const SizedBox(height: IgongoSpace.xl),
         // Step 2: the popular services, two by two, each with its photo.
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Text('Popular services', style: context.text.titleMedium),
+        // The heading, with a See All link to the food shop.
+        Row(
+          children: [
+            Expanded(child: Text('Popular services', style: context.text.titleMedium)),
+            TextButton(
+              onPressed: () => openTarget(context, 'S62-01'),
+              child: Text('See All', style: TextStyle(color: context.palette.primary)),
+            ),
+          ],
         ),
         const SizedBox(height: IgongoSpace.sm),
         GridView.count(

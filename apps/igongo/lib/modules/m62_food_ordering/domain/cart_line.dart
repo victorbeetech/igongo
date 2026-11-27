@@ -3,13 +3,14 @@
 
 /// A cart line.
 class CartLine {
-  /// Creates a line.
+  /// Creates a line. [date] is the day the guest wants it (null until chosen, e.g. after a reorder).
   const CartLine({
     required this.itemId,
     required this.name,
     required this.quantity,
     required this.options,
     required this.unitPrice,
+    this.date,
   });
 
   /// The menu item's ID.
@@ -27,14 +28,24 @@ class CartLine {
   /// Shillings each, with options.
   final int unitPrice;
 
-  /// The same line with [quantity] changed (the screen's +/- buttons use this).
-  CartLine withQuantity(int quantity) => CartLine(
+  /// The day the guest wants this line (the hotel's day), or null when not chosen yet.
+  final DateTime? date;
+
+  /// A copy with any given field changed; the others stay as they are.
+  CartLine _copy({int? quantity, DateTime? date}) => CartLine(
     itemId: itemId,
     name: name,
-    quantity: quantity,
+    quantity: quantity ?? this.quantity,
     options: options,
     unitPrice: unitPrice,
+    date: date ?? this.date,
   );
+
+  /// The same line with [quantity] changed (the screen's +/- buttons use this).
+  CartLine withQuantity(int quantity) => _copy(quantity: quantity);
+
+  /// The same line on [day] (the screen's date picker uses this).
+  CartLine withDate(DateTime day) => _copy(date: day);
 
   /// What this line costs: its unit price times how many.
   int get lineTotal => unitPrice * quantity;

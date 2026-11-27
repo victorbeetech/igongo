@@ -1,9 +1,11 @@
 // One item in the cart: a rounded card with a large photo, the name, its
-// options, the price, the quantity +/- control and a delete button.
+// options, the date the guest wants it, the price, the quantity +/- control
+// and a delete button.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../../shared/format/hotel_day.dart';
 import '../../../../shared/format/ugx.dart';
 import '../../../../shared/theme/theme.dart';
 import '../../../../shared/ui/photo/guest_photo.dart';
@@ -18,6 +20,7 @@ class CartItemCard extends StatelessWidget {
     required this.line,
     required this.onQuantity,
     required this.onDelete,
+    required this.onDate,
   });
 
   /// The line shown.
@@ -29,9 +32,13 @@ class CartItemCard extends StatelessWidget {
   /// Called when the delete button is tapped.
   final VoidCallback onDelete;
 
+  /// Called when the date is tapped, to choose another day.
+  final VoidCallback onDate;
+
   @override
   Widget build(BuildContext context) {
     final palette = context.palette;
+    final date = line.date;
     // Step 1: the rounded card with a soft shadow, drawn from theme tokens only.
     return Container(
       margin: const EdgeInsets.only(bottom: IgongoSpace.md),
@@ -50,7 +57,7 @@ class CartItemCard extends StatelessWidget {
             child: SizedBox(width: 104, height: 104, child: GuestPhoto(label: line.name)),
           ),
           const SizedBox(width: IgongoSpace.md),
-          // Step 3: the name, the options and the price, then the quantity and delete row.
+          // Step 3: the name, the options, the date and the price, then the quantity and delete row.
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,12 +70,35 @@ class CartItemCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                const SizedBox(height: IgongoSpace.xs),
+                // Step 3a: the day, tappable to choose another (a line from a reorder may have none yet).
+                InkWell(
+                  onTap: onDate,
+                  borderRadius: BorderRadius.circular(IgongoRadius.sm),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: IgongoSpace.xs),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.calendar_today_outlined, size: 16, color: palette.textMuted),
+                        const SizedBox(width: IgongoSpace.xs),
+                        Flexible(
+                          child: Text(
+                            date == null ? 'Choose a date' : dayWords(date),
+                            style: context.text.bodySmall,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                // Step 3b: the price of the line.
                 Text(
                   ugx(line.lineTotal),
                   style: context.text.titleSmall?.copyWith(color: palette.primaryText, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: IgongoSpace.sm),
+                // Step 3c: quantity on the left, delete on the right.
                 Row(
                   children: [
                     QuantityStepper(quantity: line.quantity, onChanged: onQuantity),

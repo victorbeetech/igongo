@@ -1,13 +1,14 @@
-// S62-04 Cart, redesigned: a photo banner at the top, then either the empty
-// state (illustration, Browse Services, popular services) or the items as
-// cards with a summary and a Proceed to Checkout button. Only the Cart screen
-// changes; the app frame and bottom bar come from the shell as before.
+// S62-04 Cart, redesigned: a photo banner at the top with the cart count, then
+// either the empty state (illustration, Browse Services, popular services) or
+// the items as cards with a summary and a Proceed to Checkout button. The app
+// frame and bottom bar come from the shell.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../shared/catalog/screen_context.dart';
+import '../../../../shared/format/hotel_day.dart';
 import '../../../../shared/theme/theme.dart';
 import '../../../../shared/ui/button/igongo_button.dart';
 import '../../application/cart_controller.dart';
@@ -64,8 +65,9 @@ class CartScreen extends ConsumerWidget {
                     line: lines[i],
                     onQuantity: (q) => controller.setQuantity(i, q),
                     onDelete: () => controller.removeAt(i),
+                    onDate: () => _pickDate(context, controller, i, lines[i].date),
                   ),
-                // Step 5: the subtotal, service charge and total.
+                // Step 5: the subtotal, service charge and total, priced by the server.
                 const SizedBox(height: IgongoSpace.sm),
                 CartSummary(lines: lines),
                 const SizedBox(height: IgongoSpace.lg),
@@ -87,4 +89,20 @@ class CartScreen extends ConsumerWidget {
       ],
     );
   }
+}
+
+/// Asks for the day of line [index] (from today, up to 60 days on) and saves it.
+Future<void> _pickDate(BuildContext context, CartController controller, int index, DateTime? current) async {
+  // Step 1: the first day that can be chosen is the hotel's today.
+  final today = hotelDay();
+  // Step 2: start on the line's day, or today when it has none yet or it has passed.
+  final start = current != null && !current.isBefore(today) ? current : today;
+  final picked = await showDatePicker(
+    context: context,
+    initialDate: start,
+    firstDate: today,
+    lastDate: today.add(const Duration(days: 60)),
+  );
+  // Step 3: save the chosen day (a cancelled picker changes nothing).
+  if (picked != null) controller.setDate(index, picked);
 }

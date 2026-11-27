@@ -1,4 +1,4 @@
-// The bottom bar of the signed-in app: Home, My bookings (guests) and Me, or
+// The bottom bar of the signed-in app: Home, Food, Bookings, Cart and Me (guests), or
 // Home, the tabs the super admin set for the person's roles (module 3, up to
 // three), and Me. Search and Alerts join the defaults once they are live.
 
@@ -10,6 +10,7 @@ import '../../shared/session/session_controller.dart';
 import '../../shared/ui/icons/module_icons.dart';
 import '../catalog/catalog_index.dart';
 import '../navigation/open_target.dart';
+import 'cart_tab_icon.dart';
 
 /// The bottom bar tabs. [currentId] is the screen showing.
 class BottomBar extends ConsumerWidget {
@@ -22,7 +23,11 @@ class BottomBar extends ConsumerWidget {
   // Each tab: the screen it opens, its label and its icon.
   static const _home = ('home', 'Home', Icons.home_outlined);
   static const _me = ('S00-31', 'Me', Icons.person_outline);
-  static const _guestDefaults = [_home, ('S54-05', 'My bookings', Icons.receipt_long_outlined), _me];
+  // The guest's five tabs, as in the design: Home, Food, Bookings, Cart and Me.
+  static const _food = ('S62-01', 'Food', Icons.restaurant_outlined);
+  static const _bookings = ('S54-05', 'Bookings', Icons.calendar_month_outlined);
+  static const _cart = ('S62-04', 'Cart', Icons.shopping_cart_outlined);
+  static const _guestDefaults = [_home, _food, _bookings, _cart, _me];
   static const _staffDefaults = [_home, _me];
 
   @override
@@ -41,7 +46,11 @@ class BottomBar extends ConsumerWidget {
     return NavigationBar(
       selectedIndex: selected,
       onDestinationSelected: (i) => openTarget(context, tabs[i].$1),
-      destinations: [for (final t in tabs) NavigationDestination(icon: Icon(t.$3), label: t.$2)],
+      // The Cart tab carries the cart count; every other tab is a plain icon.
+      destinations: [
+        for (final t in tabs)
+          NavigationDestination(icon: t.$1 == _cart.$1 ? CartTabIcon(icon: t.$3) : Icon(t.$3), label: t.$2),
+      ],
     );
   }
 }

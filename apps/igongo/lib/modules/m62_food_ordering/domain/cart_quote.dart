@@ -14,6 +14,7 @@ class CartQuote {
     required this.total,
     required this.readyAt,
     this.promoLabel,
+    this.serviceCharge,
   });
 
   /// Reads one from the API's JSON.
@@ -24,6 +25,8 @@ class CartQuote {
     total: (json['total'] as num?)?.toInt() ?? 0,
     readyAt: '${json['readyAt']}',
     promoLabel: (json['promo'] as Json?)?['label'] as String?,
+    // The service charge, when the server sends one (null means it is not set yet).
+    serviceCharge: (json['serviceCharge'] as num?)?.toInt(),
   );
 
   /// The food, whole shillings.
@@ -43,4 +46,7 @@ class CartQuote {
 
   /// The code's name, such as "Easter (10% off)".
   final String? promoLabel;
+
+  /// The service charge the server added, or null when the server has not set one.
+  final int? serviceCharge;
 }
