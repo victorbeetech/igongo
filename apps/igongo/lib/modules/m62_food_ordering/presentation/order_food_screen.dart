@@ -29,7 +29,6 @@ import '../domain/order_type.dart';
 import '../domain/ordering_rules.dart';
 import '../domain/outlet.dart';
 import 'checkout_sheet.dart';
-import 'demo_notice.dart';
 import 'food_home/category_pills.dart';
 import 'food_home/dish_card.dart';
 import 'food_home/farm_tip.dart';
@@ -54,10 +53,15 @@ class OrderFoodScreen extends ConsumerWidget {
   static Future<void> _open(BuildContext context, Widget sheet) =>
       showModalBottomSheet<void>(context: context, isScrollControlled: true, builder: (_) => sheet);
 
-  /// A venue's photo: Kaahwa Kanuzire has its own, the demo venue a placeholder, others none yet.
-  static String? _venuePhoto(Outlet o) => o.name.toLowerCase().contains('kaahwa')
-      ? GuestPhotos.hotelKaahwaKanuzire
-      : (isDemoOutlet(o.key) ? GuestPhotos.outletRestaurant : null);
+  /// A venue's photo: each demo venue has its own hotel photo, Kaahwa Kanuzire
+  /// uses its restaurant photo, and any other venue shows the placeholder until it has one.
+  static String? _venuePhoto(Outlet o) {
+    // Step 1: Kaahwa Kanuzire is matched by name (the real outlet has no photo field yet).
+    if (o.name.toLowerCase().contains('kaahwa')) return GuestPhotos.hotelKaahwaKanuzire;
+    // Step 2: the demo venues each get a different hotel photo.
+    if (!isDemoOutlet(o.key)) return null;
+    return o.key == demoGrillKey ? GuestPhotos.hotelTerraceView : GuestPhotos.outletRestaurant;
+  }
 
   /// Words for the order types a venue takes, shown as small tags on its card.
   static List<String> _badgesOf(Outlet o, OrderingRules? rules) => [
@@ -85,7 +89,6 @@ class OrderFoodScreen extends ConsumerWidget {
       final query = ref.watch(menuSearchProvider).trim().toLowerCase();
       final category = ref.watch(menuCategoryProvider);
       final rules = ref.watch(orderingRulesProvider).valueOrNull;
-      final demo = isDemoOutlet(outlet);
       return Column(
         children: [
           Expanded(
@@ -145,25 +148,25 @@ class OrderFoodScreen extends ConsumerWidget {
                             onSelected: (l) => ref.read(menuCategoryProvider.notifier).set(l == 'All' ? null : l),
                           ),
                         ),
-                      if (demo) const DemoNotice(),
                       // Step 6: the venues, from the real outlets; tapping one makes it the cart's venue.
                       Padding(
                         padding: const EdgeInsets.only(top: IgongoSpace.lg),
                         child: VenueRow(
-                          children: [
-                            for (final o in outlets)
-                              VenueCard(
-                                name: o.name,
-                                detail: 'Open for app orders',
-                                badges: _badgesOf(o, rules),
-                                selected: o.key == outlet,
-                                photo: _venuePhoto(o),
-                                onTap: () {
-                                  ref.read(menuCategoryProvider.notifier).set(null);
-                                  ref.read(cartProvider.notifier).useOutlet(o.key);
-                                },
-                              ),
-                          ],
+                          itemCount: outlets.length,
+                          itemBuilder: (_, i, highlighted) {
+                            final o = outlets[i];
+                            return VenueCard(
+                              name: o.name,
+                              detail: 'Open for app orders',
+                              badges: _badgesOf(o, rules),
+                              selected: highlighted,
+                              photo: _venuePhoto(o),
+                              onTap: () {
+                                ref.read(menuCategoryProvider.notifier).set(null);
+                                ref.read(cartProvider.notifier).useOutlet(o.key);
+                              },
+                            );
+                          },
                         ),
                       ),
                       if (all.isEmpty)

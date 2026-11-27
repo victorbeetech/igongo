@@ -1,24 +1,29 @@
 // The Resort Venues strip: a green live dot, the heading, the venue count, and
-// the venue cards side by side (scrolling sideways).
+// the venues as an auto-sliding carousel (every 2.5 seconds) with the middle
+// card highlighted.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../shared/theme/theme.dart';
+import 'venue_carousel.dart';
 
-/// The heading and the sideways row of venue cards.
+/// The heading, and the auto-sliding carousel of venue cards.
 class VenueRow extends StatelessWidget {
-  /// Creates the strip with the venue [children] (one card each).
-  const VenueRow({super.key, required this.children});
+  /// Creates the strip for [itemCount] venues, each built by [itemBuilder].
+  const VenueRow({super.key, required this.itemCount, required this.itemBuilder});
 
-  /// The venue cards, left to right.
-  final List<Widget> children;
+  /// How many venues there are.
+  final int itemCount;
+
+  /// Builds one venue card; [highlighted] is true for the card in the middle.
+  final VenueItemBuilder itemBuilder;
 
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
     final text = context.text;
-    final n = children.length;
+    final n = itemCount;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -44,16 +49,10 @@ class VenueRow extends StatelessWidget {
           ),
         ),
         const SizedBox(height: IgongoSpace.sm),
-        // Step 2: the cards, sideways.
+        // Step 2: the auto-sliding cards.
         SizedBox(
           height: 170,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
-            itemCount: n,
-            separatorBuilder: (_, _) => const SizedBox(width: IgongoSpace.sm),
-            itemBuilder: (_, i) => children[i],
-          ),
+          child: VenueCarousel(itemCount: n, itemBuilder: itemBuilder),
         ),
       ],
     );

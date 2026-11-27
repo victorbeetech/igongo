@@ -11,6 +11,7 @@
 //
 // Delete this whole file when the hotel's real menus are live.
 
+import '../../../shared/ui/photo/guest_photos.dart';
 import '../domain/delivery_zone.dart';
 import '../domain/menu_item.dart';
 import '../domain/option_choice.dart';
@@ -26,14 +27,21 @@ const String demoOutletKey = 'demo-restaurant';
 /// The key of the second demo restaurant (it shares the demo dishes).
 const String demoKaahwaKey = 'demo-kaahwa';
 
+/// The key of the third demo restaurant (it also shares the demo dishes).
+const String demoGrillKey = 'demo-grill';
+
 /// The demo outlet list, shown only when the server has no outlets.
 const List<Outlet> demoOutlets = [
   Outlet(key: demoOutletKey, name: 'Demo restaurant'),
   Outlet(key: demoKaahwaKey, name: 'Kaahwa Kanuzire'),
+  Outlet(key: demoGrillKey, name: 'Lakeside Grill'),
 ];
 
+/// Every demo outlet key, used to tell a demo outlet from a real one.
+const List<String> demoOutletKeys = [demoOutletKey, demoKaahwaKey, demoGrillKey];
+
 /// Whether [outlet] is a demo outlet and the demo is switched on.
-bool isDemoOutlet(String outlet) => demoMenuOn && (outlet == demoOutletKey || outlet == demoKaahwaKey);
+bool isDemoOutlet(String outlet) => demoMenuOn && demoOutletKeys.contains(outlet);
 
 /// The demo delivery zone (so delivery can be tried).
 const List<DeliveryZone> demoZones = [
@@ -63,6 +71,7 @@ const List<MenuItem> demoMenuItems = [
     options: [_drinkAddOn],
     allergens: ['fish'],
     description: 'Whole tilapia on the grill with greens.',
+    photoUrl: GuestPhotos.foodFish,
   ),
   MenuItem(
     id: 'demo-rolex',
@@ -72,6 +81,7 @@ const List<MenuItem> demoMenuItems = [
     available: true,
     options: [_drinkAddOn],
     allergens: ['egg', 'gluten'],
+    photoUrl: GuestPhotos.foodFishPlated,
   ),
   MenuItem(
     id: 'demo-matooke',
@@ -81,6 +91,7 @@ const List<MenuItem> demoMenuItems = [
     available: true,
     options: [_drinkAddOn],
     allergens: ['nuts'],
+    photoUrl: GuestPhotos.foodDish,
   ),
   MenuItem(
     id: 'demo-passion',

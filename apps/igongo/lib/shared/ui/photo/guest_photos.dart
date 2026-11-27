@@ -113,6 +113,9 @@ abstract final class GuestPhotos {
   /// A plated fish dish at night.
   static const String foodFishPlated = 'assets/photos/food-fish-plated.jpg';
 
+  /// A plated salmon fillet with risotto and asparagus (a demo dish picture).
+  static const String foodDish = 'assets/photos/food-dish.jpg';
+
   /// The hotel lit up with fairy lights at night.
   static const String hotelNightLights = 'assets/photos/hotel-night-lights.jpg';
 

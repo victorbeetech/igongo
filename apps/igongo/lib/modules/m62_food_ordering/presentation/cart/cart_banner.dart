@@ -1,6 +1,7 @@
 // The Cart's top section: a full-width photo banner that rotates through the
-// hotel's services, with page dots, a wave along its bottom edge, and the cart
-// count in the top-right corner.
+// hotel's services, with page dots, a wave along its bottom edge, and a
+// wishlist heart in the top-right corner. The banner starts at the very top of
+// the screen (under the status bar), so no app bar sits above it.
 
 import 'dart:async';
 
@@ -9,10 +10,9 @@ import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../shared/theme/theme.dart';
-import '../../../../shared/ui/badge/count_badge.dart';
 import '../../../../shared/ui/clip/wave_clipper.dart';
 import '../../../../shared/ui/photo/guest_photo.dart';
-import '../../application/cart_controller.dart';
+import '../../application/wishlist_controller.dart';
 import '../../domain/cart_content.dart';
 
 /// The rotating banner. It changes slide every few seconds, and by hand when swiped.
@@ -54,11 +54,13 @@ class _CartBannerState extends ConsumerState<CartBanner> {
   @override
   Widget build(BuildContext context) {
     final palette = context.palette;
-    final count = ref.watch(cartCountProvider);
+    // Step 1: the status bar's height, so the photo runs under it and the heart clears it.
+    final topInset = MediaQuery.paddingOf(context).top;
+    final saved = ref.watch(wishlistProvider);
     return ClipPath(
       clipper: const WaveClipper(),
       child: SizedBox(
-        height: 220,
+        height: 220 + topInset,
         child: Stack(
           fit: StackFit.expand,
           children: [
@@ -66,9 +68,7 @@ class _CartBannerState extends ConsumerState<CartBanner> {
             PageView(
               controller: _pages,
               onPageChanged: (i) => setState(() => _page = i),
-              children: [
-                for (final s in cartBannerSlides) GuestPhoto(asset: s.asset, label: s.title),
-              ],
+              children: [for (final s in cartBannerSlides) GuestPhoto(asset: s.asset, label: s.title)],
             ),
             // Step 4: a dark fade at the bottom so the caption and dots read clearly.
             IgnorePointer(
@@ -82,21 +82,11 @@ class _CartBannerState extends ConsumerState<CartBanner> {
                 ),
               ),
             ),
-            // Step 5: the cart icon with its count, top right, as in the design.
+            // Step 5: the wishlist heart, top right, below the status bar. Tap toggles it.
             Positioned(
-              top: IgongoSpace.md,
+              top: topInset + IgongoSpace.sm,
               right: IgongoSpace.lg,
-              child: Semantics(
-                label: 'Cart, $count ${count == 1 ? 'item' : 'items'}',
-                child: ExcludeSemantics(
-                  child: CountBadge(
-                    count: count,
-                    background: palette.onPrimary,
-                    foreground: palette.primary,
-                    child: Icon(Icons.shopping_cart_outlined, color: palette.onPrimary, size: 28),
-                  ),
-                ),
-              ),
+              child: _WishlistButton(saved: saved, onTap: () => ref.read(wishlistProvider.notifier).toggle()),
             ),
             // Step 6: the caption of the current slide and the page dots.
             Positioned(
@@ -115,6 +105,40 @@ class _CartBannerState extends ConsumerState<CartBanner> {
               child: _Dots(count: cartBannerSlides.length, current: _page, colour: palette.onPrimary),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// The wishlist heart: a round white button with a red heart. Filled when saved.
+class _WishlistButton extends StatelessWidget {
+  /// Creates the button.
+  const _WishlistButton({required this.saved, required this.onTap});
+
+  /// True when the heart is on (saved).
+  final bool saved;
+
+  /// Called when the button is tapped.
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    // Step 1: the label says what a tap will do, so screen readers and tooltips match the heart.
+    final label = saved ? 'Remove from wishlist' : 'Save to wishlist';
+    return Semantics(
+      button: true,
+      toggled: saved,
+      label: label,
+      child: Material(
+        color: palette.onPrimary,
+        shape: const CircleBorder(),
+        elevation: 2,
+        child: IconButton(
+          tooltip: label,
+          onPressed: onTap,
+          icon: Icon(saved ? Icons.favorite : Icons.favorite_border, color: palette.primary, size: 26),
         ),
       ),
     );
