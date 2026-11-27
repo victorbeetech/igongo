@@ -8,13 +8,16 @@ import 'package:material_ui/material_ui.dart';
 /// Shows [slides] one at a time, fading between them every [every].
 class FadeSlides extends StatefulWidget {
   /// Creates the slideshow.
-  const FadeSlides({super.key, required this.slides, this.every = const Duration(seconds: 4)});
+  const FadeSlides({super.key, required this.slides, this.every = const Duration(seconds: 4), this.onChanged});
 
   /// The slides (each fills the space).
   final List<Widget> slides;
 
   /// How long each slide stays.
   final Duration every;
+
+  /// Called with the new slide's number each time the slide changes (for page dots).
+  final ValueChanged<int>? onChanged;
 
   @override
   State<FadeSlides> createState() => _FadeSlidesState();
@@ -31,6 +34,7 @@ class _FadeSlidesState extends State<FadeSlides> {
     _timer = Timer.periodic(widget.every, (_) {
       if (widget.slides.length < 2 || !mounted) return;
       setState(() => _index = (_index + 1) % widget.slides.length);
+      widget.onChanged?.call(_index);
     });
   }
 

@@ -33,7 +33,10 @@ class RecentBookings extends StatelessWidget {
         Row(
           children: [
             Expanded(child: Text('Recent Bookings', style: context.text.titleMedium)),
-            TextButton(onPressed: onOpen, child: const Text('See All')),
+            TextButton(
+              onPressed: onOpen,
+              child: const Row(mainAxisSize: MainAxisSize.min, children: [Text('See All'), Icon(Icons.chevron_right, size: 18)]),
+            ),
           ],
         ),
         // Step 2: no bookings yet, or one card per recent booking.
@@ -53,13 +56,31 @@ class RecentBookings extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(b.offeringName, style: context.text.titleSmall, maxLines: 1, overflow: TextOverflow.ellipsis),
-                        Text(b.when, style: context.text.bodySmall?.copyWith(color: p.textMuted), maxLines: 1, overflow: TextOverflow.ellipsis),
+                        // The date with a small calendar icon, as on the reference.
+                        Row(
+                          spacing: IgongoSpace.xs,
+                          children: [
+                            Icon(Icons.event_available_outlined, size: 14, color: p.textMuted),
+                            Expanded(
+                              child: Text(
+                                b.when,
+                                style: context.text.bodySmall?.copyWith(color: p.textMuted),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: IgongoSpace.md),
-                    child: TextButton(onPressed: onOpen, child: const Text('View')),
+                    // A soft pill with a small arrow, like the reference.
+                    child: FilledButton.tonal(
+                      onPressed: onOpen,
+                      child: const Row(mainAxisSize: MainAxisSize.min, children: [Text('View'), Icon(Icons.chevron_right, size: 18)]),
+                    ),
                   ),
                 ],
               ),

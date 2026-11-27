@@ -77,6 +77,8 @@ class BookingsHomeScreen extends ConsumerWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 crossAxisSpacing: IgongoSpace.sm,
                 mainAxisSpacing: IgongoSpace.sm,
+                // Slightly wider than tall, like the reference tiles.
+                childAspectRatio: 1.3,
                 children: [
                   for (final c in bookingCategories)
                     BookingCategoryCard(category: c, onTap: () => screen.open(c.screenId)),

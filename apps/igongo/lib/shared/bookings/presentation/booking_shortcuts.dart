@@ -32,7 +32,7 @@ class BookingShortcuts extends StatelessWidget {
           child: Column(
             spacing: IgongoSpace.xs,
             children: [
-              Icon(icon, color: p.primary),
+              Icon(icon, color: p.primary, size: 28),
               Text(label, style: context.text.bodySmall, maxLines: 1, overflow: TextOverflow.ellipsis),
             ],
           ),
