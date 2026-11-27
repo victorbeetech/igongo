@@ -2,7 +2,7 @@
  * CRM HTTP routes, mounted by the gateway at `/api/crm`.
  *
  *   GET    /crm/me                 my profile (S54-05), made on first use
- *   PATCH  /crm/me                 change my details (S54-06)
+ *   PATCH  /crm/me                 change my details: name, phone, email, likes, allergies (S54-06)
  *   PUT    /crm/me/consent         my marketing choices (S54-07)
  *   GET    /crm/guests?q&tag       guests list (S54-01), staff
  *   POST   /crm/guests             add a walk-in guest, staff
@@ -18,14 +18,15 @@ import { Hono, type Context } from "hono";
 import type { CrmDeps } from "../application/crm-deps";
 import { myProfile, setMyConsent, updateMyProfile } from "../application/use-cases/my-profile";
 import { addStaffNote, createWalkIn, tagGuest } from "../application/use-cases/staff-guest-tools";
+import { checkedJson } from "./checked-json";
 import { CRM_PERMISSIONS as P } from "./permissions";
 import { consentBody, myDetailsBody, noteBody, searchQuery, settingsBody, tagsBody, walkInBody } from "./request-schemas";
 
 export function crmRouter(deps: (c: Context<ActorEnv>) => CrmDeps) {
   return new Hono<ActorEnv>()
     .get("/me", requireSignIn, async (c) => c.json(await myProfile(deps(c), actorOf(c))))
-    .patch("/me", requireSignIn, zValidator("json", myDetailsBody), async (c) => c.json(await updateMyProfile(deps(c), actorOf(c), c.req.valid("json"))))
-    .put("/me/consent", requireSignIn, zValidator("json", consentBody), async (c) => c.json(await setMyConsent(deps(c), actorOf(c), c.req.valid("json"))))
+    .patch("/me", requireSignIn, checkedJson(myDetailsBody), async (c) => c.json(await updateMyProfile(deps(c), actorOf(c), c.req.valid("json"))))
+    .put("/me/consent", requireSignIn, checkedJson(consentBody), async (c) => c.json(await setMyConsent(deps(c), actorOf(c), c.req.valid("json"))))
     .get("/guests", requireStaffPermission(P.view), zValidator("query", searchQuery), async (c) => {
       const { q, tag } = c.req.valid("query");
       return c.json({ items: await deps(c).profiles.search({ ...(q ? { q } : {}), ...(tag ? { tag } : {}), limit: 100 }) });

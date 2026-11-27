@@ -14,6 +14,7 @@ import '../../../../shared/preferences/preferences.dart';
 import '../../../../shared/screens/parts/screen_list_view.dart';
 import '../../../../shared/session/session_controller.dart';
 import '../../../../shared/theme/theme.dart';
+import '../../../m54_crm_guests/presentation/past_visits_screen.dart';
 import '../../../../shared/ui/button/igongo_button.dart';
 import '../../../../shared/ui/card/igongo_card.dart';
 import '../../../../shared/ui/toast/igongo_toast.dart';
@@ -112,7 +113,9 @@ class MyProfileScreen extends ConsumerWidget {
             title: 'Past visits',
             icon: Icons.history,
             solid: true,
-            onTap: () => screen.open('S54-05'),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(builder: (_) => const PastVisitsScreen()),
+            ),
           ),
         ],
         // Step 3: how the app looks, with the current theme shown on its row.
