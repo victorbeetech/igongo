@@ -52,10 +52,10 @@ class GuestDishCard extends StatelessWidget {
   static const width = 260.0;
 
   /// Every card has this height, so the row's cards line up.
-  static const _cardHeight = 296.0;
+  static const _cardHeight = 306.0;
 
   /// The picture's height, in logical pixels.
-  static const _pictureHeight = 160.0;
+  static const _pictureHeight = 200.0;
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +118,7 @@ class GuestDishCard extends StatelessWidget {
                       if (description.isNotEmpty)
                         Text(
                           description,
-                          maxLines: 2,
+                          maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: context.text.bodySmall?.copyWith(color: p.textMuted),
                         ),
