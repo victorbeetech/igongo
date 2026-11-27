@@ -9,10 +9,13 @@ import '../../../../shared/theme/theme.dart';
 /// One area of the hotel (rooms, spa, pool...), tapped to open it.
 class AreaCard extends StatelessWidget {
   /// Creates the card.
-  const AreaCard({super.key, required this.label, required this.icon, required this.onTap});
+  const AreaCard({super.key, required this.label, required this.subtitle, required this.icon, required this.onTap});
 
   /// The area's name, such as Spa.
   final String label;
+
+  /// The short line under the name, such as "Heritage rooms" (a placeholder until wired).
+  final String subtitle;
 
   /// The area's icon.
   final IconData icon;
@@ -51,13 +54,25 @@ class AreaCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: IgongoSpace.sm),
-                // Step 2: the name, up to two lines, so long names still fit.
+                // Step 2: the name, up to two lines, with the subtitle under it.
                 Expanded(
-                  child: Text(
-                    label,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.text.labelLarge?.copyWith(color: p.text, fontWeight: FontWeight.w700),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        label,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.text.labelLarge?.copyWith(color: p.text, fontWeight: FontWeight.w700),
+                      ),
+                      Text(
+                        subtitle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.text.labelSmall?.copyWith(color: p.textMuted),
+                      ),
+                    ],
                   ),
                 ),
                 Icon(Icons.chevron_right, size: IgongoSpace.lg, color: p.textMuted),

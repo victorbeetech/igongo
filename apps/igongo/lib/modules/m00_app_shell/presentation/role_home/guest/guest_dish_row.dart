@@ -18,8 +18,15 @@ class GuestDishRow extends ConsumerWidget {
   /// Creates the row.
   const GuestDishRow({super.key});
 
-  /// The number of placeholder cards shown when there are no dishes yet.
-  static const _placeholderCount = 3;
+  /// The tags on the placeholder cards, as the design shows them (words only, no data).
+  static const _placeholderTags = ['Best seller', 'Chef specialty', 'Wood smoked'];
+
+  /// The tag on real dishes until the menu API carries a tag.
+  static const _realTag = 'On the menu';
+
+  /// The rating and prep time are dashes until the menu API carries them.
+  static const _placeholderRating = '— (—)';
+  static const _placeholderPrepTime = '— mins';
 
   /// The row's height: the card plus room for its shadow.
   static const _rowHeight = 280.0;
@@ -38,8 +45,15 @@ class GuestDishRow extends ConsumerWidget {
     // Step 2: real dishes when there are any; otherwise placeholder cards in the same layout.
     final cards = items.isEmpty
         ? [
-            for (var i = 0; i < _placeholderCount; i++)
-              const GuestDishCard(name: 'Dish name', description: 'Dishes will appear here', price: 'UGX —'),
+            for (var i = 0; i < _placeholderTags.length; i++)
+              GuestDishCard(
+                name: 'Dish name',
+                description: 'Dishes will appear here',
+                price: 'UGX —',
+                tag: _placeholderTags[i],
+                rating: _placeholderRating,
+                prepTime: _placeholderPrepTime,
+              ),
           ]
         : [
             for (final item in items)
@@ -47,6 +61,9 @@ class GuestDishRow extends ConsumerWidget {
                 name: item.name,
                 description: item.description ?? '',
                 price: ugx(item.price),
+                tag: _realTag,
+                rating: _placeholderRating,
+                prepTime: _placeholderPrepTime,
                 onTap: () {
                   // Opening a dish sets its outlet as the cart's, then opens the dish page.
                   ref.read(cartProvider.notifier).useOutlet(outlet!.key);
