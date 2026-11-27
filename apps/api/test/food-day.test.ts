@@ -91,7 +91,8 @@ describe("the food side", () => {
     expect(new Date(later.readyAt).getTime()).toBe(at.getTime() - 25 * 60_000);
     expect((await grace.call("POST", "/api/orders/quote", { outlet: "main", type: "delivery", lines: [line], deliverTo: kakoba, arriveAt: new Date(Date.now() + 20 * 60_000).toISOString() })).status).toBe(400);
     expect((await grace.call("POST", "/api/orders/quote", { outlet: "main", type: "delivery", lines: [line], deliverTo: kakoba, arriveAt: new Date(Date.now() + 9 * 86_400_000).toISOString() })).status).toBe(400);
-    expect((await grace.call("POST", "/api/orders/quote", { outlet: "main", type: "dine_in", lines: [line], arriveAt: at.toISOString() })).status).toBe(400);
+    // Dine-in guests give their arrival time, so a dine-in quote with a time is accepted.
+    expect((await grace.call("POST", "/api/orders/quote", { outlet: "main", type: "dine_in", lines: [line], arriveAt: at.toISOString() })).status).toBe(200);
 
     // Another guest gets 403 on Grace's order, its tracker and its reorder.
     const tom = await guest("Tom");

@@ -29,10 +29,9 @@ abstract final class GuestPhotos {
   /// The banner at the top of the guest home.
   static const String banner = 'assets/photos/igongo-hut.jpg';
 
-  /// The three promotion slides under the greeting (the hut is the new-promo slide).
+  /// The two promotion slides behind the greeting (the hut is the new-promo slide).
   static const List<PromoPhoto> promos = [
     PromoPhoto(banner, bannerAlignment),
-    PromoPhoto('assets/photos/hotel-kaahwa-kanuzire.jpg'),
     PromoPhoto('assets/photos/hotel-entrance-night.jpg'),
   ];
 
