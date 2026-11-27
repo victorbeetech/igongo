@@ -100,6 +100,25 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
     });
   }
 
+  /// The guest tapped the map: the point is taken with the zone and place typed, then saved for next time.
+  Future<void> _onPinned(double lat, double lng) async {
+    // Step 1: a map point needs a zone and a place, since the rider reads the place.
+    final place = _text(_place);
+    final zone = _zone;
+    if (place == null || zone == null) return showIgongoToast(context, 'Choose the zone and type where to deliver first.');
+    final pin = DeliveryPin(label: place, zone: zone, lat: lat, lng: lng);
+    // Step 2: use the point for this checkout straight away.
+    setState(() => _pin = pin);
+    // Step 3: save the point on the server so it is remembered for the guest's next order.
+    try {
+      await ref.read(savedPinApiProvider).save(pin);
+      ref.invalidate(savedPinProvider);
+    } on ApiException {
+      // Step 4: the order still uses the point; only the "saved" copy failed.
+      if (mounted) showIgongoToast(context, "Could not save your place. This order still uses it.");
+    }
+  }
+
   /// The cart and details as the API takes them.
   Json _body(String outlet, String type) {
     final place = _text(_place);
@@ -273,7 +292,7 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
             if (_type == 'delivery') ...[
               if (ref.watch(savedPinProvider).valueOrNull case final saved?)
                 ActionChip(label: Text('Use my saved place: ${saved.label}'), onPressed: () => _useSavedPin(saved)),
-              DeliveryPinMap(pin: _confirmedPin, onPinned: (pin) => setState(() => _pin = pin)),
+              DeliveryPinMap(pin: _confirmedPin, onPinned: _onPinned),
             ],
             if (_type == 'delivery' || _type == 'room_service' || _type == 'dine_in')
               IgongoField(
