@@ -42,7 +42,7 @@ class GuestQuickAction extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.sm, vertical: IgongoSpace.md),
+          padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.xxs, vertical: IgongoSpace.md),
           // Step 1: the disc, then the title and subtitle, all centred in the card.
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -57,14 +57,14 @@ class GuestQuickAction extends StatelessWidget {
               const SizedBox(height: IgongoSpace.sm),
               Text(
                 title,
-                maxLines: 1,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
                 style: context.text.labelLarge?.copyWith(color: p.text, fontWeight: FontWeight.w700),
               ),
               Text(
                 subtitle,
-                maxLines: 1,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
                 style: context.text.labelSmall?.copyWith(color: p.textMuted),

@@ -1,12 +1,13 @@
-// The three quick actions under the hero card: Book stay, Dine in and Museum,
-// each in an equal column. [onOpen] opens the screen for the chosen area.
+// The five quick actions under the hero card: Book stay, Dine in, Museum, Spa and Pool,
+// all in one row of equal columns. [onOpen] opens the screen for the chosen area.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import 'guest_quick_action.dart';
+import 'guest_service_placeholder_page.dart';
 
-/// The row of three quick-action cards.
+/// The row of five quick-action cards.
 class GuestQuickActions extends StatelessWidget {
   /// Creates the row; [onOpen] receives the screen ID to open.
   const GuestQuickActions({super.key, required this.onOpen});
@@ -23,13 +24,18 @@ class GuestQuickActions extends StatelessWidget {
   /// The museum's home.
   static const _museum = 'S68-01';
 
+  /// Opens the placeholder page for a service that has no screen yet.
+  static void _openPlaceholder(BuildContext context, String title) {
+    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => GuestServicePlaceholderPage(title: title)));
+  }
+
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
-    // Step 1: three equal columns with a small gap between them.
+    // Step 1: five equal columns with a small gap between them.
     child: IntrinsicHeight(
       child: Row(
-        spacing: IgongoSpace.sm,
+        spacing: IgongoSpace.xs,
         children: [
           Expanded(
             child: GuestQuickAction(
@@ -53,6 +59,22 @@ class GuestQuickActions extends StatelessWidget {
               title: 'Museum',
               subtitle: 'Cultural tour',
               onTap: () => onOpen(_museum),
+            ),
+          ),
+          Expanded(
+            child: GuestQuickAction(
+              icon: Icons.spa_outlined,
+              title: 'Spa',
+              subtitle: 'Massage and steam',
+              onTap: () => _openPlaceholder(context, 'Spa'),
+            ),
+          ),
+          Expanded(
+            child: GuestQuickAction(
+              icon: Icons.pool_outlined,
+              title: 'Pool',
+              subtitle: 'Swim and relax',
+              onTap: () => _openPlaceholder(context, 'Pool'),
             ),
           ),
         ],

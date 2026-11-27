@@ -161,14 +161,14 @@ void main() {
     await _settle(tester);
     expect(find.text('Your cart is empty'), findsOneWidget);
     expect(find.byType(BackButton), findsNothing);
-    // A pushed page (Spa, opened from a home tile) keeps its Back arrow.
+    // A pushed page (Spa, opened from the Explore tile below the quick actions) keeps its Back arrow.
     await tester.tap(find.text('Home').last);
     await _settle(tester);
-    await tester.scrollUntilVisible(find.text('Spa'), 200, scrollable: find.byType(Scrollable).first);
+    await tester.scrollUntilVisible(find.text('Spa').last, 200, scrollable: find.byType(Scrollable).first);
     // Lift it clear of the bottom bar before tapping.
     await tester.drag(find.byType(Scrollable).first, const Offset(0, -150));
     await _settle(tester);
-    await tester.tap(find.text('Spa'));
+    await tester.tap(find.text('Spa').last);
     await _settle(tester);
     expect(find.byType(BackButton), findsOneWidget);
   });

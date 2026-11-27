@@ -44,7 +44,7 @@ class _GuestDishRowState extends ConsumerState<GuestDishRow> {
   static const _placeholderPrepTime = '— mins';
 
   /// The row's height: the card plus room for its shadow.
-  static const _rowHeight = 300.0;
+  static const _rowHeight = 326.0;
 
   /// The gap between two cards.
   static const _gap = IgongoSpace.md;
