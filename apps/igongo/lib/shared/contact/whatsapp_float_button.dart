@@ -5,11 +5,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
-import '../theme/theme.dart';
 import '../ui/whatsapp/whatsapp_icon.dart';
 import 'open_whatsapp_chat.dart';
 
-/// The floating WhatsApp button: a white round button with the green WhatsApp icon.
+/// The floating WhatsApp button: the plain green WhatsApp icon with no background behind it.
 class WhatsappFloatButton extends ConsumerWidget {
   /// Creates the button.
   const WhatsappFloatButton({super.key});
@@ -19,14 +18,14 @@ class WhatsappFloatButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Step 1: a round surface, the WhatsApp icon keeps its own green.
-    final p = context.palette;
+    // Step 0: the button itself is drawn with no background (see below).
     return FloatingActionButton(
       tooltip: 'Chat with us on WhatsApp',
       // No hero animation: only one of these exists, and a hero would clash between pages.
       heroTag: null,
-      backgroundColor: p.surface,
-      // Step 1b: no shadow and no outline, so only the plain WhatsApp icon shows on the round surface.
+      // Step 1: no background at all, so the plain WhatsApp icon shows on whatever the page is.
+      backgroundColor: const Color(0x00000000),
+      // Step 1b: no shadow and no outline.
       elevation: 0,
       focusElevation: 0,
       hoverElevation: 0,
