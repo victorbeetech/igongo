@@ -8,9 +8,8 @@ import '../../../../shared/theme/theme.dart';
 import '../../../../shared/ui/button/igongo_button.dart';
 import 'widgets/info_card.dart';
 import 'widgets/onboarding_actions.dart';
-import 'widgets/onboarding_badge.dart';
 import 'widgets/onboarding_dots.dart';
-import 'widgets/onboarding_eyebrow.dart';
+import 'widgets/onboarding_emblem_chip.dart';
 import 'widgets/onboarding_hero.dart';
 import 'widgets/onboarding_pill.dart';
 import 'widgets/onboarding_top_bar.dart';
@@ -46,51 +45,60 @@ class WelcomeStepThree extends StatelessWidget {
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(IgongoSpace.xl, IgongoSpace.md, IgongoSpace.xl, IgongoSpace.xl),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Step 2: the language label on the left (English is the only language so far), Skip on the right.
-          OnboardingTopBar(leading: const OnboardingPill(label: 'English', icon: Icons.language), onSkip: onSkip),
+          // Step 2: the language pill with its drop-down arrow on the left (English is the only language so far), Skip on the right.
+          OnboardingTopBar(
+            leading: const OnboardingPill(label: 'English', icon: Icons.language, trailingIcon: Icons.expand_more),
+            onSkip: onSkip,
+          ),
           const SizedBox(height: IgongoSpace.md),
-          // Step 3: the hero photo, with the community place tag and the connected badge.
-          const OnboardingHero(
-            placeTag: 'Igongo Community Hub',
-            placeIcon: Icons.place,
-            badge: OnboardingBadge(icon: Icons.handshake, title: 'Connected for Guests & Staff'),
-            emblem: false,
+          // Step 3: the hero photo, with the logo chip and its label, and the hub and town names along the bottom.
+          OnboardingHero(
+            height: 270,
+            label: 'Igongo Community Hub',
+            topLeft: const OnboardingEmblemChip(label: 'Culture & Stay'),
+            bottomLeft: Row(
+              mainAxisSize: MainAxisSize.min,
+              spacing: IgongoSpace.xs,
+              children: [
+                Icon(Icons.circle, size: IgongoSpace.sm, color: p.surface),
+                Text('Igongo Community Hub', style: context.text.labelLarge?.copyWith(color: p.surface)),
+              ],
+            ),
+            bottomRight: Text('Mbarara, Uganda', style: context.text.labelLarge?.copyWith(color: p.surface)),
           ),
           const SizedBox(height: IgongoSpace.lg),
-          // Step 4: the eyebrow, the title and the description.
-          const OnboardingEyebrow(text: 'Culture & Stay', flanked: false),
+          // Step 4: the pill above the title, then the title and the description, aligned to the start.
+          const OnboardingPill(label: 'Connected for Guests & Staff', icon: Icons.handshake),
           const SizedBox(height: IgongoSpace.sm),
-          Text(
-            'Built for Our Entire Community',
-            textAlign: TextAlign.center,
-            style: context.text.displaySmall?.copyWith(color: p.text),
-          ),
+          Text('Built for Our Entire Community', style: context.text.displaySmall?.copyWith(color: p.text)),
           const SizedBox(height: IgongoSpace.sm),
           Text(
             'Guests access seamless concierge and cultural itineraries, '
             'while team members clock in, fulfill room orders, and coordinate daily tasks in unison.',
-            textAlign: TextAlign.center,
             style: context.text.bodyLarge?.copyWith(color: p.textMuted),
           ),
           const SizedBox(height: IgongoSpace.lg),
-          // Step 5: the two highlight cards, one for guests and one for staff.
+          // Step 5: the two highlight cards, one for guests and one for staff, each with a chevron.
           const OnboardingInfoCard(
             icon: Icons.room_service,
-            eyebrow: '24/7 Care',
             title: 'For Guests',
+            tag: '24/7 Care',
             body: 'Order regional delicacies, book museum tours, & unlock villa amenities.',
+            chevron: true,
           ),
           const SizedBox(height: IgongoSpace.sm),
           const OnboardingInfoCard(
             icon: Icons.badge,
-            eyebrow: 'Operations',
             title: 'For Staff & Guides',
+            tag: 'Operations',
             body: 'One-tap duty clock-in, live shift rosters, & immediate task coordination.',
+            chevron: true,
           ),
           const SizedBox(height: IgongoSpace.lg),
           // Step 6: the page dots, screen 3 showing.
-          const OnboardingDots(count: 3, index: 2),
+          const Center(child: OnboardingDots(count: 3, index: 2)),
           const SizedBox(height: IgongoSpace.lg),
           // Step 7: Get Started and Explore as a Guest.
           OnboardingActions(
@@ -103,13 +111,15 @@ class WelcomeStepThree extends StatelessWidget {
           ),
           const SizedBox(height: IgongoSpace.md),
           // Step 8: the sign-in link for people who already have an account.
-          Wrap(
-            alignment: WrapAlignment.center,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              Text('Already have an account? ', style: context.text.bodyLarge?.copyWith(color: p.textMuted)),
-              IgongoButton(label: 'Sign In', variant: ButtonVariant.text, onPressed: onSignIn),
-            ],
+          Center(
+            child: Wrap(
+              alignment: WrapAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Text('Already have an account? ', style: context.text.bodyLarge?.copyWith(color: p.textMuted)),
+                IgongoButton(label: 'Sign In', variant: ButtonVariant.text, onPressed: onSignIn),
+              ],
+            ),
           ),
         ],
       ),
