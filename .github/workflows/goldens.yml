@@ -1,0 +1,38 @@
+# Regenerates the golden and store screenshot pictures on Linux (the same
+# machine type the checks use, so they match) and commits them to the branch
+# it was started on. Start it by hand from the Actions page.
+name: Update screenshots
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  # Same version as app.yml, so the pictures match the checks.
+  FLUTTER_VERSION: 3.50.1
+
+defaults:
+  run:
+    working-directory: apps/igongo
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+      - run: flutter pub get
+      # Step 1: write the new pictures.
+      - run: flutter test --update-goldens
+      # Step 2: commit only the pictures and the lock file, if anything changed.
+      - run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add -A test pubspec.lock
+          git diff --cached --quiet || git commit -m "Update screenshots and lock file"
+          git push
