@@ -24,10 +24,12 @@ class GuestGreeting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
-    // Step 1: the first name only, so the greeting stays one short line.
+    // Step 1: the first name only, so the greeting stays one short line. Signed out
+    // there is no name, so the line reads "Welcome to Igongo" instead.
     final first = name?.trim().split(' ').first;
-    final greeting = greetingFor(DateTime.now());
-    final line = first == null || first.isEmpty ? greeting : '$greeting, $first';
+    final line = first == null || first.isEmpty
+        ? 'Welcome to Igongo'
+        : '${greetingFor(DateTime.now())}, $first';
     return Padding(
       padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, IgongoSpace.lg, IgongoSpace.lg, IgongoSpace.sm),
       child: Row(

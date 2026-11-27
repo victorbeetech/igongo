@@ -32,12 +32,12 @@ void main() {
       preview: false,
       overrides: [sessionProvider.overrideWith(_GuestSessionController.new)],
     );
-    // Step 1: the guest home greets the guest by first name.
-    expect(find.text('Hello, Grace'), findsOneWidget);
+    // Step 1: the guest home greets the guest by first name (the greeting depends on the hour).
+    expect(find.textContaining('Grace'), findsOneWidget);
     // Step 2: no staff menu: the frame has no drawer for a guest.
     expect(find.byType(RoleDrawer), findsNothing);
-    // Step 2b: the food shop is on the guest home as a card.
-    expect(find.text('Food shop'), findsOneWidget);
+    // Step 2b: the guest home shows the "Explore Igongo" areas, including Order.
+    expect(find.text('Order'), findsOneWidget);
     // Step 3: no super admin Preview button for a guest.
     expect(find.byTooltip('Preview'), findsNothing);
   });
