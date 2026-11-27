@@ -5,6 +5,7 @@ import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import 'guest_quick_action.dart';
+import 'guest_service_placeholder_page.dart';
 
 /// The row of five quick-action cards.
 class GuestQuickActions extends StatelessWidget {
@@ -23,8 +24,10 @@ class GuestQuickActions extends StatelessWidget {
   /// The museum's home.
   static const _museum = 'S68-01';
 
-  /// Spa and pool have no screen yet, so their cards do nothing until they are wired.
-  static void _placeholder() {}
+  /// Opens the placeholder page for a service that has no screen yet.
+  static void _openPlaceholder(BuildContext context, String title) {
+    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => GuestServicePlaceholderPage(title: title)));
+  }
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -58,20 +61,20 @@ class GuestQuickActions extends StatelessWidget {
               onTap: () => onOpen(_museum),
             ),
           ),
-          const Expanded(
+          Expanded(
             child: GuestQuickAction(
               icon: Icons.spa_outlined,
               title: 'Spa',
               subtitle: 'Massage and steam',
-              onTap: _placeholder,
+              onTap: () => _openPlaceholder(context, 'Spa'),
             ),
           ),
-          const Expanded(
+          Expanded(
             child: GuestQuickAction(
               icon: Icons.pool_outlined,
               title: 'Pool',
               subtitle: 'Swim and relax',
-              onTap: _placeholder,
+              onTap: () => _openPlaceholder(context, 'Pool'),
             ),
           ),
         ],
