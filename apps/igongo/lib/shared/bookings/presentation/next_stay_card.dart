@@ -15,8 +15,7 @@ import '../domain/booking.dart';
 /// The next-stay card. [stay] is null when there is no upcoming stay.
 class NextStayCard extends StatelessWidget {
   /// Creates the card; [onView] opens the stay, [onBook] opens the room booking.
-  const NextStayCard({super.key, required this.stay, required this.onView, required this.onBook, DateTime? today})
-    : _today = today;
+  const NextStayCard({super.key, required this.stay, required this.onView, required this.onBook, this.today});
 
   /// The guest's next stay, if any.
   final Booking? stay;
@@ -28,7 +27,7 @@ class NextStayCard extends StatelessWidget {
   final VoidCallback onBook;
 
   /// Today, for the tests; the clock when null.
-  final DateTime? _today;
+  final DateTime? today;
 
   static const _months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
   static const _days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
@@ -46,7 +45,7 @@ class NextStayCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
-    final today = _today ?? DateTime.now();
+    final now = today ?? DateTime.now();
     final day = parseDayKey(stay?.date);
     final end = parseDayKey(stay?.endDate);
     final nights = day != null && end != null ? end.difference(day).inDays : 1;
@@ -62,7 +61,7 @@ class NextStayCard extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  day == null ? '' : (day.difference(dayOnly(today)).inDays == 1 ? 'TOM' : _days[day.weekday - 1]),
+                  day == null ? '' : (day.difference(dayOnly(now)).inDays == 1 ? 'TOM' : _days[day.weekday - 1]),
                   style: context.text.labelMedium?.copyWith(color: p.primaryText),
                 ),
                 Text(day == null ? '–' : '${day.day}', style: context.text.headlineSmall),
@@ -85,7 +84,7 @@ class NextStayCard extends StatelessWidget {
                 Text(
                   day == null
                       ? 'No upcoming stay'
-                      : '${_whenWords(day, today)} • $nights ${nights == 1 ? 'Night' : 'Nights'}',
+                      : '${_whenWords(day, now)} • $nights ${nights == 1 ? 'Night' : 'Nights'}',
                   style: context.text.bodySmall?.copyWith(color: p.textMuted),
                 ),
                 // A red pill with the words and a double arrow, as on the reference.
