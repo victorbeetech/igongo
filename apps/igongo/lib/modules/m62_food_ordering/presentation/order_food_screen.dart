@@ -150,20 +150,21 @@ class OrderFoodScreen extends ConsumerWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: IgongoSpace.lg),
                         child: VenueRow(
-                          children: [
-                            for (final o in outlets)
-                              VenueCard(
-                                name: o.name,
-                                detail: 'Open for app orders',
-                                badges: _badgesOf(o, rules),
-                                selected: o.key == outlet,
-                                photo: _venuePhoto(o),
-                                onTap: () {
-                                  ref.read(menuCategoryProvider.notifier).set(null);
-                                  ref.read(cartProvider.notifier).useOutlet(o.key);
-                                },
-                              ),
-                          ],
+                          itemCount: outlets.length,
+                          itemBuilder: (_, i, highlighted) {
+                            final o = outlets[i];
+                            return VenueCard(
+                              name: o.name,
+                              detail: 'Open for app orders',
+                              badges: _badgesOf(o, rules),
+                              selected: highlighted,
+                              photo: _venuePhoto(o),
+                              onTap: () {
+                                ref.read(menuCategoryProvider.notifier).set(null);
+                                ref.read(cartProvider.notifier).useOutlet(o.key);
+                              },
+                            );
+                          },
                         ),
                       ),
                       if (all.isEmpty)
