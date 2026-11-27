@@ -48,6 +48,21 @@ describe("social sign-in never starts a super admin session", () => {
   });
 });
 
+describe("Google and Apple are for the app only", () => {
+  it("refuses Google and Apple on the web portal, even for a staff member without the super admin role", async () => {
+    await expect(checkSessionStart(depsFor(["role_cashier"], false), "user_1", "google", "web", { social: true })).rejects.toMatchObject({ code: "method_disabled" });
+    await expect(checkSessionStart(depsFor(["role_cashier"], false), "user_1", "apple", "web", { social: true })).rejects.toMatchObject({ code: "method_disabled" });
+  });
+
+  it("still lets Google and Apple work in the app for a staff member without the super admin role", async () => {
+    await expect(checkSessionStart(depsFor(["role_cashier"], false), "user_1", "google", "app", { social: true })).resolves.toBeUndefined();
+  });
+
+  it("keeps the web password route for staff", async () => {
+    await expect(checkSessionStart(depsFor(["role_cashier"], false), "user_1", "email_password", "web")).resolves.toBeUndefined();
+  });
+});
+
 describe("recognising social requests", () => {
   it("counts the Google and Apple redirect and callback paths as social", () => {
     expect(isSocialRequestPath("/sign-in/social")).toBe(true);
