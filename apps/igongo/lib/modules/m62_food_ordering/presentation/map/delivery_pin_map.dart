@@ -2,8 +2,8 @@
 // map key is missing it shows [MapNotReadyNotice], so the guest can still type
 // their place. When the map package is added, only this file changes.
 
-import 'package:flutter/material.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../domain/delivery_pin.dart';
 
