@@ -26,6 +26,12 @@ class WhatsappFloatButton extends ConsumerWidget {
       // No hero animation: only one of these exists, and a hero would clash between pages.
       heroTag: null,
       backgroundColor: p.surface,
+      // Step 1b: no shadow and no outline, so only the plain WhatsApp icon shows on the round surface.
+      elevation: 0,
+      focusElevation: 0,
+      hoverElevation: 0,
+      highlightElevation: 0,
+      shape: const CircleBorder(side: BorderSide.none),
       onPressed: () => openWhatsappChat(context, ref),
       // Step 2: the icon, drawn from the SVG in its own green.
       child: const WhatsappIcon(size: _iconSize),
