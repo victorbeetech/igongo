@@ -1,21 +1,27 @@
-// The page for one dish, opened by tapping it: a preview of the meal, then
-// optional add-ons (such as a drink), then an optional note for the kitchen
-// (such as "no tomatoes"), then Add to cart. Nothing here is compulsory except
-// a group the restaurant itself marks "required" in its menu.
+// The page for one dish, opened by tapping it. Top to bottom: the photo (with
+// prep time), the overview card (section, name, price, description, tags and
+// allergens), the customisation sections the restaurant set up (radio or
+// checkbox), a note for the kitchen, and a bottom bar with the quantity and
+// Add to Order. Every word and price comes from the menu API; the total is
+// worked out from the picks and the quantity on this screen.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
-import '../../../shared/format/ugx.dart';
 import '../../../shared/theme/theme.dart';
-import '../../../shared/ui/button/igongo_button.dart';
-import '../../../shared/ui/photo/photo_slot.dart';
 import '../../../shared/ui/toast/igongo_toast.dart';
 import '../application/cart_controller.dart';
 import '../domain/cart_line.dart';
+import '../domain/dish_pricing.dart';
 import '../domain/menu_item.dart';
 import '../domain/option_group.dart';
+import 'dish/dish_hero.dart';
+import 'dish/dish_note_field.dart';
+import 'dish/dish_option_section.dart';
+import 'dish/dish_order_bar.dart';
+import 'dish/dish_overview_card.dart';
+import 'dish/dish_top_bar.dart';
 
 /// Opens [item]'s page over the current screen (it has a Back arrow).
 Future<void> openItemPage(BuildContext context, MenuItem item) =>
@@ -34,142 +40,150 @@ class ItemPage extends ConsumerStatefulWidget {
 }
 
 class _ItemPageState extends ConsumerState<ItemPage> {
-  int _quantity = 1;
+  /// Height of the photo, in logical pixels.
+  static const _heroHeight = 300.0;
 
-  /// Picked choice keys per group.
-  final Map<String, Set<String>> _picks = {};
+  /// How far the guest must scroll (pixels) before the dish name appears in the top bar.
+  static const _titleAfter = 180.0;
+
+  /// The most dishes one line may hold.
+  static const _maxQuantity = 20;
+
+  /// Scroll position of the page, to show the name in the top bar.
+  final _scroll = ScrollController();
 
   /// The guest's note for the kitchen on this dish.
   final _note = TextEditingController();
 
+  /// How many dishes the guest wants.
+  int _quantity = 1;
+
+  /// The picked choice keys per option group.
+  DishPicks _picks = {};
+
+  /// True when the guest has marked the dish as a favourite (kept on this screen only).
+  bool _favourite = false;
+
+  /// True once the guest has scrolled past the photo.
+  bool _titleShown = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Step 1: follow the scroll so the top bar can show the dish name.
+    _scroll.addListener(_onScroll);
+  }
+
   @override
   void dispose() {
+    _scroll
+      ..removeListener(_onScroll)
+      ..dispose();
     _note.dispose();
     super.dispose();
   }
 
-  /// The price of one, with the picked options.
-  int get _unitPrice {
-    var price = widget.item.price;
-    for (final g in widget.item.options) {
-      for (final c in g.choices) {
-        if (_picks[g.key]?.contains(c.key) ?? false) price += c.priceDelta;
-      }
-    }
-    return price;
+  /// Shows the dish name in the top bar only after the guest scrolls past [_titleAfter].
+  void _onScroll() {
+    final shown = _scroll.hasClients && _scroll.offset > _titleAfter;
+    if (shown != _titleShown) setState(() => _titleShown = shown);
   }
 
-  /// Picks or unpicks [choice] in [group] (one only unless the group allows several).
-  void _toggle(OptionGroup group, String choice) => setState(() {
-    final set = _picks.putIfAbsent(group.key, () => {});
-    if (set.contains(choice)) {
-      set.remove(choice);
-    } else {
-      if (!group.multiple) set.clear();
-      set.add(choice);
-    }
-  });
+  /// Sets the count, kept between 1 and [_maxQuantity].
+  void _setQuantity(int quantity) => setState(() => _quantity = quantity.clamp(1, _maxQuantity));
 
-  /// Adds the dish to the cart, once every group the restaurant marked required has a pick.
+  /// Picks [choice] in a single-choice (radio) group.
+  void _choose(OptionGroup group, String choice) => setState(() => _picks = dishChoose(_picks, group, choice));
+
+  /// Flips [choice] in a multi-choice (checkbox) group.
+  void _toggle(OptionGroup group, String choice) => setState(() => _picks = dishTogglePick(_picks, group, choice));
+
+  /// Adds the dish to the cart once every required group has a pick, then goes back to the menu.
   void _add() {
-    final missing = widget.item.options.where((g) => g.required && (_picks[g.key]?.isEmpty ?? true));
+    final item = widget.item;
+    // Step 1: stop and say which required group still needs a pick.
+    final missing = dishMissingRequired(item, _picks);
     if (missing.isNotEmpty) return showIgongoToast(context, 'Pick ${missing.first.name}.');
+    // Step 2: the cart gets the picks, the unit price with them, and the note (or none).
     final note = _note.text.trim();
     ref
         .read(cartProvider.notifier)
         .add(
           CartLine(
-            itemId: widget.item.id,
-            name: widget.item.name,
+            itemId: item.id,
+            name: item.name,
             quantity: _quantity,
-            options: [
-              for (final e in _picks.entries)
-                for (final c in e.value) '${e.key}:$c',
-            ],
-            unitPrice: _unitPrice,
+            options: dishCartOptions(_picks),
+            unitPrice: dishUnitPrice(item, _picks),
             notes: note.isEmpty ? null : note,
           ),
         );
+    // Step 3: back to the menu.
     Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
     final item = widget.item;
+    final palette = context.palette;
+    final total = dishTotal(item, _picks, _quantity);
     return Scaffold(
-      appBar: AppBar(title: Text(item.name, maxLines: 1, overflow: TextOverflow.ellipsis)),
-      body: Column(
+      backgroundColor: palette.background,
+      body: Stack(
         children: [
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(IgongoSpace.lg),
-              children: [
-                // Step 1: the preview of the meal.
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(IgongoRadius.lg),
-                  child: const PhotoSlot(width: double.infinity, height: 200, icon: Icons.restaurant_outlined),
-                ),
-                const SizedBox(height: IgongoSpace.md),
-                Text(item.name, style: context.text.titleLarge),
-                Text(ugx(item.price), style: context.text.titleMedium?.copyWith(color: context.palette.primaryText)),
-                if (item.description case final d?) ...[const SizedBox(height: IgongoSpace.sm), Text(d)],
-                if (item.allergens.isNotEmpty) ...[
-                  const SizedBox(height: IgongoSpace.sm),
-                  Text('Contains: ${item.allergens.join(', ')}', style: context.text.bodySmall),
-                ],
-                // Step 2: the add-ons, such as a drink (optional unless the menu says required).
-                for (final g in item.options) ...[
-                  const SizedBox(height: IgongoSpace.lg),
-                  Text('${g.name} (${g.required ? 'required' : 'optional'})', style: context.text.titleSmall),
-                  const SizedBox(height: IgongoSpace.sm),
-                  Wrap(
-                    spacing: IgongoSpace.sm,
-                    children: [
-                      for (final c in g.choices)
-                        FilterChip(
-                          label: Text(c.priceDelta == 0 ? c.name : '${c.name} +${ugx(c.priceDelta)}'),
-                          selected: _picks[g.key]?.contains(c.key) ?? false,
-                          onSelected: (_) => _toggle(g, c.key),
-                        ),
+          // Layer 1: the scrolling page. Its bottom padding keeps the last section clear of the order bar.
+          ListView(
+            controller: _scroll,
+            padding: const EdgeInsets.only(bottom: IgongoSpace.xxl * 4),
+            children: [
+              DishHero(photoUrl: item.photoUrl, prepMinutes: item.prepMinutes, height: _heroHeight),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    DishOverviewCard(item: item),
+                    // The customisation sections, in the order the menu sets them.
+                    for (final group in item.options) ...[
+                      const SizedBox(height: IgongoSpace.lg),
+                      DishOptionSection(
+                        group: group,
+                        picked: _picks[group.key] ?? const <String>{},
+                        onChoose: (c) => _choose(group, c),
+                        onToggle: (c) => _toggle(group, c),
+                      ),
                     ],
-                  ),
-                ],
-                // Step 3: the personal note, optional.
-                const SizedBox(height: IgongoSpace.lg),
-                Text('Make it yours (optional)', style: context.text.titleSmall),
-                const SizedBox(height: IgongoSpace.sm),
-                TextField(
-                  controller: _note,
-                  maxLength: 300,
-                  maxLines: 2,
-                  decoration: const InputDecoration(hintText: 'For example: no tomatoes'),
+                    const SizedBox(height: IgongoSpace.lg),
+                    DishNoteField(controller: _note),
+                  ],
                 ),
-              ],
+              ),
+            ],
+          ),
+          // Layer 2: the top bar floats over the photo.
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: DishTopBar(
+              name: item.name,
+              titleShown: _titleShown,
+              favourite: _favourite,
+              onBack: () => Navigator.of(context).maybePop(),
+              onToggleFavourite: () => setState(() => _favourite = !_favourite),
             ),
           ),
-          // Step 4: how many, and Add to cart.
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(IgongoSpace.md),
-              child: Row(
-                spacing: IgongoSpace.sm,
-                children: [
-                  IconButton(
-                    tooltip: 'Fewer',
-                    icon: const Icon(Icons.remove),
-                    onPressed: _quantity > 1 ? () => setState(() => _quantity--) : null,
-                  ),
-                  Text('$_quantity'),
-                  IconButton(
-                    tooltip: 'More',
-                    icon: const Icon(Icons.add),
-                    onPressed: () => setState(() => _quantity++),
-                  ),
-                  Expanded(
-                    child: IgongoButton(label: 'Add ${ugx(_unitPrice * _quantity)}', expand: true, onPressed: _add),
-                  ),
-                ],
-              ),
+          // Layer 3: the order bar sits at the bottom.
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: DishOrderBar(
+              quantity: _quantity,
+              total: total,
+              canAdd: item.available,
+              onQuantity: _setQuantity,
+              onAdd: _add,
             ),
           ),
         ],
