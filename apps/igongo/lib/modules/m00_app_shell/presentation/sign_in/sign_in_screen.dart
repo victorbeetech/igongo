@@ -1,28 +1,27 @@
-// S00-05 Sign in: one entry point for everyone. Email and password sign in
-// for real against the Igongo API (the session is kept in the phone's secure
-// storage). New guests create an account on S00-18. Google and Apple sit
-// under the form when the server has them on (see docs/APP-WIRING.md).
-// The look is the shared Auth frame, the same as the other Auth screens.
+// S00-05 Sign in: one entry point for everyone. Google and Apple sit at the
+// top when the server has them on and this phone can run them. Email and
+// password sign in for real against the Igongo API (the session is kept in the
+// phone's secure storage). New guests sign up on S00-18. The layout follows the
+// approved Sign In design: social row, form, remember me, Sign In, footer.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../shared/api/api_exception.dart';
 import '../../../../shared/catalog/catalog.dart';
 import '../../../../shared/session/session_controller.dart';
-import '../../../../shared/social_sign_in/apple_native_sign_in.dart';
-import '../../../../shared/social_sign_in/google_native_sign_in.dart';
-import '../../../../shared/social_sign_in/social_id_token.dart';
-import '../../../../shared/social_sign_in/social_sign_in_support.dart';
+import '../../../../shared/social_sign_in/sign_in_option.dart';
+import '../../../../shared/social_sign_in/social_sign_in_flow.dart';
 import '../../../../shared/theme/theme.dart';
-import '../../../../shared/ui/auth/auth_or_divider.dart';
 import '../../../../shared/ui/auth/auth_shell.dart';
+import '../../../../shared/ui/auth/contact_us_link.dart';
+import '../../../../shared/ui/auth/social_auth_row.dart';
 import '../../../../shared/ui/button/igongo_button.dart';
 import '../../../../shared/ui/field/igongo_field.dart';
 import '../../../../shared/ui/field/password_field.dart';
 import '../../../../shared/ui/toast/igongo_toast.dart';
 import '../../application/sign_in_options_provider.dart';
-import '../../domain/sign_in_option.dart';
 
 /// The sign-in screen.
 class SignInScreen extends ConsumerStatefulWidget {
@@ -52,21 +51,17 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     super.dispose();
   }
 
-  /// Google or Apple, run on this phone: the native sheet gives an ID token,
-  /// the API checks it and the person lands on their home. A cancelled sheet
-  /// does nothing; any other failure shows the message as a toast.
+  /// Google or Apple, run on this phone. A cancelled sheet does nothing; any
+  /// other failure shows the message as a toast.
   Future<void> _signInSocial(SignInOption option) async {
-    if (_busy) return; // A double tap does not open a second sheet.
+    // Step 1: a double tap does not open a second sheet.
+    if (_busy) return;
     setState(() => _busy = true);
     try {
-      // Step 1: the native sheet for this provider (null means the person cancelled).
-      final SocialIdToken? social = option.method == 'apple'
-          ? await AppleNativeSignIn().signIn()
-          : await GoogleNativeSignIn().signIn();
-      if (social == null) return;
-      // Step 2: the API checks the token and starts the session.
-      await ref.read(sessionProvider.notifier).signInWithSocial(social);
-      if (mounted) screen.open('home');
+      // Step 2: the shared flow runs the sheet and the API; false means it was cancelled.
+      final started = await signInWithSocialOption(ref, option);
+      // Step 3: open the home only when the session really started.
+      if (started && mounted) screen.open('home');
     } on ApiException catch (e) {
       if (mounted) showIgongoToast(context, e.message);
     } finally {
@@ -76,10 +71,12 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
   /// Signs in, then opens the person's home. Errors show the API's message.
   Future<void> _signIn() async {
+    // Step 1: both boxes must be filled before the server is called.
     if (_email.text.trim().isEmpty || _password.text.isEmpty) {
       showIgongoToast(context, 'Enter your email and password.');
       return;
     }
+    // Step 2: sign in for real; the server's message is shown on failure.
     setState(() => _busy = true);
     try {
       await ref.read(sessionProvider.notifier).signInWithEmail(_email.text.trim(), _password.text);
@@ -93,16 +90,19 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // The switched-on Google and Apple options, only when the server lists them.
+    // Step 1: the switched-on options, filtered to the ones this phone can finish.
     final options = ref.watch(signInOptionsProvider).valueOrNull ?? const <SignInOption>[];
-    // Only the ones this phone can run natively (Apple on iPhone, Google on iPhone and Android).
-    final social = options.where((o) => isNativeSocialAvailable(o.method) && (o.method == 'google' || o.method == 'apple')).toList();
+    final social = availableSocialOptions(options);
     return AuthShell(
+      // Step 2: the card spacing from the design (24 sides, 12 top).
+      cardPadding: const EdgeInsets.fromLTRB(IgongoSpace.xl, IgongoSpace.md, IgongoSpace.xl, IgongoSpace.lg),
       children: [
-        // Step 1: the title and a short line under it.
-        Text('Welcome Back', style: context.text.headlineSmall),
-        Text('Sign in to continue to your account', style: context.text.bodySmall),
-        // Step 2: email and password, signed in for real.
+        // Step 3: the title and a short line under it, centred as in the design.
+        Text('Welcome Back', textAlign: TextAlign.center, style: context.text.headlineSmall),
+        Text('Sign in to continue', textAlign: TextAlign.center, style: context.text.bodySmall),
+        // Step 3: Google and Apple at the top, always shown; the ones not set up say so when tapped.
+        SocialAuthRow(available: social, busy: _busy, onPressed: _signInSocial),
+        // Step 4: email and password, signed in for real.
         IgongoField(
           label: 'Email address',
           hint: 'name@example.com',
@@ -119,7 +119,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
           onToggle: () => setState(() => _showPassword = !_showPassword),
           onSubmitted: (_) => _signIn(),
         ),
-        // Step 3: "Remember me" on the left, "Forgot password?" on the right.
+        // Step 5: "Remember me" on the left, "Forgot password?" on the right.
         Row(
           children: [
             // MergeSemantics joins the box and its words, so screen readers say "Remember me" for the box.
@@ -140,29 +140,18 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             ),
           ],
         ),
-        // Step 4: the Sign In button.
+        // Step 6: the Sign In button.
         IgongoButton(label: _busy ? 'Signing in…' : 'Sign In →', expand: true, onPressed: _busy ? null : _signIn),
-        // Step 5: Google and Apple, only when the server has them on and set up.
-        if (social.isNotEmpty) ...[
-          const AuthOrDivider(),
-          for (final option in social)
-            IgongoButton(
-              label: option.label,
-              variant: ButtonVariant.secondary,
-              expand: true,
-              onPressed: _busy ? null : () => _signInSocial(option),
-            ),
-        ],
-        // Step 6: guest sign-up (staff accounts come from the hotel).
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        // Step 7: the footer, with the guest sign-up link and the Contact Us placeholder.
+        // A Wrap, so the items flow onto a second line at large text sizes instead of overflowing.
+        Wrap(
+          alignment: WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Text("Don't have an account?", style: context.text.bodySmall),
-            IgongoButton(
-              label: 'Contact Us',
-              variant: ButtonVariant.text,
-              onPressed: () => screen.open('S00-18'),
-            ),
+            IgongoButton(label: 'Sign Up', variant: ButtonVariant.text, onPressed: () => screen.open('S00-18')),
+            Text('•', style: context.text.bodySmall),
+            const ContactUsLink(),
           ],
         ),
       ],

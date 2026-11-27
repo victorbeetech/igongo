@@ -2,7 +2,7 @@
 // needed), so the login screen shows only those.
 
 import '../../../shared/api/api_client.dart';
-import '../domain/sign_in_option.dart';
+import '../../../shared/social_sign_in/sign_in_option.dart';
 
 /// Calls the public login-methods endpoint.
 class LoginMethodsApi {

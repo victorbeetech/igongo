@@ -222,3 +222,19 @@ No key is written in the repository. The code is `modules/payments/src/infrastru
 **What this costs:** iPhones on iOS 15.0 to 15.4 can no longer install the app. Most phones are on newer versions, so this is a small cost.
 
 **Your choice, later:** keep 15.5 (the default), or ask Claude to find another map package that supports iOS 15.0. To change it back, set `IPHONEOS_DEPLOYMENT_TARGET` in `apps/igongo/ios/Runner.xcodeproj/project.pbxproj` once the map package allows it.
+
+---
+
+## Google and Apple logos for the sign-in buttons (27 Nov 2026)
+
+**Status:** done. The logos are the vector marks from the approved design, in `apps/igongo/assets/images/google_logo.svg` and `apple_logo.svg`.
+
+**Optional, later:** if the hotel or the owner has the official brand files, replace those two SVG files with the official ones. The buttons follow the file names, so nothing else changes.
+
+## Contact Us link on the sign-in and create account screens (27 Nov 2026)
+
+**Status:** both designs have a "Contact Us" link in the footer. The app has no contact screen to open, so the link is left out.
+
+**What is needed:** a decision on where "Contact Us" should go: a contact screen in the app, a phone number, or an email address.
+
+**Exact steps:** reply with the choice. Claude then adds the link to both footers in `sign_in_screen.dart` and `create_account_screen.dart`.

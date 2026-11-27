@@ -5,8 +5,8 @@ import '../../shared/catalog/catalog.dart';
 
 /// Rules for the frame around a screen.
 abstract final class ChromeRules {
-  // Screens drawn edge to edge with no frame at all: splash, welcome and sign in.
-  static const _fullScreen = {'S00-01', 'S00-02', 'S00-05'};
+  // Screens drawn edge to edge with no frame at all: splash, welcome, sign in and create account.
+  static const _fullScreen = {'S00-01', 'S00-02', 'S00-05', 'S00-18'};
 
   /// Whether [spec] is drawn edge to edge, with no app bar.
   static bool fullScreen(ScreenSpec spec) => _fullScreen.contains(spec.id);
