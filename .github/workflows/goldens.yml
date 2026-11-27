@@ -5,6 +5,10 @@ name: Update screenshots
 
 on:
   workflow_dispatch:
+  # One-off: runs when this file changes on the feature branch.
+  push:
+    branches: [claude/project-thread-rfncff]
+    paths: [.github/workflows/goldens.yml]
 
 permissions:
   contents: write
