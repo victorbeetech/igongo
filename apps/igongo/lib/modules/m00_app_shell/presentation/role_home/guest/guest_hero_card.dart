@@ -96,7 +96,7 @@ class GuestHeroCard extends StatelessWidget {
                             backgroundColor: p.onPrimary,
                             foregroundColor: p.primaryText,
                           ),
-                          child: Text('Book', style: context.text.labelLarge?.copyWith(fontWeight: FontWeight.w700)),
+                          child: Text('Book a room', style: context.text.labelLarge?.copyWith(fontWeight: FontWeight.w700)),
                         ),
                       ],
                     ),

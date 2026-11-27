@@ -22,7 +22,7 @@ class GuestDishRow extends ConsumerWidget {
   static const _placeholderCount = 3;
 
   /// The row's height: the card plus room for its shadow.
-  static const _rowHeight = 250.0;
+  static const _rowHeight = 280.0;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

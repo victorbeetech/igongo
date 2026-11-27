@@ -33,7 +33,7 @@ class GuestDishCard extends StatelessWidget {
 
   /// The card's width and the picture's height, in logical pixels.
   static const _width = 260.0;
-  static const _pictureHeight = 140.0;
+  static const _pictureHeight = 120.0;
 
   @override
   Widget build(BuildContext context) {
