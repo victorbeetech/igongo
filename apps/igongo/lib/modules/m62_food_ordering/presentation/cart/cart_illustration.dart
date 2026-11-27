@@ -1,5 +1,5 @@
-// A custom shopping cart drawn in code: a soft pink disc behind a red trolley
-// with a cream parcel, wheels and motion marks. It is decorative only.
+// The empty-cart illustration: the design's cart artwork, with a fallback
+// trolley drawn in code if the image is missing. It is decorative only.
 
 import 'package:material_ui/material_ui.dart';
 
@@ -12,7 +12,15 @@ class CartIllustration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ExcludeSemantics(
-    child: CustomPaint(size: const Size(200, 150), painter: _CartPainter(context.palette)),
+    // Step 1: the design's cart artwork. If it cannot load, the drawn trolley below shows instead.
+    child: Image.asset(
+      'assets/cart/cart-illustration.png',
+      width: 200,
+      height: 150,
+      fit: BoxFit.contain,
+      errorBuilder: (context, error, stack) =>
+          CustomPaint(size: const Size(200, 150), painter: _CartPainter(context.palette)),
+    ),
   );
 }
 
