@@ -4,6 +4,8 @@
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../../shared/theme/theme.dart';
+
 import '../../../../shared/ui/card/igongo_card.dart';
 
 /// The placeholder panel for today's news.

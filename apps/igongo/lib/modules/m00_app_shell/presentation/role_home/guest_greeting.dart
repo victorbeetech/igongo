@@ -4,6 +4,8 @@
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../../shared/theme/theme.dart';
+
 /// The time-of-day greeting, the signed-in person's first name and the place.
 class GuestGreeting extends StatelessWidget {
   /// Creates the greeting; [name] is null when signed out.

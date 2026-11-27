@@ -4,6 +4,8 @@
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../../shared/theme/theme.dart';
+
 import '../../../../shared/format/ugx.dart';
 import '../../../../shared/ui/card/igongo_card.dart';
 import '../../../m62_food_ordering/domain/menu_item.dart';
