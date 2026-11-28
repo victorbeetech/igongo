@@ -28,6 +28,10 @@ describe("checkProfilePhoto", () => {
     expect(() => checkProfilePhoto(dataUrl("image/jpeg", MAX_PROFILE_PHOTO_BYTES * 2))).toThrow("too large");
   });
 
+  it("refuses a payload that is not base64", () => {
+    expect(() => checkProfilePhoto("data:image/png;base64,<script>alert(1)</script>")).toThrow("Choose a JPG or PNG photo.");
+  });
+
   it("refuses an empty photo", () => {
     expect(() => checkProfilePhoto("data:image/jpeg;base64,")).toThrow("empty");
   });

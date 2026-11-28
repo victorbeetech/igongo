@@ -29,7 +29,4 @@ class ProfilePhotoApi {
   Future<void> save(Uint8List png) async {
     await _api.put('/api/users/me/photo', {'image': 'data:image/png;base64,${base64Encode(png)}'});
   }
-
-  /// Removes my photo.
-  Future<void> remove() => _api.send('DELETE', '/api/users/me/photo');
 }

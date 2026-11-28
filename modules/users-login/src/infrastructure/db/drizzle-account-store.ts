@@ -37,7 +37,7 @@ export class DrizzleAccountStore implements AccountStore {
     await this.db.update(user).set({ kind, updatedAt: new Date() }).where(eq(user.id, userId));
   }
 
-  async setImage(userId: string, image: string | null): Promise<void> {
+  async setImage(userId: string, image: string): Promise<void> {
     await this.db.update(user).set({ image, updatedAt: new Date() }).where(eq(user.id, userId));
   }
 

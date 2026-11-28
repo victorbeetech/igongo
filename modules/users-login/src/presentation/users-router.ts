@@ -3,7 +3,6 @@
  *
  *   GET    /me                        my account
  *   PUT    /me/photo                  save my profile photo (data URL, JPG or PNG)
- *   DELETE /me/photo                  remove my profile photo
  *   GET    /me/sessions               my signed-in devices
  *   DELETE /me/sessions/:sessionId    sign out one of my devices
  *   POST   /me/sessions/sign-out-others  sign out all my other devices
@@ -44,10 +43,6 @@ export function usersRouter(deps: (c: Context<ActorEnv>) => UsersDeps) {
         const image = checkProfilePhoto(c.req.valid("json").image);
         await deps(c).accounts.setImage(actorOf(c).userId, image);
         return c.json({ image });
-      })
-      .delete("/me/photo", async (c) => {
-        await deps(c).accounts.setImage(actorOf(c).userId, null);
-        return c.body(null, 204);
       })
       .get("/me/sessions", async (c) => {
         const me = actorOf(c);
