@@ -13,7 +13,7 @@ import 'package:igongo/shared/bookings/application/bookings_providers.dart';
 import 'package:igongo/shared/bookings/domain/booking_place.dart';
 import 'package:igongo/shared/bookings/domain/booking_rules.dart';
 import 'package:igongo/shared/bookings/domain/offering.dart';
-import 'package:igongo/shared/bookings/presentation/booking_next.dart';
+import 'package:igongo/shared/bookings/presentation/flow/common/flow_submit.dart';
 import 'package:igongo/shared/bookings/presentation/flow/common/flow_bottom_bar.dart';
 import 'package:igongo/shared/bookings/presentation/flow/common/flow_choice_tile.dart';
 import 'package:igongo/shared/bookings/presentation/flow/common/flow_counter.dart';
@@ -27,7 +27,6 @@ import 'package:igongo/shared/bookings/presentation/flow/common/flow_tag.dart';
 import 'package:igongo/shared/format/day_key.dart';
 import 'package:igongo/shared/format/ugx.dart';
 import 'package:igongo/shared/theme/theme.dart';
-import 'package:igongo/shared/ui/toast/igongo_toast.dart';
 
 /// The pool pass booking screen, live from the pool module's API.
 class PoolAccommodationScreen extends ConsumerStatefulWidget {
@@ -61,29 +60,21 @@ class _PoolAccommodationScreenState extends ConsumerState<PoolAccommodationScree
   /// True while the bookings are being made.
   bool _busy = false;
 
-  /// Books the pass and each ticked add-on, then moves on from the pass's booking.
+  /// Books the pass for the swimmers on the day and session, plus each ticked add-on.
   Future<void> _confirm(List<Offering> passes, List<Offering> addOns) async {
-    // Step 1: a pass must be picked, and a session when the pass has sessions.
-    if (passes.isEmpty) return;
     final pass = passes[_pass];
-    final slot = pass.slots.isEmpty ? null : pass.slots[_session];
-    final swimmers = _adults + _children;
     setState(() => _busy = true);
-    try {
-      // Step 2: book the pass for the swimmers on the day and session picked.
-      final api = ref.read(bookingsApiProvider(widget.place));
-      final booking = await api.book(offeringId: pass.id, units: swimmers, date: dayKey(_day), slot: slot);
-      // Step 3: book each ticked add-on (one unit each), so each one is a real booking.
-      for (final i in _addOns) {
-        await api.book(offeringId: addOns[i].id, units: 1);
-      }
-      ref.invalidate(myBookingsProvider(widget.place));
-      if (mounted) await openAfterBooking(context, booking, widget.place);
-    } on Exception catch (e) {
-      if (mounted) showIgongoToast(context, '$e');
-    } finally {
-      if (mounted) setState(() => _busy = false);
-    }
+    await submitFlowBooking(
+      context,
+      ref,
+      widget.place,
+      offering: pass,
+      units: _adults + _children,
+      date: dayKey(_day),
+      slot: pass.slots.isEmpty ? null : pass.slots[_session],
+      extras: [for (final i in _addOns) addOns[i]],
+    );
+    if (mounted) setState(() => _busy = false);
   }
 
   @override
