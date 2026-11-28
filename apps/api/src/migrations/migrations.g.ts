@@ -90,6 +90,12 @@ export const MIGRATIONS: Migration[] = [
  },
  {
   "module": "roles-permissions",
+  "name": "0011_super_admin_notify_permissions",
+  "checksum": "10d8fe72b7c40e69",
+  "sql": "-- The super admin posts updates and notifications from the web portal, which\n-- calls POST /api/notifications/push/broadcast (needs notifications.broadcast.send)\n-- and sends a test push (needs notifications.push.test). Migration 0010 granted\n-- the super admin every key the modules defined then, and these two were not in\n-- that list, so the super admin got \"permission_denied\". Grants them now.\n-- ON CONFLICT DO NOTHING keeps any change already made in the app.\nINSERT INTO \"roles\".\"role_permissions\" (\"role_id\",\"permission_key\",\"scope\") VALUES\n('role_super-admin','notifications.broadcast.send','all'),\n('role_super-admin','notifications.push.test','all')\nON CONFLICT DO NOTHING;\n"
+ },
+ {
+  "module": "roles-permissions",
   "name": "0012_points_rewards_permissions",
   "checksum": "e724843e4a5d2716",
   "sql": "-- Points rewards: the super admin can view and change the points rules,\n-- run expiry and adjust a guest's points by hand, without code. Other roles\n-- get these keys from the super admin screens.\n--> statement-breakpoint\nINSERT INTO \"roles\".\"role_permissions\" (\"role_id\",\"permission_key\",\"scope\") SELECT r.\"id\", p.key, 'all' FROM \"roles\".\"roles\" r CROSS JOIN (VALUES ('points-rewards.rules.view'), ('points-rewards.rules.edit'), ('points-rewards.points.adjust')) AS p(key) WHERE r.\"id\" = 'role_super-admin' ON CONFLICT DO NOTHING;\n"

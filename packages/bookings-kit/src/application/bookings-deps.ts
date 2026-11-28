@@ -1,5 +1,6 @@
 /** Everything the kit's use cases need, given by the gateway per request for one module. */
 
+import type { UserNotifier } from "@igongo/contracts/notifications";
 import type { ChangeContext } from "@igongo/core";
 import type { BookingModule } from "./booking-module";
 import type { BookingRepository } from "./ports/booking-repository";
@@ -14,4 +15,6 @@ export interface BookingsDeps {
   change: ChangeContext;
   /** The secret that signs tickets (TICKET_SIGNING_KEY). Null or missing means ticket checks are off. */
   ticketKey?: string | null;
+  /** Tells a guest about a change to their booking (Alerts inbox and phones). Missing means no messages. */
+  notify?: UserNotifier;
 }
