@@ -231,10 +231,14 @@ No key is written in the repository. The code is `modules/payments/src/infrastru
 
 **Optional, later:** if the hotel or the owner has the official brand files, replace those two SVG files with the official ones. The buttons follow the file names, so nothing else changes.
 
-## Contact Us link on the sign-in and create account screens (27 Nov 2026)
+## Contact Us: confirm the hotel's numbers and address (27 Nov 2026)
 
-**Status:** both designs have a "Contact Us" link in the footer. The app has no contact screen to open, so the link is left out.
+**Status:** the Contact Us screen (S00-46) is built, and the "Contact Us" links on the sign-in and create account screens open it. It is in the PR, waiting for your visual approval.
 
-**What is needed:** a decision on where "Contact Us" should go: a contact screen in the app, a phone number, or an email address.
+**What is needed:** please confirm these are the final details. They are placeholders taken from the design, and the app shows them as they are:
+- Front desk number: +256 393 262 050 (Call Now button, and the top-bar call icon uses +256 392 722 963 from the design)
+- Reservations email: reservations@igongo.co.ug
+- WhatsApp number shown on the card: +256 772 123 456. The chat button itself opens the number the super admin sets in the hotel settings, not this one.
+- Address: Mbarara - Masaka Highway, Biharwe, Mbarara, Uganda
 
-**Exact steps:** reply with the choice. Claude then adds the link to both footers in `sign_in_screen.dart` and `create_account_screen.dart`.
+**Exact steps:** send the final numbers and address. Claude then changes them in one file, `apps/igongo/lib/shared/contact/contact_details.dart`. For the WhatsApp number, the super admin sets it in the web settings (Hotel profile, "Whatsapp").
