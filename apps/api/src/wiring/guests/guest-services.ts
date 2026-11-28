@@ -26,7 +26,7 @@ import type { PointsDesk } from "@igongo/contracts/points-rewards";
 import { DrizzlePointsStore, pointsDesk as buildPointsDesk, type PointsDeps } from "@igongo/points-rewards";
 import { deliveryDesk, DrizzleJobRepository, DrizzleRiderRepository, SettingsDeliveryRulesStore, type DeliveryDeps } from "@igongo/delivery-riders";
 import { eventsConferencesDeps } from "@igongo/events-conferences";
-import { DrizzleCartRepository, DrizzleLocationRepository, DrizzleOrderRepository, DrizzleRatingRepository, orderPayable, orderTracker, SettingsRulesStore, type OrderingDeps } from "@igongo/food-ordering";
+import { DrizzleCartRepository, DrizzleLocationRepository, DrizzleOrderRepository, DrizzleRatingRepository, DrizzleSavedDishRepository, orderPayable, orderTracker, SettingsRulesStore, type OrderingDeps } from "@igongo/food-ordering";
 import { DrizzleItemRepository, menuReader, SettingsMenuStore, type MenuDeps } from "@igongo/menu-catalogue";
 import { museumDeps } from "@igongo/museum";
 import { DrizzlePaymentRepository, paymentProviders, resendReceiptMailer, SettingsMethodStore, type PaymentsDeps } from "@igongo/payments";
@@ -68,8 +68,8 @@ export class GuestServices {
     private readonly ticketKey: string | null = null,
   ) {}
 
-  /** True when the super admin has [key] on and not in maintenance. */
-  private async isOn(key: string): Promise<boolean> {
+  /** True when the super admin has [key] on and not in maintenance. Public so the profile stats can skip switched-off modules. */
+  async isOn(key: string): Promise<boolean> {
     const s = await this.modules.stateOf(key);
     return s.enabled && !s.maintenance;
   }
@@ -96,6 +96,7 @@ export class GuestServices {
     const m = this.menu();
     return {
       orders: new DrizzleOrderRepository(this.db), carts: new DrizzleCartRepository(this.db), locations: new DrizzleLocationRepository(this.db), ratings: new DrizzleRatingRepository(this.db), rules: new SettingsRulesStore(this.db),
+      savedDishes: new DrizzleSavedDishRepository(this.db),
       menu: menuReader(m.items, m.settings, this.change.now), delivery: this.deliveryDesk(), promos: this.promoDesk(), points: this.pointsDesk(), notify: this.notify, change: this.change,
     };
   }

@@ -239,6 +239,12 @@ export const MIGRATIONS: Migration[] = [
   "sql": "ALTER TABLE \"orders\".\"orders\" ADD COLUMN \"points_spent\" integer DEFAULT 0 NOT NULL;--> statement-breakpoint\nALTER TABLE \"orders\".\"orders\" ADD COLUMN \"points_discount\" integer DEFAULT 0 NOT NULL;"
  },
  {
+  "module": "food-ordering",
+  "name": "0006_saved_dishes",
+  "checksum": "390ab13b75a3da0b",
+  "sql": "CREATE TABLE \"orders\".\"saved_dishes\" (\n\t\"user_id\" text NOT NULL,\n\t\"item_id\" text NOT NULL,\n\t\"outlet\" text NOT NULL,\n\t\"saved_at\" timestamp with time zone NOT NULL,\n\tCONSTRAINT \"saved_dishes_user_id_item_id_pk\" PRIMARY KEY(\"user_id\",\"item_id\")\n);\n--> statement-breakpoint\nCREATE INDEX \"saved_dishes_user_idx\" ON \"orders\".\"saved_dishes\" USING btree (\"user_id\",\"saved_at\");"
+ },
+ {
   "module": "delivery-riders",
   "name": "0000_init",
   "checksum": "c2b38ace91546101",

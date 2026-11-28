@@ -12,6 +12,9 @@
  *   GET   /orders/location        my saved delivery pin, or null
  *   PUT   /orders/location        save my delivery pin (the map point)
  *   DELETE /orders/location       remove my saved delivery pin
+ *   GET   /orders/dishes          my saved dishes, with today's names and prices
+ *   PUT   /orders/dishes/:itemId  save a dish to my list (the heart)
+ *   DELETE /orders/dishes/:itemId remove a dish from my list
  *   GET   /orders/stars           each dish's average stars, for the menu
  *   GET   /orders/reviews         newest reviews (all=1: staff, with hidden ones)
  *   POST  /orders/reviews/:id/hide  staff hide or show a review
@@ -37,6 +40,7 @@ import { hideReview, rateOrder } from "../application/use-cases/rate-order";
 import { reorder } from "../application/use-cases/reorder";
 import { clearSavedCart, readSavedCart, saveCart } from "../application/use-cases/guest-cart";
 import { clearSavedLocation, readSavedLocation, saveLocation } from "../application/use-cases/guest-location";
+import { listSavedDishes, removeDish, saveDish } from "../application/use-cases/saved-dishes";
 import { priceCart } from "../application/use-cases/price-cart";
 import { orderNumber, type Order } from "../domain/order";
 import type { OrderRating } from "../domain/order-rating";
@@ -114,6 +118,19 @@ export function ordersRouter(deps: (c: Context<ActorEnv>) => OrderingDeps) {
     .put("/location", requireSignIn, zValidator("json", pinBody), async (c) => c.json(await saveLocation(deps(c), actorOf(c).userId, c.req.valid("json"))))
     .delete("/location", requireSignIn, async (c) => {
       await clearSavedLocation(deps(c), actorOf(c).userId);
+      return c.body(null, 204);
+    })
+    // Saved dishes: always the caller's own list (the user ID comes from the session).
+    .get("/dishes", requireSignIn, async (c) => {
+      const items = await listSavedDishes(deps(c), actorOf(c).userId);
+      return c.json({ items });
+    })
+    .put("/dishes/:itemId", requireSignIn, async (c) => {
+      await saveDish(deps(c), actorOf(c).userId, c.req.param("itemId"));
+      return c.body(null, 204);
+    })
+    .delete("/dishes/:itemId", requireSignIn, async (c) => {
+      await removeDish(deps(c), actorOf(c).userId, c.req.param("itemId"));
       return c.body(null, 204);
     })
     .get("/stars", async (c) => c.json({ items: await deps(c).ratings.stars() }))

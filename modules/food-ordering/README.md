@@ -2,7 +2,8 @@
 
 Every food order of every type. Spec: [docs/modules/62-food-ordering.md](../../docs/modules/62-food-ordering.md).
 
-- **Routes** (`/api/orders`): `GET|PUT /rules`, `POST /quote`, `POST /`, `GET /mine`, `GET /stars`, `GET /reviews` (`all=1` for staff), `POST /reviews/:orderId/hide`, `GET /board`, `GET /:id`, `POST /:id/status`, `POST /:id/cancel`, `POST /:id/rating`, `GET /:id/reorder`.
+- **Routes** (`/api/orders`): `GET|PUT /rules`, `POST /quote`, `POST /`, `GET /mine`, `GET|PUT|DELETE /dishes/:itemId` (saved dishes, the heart), `GET /stars`, `GET /reviews` (`all=1` for staff), `POST /reviews/:orderId/hide`, `GET /board`, `GET /:id`, `POST /:id/status`, `POST /:id/cancel`, `POST /:id/rating`, `GET /:id/reorder`.
+- **Saved dishes**: one row per guest and dish (`orders.saved_dishes`). Names and prices come from the menu each time, and a dish that leaves the menu drops off the list. **Points** are earned and spent through Points rewards (`PointsDesk`), not here.
 - **Prices**: always worked out here, on the server: lines with options, the zone's delivery fee, and a promo or voucher code through the `PromoDesk` (Promotions & Vouchers). The discount never exceeds the food. The app's numbers are never used.
 - **Scheduled orders**: delivery, takeaway and room service may carry a wanted time (`arriveAt`), up to `scheduleAheadDays` ahead (0 turns it off); the kitchen gets it ready in time to travel.
 - **Double tap**: the app sends one `requestKey` per checkout; the same key from the same person returns the same order.
