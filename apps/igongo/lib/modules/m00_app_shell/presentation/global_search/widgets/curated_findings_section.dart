@@ -1,5 +1,5 @@
 // The "Curated Findings" block: the title with a count and a Sort button, then one
-// card per finding, one under another.
+// card per finding, one under another. The screen owns the heart and sort state.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
@@ -16,9 +16,14 @@ class CuratedFindingsSection extends StatelessWidget {
     required this.findings,
     required this.favourites,
     required this.onFavourite,
+    required this.onOpen,
+    required this.onSort,
   });
 
-  /// The findings to show, in order.
+  /// Called when the Sort button is tapped.
+  final VoidCallback onSort;
+
+  /// The findings to show, in the admin's order.
   final List<CuratedFinding> findings;
 
   /// The indexes of the findings marked as favourite.
@@ -26,6 +31,9 @@ class CuratedFindingsSection extends StatelessWidget {
 
   /// Called with a finding's index when its favourite button is tapped.
   final ValueChanged<int> onFavourite;
+
+  /// Called with a finding's index when its button is tapped.
+  final ValueChanged<int> onOpen;
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +54,7 @@ class CuratedFindingsSection extends StatelessWidget {
                   children: [
                     Text('Curated Findings', style: context.text.displaySmall),
                     DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: p.warmCard,
-                        borderRadius: BorderRadius.circular(IgongoRadius.pill),
-                      ),
+                      decoration: BoxDecoration(color: p.warmCard, borderRadius: BorderRadius.circular(IgongoRadius.pill)),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.sm, vertical: IgongoSpace.xxs),
                         child: Text(
@@ -62,26 +67,30 @@ class CuratedFindingsSection extends StatelessWidget {
                 ),
               ),
               TextButton.icon(
-                onPressed: () {}, // Sorting is wired later.
+                onPressed: onSort,
                 icon: Icon(Icons.swap_vert, size: IgongoSpace.md, color: p.primary),
-                label: Text(
-                  'Sort',
-                  style: context.text.labelSmall?.copyWith(color: p.primary, fontWeight: FontWeight.w700),
-                ),
+                label: Text('Sort', style: context.text.labelSmall?.copyWith(color: p.primary, fontWeight: FontWeight.w700)),
               ),
             ],
           ),
           const SizedBox(height: IgongoSpace.md),
-          // Step 2: one card per finding, each with a gap under it.
-          for (var i = 0; i < findings.length; i++)
+          // Step 2: no findings yet, so say so; otherwise one card per finding.
+          if (findings.isEmpty)
             Padding(
-              padding: const EdgeInsets.only(bottom: IgongoSpace.lg),
-              child: CuratedFindingCard(
-                finding: findings[i],
-                favourite: favourites.contains(i),
-                onFavourite: () => onFavourite(i),
+              padding: const EdgeInsets.symmetric(vertical: IgongoSpace.lg),
+              child: Text('No curated findings yet.', style: context.text.bodyMedium?.copyWith(color: p.textMuted)),
+            )
+          else
+            for (var i = 0; i < findings.length; i++)
+              Padding(
+                padding: const EdgeInsets.only(bottom: IgongoSpace.lg),
+                child: CuratedFindingCard(
+                  finding: findings[i],
+                  favourite: favourites.contains(i),
+                  onFavourite: () => onFavourite(i),
+                  onOpen: () => onOpen(i),
+                ),
               ),
-            ),
         ],
       ),
     );

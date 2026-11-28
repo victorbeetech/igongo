@@ -22,7 +22,15 @@ export const offeringBody = z.object({
   visibleToClients: z.boolean().default(true),
   sortOrder: z.number().int().min(0).max(10_000).default(0),
 });
-export const offeringPatch = offeringBody.partial();
+/**
+ * `PATCH /offerings/:id`: only the fields sent are changed. `.partial()` alone would
+ * still fill each default (empty times, no details, shown to clients) for a field the
+ * caller left out, so a switch that only sends `active` would wipe the rest. Each field
+ * here is made optional without its default, so a missing field is left as it is.
+ */
+export const offeringPatch = z.object(
+  Object.fromEntries(Object.entries(offeringBody.shape).map(([key, field]) => [key, (field instanceof z.ZodDefault ? field.unwrap() : field).optional()])),
+);
 
 /** The wanted dates or slot, for availability and booking. */
 const wanted = { date: z.iso.date().optional(), endDate: z.iso.date().optional(), slot: time.optional() };
@@ -39,6 +47,12 @@ export const bookBody = z.object({
 
 /** `GET /bookings`. */
 export const listQuery = z.object({ date: z.iso.date().optional(), status: z.enum(BOOKING_STATUSES).optional() });
+
+/** `GET /bookings/mine` paging: `before` is the last page's `nextBefore`; `limit` is the page size. */
+export const myBookingsQuery = z.object({
+  before: z.iso.datetime({ offset: true }).optional(),
+  limit: z.coerce.number().int().min(1).max(200).default(200),
+});
 
 /** `POST /bookings/:id/cancel`. */
 export const cancelBody = z.object({ reason: z.string().trim().min(2).max(300) });

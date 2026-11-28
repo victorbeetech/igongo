@@ -24,6 +24,7 @@
     "./bonuses-rewards": "./bonuses-rewards/index.ts",
     "./payroll": "./payroll/index.ts",
     "./reports-analytics": "./reports-analytics/index.ts",
-    "./promotions-vouchers": "./promotions-vouchers/index.ts"
+    "./promotions-vouchers": "./promotions-vouchers/index.ts",
+    "./points-rewards": "./points-rewards/index.ts"
   }
 }

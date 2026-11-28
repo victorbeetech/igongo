@@ -1,5 +1,5 @@
 // The words shown where a dish detail is designed but not wired yet (kitchen,
-// serves, calories, the chef's badge, favourite and share). Screens show these
+// serves, calories, the chef's badge and share). Screens show these
 // instead of invented values; when a field is wired, its widget switches to the real value.
 
 /// Shown in place of a feature that is not built yet.

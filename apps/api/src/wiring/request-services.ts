@@ -24,7 +24,6 @@ import {
   DrizzleLoginSettingsStore,
   DrizzlePinStore,
   notConfiguredCardDirectory,
-  notConfiguredCodeSender,
   resendCodeSender,
   DEFAULT_EMAIL_SENDER,
   type Auth,
@@ -128,11 +127,7 @@ export class RequestServices {
         access: this.access(),
         pins: new DrizzlePinStore(this.db),
         cards: notConfiguredCardDirectory,
-        // Email codes and reset links go through Resend once its key and sender are set (SMS and WhatsApp stay off).
-        codes: resendCodeSender({
-          apiKey: async () => (await this.secrets().get("resend.api_key")) ?? this.env.RESEND_API_KEY ?? null,
-          from: async () => (await this.secrets().get("resend.sender")) ?? this.env.RECEIPT_FROM ?? DEFAULT_EMAIL_SENDER,
-        }),
+        codes: this.emailCodes(),
         audit: this.audit(),
         failedLogins: new DrizzleFailedLoginStore(this.db),
         devices: new DrizzleKnownDeviceStore(this.db),
@@ -141,7 +136,14 @@ export class RequestServices {
       }),
   );
   /** New-device and sign-in method alerts, by email (once set up) and push. */
-  readonly securityAlerts = once(() => securityAlerts(notConfiguredCodeSender, this.notifier(), this.access(), this.logger()));
+  readonly securityAlerts = once(() => securityAlerts(this.emailCodes(), this.notifier(), this.access(), this.logger()));
+  /** Email codes, reset links and security alerts go through Resend once its key and sender are set (SMS and WhatsApp stay off). */
+  readonly emailCodes = once(() =>
+    resendCodeSender({
+      apiKey: async () => (await this.secrets().get("resend.api_key")) ?? this.env.RESEND_API_KEY ?? null,
+      from: async () => (await this.secrets().get("resend.sender")) ?? this.env.RECEIPT_FROM ?? DEFAULT_EMAIL_SENDER,
+    }),
+  );
 
   /** HR's staff records for the super admin's staff match, recorded as [actor]. */
   staffRecords(actor: { userId: string; name: string } | undefined) {

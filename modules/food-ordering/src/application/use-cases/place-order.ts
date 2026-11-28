@@ -11,7 +11,7 @@
  *   5. a guest's order empties their saved cart.
  */
 
-import { newId, recordChange } from "@igongo/core";
+import { AppError, newId, recordChange } from "@igongo/core";
 import { orderNumber, type Order, type OrderChannel } from "../../domain/order";
 import { paidBeforeKitchen } from "../../domain/ordering-rules";
 import type { OrderingDeps } from "../ordering-deps";
@@ -26,6 +26,8 @@ export interface PlaceInput extends CartInput {
   table?: string;
   /** The app's one-per-checkout key (double-tap guard). */
   requestKey?: string;
+  /** Points the guest spends on this order (signed-in guests only). */
+  pointsToSpend?: number;
 }
 
 export async function placeOrder(deps: OrderingDeps, input: PlaceInput): Promise<Order> {
@@ -38,14 +40,28 @@ export async function placeOrder(deps: OrderingDeps, input: PlaceInput): Promise
   }
   // 1. Price and check.
   const cart = await priceCart(deps, input);
+  // The order's id is made now, so points spent on it are recorded against the same id.
+  const id = newId("ord");
+  // 1b. Points: the value comes off the total; they are spent now, against this order.
+  const points = input.pointsToSpend ?? 0;
+  let pointsDiscount = 0;
+  if (points > 0) {
+    if (!deps.points) throw new AppError("module_disabled", "Points are switched off for now.");
+    if (!input.customer.userId) throw new AppError("bad_request", "Points can only be used by a signed-in guest.");
+    pointsDiscount = await deps.points.valueOf(points);
+    if (pointsDiscount > cart.total) throw new AppError("bad_request", "Those points are worth more than this order. Use fewer points.");
+    await deps.points.spend(input.customer.userId, points, id);
+  }
+  const total = cart.total - pointsDiscount;
   // 2. Kitchen now, or after payment.
-  const status = paidBeforeKitchen(cart.rules, input.type, cart.total) > 0 ? "awaiting_payment" : "received";
+  const status = paidBeforeKitchen(cart.rules, input.type, total) > 0 ? "awaiting_payment" : "received";
   // 3. Number and save.
   const order: Order = {
-    id: newId("ord"), seq: await deps.orders.nextSeq(), userId: input.customer.userId, customerName: input.customer.name, customerPhone: input.customer.phone,
+    id, seq: await deps.orders.nextSeq(), userId: input.customer.userId, customerName: input.customer.name, customerPhone: input.customer.phone,
     outlet: input.outlet, type: input.type, channel: input.channel, status, lines: cart.lines, notes: input.notes ?? null, allergies: input.allergies ?? null,
     table: input.table ?? null, deliverTo: input.deliverTo ?? null, subtotal: cart.subtotal, discount: cart.discount, promoCode: cart.promo?.code ?? null,
-    deliveryFee: cart.deliveryFee, containerFee: cart.containerFee, total: cart.total, paid: 0, arriveAt: input.arriveAt ?? null, readyAt: cart.readyAt,
+    pointsSpent: pointsDiscount > 0 ? points : 0, pointsDiscount,
+    deliveryFee: cart.deliveryFee, containerFee: cart.containerFee, total, paid: 0, arriveAt: input.arriveAt ?? null, readyAt: cart.readyAt,
     takenBy: input.channel === "staff" ? deps.change.actorId : null, requestKey: key,
     history: [{ status, at: now.toISOString(), by: deps.change.actorId, note: null }], createdAt: now, updatedAt: now,
   };

@@ -8,6 +8,8 @@ library;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:igongo/app/catalog/catalog_index.dart';
 import 'package:igongo/app/igongo_app.dart';
+import 'package:igongo/modules/m10_notifications/application/inbox_providers.dart';
+import 'package:igongo/modules/m10_notifications/domain/inbox_page.dart';
 import 'package:igongo/shared/session/session_controller.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -28,7 +30,11 @@ void main() {
         CatalogIndex.instance.locationOf(CatalogIndex.instance.screens['S00-28']!),
         mode: mode,
         preview: false,
-        overrides: [sessionProvider.overrideWith(FakeGuestSession.new)],
+        // A fixed empty inbox, so the picture never depends on the network.
+        overrides: [
+          sessionProvider.overrideWith(FakeGuestSession.new),
+          inboxProvider.overrideWith((ref) async => const InboxPage(items: [], unreadCount: 0)),
+        ],
       );
       // Step 4: compare with the approved picture.
       await expectLater(find.byType(IgongoApp), matchesGoldenFile('goldens/$modeName/updates_large.png'));

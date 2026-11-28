@@ -24,10 +24,13 @@ export const MODULES = [
   // Guests and riders (build step 3).
   "crm-guests",
   "menu-catalogue",
+  "guest-content",
+  "points-rewards",
   "food-ordering",
   "delivery-riders",
   "payments",
   "room-bookings",
+  "booking-calendar",
   "museum",
   "events-conferences",
   "pool",

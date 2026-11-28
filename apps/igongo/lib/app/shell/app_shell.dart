@@ -43,7 +43,7 @@ class AppShell extends ConsumerWidget {
     // Step 1a-2: a signed-in guest's My profile (Me tab) has no app bar either: its red banner
     // runs under the status bar and acts as the app bar, with safe-area spacing for the title.
     final guestProfile = spec.id == 'S00-31' && guestOnly;
-    // Step 1a-3: a signed-in guest's Food tab (S62-01) draws its own one-row top bar (venue, wish list, WhatsApp).
+    // Step 1a-3: a signed-in guest's Food tab (S62-01) draws its own one-row top bar (the venue).
     final guestFood = spec.id == 'S62-01' && guestOnly;
     // Step 1a-4: a signed-in guest's Updates (S00-28) draws its own top row (logo, bell, photo), so the app bar is hidden there.
     final guestUpdates = spec.id == 'S00-28' && guestOnly;

@@ -3,6 +3,7 @@
 import type { DeliveryDesk } from "@igongo/contracts/delivery-riders";
 import type { MenuReader } from "@igongo/contracts/menu-catalogue";
 import type { UserNotifier } from "@igongo/contracts/notifications";
+import type { PointsDesk } from "@igongo/contracts/points-rewards";
 import type { PromoDesk } from "@igongo/contracts/promotions-vouchers";
 import type { ChangeContext } from "@igongo/core";
 import type { CartRepository } from "./ports/cart-repository";
@@ -25,6 +26,8 @@ export interface OrderingDeps {
   delivery: DeliveryDesk | null;
   /** Promotions & Vouchers (promo and voucher codes), or null while that module is switched off. */
   promos: PromoDesk | null;
+  /** Points rewards, or null while that module is switched off: spend at checkout, earn when paid, give back on cancel. */
+  points: PointsDesk | null;
   /** Pushes order news to the guest's phone (Notifications); sends nothing when not set up. */
   notify: UserNotifier;
   change: ChangeContext;

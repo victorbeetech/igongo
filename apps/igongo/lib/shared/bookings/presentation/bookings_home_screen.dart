@@ -41,6 +41,9 @@ class BookingsHomeScreen extends ConsumerWidget {
   /// The number of the My receipts screen.
   static const _receiptsId = 'S78-06';
 
+  /// The booking calendar (module 85, S85-01), opened from the calendar badge.
+  static const _calendarId = 'S85-01';
+
   /// The room booking screen.
 
   /// The food ordering screen (used for Room Order).
@@ -71,7 +74,7 @@ class BookingsHomeScreen extends ConsumerWidget {
           // Step 1: the page: the title row above the scrolling content.
           Column(
             children: [
-              BookingsHomeHeader(onReceipts: () => screen.open(_receiptsId)),
+              BookingsHomeHeader(onReceipts: () => screen.open(_receiptsId), onCalendar: () => screen.open(_calendarId)),
               Expanded(
                 child: ListView(
                   padding: EdgeInsets.zero,

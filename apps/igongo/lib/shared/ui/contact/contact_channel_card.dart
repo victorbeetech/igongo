@@ -16,7 +16,7 @@ class ContactChannelCard extends StatelessWidget {
     required this.glyph,
     required this.discColor,
     required this.title,
-    required this.chip,
+    this.chip,
     required this.detail,
     required this.actionLabel,
     required this.actionIcon,
@@ -35,8 +35,8 @@ class ContactChannelCard extends StatelessWidget {
   /// The channel name, such as "Call Front Desk".
   final String title;
 
-  /// The short status text on the right of the title, such as "24/7".
-  final String chip;
+  /// The short status text on the right of the title, such as "24/7". Null shows no chip.
+  final String? chip;
 
   /// True shows a small green dot before [chip] (used for "Live").
   final bool chipLive;
@@ -63,6 +63,8 @@ class ContactChannelCard extends StatelessWidget {
   Widget build(BuildContext context) {
     // Step 1: read the theme once for this card (light or dark mode).
     final p = context.palette;
+    // Step 0: the chip text in a local, so an empty chip is simply left out.
+    final chipText = chip;
     return Container(
       decoration: BoxDecoration(
         color: p.surface,
@@ -94,8 +96,11 @@ class ContactChannelCard extends StatelessWidget {
                     Row(
                       children: [
                         Expanded(child: Text(title, style: context.text.titleMedium)),
-                        const SizedBox(width: IgongoSpace.xs),
-                        _Chip(label: chip, live: chipLive),
+                        // Step 3b: the chip only when there is one to show.
+                        if (chipText != null) ...[
+                          const SizedBox(width: IgongoSpace.xs),
+                          _Chip(label: chipText, live: chipLive),
+                        ],
                       ],
                     ),
                     const SizedBox(height: IgongoSpace.xxs),

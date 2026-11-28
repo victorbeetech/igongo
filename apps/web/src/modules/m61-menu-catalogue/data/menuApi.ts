@@ -17,7 +17,14 @@ export const useMenuItems = (outlet: string, all = false) =>
 
 export const useMenuSettings = () => useQuery({ queryKey: ["menu", "settings"], queryFn: () => api<MenuSettings>("/api/menu/settings") });
 
-export const useSaveMenuSettings = () => useApiMutation((s: MenuSettings) => api<MenuSettings>("/api/menu/settings", { method: "PUT", body: s }), { done: "Outlets saved", refresh: [["menu"]] });
+/** Adds a venue (super admin only). The key is made from the name by the API. */
+export const useAddOutlet = () => useApiMutation((v: { name: string; clientVisible: boolean }) => api<Outlet>("/api/menu/outlets", { method: "POST", body: v }), { done: "Venue added", refresh: [["menu"]] });
+
+/** Renames a venue or switches it on or off for guests (super admin only). */
+export const useEditOutlet = () => useApiMutation((v: { key: string; patch: { name?: string; clientVisible?: boolean } }) => api<Outlet>(`/api/menu/outlets/${v.key}`, { method: "PATCH", body: v.patch }), { done: "Venue saved", refresh: [["menu"]] });
+
+/** Removes a venue that has no dishes (super admin only). */
+export const useRemoveOutlet = () => useApiMutation((key: string) => api<{ key: string }>(`/api/menu/outlets/${key}`, { method: "DELETE" }), { done: "Venue removed", refresh: [["menu"]] });
 
 export const useAddItem = () => useApiMutation((i: Partial<MenuItem>) => api<MenuItem>("/api/menu/items", { method: "POST", body: i }), { done: "Item added", refresh: [["menu"]] });
 
