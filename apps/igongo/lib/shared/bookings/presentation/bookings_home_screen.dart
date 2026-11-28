@@ -18,6 +18,7 @@ import '../domain/placeholder_copy.dart';
 import 'booking_hero.dart';
 import 'home/hero_chips.dart';
 import 'home/active_reservation_card.dart';
+import 'home/book_on_whatsapp_card.dart';
 import 'home/booking_segment_tabs.dart';
 import 'home/bookings_home_header.dart';
 import 'home/itinerary_section.dart';
@@ -41,7 +42,6 @@ class BookingsHomeScreen extends ConsumerWidget {
   static const _receiptsId = 'S78-06';
 
   /// The room booking screen.
-  static const _bookRoomId = 'S67-02';
 
   /// The food ordering screen (used for Room Order).
   static const _foodId = 'S62-01';
@@ -114,13 +114,20 @@ class BookingsHomeScreen extends ConsumerWidget {
                         spacing: IgongoSpace.md,
                         children: [
                           // Step 3: the active reservation (the next stay) with its three actions.
-                          ActiveReservationCard(
-                            stay: stay,
-                            onDigitalKey: () => screen.open(_myBookingsId),
-                            onRoomOrder: () => screen.open(_foodId),
-                            onManage: () => screen.open(_myBookingsId),
-                            onBook: () => screen.open(_bookRoomId),
-                          ),
+                          // With no stay, a short WhatsApp call to action; with a stay, the card.
+                          if (stay == null)
+                            const BookOnWhatsappCard()
+                          else
+                            ActiveReservationCard(
+                              stay: stay,
+                              // The next stay comes from the room module, so it is a room.
+                              isRoomStay: true,
+                              onDigitalKey: () => screen.open(_myBookingsId),
+                              onRoomOrder: () => screen.open(_foodId),
+                              onManage: () => screen.open(_myBookingsId),
+                              onEventDetails: () => screen.open(_myBookingsId),
+                              onVenue: () => screen.open(_myBookingsId),
+                            ),
                           // Step 4: the pill tabs.
                           BookingSegmentTabs(
                             activeCount: stay == null ? 0 : 1,
