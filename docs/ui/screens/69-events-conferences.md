@@ -18,6 +18,7 @@
 | <a id="s69-10"></a>S69-10 | Event check-in | App, Kiosk | `/events-conferences/event-check-in` | Scan QR invites at the door | Role home, S69-09 Guest list | Back only |
 | <a id="s69-11"></a>S69-11 | Post-event report | App, Web | `/events-conferences/post-event-report` | Numbers, feedback and costs | S69-05 Event detail | Back only |
 | <a id="s69-12"></a>S69-12 | My event | App | `/events-conferences/my-event` | The client's view of their event | Role home | S69-07 Contract |
+| <a id="s69-13"></a>S69-13 | Events settings | Web | `/events-conferences/events-settings` | Event types and packages on sale, with prices, capacity and dates; Booking rules: deposit, approval, cancel deadline and limit | S69-01 Events home | Back only |
 
 ## Dialogs, sheets and confirmations
 
