@@ -3,6 +3,7 @@
 // pushed, and "Mark all as read" on the right. Nothing on it is sample data.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../../../shared/catalog/screen_context.dart';
 import '../../../../shared/layout/igongo_scaffold.dart';
