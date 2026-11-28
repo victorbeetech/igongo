@@ -45,6 +45,9 @@ class BookingsApi {
     }),
   );
 
+  /// One booking by [id], read fresh from the API (used after a payment so the receipt shows the new amount paid).
+  Future<Booking> one(String id) async => Booking.fromJson(await _api.get('${place.path}/bookings/$id'));
+
   /// Cancels my booking [id].
   Future<void> cancel(String id) =>
       _api.post('${place.path}/bookings/$id/cancel', {'reason': 'Cancelled by the guest'});
