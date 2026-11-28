@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../api/api_client.dart';
 import '../api/api_config.dart';
 import '../api/api_exception.dart';
+import '../../modules/m10_notifications/push_module.dart';
 import '../social_sign_in/social_id_token.dart';
 import 'session.dart';
 import 'first_run_store.dart';
@@ -95,21 +96,42 @@ class SessionController extends AsyncNotifier<Session?> {
 
   /// Deletes the person's own account on the server, then forgets it here.
   /// Staff accounts are refused by the server (HR closes them).
+  /// The account's own signed-in session is the only one the server deletes,
+  /// so a person can never delete someone else's account from the app.
   Future<void> deleteMyAccount() async {
+    // Step 1: switch push off first, while the token still works.
+    await _stopPush();
+    // Step 2: the server deletes the account; a refusal throws ApiException and keeps the session.
     await ref.read(apiClientProvider).post('/api/auth/delete-user', const <String, dynamic>{});
+    // Step 3: forget the token on this phone.
     await ref.read(sessionStoreProvider).clear();
     state = const AsyncData(null);
   }
 
-  /// Signs out here and on the server.
+  /// Signs out here and on the server. Push is switched off for this phone first,
+  /// so the next person who signs in never gets this person's notifications.
   Future<void> signOut() async {
+    // Step 1: switch push off while the token still works.
+    await _stopPush();
+    // Step 2: end the session on the server. A failed call still signs out here.
     try {
       await ref.read(apiClientProvider).post('/api/auth/sign-out', const <String, dynamic>{});
     } on ApiException {
       // Signed out locally even when the server cannot be reached.
     }
+    // Step 3: forget the token on this phone and clear the session.
     await ref.read(sessionStoreProvider).clear();
     state = const AsyncData(null);
+  }
+
+  /// Removes this phone's push token for the signed-in person, if there is one.
+  /// Never throws, so it cannot block sign-out or deletion.
+  Future<void> _stopPush() async {
+    // Step 1: no session, nothing to stop.
+    final token = state.valueOrNull?.token;
+    if (token == null) return;
+    // Step 2: hand the token to the push module, which removes it on the API and the phone.
+    await PushModule.instance?.stopForSignOut(baseUrl: igongoApiUrl, token: token);
   }
 
   /// The person and their access, for [token].
