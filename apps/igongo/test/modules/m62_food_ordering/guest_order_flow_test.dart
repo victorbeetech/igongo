@@ -71,7 +71,7 @@ class _OneVenueApi extends OrdersApi {
     'outlet': _venueKey,
     'type': body['type'],
     'status': 'placed',
-    'lines': const [],
+    'lines': const <Map<String, Object?>>[],
     'total': 5000,
     'paid': 0,
     'readyAt': '',
