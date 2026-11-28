@@ -8,7 +8,7 @@ import 'dart:async';
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
-import '../../../../../shared/hotel/domain/hotel_banner.dart';
+import '../../../../../shared/hotel/domain/hotel_content_item.dart';
 import '../../../../../shared/ui/photo/guest_photo.dart';
 import 'guest_hero_dots.dart';
 import 'guest_hero_slide.dart';
@@ -19,10 +19,10 @@ class GuestHeroCard extends StatefulWidget {
   const GuestHeroCard({super.key, required this.banners, required this.onTap});
 
   /// The active banners, in the admin's order.
-  final List<HotelBanner> banners;
+  final List<HotelContentItem> banners;
 
   /// Called with the banner whose button is tapped.
-  final void Function(HotelBanner banner) onTap;
+  final void Function(HotelContentItem banner) onTap;
 
   @override
   State<GuestHeroCard> createState() => _GuestHeroCardState();

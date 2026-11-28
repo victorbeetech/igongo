@@ -4,7 +4,7 @@
 
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:igongo/modules/m00_app_shell/presentation/global_search/discovery_placeholders.dart';
+import 'package:igongo/modules/m00_app_shell/presentation/global_search/discovery_categories.dart';
 import 'package:igongo/modules/m00_app_shell/presentation/global_search/widgets/curated_findings_section.dart';
 import 'package:igongo/modules/m00_app_shell/presentation/global_search/widgets/discovery_search_row.dart';
 import 'package:igongo/modules/m00_app_shell/presentation/global_search/widgets/discovery_top_bar.dart';
@@ -12,6 +12,8 @@ import 'package:igongo/modules/m00_app_shell/presentation/global_search/widgets/
 import 'package:igongo/modules/m00_app_shell/presentation/global_search/widgets/recent_searches.dart';
 import 'package:igongo/modules/m00_app_shell/presentation/global_search/widgets/trending_experiences_card.dart';
 import 'package:igongo/shared/theme/theme.dart';
+
+import 'discovery_fixtures.dart';
 
 void main() {
   for (final mode in [ThemeMode.light, ThemeMode.dark]) {
@@ -34,19 +36,15 @@ void main() {
                   child: DiscoverySearchRow(onFilter: () {}, onChanged: (_) {}, onSubmitted: (_) {}, onVoice: () {}),
                 ),
                 RecentSearches(
-                  searches: DiscoveryPlaceholders.recentSearches,
+                  searches: const ['Grilled Tilapia', 'Heritage Cottage'],
                   onRemove: (_) {},
                   onClear: () {},
                 ),
                 const SizedBox(height: 16),
-                ExploreCategories(categories: DiscoveryPlaceholders.categories, selected: 0, onSelected: (_) {}),
+                ExploreCategories(categories: discoveryCategories, selected: 0, onSelected: (_) {}),
                 const SizedBox(height: 24),
-                CuratedFindingsSection(
-                  findings: DiscoveryPlaceholders.findings,
-                  favourites: const {0},
-                  onFavourite: (_) {},
-                ),
-                const TrendingExperiencesCard(experiences: DiscoveryPlaceholders.trending),
+                CuratedFindingsSection(findings: testFindings, onOpen: (_) {}),
+                TrendingExperiencesCard(experiences: testTrending, onOpen: (_) {}),
               ],
             ),
           ),

@@ -32,11 +32,11 @@ const branding = z.object({
 });
 
 /**
- * One home-screen banner the super admin manages (the carousel in the guest app).
+ * One item of the content the super admin manages: a home banner, a curated finding or a trending experience.
  * `imageFileId` is a file id from the Files upload ("" for no picture);
  * `screen` is the app screen code the banner opens ("" for none).
  */
-const banner = z.object({
+const contentItem = z.object({
   id: z.string().min(1).max(40),
   title: z.string().min(1).max(120),
   subtitle: z.string().max(200),
@@ -45,10 +45,15 @@ const banner = z.object({
   active: z.boolean(),
 });
 
-/** Content the apps show that the super admin changes without code (banners, and later more). */
+/**
+ * Content the apps show that the super admin changes without code:
+ * the home carousel's banners, the search screen's curated findings and its trending experiences.
+ * All three use the same item shape; the app shows only the active items, in the admin's order.
+ */
 const content = z.object({
-  /** The carousel's banners, in order. The app shows only the active ones. */
-  banners: z.array(banner).max(10),
+  banners: z.array(contentItem).max(10),
+  findings: z.array(contentItem).max(12),
+  trending: z.array(contentItem).max(12),
 });
 
 /** Time, money and number formats. */
@@ -68,7 +73,7 @@ export const SECTION_NAMES = Object.keys(SETTINGS_SECTIONS) as SettingsSection[]
 export const SETTINGS_DEFAULTS: { [K in SettingsSection]: z.infer<(typeof SETTINGS_SECTIONS)[K]> } = {
   hotel: { name: "Igongo Country Hotel & Cultural Centre", shortName: "Igongo", address: "Mbarara, Uganda", phone: "", whatsapp: "256793128137", email: "", tin: "", registration: "" },
   branding: { logo: "stacked", announcement: "", loginWelcome: "Welcome to Igongo", minimumAppVersion: "0.0.0" },
-  content: { banners: [] },
+  content: { banners: [], findings: [], trending: [] },
   regional: { timeZone: "Africa/Kampala", currency: "UGX", dateFormat: "DD/MM/YYYY", businessDayCutoff: "04:00", financialYearStartMonth: 7 },
 };
 

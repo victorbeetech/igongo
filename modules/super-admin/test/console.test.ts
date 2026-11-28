@@ -38,10 +38,11 @@ describe("settings", () => {
   it("stores home banners in the public content section and refuses a banner without a title", async () => {
     const { store, ctx } = await setup();
     expect((await readSection(store, "content"))["banners"]).toEqual([]);
+    expect((await readSection(store, "content"))["findings"]).toEqual([]);
     const banner = { id: "b1", title: "Heritage Suite", subtitle: "Two nights", imageFileId: "", screen: "S67-01", active: true };
-    await updateSection(store, ctx, "content", { banners: [banner] });
+    await updateSection(store, ctx, "content", { banners: [banner], findings: [], trending: [] });
     expect((await readSection(store, "content"))["banners"]).toEqual([banner]);
-    await expect(updateSection(store, ctx, "content", { banners: [{ ...banner, title: "" }] })).rejects.toThrow();
+    await expect(updateSection(store, ctx, "content", { banners: [{ ...banner, title: "" }], findings: [], trending: [] })).rejects.toThrow();
   });
 });
 

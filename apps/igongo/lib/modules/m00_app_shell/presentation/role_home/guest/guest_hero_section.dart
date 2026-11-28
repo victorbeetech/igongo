@@ -7,7 +7,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../../../shared/catalog/catalog.dart';
 import '../../../../../shared/hotel/application/public_settings_providers.dart';
-import '../../../../../shared/hotel/domain/hotel_banner.dart';
+import '../../../../../shared/hotel/domain/hotel_content_item.dart';
 import 'guest_hero_card.dart';
 
 /// The card's height, the same as the carousel's, so the loading box keeps the layout still.
@@ -35,14 +35,14 @@ class GuestHeroSection extends ConsumerWidget {
         child: Center(child: CircularProgressIndicator()),
       ),
       // Step 2b: unreadable settings show the empty card; the person can pull to refresh the home later.
-      error: (_, _) => GuestHeroCard(banners: const <HotelBanner>[], onTap: _open),
+      error: (_, _) => GuestHeroCard(banners: const <HotelContentItem>[], onTap: _open),
       // Step 2c: the active banners from the admin.
       data: (data) => GuestHeroCard(banners: data.banners, onTap: _open),
     );
   }
 
   /// Opens the banner's screen, or the room list when the admin set none.
-  void _open(HotelBanner banner) {
+  void _open(HotelContentItem banner) {
     screen.open(banner.screen.isEmpty ? _defaultBannerScreen : banner.screen);
   }
 }

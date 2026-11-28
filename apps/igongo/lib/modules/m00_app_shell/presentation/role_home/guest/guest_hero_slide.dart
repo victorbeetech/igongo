@@ -7,7 +7,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../../../shared/theme/theme.dart';
 import '../../../../../shared/ui/photo/guest_photo.dart';
-import '../../../../../shared/hotel/domain/hotel_banner.dart';
+import '../../../../../shared/hotel/domain/hotel_content_item.dart';
 
 /// The small tag and the eyebrow line the slides share (words only, the design's labels).
 const _tagLabel = 'Featured';
@@ -19,7 +19,7 @@ class GuestHeroSlide extends StatelessWidget {
   const GuestHeroSlide({super.key, required this.banner, required this.onTap});
 
   /// The admin's banner shown on this slide.
-  final HotelBanner banner;
+  final HotelContentItem banner;
 
   /// Called when the slide's button is tapped.
   final VoidCallback onTap;
@@ -115,7 +115,7 @@ class GuestHeroSlide extends StatelessWidget {
                     onPressed: onTap,
                     // Step 4a: a light button with the Igongo red words; red on light reads in both modes.
                     style: FilledButton.styleFrom(backgroundColor: p.onPrimary, foregroundColor: p.primary),
-                    child: Text('View', style: context.text.labelLarge?.copyWith(color: p.primary, fontWeight: FontWeight.w700)),
+                    child: Text('Book a room', style: context.text.labelLarge?.copyWith(color: p.primary, fontWeight: FontWeight.w700)),
                   ),
                 ],
               ),
