@@ -37,6 +37,10 @@ export class DrizzleAccountStore implements AccountStore {
     await this.db.update(user).set({ kind, updatedAt: new Date() }).where(eq(user.id, userId));
   }
 
+  async setImage(userId: string, image: string | null): Promise<void> {
+    await this.db.update(user).set({ image, updatedAt: new Date() }).where(eq(user.id, userId));
+  }
+
   async sessionsOf(userId: string): Promise<SessionSummary[]> {
     return this.db
       .select({ id: session.id, createdAt: session.createdAt, expiresAt: session.expiresAt, ipAddress: session.ipAddress, userAgent: session.userAgent })

@@ -9,6 +9,8 @@ export interface AccountStore {
   get(userId: string): Promise<AccountSummary | null>;
   setStatus(userId: string, status: AccountStatus): Promise<void>;
   setKind(userId: string, kind: "staff" | "client"): Promise<void>;
+  /** Saves the profile photo as a data URL (null removes it). */
+  setImage(userId: string, image: string | null): Promise<void>;
   sessionsOf(userId: string): Promise<SessionSummary[]>;
   /** Deletes one session of [userId]; false when there was none. */
   deleteSession(userId: string, sessionId: string): Promise<boolean>;
