@@ -16,12 +16,10 @@ import '../../ui/button/igongo_button.dart';
 import '../../ui/card/igongo_card.dart';
 import '../../ui/toast/igongo_toast.dart';
 import '../application/bookings_providers.dart';
-import '../domain/booking.dart';
 import '../domain/booking_place.dart';
 import '../domain/booking_selection.dart';
 import '../domain/offering.dart';
-import 'booking_confirmed_screen.dart';
-import 'booking_payment_screen.dart';
+import 'booking_next.dart';
 
 /// The details of one offering before booking.
 class BookingDetailsScreen extends ConsumerStatefulWidget {
@@ -90,38 +88,12 @@ class _BookingDetailsScreenState extends ConsumerState<BookingDetailsScreen> {
           );
       ref.invalidate(myBookingsProvider(widget.place));
       if (!mounted) return;
-      await _next(booking);
+      if (mounted) await openAfterBooking(context, booking, widget.place);
     } on Exception catch (e) {
       if (mounted) showIgongoToast(context, '$e');
     } finally {
       if (mounted) setState(() => _busy = false);
     }
-  }
-
-  /// Opens the next step for [booking] in place of this screen.
-  Future<void> _next(Booking booking) async {
-    final nav = Navigator.of(context);
-    // Step 1: a request (an enquiry or an approval) owes nothing now; say so and go back.
-    if (booking.status == 'requested') {
-      showIgongoToast(context, 'Request sent');
-      nav.pop();
-      return;
-    }
-    // Step 2: nothing to pay, so the receipt is ready at once.
-    if (booking.owed <= 0) {
-      await nav.pushReplacement(
-        MaterialPageRoute<void>(
-          builder: (_) => BookingConfirmedScreen(booking: booking, place: widget.place),
-        ),
-      );
-      return;
-    }
-    // Step 3: money is owed, so the payment screen opens next.
-    await nav.pushReplacement(
-      MaterialPageRoute<void>(
-        builder: (_) => BookingPaymentScreen(booking: booking, place: widget.place),
-      ),
-    );
   }
 
   @override

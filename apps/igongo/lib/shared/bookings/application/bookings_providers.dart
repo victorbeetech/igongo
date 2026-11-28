@@ -6,6 +6,7 @@ import '../../session/session_controller.dart';
 import '../data/bookings_api.dart';
 import '../domain/booking.dart';
 import '../domain/booking_place.dart';
+import '../domain/booking_rules.dart';
 import '../domain/offering.dart';
 
 /// The bookings API of [place].
@@ -32,4 +33,10 @@ typedef DeskFilter = ({BookingPlace place, String? status, String? date});
 final deskBookingsProvider = FutureProvider.autoDispose.family<List<Booking>, DeskFilter>((ref, f) {
   ref.watch(sessionProvider);
   return ref.watch(bookingsApiProvider(f.place)).desk(status: f.status, date: f.date);
+});
+
+/// The booking rules of [place] (deposit percent), read once per session.
+final bookingRulesProvider = FutureProvider.autoDispose.family<BookingRules, BookingPlace>((ref, place) {
+  ref.watch(sessionProvider);
+  return ref.watch(bookingsApiProvider(place)).rules();
 });
