@@ -3,7 +3,7 @@
  * own module switch, so the super admin can turn one off (or put it in
  * maintenance) without touching the others.
  *
- *   /api/me/stats     my profile numbers (bookings, orders, points, saved dishes)
+ *   /api/me/stats     my profile numbers (bookings, orders, points)
  *   /api/crm/*        guest profiles, my account            module 54
  *   /api/content/*    guest app content (banners, stories)  module 61
  *   /api/points/*     points rewards (rules, wallet, admin) module 57

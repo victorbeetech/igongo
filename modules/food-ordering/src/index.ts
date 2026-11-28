@@ -22,8 +22,4 @@ export type { SavedLocation } from "./domain/saved-location";
 export { readSavedLocation, saveLocation, clearSavedLocation } from "./application/use-cases/guest-location";
 export type { SavedCart, SavedCartLine } from "./domain/saved-cart";
 export { orderKpis } from "./infrastructure/order-kpis";
-export { DrizzleSavedDishRepository } from "./infrastructure/db/drizzle-saved-dish-repository";
-export type { SavedDishRepository } from "./application/ports/saved-dish-repository";
-export type { SavedDish } from "./domain/saved-dish";
-export { listSavedDishes, saveDish, removeDish } from "./application/use-cases/saved-dishes";
 export { foodSummary, type FoodSummary } from "./application/use-cases/guest-summary";
