@@ -18,6 +18,7 @@ import '../../../../shared/screens/parts/screen_list_view.dart';
 import '../../../../shared/session/session_controller.dart';
 import '../../../../shared/theme/theme.dart';
 import '../../../m54_crm_guests/presentation/past_visits_screen.dart';
+import '../../../m57_loyalty/points/presentation/points_activity_row.dart';
 import '../../../../shared/ui/button/igongo_button.dart';
 import '../../../../shared/ui/card/igongo_card.dart';
 import '../../../../shared/ui/toast/igongo_toast.dart';
@@ -124,6 +125,8 @@ class MyProfileScreen extends ConsumerWidget {
           const ProfileSectionTitle('Resort Activity'),
           ProfileActionGroup(
             children: [
+              // My points: shown only while the points programme is on.
+              PointsActivityRow(onTap: () => screen.open('S57-01')),
               // PLACEHOLDER: the room and the active stay count are not read yet; dashes show for now.
               ProfileActionRow(
                 title: 'My Bookings & Orders',
