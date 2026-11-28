@@ -1,12 +1,15 @@
 // S00-21 Role home: built from the person's role at run time. The tiles come
 // from the role (the super admin edits them in the layout editor), so a new
-// role works without an app update. Guests get the redesigned home (the guest/ folder).
+// role works without an app update. Guests get the redesigned home (the guest/ folder),
+// whose stories, hero, quick actions and dish row follow the super admin's home settings.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../shared/catalog/catalog.dart';
+import '../../../../shared/home_content/application/home_content_provider.dart';
+import '../../../../shared/home_content/domain/home_content.dart';
 import '../../../../shared/session/session_controller.dart';
 import '../../../../shared/screens/home/tile_grid.dart';
 import '../../../../shared/screens/parts/screen_list_view.dart';
@@ -42,6 +45,8 @@ class RoleHomeScreen extends ConsumerWidget {
     final role = screen.role;
     final session = ref.watch(sessionProvider).valueOrNull;
     final name = session?.name;
+    // Step 0: the guest home's content from the super admin's settings (the fallback until it loads).
+    final home = ref.watch(homeContentProvider).valueOrNull ?? HomeContent.fallback;
     return ScreenListView(
       children: [
         // Step 1: the greeting. Guests get the top row (with search) and the status strip.
@@ -78,20 +83,22 @@ class RoleHomeScreen extends ConsumerWidget {
             ),
           ),
         if (role.isClient) ...[
-          // Step 2: the stories row, then the featured stay.
-          const GuestStoriesRow(),
-          Padding(
-            padding: const EdgeInsets.only(top: IgongoSpace.sm),
-            child: GuestHeroCard(onBook: () => screen.open('S67-01')),
-          ),
-          // Step 3: the three quick actions.
-          Padding(
-            padding: const EdgeInsets.only(top: IgongoSpace.lg),
-            child: GuestQuickActions(onOpen: (id) => screen.open(id)),
-          ),
-          // Step 4: the dishes, with a link to the full menu.
-          GuestSectionTitle('From our kitchen', action: 'Full menu', onAction: () => screen.open('S62-01')),
-          const GuestDishRow(),
+          // Step 2: the stories row, then the featured stays. Each shows only when the super admin has switched it on and added items.
+          if (home.showStories) GuestStoriesRow(stories: home.stories),
+          if (home.showHero)
+            Padding(
+              padding: const EdgeInsets.only(top: IgongoSpace.sm),
+              child: GuestHeroCard(slides: home.slides, onBook: () => screen.open('S67-01')),
+            ),
+          // Step 3: the quick actions, set by the super admin.
+          if (home.showQuickActions)
+            Padding(
+              padding: const EdgeInsets.only(top: IgongoSpace.lg),
+              child: GuestQuickActions(items: home.quickActions, onOpen: (id) => screen.open(id)),
+            ),
+          // Step 4: the dishes with a link to the full menu. The row hides itself when there are no dishes.
+          if (home.restaurantOn)
+            GuestDishRow(onFullMenu: () => screen.open('S62-01')),
           // Step 5: the areas of the hotel, two to a row, as the design shows.
           const GuestSectionTitle('Explore Igongo'),
           Padding(

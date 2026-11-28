@@ -5,6 +5,7 @@
  */
 
 import { z } from "zod";
+import { HOME_DEFAULTS, homeSection } from "./home-content";
 
 /** Hotel profile (spec: "Hotel settings"). */
 const hotel = z.object({
@@ -40,7 +41,8 @@ const regional = z.object({
   financialYearStartMonth: z.number().int().min(1).max(12),
 });
 
-export const SETTINGS_SECTIONS = { hotel, branding, regional } as const;
+/** The guest home content (stories, hero, quick actions, switches). See home-content.ts. */
+export const SETTINGS_SECTIONS = { hotel, branding, regional, home: homeSection } as const;
 export type SettingsSection = keyof typeof SETTINGS_SECTIONS;
 export const SECTION_NAMES = Object.keys(SETTINGS_SECTIONS) as SettingsSection[];
 
@@ -49,7 +51,9 @@ export const SETTINGS_DEFAULTS: { [K in SettingsSection]: z.infer<(typeof SETTIN
   hotel: { name: "Igongo Country Hotel & Cultural Centre", shortName: "Igongo", address: "Mbarara, Uganda", phone: "", whatsapp: "256793128137", email: "", tin: "", registration: "" },
   branding: { logo: "stacked", announcement: "", loginWelcome: "Welcome to Igongo", minimumAppVersion: "0.0.0" },
   regional: { timeZone: "Africa/Kampala", currency: "UGX", dateFormat: "DD/MM/YYYY", businessDayCutoff: "04:00", financialYearStartMonth: 7 },
+  home: HOME_DEFAULTS,
 };
 
 /** Sections anyone may read (the login screen needs them before sign-in). */
-export const PUBLIC_SECTIONS: SettingsSection[] = ["hotel", "branding"];
+/** The home section is public too: the guest app reads it before sign-in. */
+export const PUBLIC_SECTIONS: SettingsSection[] = ["hotel", "branding", "home"];

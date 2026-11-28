@@ -242,3 +242,18 @@ No key is written in the repository. The code is `modules/payments/src/infrastru
 - Address: Mbarara - Masaka Highway, Biharwe, Mbarara, Uganda
 
 **Exact steps:** send the final numbers and address. Claude then changes them in one file, `apps/igongo/lib/shared/contact/contact_details.dart`. For the WhatsApp number, the super admin sets it in the web settings (Hotel profile, "Whatsapp").
+
+---
+
+## Regenerate two store screenshots (your Mac, 5 minutes)
+
+**Status:** PR #109 (guest home driven by the super admin's settings) is in place, but its CI stays red until these two store images are regenerated.
+
+**Why Claude could not do it:** the store images are made by a Flutter test on your Mac. There is no Flutter SDK in Claude's environment. The guest home no longer shows demo stories, hero slides or dishes, so the two `01-guest-home` images (Play and App Store) differ from the saved ones.
+
+**Steps:**
+1. Open Terminal and run:
+   `cd ~/igongo/apps/igongo && flutter test --update-goldens test/store/store_screenshots_test.dart`
+2. Check the two new images in `packages/brand/store/screenshots/` (`play-store/01-guest-home.png` and `app-store/01-guest-home.png`).
+3. Commit and push them to the PR branch `claude/project-thread-8d1nr8`.
+4. Tell Claude in the thread. Claude then merges PR #109 once CI is green.

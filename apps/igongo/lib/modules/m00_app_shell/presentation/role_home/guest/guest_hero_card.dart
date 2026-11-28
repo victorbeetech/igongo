@@ -1,20 +1,24 @@
-// The hero card on the guest home: a carousel of featured stays. It moves to the next
-// slide every 2 seconds, wraps back to the first, and can be swiped by hand. Dots under
-// the card show which of the three slides is on screen.
+// The hero card on the guest home: a carousel of the featured stays the super admin
+// switched on. It moves to the next slide every 2 seconds, wraps back to the first,
+// and can be swiped by hand. Dots under the card show which slide is on screen.
+// The parent hides the card when there are no slides.
 
 import 'dart:async';
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../../../shared/home_content/domain/home_hero_slide.dart';
 import 'guest_hero_dots.dart';
 import 'guest_hero_slide.dart';
-import 'guest_hero_stay.dart';
 
 /// The featured stays carousel. [onBook] opens the room list.
 class GuestHeroCard extends StatefulWidget {
-  /// Creates the carousel.
-  const GuestHeroCard({super.key, required this.onBook});
+  /// Creates the carousel from the slides the super admin switched on.
+  const GuestHeroCard({super.key, required this.slides, required this.onBook});
+
+  /// The slides to show, in order.
+  final List<HomeHeroSlide> slides;
 
   /// Called when the Book a room button is tapped.
   final VoidCallback onBook;
@@ -51,8 +55,8 @@ class _GuestHeroCardState extends State<GuestHeroCard> {
 
   /// Moves to the next slide, going back to the first after the last.
   void _advance() {
-    if (!_controller.hasClients) return;
-    final next = (_index + 1) % GuestHeroStay.demo.length;
+    if (!_controller.hasClients || widget.slides.length < 2) return;
+    final next = (_index + 1) % widget.slides.length;
     _controller.animateToPage(next, duration: _slideDuration, curve: Curves.easeInOut);
   }
 
@@ -69,7 +73,7 @@ class _GuestHeroCardState extends State<GuestHeroCard> {
 
   @override
   Widget build(BuildContext context) {
-    const stays = GuestHeroStay.demo;
+    final slides = widget.slides;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
       child: ClipRRect(
@@ -82,15 +86,15 @@ class _GuestHeroCardState extends State<GuestHeroCard> {
               PageView.builder(
                 controller: _controller,
                 onPageChanged: _onPageChanged,
-                itemCount: stays.length,
-                itemBuilder: (_, i) => GuestHeroSlide(stay: stays[i], onBook: widget.onBook),
+                itemCount: slides.length,
+                itemBuilder: (_, i) => GuestHeroSlide(slide: slides[i], onBook: widget.onBook),
               ),
               // Step 4: the dots at the very bottom, the current slide's dot wide.
               Positioned(
                 left: 0,
                 right: 0,
                 bottom: IgongoSpace.xs,
-                child: GuestHeroDots(count: stays.length, current: _index),
+                child: GuestHeroDots(count: slides.length, current: _index),
               ),
             ],
           ),

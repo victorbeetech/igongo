@@ -1,20 +1,20 @@
-// One slide of the hero carousel: the placeholder fill, a dark gradient for the text,
-// the tag and bookmark on top, the title and price at the bottom, and a Book a room button.
+// One slide of the hero carousel: the picture (or a placeholder), a dark gradient for
+// the text, the tag and bookmark on top, the title and price at the bottom, and a Book a room button.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../../shared/theme/theme.dart';
 import '../../../../../shared/ui/photo/guest_photo.dart';
-import 'guest_hero_stay.dart';
+import '../../../../../shared/home_content/domain/home_hero_slide.dart';
 
 /// One featured stay as a full-size slide. [onBook] opens the room list.
 class GuestHeroSlide extends StatelessWidget {
-  /// Creates the slide for [stay].
-  const GuestHeroSlide({super.key, required this.stay, required this.onBook});
+  /// Creates the slide for [slide].
+  const GuestHeroSlide({super.key, required this.slide, required this.onBook});
 
-  /// The words shown on this slide.
-  final GuestHeroStay stay;
+  /// The words and picture shown on this slide.
+  final HomeHeroSlide slide;
 
   /// Called when the Book a room button is tapped.
   final VoidCallback onBook;
@@ -25,8 +25,8 @@ class GuestHeroSlide extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        // Step 1: the demo picture for this stay (a placeholder if the picture cannot load).
-        GuestPhoto(asset: stay.asset, label: stay.title),
+        // Step 1: the slide's picture (a placeholder if none is set or it cannot load).
+        GuestPhoto(imageUrl: slide.imageUrl, label: slide.title),
         // Step 2: a dark gradient from the bottom, so the text reads on any picture.
         DecoratedBox(
           decoration: BoxDecoration(
@@ -49,13 +49,13 @@ class GuestHeroSlide extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.sm, vertical: IgongoSpace.xxs),
                   child: Text(
-                    stay.tag,
+                    slide.tag,
                     style: context.text.labelSmall?.copyWith(color: p.onPrimary, fontWeight: FontWeight.w700),
                   ),
                 ),
               ),
               const Spacer(),
-              // The bookmark is a placeholder: it does nothing until saving is wired.
+              // The bookmark does nothing until saving is wired.
               IconButton.filled(
                 tooltip: 'Save',
                 onPressed: () {},
@@ -79,7 +79,7 @@ class GuestHeroSlide extends StatelessWidget {
                   Icon(Icons.star_outline, size: IgongoSpace.md, color: p.onPrimary),
                   const SizedBox(width: IgongoSpace.xxs),
                   Text(
-                    stay.eyebrow,
+                    slide.eyebrow,
                     style: context.text.labelSmall?.copyWith(
                       color: p.onPrimary,
                       letterSpacing: 1.1,
@@ -90,14 +90,14 @@ class GuestHeroSlide extends StatelessWidget {
               ),
               const SizedBox(height: IgongoSpace.xxs),
               Text(
-                stay.title,
+                slide.title,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: context.text.titleMedium?.copyWith(color: p.onPrimary, fontWeight: FontWeight.w700),
               ),
               const SizedBox(height: IgongoSpace.xxs),
               Text(
-                stay.description,
+                slide.description,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: context.text.bodySmall?.copyWith(color: p.onPrimary),
@@ -107,7 +107,7 @@ class GuestHeroSlide extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      stay.price,
+                      slide.price,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: context.text.labelMedium?.copyWith(color: p.onPrimary),

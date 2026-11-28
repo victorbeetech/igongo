@@ -1,7 +1,8 @@
 // The "From our kitchen" row: a horizontal list of dish cards that slides by itself
 // every 2 seconds and wraps back to the start, and can also be swiped by hand. Dishes
 // come from the first outlet's menu in the API (only items on today and not containers).
-// While loading, or when there are no dishes, placeholder cards keep the same layout.
+// While loading, or when there are no dishes, the whole row (title included) is hidden,
+// so no placeholder dish is ever shown.
 
 import 'dart:async';
 
@@ -15,27 +16,21 @@ import '../../../../m62_food_ordering/application/orders_providers.dart';
 import '../../../../m62_food_ordering/domain/menu_item.dart';
 import '../../../../m62_food_ordering/presentation/item_page.dart';
 import 'guest_dish_card.dart';
+import 'guest_section_title.dart';
 
 /// The horizontal row of dish cards on the guest home.
 class GuestDishRow extends ConsumerStatefulWidget {
-  /// Creates the row.
-  const GuestDishRow({super.key});
+  /// Creates the row; [onFullMenu] opens the full menu from the row's link.
+  const GuestDishRow({super.key, required this.onFullMenu});
+
+  /// Called when the "Full menu" link is tapped.
+  final VoidCallback onFullMenu;
 
   @override
   ConsumerState<GuestDishRow> createState() => _GuestDishRowState();
 }
 
 class _GuestDishRowState extends ConsumerState<GuestDishRow> {
-  /// The tags on the placeholder cards, as the design shows them (words only, no data).
-  static const _placeholderTags = ['Best seller', 'Chef specialty', 'Wood smoked'];
-
-  /// Demo pictures for the placeholder cards, one per card, from the owner's photos.
-  static const _placeholderAssets = [
-    'assets/photos/food-dish.jpg',
-    'assets/photos/food-fish-plated.jpg',
-    'assets/photos/outlet-restaurant.jpg',
-  ];
-
   /// The tag on real dishes until the menu API carries a tag.
   static const _realTag = 'On the menu';
 
@@ -101,52 +96,46 @@ class _GuestDishRowState extends ConsumerState<GuestDishRow> {
               if (i.available && !i.isContainer) i,
           ];
 
-    // Step 5: real dishes when there are any; otherwise placeholder cards in the same layout.
-    final cards = items.isEmpty
-        ? [
-            for (var i = 0; i < _placeholderTags.length; i++)
-              GuestDishCard(
-                name: 'Dish name',
-                description: 'Dishes will appear here',
-                price: 'UGX —',
-                tag: _placeholderTags[i],
-                rating: _placeholderRating,
-                prepTime: _placeholderPrepTime,
-                asset: _placeholderAssets[i],
-              ),
-          ]
-        : [
-            for (final item in items)
-              GuestDishCard(
-                name: item.name,
-                description: item.description ?? '',
-                price: ugx(item.price),
-                tag: _realTag,
-                rating: _placeholderRating,
-                prepTime: _placeholderPrepTime,
-                onTap: () {
-                  // Opening a dish sets its outlet as the cart's, then opens the dish page.
-                  ref.read(cartProvider.notifier).useOutlet(outlet!.key);
-                  openItemPage(context, item);
-                },
-              ),
-          ];
-
-    // Step 6: the cards in a row that slides by itself and by hand, with the page's edge margins.
-    return Semantics(
-      label: 'Meals to order',
-      container: true,
-      child: SizedBox(
-        height: _rowHeight,
-        child: ListView.separated(
-          controller: _controller,
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
-          itemCount: cards.length,
-          separatorBuilder: (_, _) => const SizedBox(width: _gap),
-          itemBuilder: (_, i) => cards[i],
+    // Step 5: no dishes (none on the menu today, or the menu cannot load): hide the whole row, title included.
+    if (items.isEmpty) return const SizedBox.shrink();
+    final cards = [
+      for (final item in items)
+        GuestDishCard(
+          name: item.name,
+          description: item.description ?? '',
+          price: ugx(item.price),
+          tag: _realTag,
+          rating: _placeholderRating,
+          prepTime: _placeholderPrepTime,
+          onTap: () {
+            // Opening a dish sets its outlet as the cart's, then opens the dish page.
+            ref.read(cartProvider.notifier).useOutlet(outlet!.key);
+            openItemPage(context, item);
+          },
         ),
-      ),
+    ];
+
+    // Step 6: the title with its full-menu link, then the cards in a row that slides by itself and by hand.
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        GuestSectionTitle('From our kitchen', action: 'Full menu', onAction: widget.onFullMenu),
+        Semantics(
+          label: 'Meals to order',
+          container: true,
+          child: SizedBox(
+            height: _rowHeight,
+            child: ListView.separated(
+              controller: _controller,
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
+              itemCount: cards.length,
+              separatorBuilder: (_, _) => const SizedBox(width: _gap),
+              itemBuilder: (_, i) => cards[i],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

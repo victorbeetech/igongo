@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import type { AuditEntryInput } from "@igongo/contracts/audit-trail";
 import { SecretBox, toBase64 } from "@igongo/core";
 import { DrizzleConsoleStore, listModules, moduleSwitchReader, readSection, secretReader, setModuleState } from "../src";
+import { PUBLIC_SECTIONS } from "../src/domain/settings-sections";
 import { listSecrets, setSecret } from "../src/application/use-cases/secrets";
 import { updateSection } from "../src/application/use-cases/settings";
 import { freshDb } from "./helpers";
@@ -57,5 +58,31 @@ describe("encrypted keys", () => {
     await setSecret(store, box, ctx, "apple.key_id", "KEY-DEMO-2");
     const got = await secretReader(store, box).getMany(["apple.team_id", "apple.key_id", "google.client_id"]);
     expect(got).toEqual({ "apple.team_id": "TEAM-DEMO-1", "apple.key_id": "KEY-DEMO-2", "google.client_id": null });
+  });
+});
+
+describe("home content section", () => {
+  it("starts with the five quick actions and no stories or slides", async () => {
+    const { store } = await setup();
+    const home = await readSection(store, "home");
+    expect(home["stories"]).toMatchObject({ enabled: true, items: [] });
+    expect(home["hero"]).toMatchObject({ enabled: true, slides: [] });
+    expect((home["quickActions"] as { items: unknown[] }).items).toHaveLength(5);
+  });
+
+  it("saves a story the super admin adds and refuses an unknown icon or a bad screen ID", async () => {
+    const { store, ctx } = await setup();
+    const home = await readSection(store, "home");
+    const story = { enabled: true, title: "Sunrise walk", subtitle: "06:00", icon: "sunny", imageUrl: "" };
+    await updateSection(store, ctx, "home", { ...home, stories: { enabled: true, items: [story] } });
+    expect(((await readSection(store, "home"))["stories"] as { items: unknown[] }).items).toEqual([story]);
+    const badIcon = { ...story, icon: "dragon" };
+    await expect(updateSection(store, ctx, "home", { ...home, stories: { enabled: true, items: [badIcon] } })).rejects.toThrow(/icon/);
+    const badScreen = { enabled: true, title: "Spa", subtitle: "", icon: "spa", screenId: "spa" };
+    await expect(updateSection(store, ctx, "home", { ...home, quickActions: { enabled: true, items: [badScreen] } })).rejects.toThrow(/screenId/);
+  });
+
+  it("is listed as public so the guest app can read it before sign-in", () => {
+    expect(PUBLIC_SECTIONS).toContain("home");
   });
 });

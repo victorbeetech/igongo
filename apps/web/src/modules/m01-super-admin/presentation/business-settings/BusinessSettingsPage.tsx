@@ -1,10 +1,12 @@
 "use client";
 // S01-06 Business settings (also S01-05 Hotel profile and S01-11 Global
-// banner): the hotel's details, branding and regional formats, each section
-// saved on its own. The API checks every value before saving.
+// banner): the hotel's details, branding, regional formats and the guest home,
+// each section saved on its own. The API checks every value before saving.
 
 import { useState } from "react";
 import { useSaveSection, useSettings } from "@/modules/m01-super-admin/data/consoleApi";
+import { HomeContentEditor } from "@/modules/m01-super-admin/presentation/home-content/HomeContentEditor";
+import type { HomeSettings } from "@/modules/m01-super-admin/presentation/home-content/home-content-types";
 import { LiveData } from "@/shared/api/LiveData";
 import type { ScreenContext } from "@/shared/catalog/types";
 import { PurposeText } from "@/shared/screens/parts/PurposeText";
@@ -13,7 +15,7 @@ import { TextInput } from "@/shared/ui/field/TextInput";
 import { SectionHeader } from "@/shared/ui/section/SectionHeader";
 
 /** Readable names for each section. */
-const TITLES: Record<string, string> = { hotel: "Hotel profile", branding: "Branding and banner", regional: "Time, money and formats" };
+const TITLES: Record<string, string> = { hotel: "Hotel profile", branding: "Branding and banner", regional: "Time, money and formats", home: "Guest home" };
 
 /** The settings page. */
 export function BusinessSettingsPage({ screen }: { screen: ScreenContext }) {
@@ -22,7 +24,14 @@ export function BusinessSettingsPage({ screen }: { screen: ScreenContext }) {
     <>
       <PurposeText text={screen.spec.purpose} />
       <LiveData query={settings} name={screen.spec.name}>
-        {(d) => <div className="grid gap-4 p-4">{Object.entries(d).map(([name, values]) => <SectionForm key={name} name={name} initial={values} />)}</div>}
+        {(d) => (
+          <div className="grid gap-4 p-4">
+            {Object.entries(d).map(([name, values]) =>
+              // The guest home holds lists, so it has its own editor; the other sections are flat fields.
+              name === "home" ? <HomeContentEditor key={name} initial={values as unknown as HomeSettings} /> : <SectionForm key={name} name={name} initial={values} />,
+            )}
+          </div>
+        )}
       </LiveData>
     </>
   );
