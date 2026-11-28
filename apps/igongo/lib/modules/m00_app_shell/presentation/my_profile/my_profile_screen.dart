@@ -10,6 +10,7 @@ import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../shared/api/api_exception.dart';
+import '../../data/account_actions.dart';
 import '../../../../shared/catalog/catalog.dart';
 import '../../../../shared/dialogs/delete_account/delete_account_dialog.dart';
 import '../../../../shared/dialogs/sign_out/sign_out_dialog.dart';
@@ -73,13 +74,17 @@ class MyProfileScreen extends ConsumerWidget {
       await ref.read(sessionProvider.notifier).deleteMyAccount();
       if (context.mounted) screen.open('S00-05');
     } on ApiException catch (e) {
-      if (context.mounted) showIgongoToast(context, e.message);
+      // The server only deletes with a fresh sign-in: ask the person to sign in again.
+      final message = e.code == 'SESSION_EXPIRED' ? 'For your safety, sign in again before deleting your account.' : e.message;
+      if (context.mounted) showIgongoToast(context, message);
     }
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final session = ref.watch(sessionProvider).valueOrNull;
+    // The super admin's switches: a loading or failed read keeps both actions shown (the server still checks).
+    final actions = ref.watch(accountActionsProvider).valueOrNull ?? AccountActions.defaults;
     final prefs = PreferencesScope.of(context);
     final guest = session != null && !session.isStaff;
     // Step 0: the saved dishes, read only for a guest (empty while loading or on a failed load, which shows a dash).
@@ -180,13 +185,14 @@ class MyProfileScreen extends ConsumerWidget {
                 tone: ProfileRowTone.neutral,
                 onTap: () => screen.open('S00-36'),
               ),
-              ProfileActionRow(
-                title: 'Sign Out',
-                icon: Icons.logout,
-                tone: ProfileRowTone.neutral,
-                onTap: () => _signOut(context, ref),
-              ),
-              if (!session.isStaff)
+              if (actions.allowSignOut)
+                ProfileActionRow(
+                  title: 'Sign Out',
+                  icon: Icons.logout,
+                  tone: ProfileRowTone.neutral,
+                  onTap: () => _signOut(context, ref),
+                ),
+              if (!session.isStaff && actions.allowSelfDelete)
                 ProfileActionRow(
                   title: 'Delete Account',
                   icon: Icons.delete_outline,

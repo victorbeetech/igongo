@@ -17,6 +17,7 @@ import 'domain/push_start_result.dart';
 import 'infrastructure/background_push_handler.dart';
 import 'infrastructure/firebase_config.dart';
 import 'infrastructure/firebase_push_gateway.dart';
+import 'infrastructure/http_device_token_api.dart';
 import 'infrastructure/plugin_local_notifier.dart';
 
 /// The app's entry point to push notifications.
@@ -69,5 +70,19 @@ class PushModule {
     final gateway = _gateway;
     if (gateway == null) return;
     await StopPush(gateway: gateway, api: api, state: _state)();
+  }
+
+  /// Switches push off for the person whose session [token] is still saved.
+  /// Call this BEFORE the token is cleared, because the API call needs it.
+  /// It never throws, so sign-out always finishes.
+  Future<void> stopForSignOut({required String baseUrl, required String token}) async {
+    try {
+      // Step 1: a device-token client that uses the person's token for this one call.
+      final api = HttpDeviceTokenApi(baseUrl: baseUrl, accessToken: () async => token);
+      // Step 2: remove the token from the API and the phone.
+      await stop(api: api);
+    } on Object {
+      // Ignored on purpose: the old token dies with the next send if this fails.
+    }
   }
 }

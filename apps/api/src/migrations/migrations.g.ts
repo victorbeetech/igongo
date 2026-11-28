@@ -107,6 +107,12 @@ export const MIGRATIONS: Migration[] = [
   "sql": "-- The booking calendar's settings (on/off, opening days, full rule, window)\n-- are changed by the super admin. Granted to the super admin role through the\n-- roles tables, like every other role permission, so the super admin can change\n-- the role later in the app. ON CONFLICT DO NOTHING keeps any change already made.\n--> statement-breakpoint\nINSERT INTO \"roles\".\"role_permissions\" (\"role_id\",\"permission_key\",\"scope\") SELECT r.\"id\", 'booking-calendar.settings.view', 'all' FROM \"roles\".\"roles\" r WHERE r.\"id\" = 'role_super-admin' ON CONFLICT DO NOTHING;\n--> statement-breakpoint\nINSERT INTO \"roles\".\"role_permissions\" (\"role_id\",\"permission_key\",\"scope\") SELECT r.\"id\", 'booking-calendar.settings.edit', 'all' FROM \"roles\".\"roles\" r WHERE r.\"id\" = 'role_super-admin' ON CONFLICT DO NOTHING;\n"
  },
  {
+  "module": "roles-permissions",
+  "name": "0014_super_admin_delete_accounts",
+  "checksum": "bfeb90e8b85614f3",
+  "sql": "-- The super admin deletes guest accounts from the web (Account detail). Needs\n-- users-login.accounts.delete. Granted here through the roles tables, like every\n-- other role permission, so the super admin role can be changed in the app\n-- later. ON CONFLICT DO NOTHING keeps any change the super admin already made.\n--> statement-breakpoint\nINSERT INTO \"roles\".\"role_permissions\" (\"role_id\",\"permission_key\",\"scope\") SELECT r.\"id\", 'users-login.accounts.delete', 'all' FROM \"roles\".\"roles\" r WHERE r.\"id\" = 'role_super-admin' ON CONFLICT DO NOTHING;\n"
+ },
+ {
   "module": "users-login",
   "name": "0000_users_login",
   "checksum": "26c20af258cc84a8",
