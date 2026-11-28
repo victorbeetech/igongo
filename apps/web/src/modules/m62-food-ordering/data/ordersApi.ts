@@ -3,6 +3,7 @@
 // menu, zones and tracking are read by address from their own modules.
 
 import { useQuery } from "@tanstack/react-query";
+import { allHistoryPages } from "@/shared/api/allHistoryPages";
 import { api } from "@/shared/api/apiClient";
 import type { MenuItem } from "@/shared/api/types/menuItem";
 import type { Outlet } from "@/shared/api/types/outlet";
@@ -18,7 +19,7 @@ export const useZones = () => useQuery({ queryKey: ["delivery", "zones"], queryF
 
 export const useOrderingRules = () => useQuery({ queryKey: ["orders", "rules"], queryFn: () => api<OrderingRules>("/api/orders/rules") });
 
-export const useMyOrders = () => useQuery({ queryKey: ["orders", "mine"], queryFn: () => api<{ items: Order[] }>("/api/orders/mine"), refetchInterval: 20000 });
+export const useMyOrders = () => useQuery({ queryKey: ["orders", "mine"], queryFn: () => allHistoryPages<Order>("/api/orders/mine"), refetchInterval: 20000 });
 
 export const useBoard = (outlet: string) => useQuery({ queryKey: ["orders", "board", outlet], queryFn: () => api<{ items: Order[] }>(`/api/orders/board${outlet ? `?outlet=${outlet}` : ""}`), refetchInterval: 15000 });
 

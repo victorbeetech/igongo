@@ -9,6 +9,12 @@ const text = (max: number) => z.string().trim().min(1).max(max);
 
 const place = z.object({ label: text(200), zone: key.nullable(), lat: z.number().min(-90).max(90).nullable(), lng: z.number().min(-180).max(180).nullable() });
 
+/** `GET /orders/mine` paging: `before` is the last page's `nextBefore`; `limit` is the page size. */
+export const historyQuery = z.object({
+  before: z.iso.datetime({ offset: true }).optional(),
+  limit: z.coerce.number().int().min(1).max(100).default(100),
+});
+
 /** The cart, for `POST /orders/quote` and `POST /orders`. */
 export const cartBody = z.object({
   outlet: key,
@@ -36,6 +42,8 @@ export const placeBody = cartBody.extend({
   customer: z.object({ name: text(120), phone: z.string().trim().regex(/^\+?[0-9 ]{7,20}$/).optional() }).optional(),
   /** One random key per checkout, sent again on a retry, so a double tap never orders twice. */
   requestKey: z.string().regex(/^[A-Za-z0-9-]{8,64}$/).optional(),
+  /** Points to spend on this order (a whole number; the server checks the value and the balance). */
+  pointsToSpend: z.number().int().min(0).max(1000000).optional(),
 });
 
 /** `PUT /orders/location`: the guest's saved delivery pin (both coordinates are required). */

@@ -21,8 +21,8 @@ export function MyOrdersPage({ screen }: { screen: ScreenContext }) {
     <>
       <PurposeText text={screen.spec.purpose} />
       <div className="grid gap-3 p-4">
-        <LiveData query={mine} name="Your orders" isEmpty={(d) => d.items.length === 0}>
-          {(d) => d.items.map((o) => <OrderCard key={o.id} order={o} />)}
+        <LiveData query={mine} name="Your orders" isEmpty={(d) => d.length === 0}>
+          {(d) => d.map((o) => <OrderCard key={o.id} order={o} />)}
         </LiveData>
       </div>
     </>

@@ -18,7 +18,14 @@ export const payBody = z.object({ ...ref, method, amount: amount.optional(), pho
 export const recordBody = z.object({ ...ref, method, amount: amount.optional(), reference: z.string().trim().max(80).optional() });
 
 /** `GET /payments`. */
-export const listQuery = z.object({ status: z.enum(["pending", "succeeded", "failed", "refunded"]).optional(), module: ref.module.optional(), mine: z.enum(["1"]).optional() });
+/** `GET /payments`: filters, plus paging (`before` is the last page's `nextBefore`; `limit` the page size). */
+export const listQuery = z.object({
+  status: z.enum(["pending", "succeeded", "failed", "refunded"]).optional(),
+  module: ref.module.optional(),
+  mine: z.enum(["1"]).optional(),
+  before: z.iso.datetime({ offset: true }).optional(),
+  limit: z.coerce.number().int().min(1).max(200).default(200),
+});
 
 /** `POST /payments/:id/refund`. */
 export const refundBody = z.object({ amount, reason: z.string().trim().min(3).max(300) });
