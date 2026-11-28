@@ -59,8 +59,19 @@ export interface RestaurantSlide extends ContentItemBase {
   linkTarget: string | null;
 }
 
+/** Editable words the guest home shows. Empty means the app shows its built-in wording. */
+export interface GuestTexts {
+  /** The line before the guest's first name, e.g. "Good morning". Empty uses the time-of-day greeting. */
+  greetingMorning: string;
+  greetingAfternoon: string;
+  greetingEvening: string;
+  /** The line shown when no guest is signed in, e.g. "Welcome to Igongo". */
+  welcomeLine: string;
+}
+
 /** The whole guest content document. Every list is empty until the super admin adds items. */
 export interface GuestContent {
+  texts: GuestTexts;
   banners: Banner[];
   stories: Story[];
   featuredStays: FeaturedStay[];
@@ -68,8 +79,12 @@ export interface GuestContent {
   restaurantSlides: RestaurantSlide[];
 }
 
+/** Empty wording: the app keeps its built-in words until the super admin types new ones. */
+export const EMPTY_GUEST_TEXTS: GuestTexts = { greetingMorning: "", greetingAfternoon: "", greetingEvening: "", welcomeLine: "" };
+
 /** An empty document: what a new install shows before the super admin adds anything. */
 export const EMPTY_GUEST_CONTENT: GuestContent = {
+  texts: EMPTY_GUEST_TEXTS,
   banners: [],
   stories: [],
   featuredStays: [],

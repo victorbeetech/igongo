@@ -10,6 +10,7 @@ const imageUrl = z.string().trim().max(1000).url().startsWith("https://").nullab
 const base = { id: z.string().min(1).max(80), active: z.boolean(), sortOrder: z.number().int().min(0).max(100000) };
 
 export const contentBody = z.object({
+  texts: z.object({ greetingMorning: z.string().trim().max(60), greetingAfternoon: z.string().trim().max(60), greetingEvening: z.string().trim().max(60), welcomeLine: z.string().trim().max(60) }),
   banners: z.array(z.object({ ...base, title: z.string().trim().min(1).max(120), subtitle: z.string().trim().max(240).nullable(), imageUrl, linkTarget })).max(200),
   stories: z.array(z.object({ ...base, label: z.string().trim().min(1).max(40), imageUrl, iconName: z.string().trim().max(60).nullable(), linkTarget })).max(200),
   featuredStays: z.array(z.object({ ...base, title: z.string().trim().min(1).max(120), subtitle: z.string().trim().max(240).nullable(), imageUrl, linkTarget })).max(200),
