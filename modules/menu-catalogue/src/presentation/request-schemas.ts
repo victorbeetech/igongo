@@ -37,6 +37,14 @@ export const itemsQuery = z.object({ outlet: key.optional(), all: z.enum(["1"]).
 /** `POST /menu/items/:id/stock`. */
 export const stockBody = z.object({ inStock: z.boolean() });
 
+/** `POST /menu/outlets`: a new venue's name (2 to 60 letters) and whether guests see it straight away. */
+export const outletBody = z.object({ name: z.string().trim().min(2).max(60), clientVisible: z.boolean().default(true) });
+
+/** `PATCH /menu/outlets/:key`: any of the name and the guest switch; at least one is needed. */
+export const outletPatch = z
+  .object({ name: z.string().trim().min(2).max(60).optional(), clientVisible: z.boolean().optional() })
+  .refine((v) => v.name !== undefined || v.clientVisible !== undefined, { message: "Change the name or the guest switch." });
+
 /** `PUT /menu/settings`. */
 export const settingsBody = z.object({ outlets: z.array(z.object({ key, name: z.string().trim().min(2).max(60) })).max(30), clientOutlets: z.array(key).max(30) });
 
