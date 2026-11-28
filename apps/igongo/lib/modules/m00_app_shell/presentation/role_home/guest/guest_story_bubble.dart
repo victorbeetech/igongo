@@ -1,6 +1,5 @@
-// One round "Happening today" bubble: a ring in the brand colours around a
-// placeholder picture, with a short label under it. The picture is a placeholder
-// until the hotel sends the real one.
+// One round "Happening today" bubble: a ring in the brand colours around the story's
+// picture (or a placeholder until the super admin adds one), with a short label under it.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
@@ -10,11 +9,11 @@ import '../../../../../shared/ui/photo/guest_photo.dart';
 
 /// A story bubble: [icon] stands in for the picture, [label] sits under it.
 class GuestStoryBubble extends StatelessWidget {
-  /// Creates the bubble; [asset] is the demo picture's path (null shows the placeholder).
-  const GuestStoryBubble({super.key, required this.icon, required this.label, this.asset});
+  /// Creates the bubble; [imageUrl] is the picture's web address (null or "" shows the placeholder).
+  const GuestStoryBubble({super.key, required this.icon, required this.label, this.imageUrl});
 
-  /// The demo picture's asset path, or null for the placeholder.
-  final String? asset;
+  /// The picture's web address, or null or "" for the placeholder.
+  final String? imageUrl;
 
   /// The icon shown while the picture is a placeholder.
   final IconData icon;
@@ -47,7 +46,7 @@ class GuestStoryBubble extends StatelessWidget {
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
-                      GuestPhoto(asset: asset),
+                      GuestPhoto(imageUrl: imageUrl),
                       // Step 2: the play-style icon over the picture, centred.
                       Center(
                         child: Icon(icon, size: IgongoSpace.lg, color: p.primary),

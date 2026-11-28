@@ -9,9 +9,9 @@ import 'package:material_ui/material_ui.dart';
 import '../../../../../shared/theme/theme.dart';
 import '../../../../../shared/ui/photo/guest_photo.dart';
 
-/// A dish card. [onTap] is null for the placeholder cards, which open nothing.
+/// A dish card. [onTap] opens the dish; the picture is a placeholder until dish photos are added.
 class GuestDishCard extends StatelessWidget {
-  /// Creates the card. [tag], [rating] and [prepTime] are placeholder words until wired.
+  /// Creates the card. [tag], [rating] and [prepTime] show placeholder words until the menu carries them.
   const GuestDishCard({
     super.key,
     required this.name,
@@ -20,7 +20,6 @@ class GuestDishCard extends StatelessWidget {
     required this.tag,
     required this.rating,
     required this.prepTime,
-    this.asset,
     this.onTap,
   });
 
@@ -41,9 +40,6 @@ class GuestDishCard extends StatelessWidget {
 
   /// The prep time shown on the picture's bottom right, such as "25 mins".
   final String prepTime;
-
-  /// The demo picture's asset path, or null for the placeholder.
-  final String? asset;
 
   /// Called when the card or its add button is tapped.
   final VoidCallback? onTap;
@@ -82,7 +78,7 @@ class GuestDishCard extends StatelessWidget {
                   SizedBox(
                     height: _pictureHeight,
                     width: double.infinity,
-                    child: GuestPhoto(asset: asset),
+                    child: const GuestPhoto(),
                   ),
                   Positioned(
                     top: IgongoSpace.sm,

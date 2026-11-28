@@ -1,28 +1,22 @@
 // "Happening today at Igongo": a title with a live dot, then a row of story
-// bubbles that slides sideways. The bubbles are demo items until the hotel adds its events.
+// bubbles that slides sideways. The stories come from the super admin's home
+// settings; the parent hides this row when there are none, so it never shows dummy items.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../../../shared/home_content/domain/home_story.dart';
+import '../../../../../shared/home_content/presentation/home_icons.dart';
 import '../../../../../shared/theme/theme.dart';
 import 'guest_story_bubble.dart';
 
 /// The stories row: the title and the bubbles, scrolling sideways.
 class GuestStoriesRow extends StatelessWidget {
-  /// Creates the row.
-  const GuestStoriesRow({super.key});
+  /// Creates the row from the stories the super admin switched on.
+  const GuestStoriesRow({super.key, required this.stories});
 
-  /// The demo bubbles: each has an icon, a demo title and its time. They are sample
-  /// text only, to show the slide; the hotel's real events replace them later.
-  static const _demoStories = <({IconData icon, String label, String asset})>[
-    (icon: Icons.sunny, label: 'Sunrise walk', asset: 'assets/photos/hotel-terrace-view.jpg'),
-    (icon: Icons.pool_outlined, label: 'Pool party', asset: 'assets/photos/hotel-pool.jpg'),
-    (icon: Icons.restaurant_outlined, label: 'Chef\'s table', asset: 'assets/photos/outlet-restaurant.jpg'),
-    (icon: Icons.terrain_outlined, label: 'Guided hike', asset: 'assets/photos/hotel-cultural-hut.jpg'),
-    (icon: Icons.music_note_outlined, label: 'Live music', asset: 'assets/photos/hotel-night-lights.jpg'),
-    (icon: Icons.local_bar_outlined, label: 'Happy hour', asset: 'assets/photos/hotel-kaahwa-front.jpg'),
-    (icon: Icons.spa_outlined, label: 'Spa offer', asset: 'assets/photos/room-bathroom-shower.jpg'),
-  ];
+  /// The stories to show, in the order the super admin set.
+  final List<HomeStory> stories;
 
   @override
   Widget build(BuildContext context) {
@@ -62,12 +56,12 @@ class GuestStoriesRow extends StatelessWidget {
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
-            itemCount: _demoStories.length,
+            itemCount: stories.length,
             separatorBuilder: (_, _) => const SizedBox(width: IgongoSpace.sm),
             itemBuilder: (_, i) => GuestStoryBubble(
-              icon: _demoStories[i].icon,
-              label: _demoStories[i].label,
-              asset: _demoStories[i].asset,
+              icon: homeIconFor(stories[i].icon),
+              label: stories[i].title,
+              imageUrl: stories[i].imageUrl,
             ),
           ),
         ),

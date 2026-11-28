@@ -7,6 +7,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../shared/catalog/catalog.dart';
 import '../../shared/contact/whatsapp_float_button.dart';
+import '../../shared/home_content/application/home_content_provider.dart';
 import '../../shared/layout/igongo_scaffold.dart';
 import '../../shared/preferences/preferences.dart';
 import '../../shared/session/session_controller.dart';
@@ -76,7 +77,8 @@ class AppShell extends ConsumerWidget {
       drawer: signedIn && !guestOnly ? const RoleDrawer() : null,
       bottomBar: signedIn ? BottomBar(currentId: spec.id) : null,
       // Step 4: the one floating WhatsApp button, in the bottom corner on every guest screen.
-      floatingAction: (guestOnly || guestHome) ? const WhatsappFloatButton() : null,
+      // The super admin can switch it off in the home settings (on until the settings load).
+      floatingAction: (guestOnly || guestHome) && (ref.watch(homeContentProvider).valueOrNull?.whatsappOn ?? true) ? const WhatsappFloatButton() : null,
       actions: [
         // Search joins real accounts once it is live (docs/APP-WIRING.md).
         if (signedIn && ViewRules.previewOn(prefs, ref.watch(sessionProvider).valueOrNull))
