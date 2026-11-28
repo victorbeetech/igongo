@@ -10,6 +10,8 @@ export const USER_PERMISSIONS = {
   viewAccounts: "users-login.accounts.view",
   createAccounts: "users-login.staff-accounts.approve",
   editAccounts: "users-login.accounts.edit",
+  /** Deleting a guest account (the admin route). Held by the super admin by default. */
+  deleteAccounts: "users-login.accounts.delete",
   revokeSessions: "users-login.sessions.delete",
   viewMethods: "users-login.methods.view",
   editMethods: "users-login.security.approve",

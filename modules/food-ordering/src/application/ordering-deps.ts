@@ -3,6 +3,7 @@
 import type { DeliveryDesk } from "@igongo/contracts/delivery-riders";
 import type { MenuReader } from "@igongo/contracts/menu-catalogue";
 import type { UserNotifier } from "@igongo/contracts/notifications";
+import type { PointsDesk } from "@igongo/contracts/points-rewards";
 import type { PromoDesk } from "@igongo/contracts/promotions-vouchers";
 import type { ChangeContext } from "@igongo/core";
 import type { CartRepository } from "./ports/cart-repository";
@@ -10,6 +11,7 @@ import type { LocationRepository } from "./ports/location-repository";
 import type { OrderRepository } from "./ports/order-repository";
 import type { RatingRepository } from "./ports/rating-repository";
 import type { RulesStore } from "./ports/rules-store";
+import type { SavedDishRepository } from "./ports/saved-dish-repository";
 
 export interface OrderingDeps {
   orders: OrderRepository;
@@ -17,6 +19,8 @@ export interface OrderingDeps {
   carts: CartRepository;
   /** Guests' saved delivery pins (one per guest, each only their own). */
   locations: LocationRepository;
+  /** Guests' saved dishes (the heart on a dish), each guest only their own. */
+  savedDishes: SavedDishRepository;
   ratings: RatingRepository;
   rules: RulesStore;
   /** Menus & Catalogue, through its contract. */
@@ -25,6 +29,8 @@ export interface OrderingDeps {
   delivery: DeliveryDesk | null;
   /** Promotions & Vouchers (promo and voucher codes), or null while that module is switched off. */
   promos: PromoDesk | null;
+  /** Points rewards, or null while that module is switched off: spend at checkout, earn when paid, give back on cancel. */
+  points: PointsDesk | null;
   /** Pushes order news to the guest's phone (Notifications); sends nothing when not set up. */
   notify: UserNotifier;
   change: ChangeContext;

@@ -1,11 +1,10 @@
 "use client";
-// S61-02 Menu editor and S61-03 Item editor: the hotel's outlets (and which
-// show to guests), then a form to add an item with price, prep time,
+// S61-02 Menu editor and S61-03 Item editor: the hotel's venues (add, rename,
+// switch on or off for guests, remove), then a form to add an item with price, prep time,
 // portions and extras, allergens and tags. Prices are the hotel's, never code.
 
 import { useState } from "react";
-import { useAddItem, useMenuSettings, useSaveMenuSettings } from "@/modules/m61-menu-catalogue/data/menuApi";
-import type { MenuSettings } from "@/shared/api/types/menuSettings";
+import { useAddItem, useMenuSettings } from "@/modules/m61-menu-catalogue/data/menuApi";
 import { parseOptions } from "@/modules/m61-menu-catalogue/domain/parseOptions";
 import { LiveData } from "@/shared/api/LiveData";
 import type { ScreenContext } from "@/shared/catalog/types";
@@ -15,6 +14,7 @@ import { Card } from "@/shared/ui/card/Card";
 import { SelectInput } from "@/shared/ui/field/SelectInput";
 import { TextArea } from "@/shared/ui/field/TextArea";
 import { TextInput } from "@/shared/ui/field/TextInput";
+import { OutletsManager } from "./OutletsManager";
 
 export function MenuEditorPage({ screen }: { screen: ScreenContext }) {
   const settings = useMenuSettings();
@@ -25,30 +25,13 @@ export function MenuEditorPage({ screen }: { screen: ScreenContext }) {
         <LiveData query={settings} name="Outlets">
           {(s) => (
             <>
-              <OutletsForm initial={s} />
+              <OutletsManager settings={s} />
               <ItemForm outlets={s.outlets.map((o) => [o.key, o.name])} />
             </>
           )}
         </LiveData>
       </div>
     </>
-  );
-}
-
-/** Outlets, one per line as `key, name, client` (client: shown to guests). */
-function OutletsForm({ initial }: { initial: MenuSettings }) {
-  const save = useSaveMenuSettings();
-  const [text, setText] = useState(initial.outlets.map((o) => `${o.key}, ${o.name}${initial.clientOutlets.includes(o.key) ? ", client" : ""}`).join("\n"));
-  const submit = () => {
-    const rows = text.split("\n").map((l) => l.split(",").map((x) => x.trim())).filter((r) => r[0] && r[1]);
-    save.mutate({ outlets: rows.map((r) => ({ key: r[0] ?? "", name: r[1] ?? "" })), clientOutlets: rows.filter((r) => r[2] === "client").map((r) => r[0] ?? "") });
-  };
-  return (
-    <Card className="grid gap-2">
-      <h2 className="text-subtitle font-bold">Outlets</h2>
-      <TextArea label="One per line: key, name, client (client = guests can order)" value={text} onChange={setText} rows={4} />
-      <Button onClick={submit} disabled={save.isPending}>Save outlets</Button>
-    </Card>
   );
 }
 

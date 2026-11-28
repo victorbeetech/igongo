@@ -1,23 +1,28 @@
-// One slide of the hero carousel: the placeholder fill, a dark gradient for the text,
-// the tag and bookmark on top, the title and price at the bottom, and a Book a room button.
+// One slide of the hero carousel, filled from a banner the super admin set: the
+// picture (or the placeholder fill), a dark gradient for the text, the tag and
+// bookmark on top, the title and subtitle at the bottom, and a button.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../../shared/theme/theme.dart';
 import '../../../../../shared/ui/photo/guest_photo.dart';
-import 'guest_hero_stay.dart';
+import '../../../../../shared/hotel/domain/hotel_content_item.dart';
 
-/// One featured stay as a full-size slide. [onBook] opens the room list.
+/// The small tag and the eyebrow line the slides share (words only, the design's labels).
+const _tagLabel = 'Featured';
+const _eyebrowLabel = 'HOTEL NEWS';
+
+/// One banner as a full-size slide.
 class GuestHeroSlide extends StatelessWidget {
-  /// Creates the slide for [stay].
-  const GuestHeroSlide({super.key, required this.stay, required this.onBook});
+  /// Creates the slide for [banner]. [onTap] runs the button.
+  const GuestHeroSlide({super.key, required this.banner, required this.onTap});
 
-  /// The words shown on this slide.
-  final GuestHeroStay stay;
+  /// The admin's banner shown on this slide.
+  final HotelContentItem banner;
 
-  /// Called when the Book a room button is tapped.
-  final VoidCallback onBook;
+  /// Called when the slide's button is tapped.
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +30,8 @@ class GuestHeroSlide extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        // Step 1: the demo picture for this stay (a placeholder if the picture cannot load).
-        GuestPhoto(asset: stay.asset, label: stay.title),
+        // Step 1: the banner's picture is not wired yet, so the shared placeholder shows.
+        GuestPhoto(label: banner.title),
         // Step 2: a dark gradient from the bottom, so the text reads on any picture.
         DecoratedBox(
           decoration: BoxDecoration(
@@ -49,23 +54,23 @@ class GuestHeroSlide extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.sm, vertical: IgongoSpace.xxs),
                   child: Text(
-                    stay.tag,
+                    _tagLabel,
                     style: context.text.labelSmall?.copyWith(color: p.onPrimary, fontWeight: FontWeight.w700),
                   ),
                 ),
               ),
               const Spacer(),
-              // The bookmark is a placeholder: it does nothing until saving is wired.
+              // Step 3a: the bookmark is not part of the banner contract yet, so it is shown disabled.
               IconButton.filled(
                 tooltip: 'Save',
-                onPressed: () {},
+                onPressed: null,
                 style: IconButton.styleFrom(backgroundColor: p.primaryDark, foregroundColor: p.onPrimary),
                 icon: const Icon(Icons.bookmark_border, size: IgongoSpace.lg),
               ),
             ],
           ),
         ),
-        // Step 4: the eyebrow, title, description, price and the Book a room button at the bottom.
+        // Step 4: the eyebrow, title, subtitle and the button at the bottom.
         Positioned(
           left: IgongoSpace.md,
           right: IgongoSpace.md,
@@ -79,7 +84,7 @@ class GuestHeroSlide extends StatelessWidget {
                   Icon(Icons.star_outline, size: IgongoSpace.md, color: p.onPrimary),
                   const SizedBox(width: IgongoSpace.xxs),
                   Text(
-                    stay.eyebrow,
+                    _eyebrowLabel,
                     style: context.text.labelSmall?.copyWith(
                       color: p.onPrimary,
                       letterSpacing: 1.1,
@@ -90,14 +95,14 @@ class GuestHeroSlide extends StatelessWidget {
               ),
               const SizedBox(height: IgongoSpace.xxs),
               Text(
-                stay.title,
+                banner.title,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: context.text.titleMedium?.copyWith(color: p.onPrimary, fontWeight: FontWeight.w700),
               ),
               const SizedBox(height: IgongoSpace.xxs),
               Text(
-                stay.description,
+                banner.subtitle,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: context.text.bodySmall?.copyWith(color: p.onPrimary),
@@ -105,16 +110,9 @@ class GuestHeroSlide extends StatelessWidget {
               const SizedBox(height: IgongoSpace.sm),
               Row(
                 children: [
-                  Expanded(
-                    child: Text(
-                      stay.price,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: context.text.labelMedium?.copyWith(color: p.onPrimary),
-                    ),
-                  ),
+                  const Spacer(),
                   FilledButton(
-                    onPressed: onBook,
+                    onPressed: onTap,
                     // Step 4a: a light button with the Igongo red words; red on light reads in both modes.
                     style: FilledButton.styleFrom(backgroundColor: p.onPrimary, foregroundColor: p.primary),
                     child: Text('Book a room', style: context.text.labelLarge?.copyWith(color: p.primary, fontWeight: FontWeight.w700)),

@@ -2,7 +2,7 @@
 
 import type { OrderStatus } from "@igongo/contracts/food-ordering";
 import type { Database } from "@igongo/core";
-import { and, asc, count, desc, eq, gte, inArray, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, gte, inArray, lt, sql } from "drizzle-orm";
 import type { OrderRepository } from "../../application/ports/order-repository";
 import type { Order } from "../../domain/order";
 import { orders } from "./schema";
@@ -30,12 +30,14 @@ export class DrizzleOrderRepository implements OrderRepository {
     return Number(row?.n ?? 0);
   }
 
-  list(filter: { userId?: string; outlet?: string; statuses?: OrderStatus[]; since?: Date; limit: number }): Promise<Order[]> {
+  list(filter: { userId?: string; outlet?: string; statuses?: OrderStatus[]; since?: Date; before?: Date; limit: number }): Promise<Order[]> {
     const where = and(
       filter.userId ? eq(orders.userId, filter.userId) : undefined,
       filter.outlet ? eq(orders.outlet, filter.outlet) : undefined,
       filter.statuses?.length ? inArray(orders.status, filter.statuses) : undefined,
       filter.since ? gte(orders.createdAt, filter.since) : undefined,
+      // Paging: only orders placed before the cursor time (the previous page's last row).
+      filter.before ? lt(orders.createdAt, filter.before) : undefined,
     );
     // The guest's list is newest first; the board is soonest ready first.
     const order = filter.userId ? desc(orders.createdAt) : asc(orders.readyAt);

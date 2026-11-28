@@ -57,7 +57,8 @@ class ApiClient {
     if (response.statusCode >= 300) {
       throw ApiException(
         response.statusCode,
-        '${json['error'] ?? 'error'}',
+        // Better Auth replies with `code`; the Igongo API with `error`.
+        '${json['error'] ?? json['code'] ?? 'error'}',
         '${json['message'] ?? 'Something went wrong.'}',
       );
     }

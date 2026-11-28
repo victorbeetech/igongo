@@ -87,6 +87,7 @@ import '../../modules/m81_reports_analytics/m81_reports_analytics_screens.g.dart
 import '../../modules/m82_apex_integration/m82_apex_integration_screens.g.dart';
 import '../../modules/m83_seo_online_presence/m83_seo_online_presence_screens.g.dart';
 import '../../modules/m84_stock_inventory/m84_stock_inventory_screens.g.dart';
+import '../../modules/m85_booking_calendar/m85_booking_calendar_screens.g.dart';
 
 /// Every module, in the order of the screen inventory.
 final allModules = <ModuleSpec>[
@@ -175,6 +176,7 @@ final allModules = <ModuleSpec>[
   m82ApexIntegrationModule,
   m83SeoOnlinePresenceModule,
   m84StockInventoryModule,
+  m85BookingCalendarModule,
 ];
 
 /// Every pre-made role with its home tiles. The super admin edits these later.

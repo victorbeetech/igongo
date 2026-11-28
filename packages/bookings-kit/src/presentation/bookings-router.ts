@@ -19,7 +19,7 @@
  */
 
 import { zValidator } from "@hono/zod-validator";
-import { actorOf, AppError, canForOthers, recordChange, requirePermission, requireSignIn, requireStaffPermission, type ActorEnv } from "@igongo/core";
+import { actorOf, AppError, canForOthers, historyPage, recordChange, requirePermission, requireSignIn, requireStaffPermission, type ActorEnv } from "@igongo/core";
 import { Hono, type Context } from "hono";
 import type { BookingsDeps } from "../application/bookings-deps";
 import { approveBooking, cancelBooking, checkIn } from "../application/use-cases/change-booking";
@@ -31,7 +31,7 @@ import { BOOKING_QR_PREFIX, issueTicket, parseTicket } from "../domain/ticket-si
 import type { TicketVerdict } from "../domain/ticket-verdict";
 import { verifyTicket } from "../application/use-cases/verify-ticket";
 import { bookingPermissions } from "./booking-permissions";
-import { approveBody, availabilityQuery, bookBody, cancelBody, checkInBody, listQuery, offeringBody, offeringPatch, rulesBody, ticketBody } from "./request-schemas";
+import { approveBody, availabilityQuery, bookBody, cancelBody, checkInBody, listQuery, myBookingsQuery, offeringBody, offeringPatch, rulesBody, ticketBody } from "./request-schemas";
 
 /** The text inside a booking's QR code. */
 export { BOOKING_QR_PREFIX } from "../domain/ticket-signature";
@@ -93,7 +93,13 @@ export function bookingsRouter(moduleKey: string, deps: (c: Context<ActorEnv>) =
       });
       return c.json(await present(c, booking), 201);
     })
-    .get("/bookings/mine", requireSignIn, async (c) => c.json({ items: await Promise.all((await deps(c).bookings.list({ userId: actorOf(c).userId, limit: 200 })).map((b) => present(c, b))) }))
+    // My bookings, one page at a time (newest first). One row more than the page is read to learn whether an older page exists.
+    .get("/bookings/mine", requireSignIn, zValidator("query", myBookingsQuery), async (c) => {
+      const { before, limit } = c.req.valid("query");
+      const rows = await deps(c).bookings.list({ userId: actorOf(c).userId, ...(before ? { before: new Date(before) } : {}), limit: limit + 1 });
+      const page = historyPage(rows, limit);
+      return c.json({ items: await Promise.all(page.items.map((b) => present(c, b))), nextBefore: page.nextBefore });
+    })
     .get("/bookings", requireStaffPermission(P.view), zValidator("query", listQuery), async (c) => {
       const { date, status } = c.req.valid("query");
       const rows = await deps(c).bookings.list({ ...(date ? { date } : {}), ...(status ? { status } : {}), limit: 500 });

@@ -10,6 +10,8 @@
     <!-- QR codes on cards and wristbands, and photos for fault reports. -->
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
+    <!-- Voice search in the search box (speech is turned into words on the phone). -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <application
         android:label="Igongo"
         android:name="${applicationName}"
@@ -60,6 +62,10 @@
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
+        </intent>
+        <!-- Lets voice search find the phone's speech recogniser (Android 11 and later). -->
+        <intent>
+            <action android:name="android.speech.RecognitionService"/>
         </intent>
     </queries>
 </manifest>
