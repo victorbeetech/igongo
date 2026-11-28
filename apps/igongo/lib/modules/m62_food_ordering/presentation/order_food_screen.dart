@@ -82,7 +82,7 @@ class OrderFoodScreen extends ConsumerWidget {
       final rules = ref.watch(orderingRulesProvider).valueOrNull;
       return Column(
         children: [
-          // Step 3: the one-row top bar (venue, wish list, WhatsApp); the cart is in the bottom bar.
+          // Step 3: the one-row top bar (the venue); the cart is in the bottom bar.
           FoodTopBar(venue: venueName),
           Expanded(
             child: ScreenListView(

@@ -21,9 +21,6 @@ import '../../../../shared/theme/theme.dart';
 import '../../../m54_crm_guests/presentation/past_visits_screen.dart';
 import '../../../m57_loyalty/points/application/points_providers.dart';
 import '../../../m57_loyalty/points/presentation/points_activity_row.dart';
-import '../../../m62_food_ordering/application/saved_dishes_providers.dart';
-import '../../../m62_food_ordering/domain/saved_dish.dart';
-import '../../../m62_food_ordering/presentation/saved_dishes/saved_dishes_screen.dart';
 import '../../../../shared/ui/button/igongo_button.dart';
 import '../../../../shared/ui/card/igongo_card.dart';
 import '../../../../shared/ui/toast/igongo_toast.dart';
@@ -87,9 +84,6 @@ class MyProfileScreen extends ConsumerWidget {
     final actions = ref.watch(accountActionsProvider).valueOrNull ?? AccountActions.defaults;
     final prefs = PreferencesScope.of(context);
     final guest = session != null && !session.isStaff;
-    // Step 0: the saved dishes, read only for a guest (empty while loading or on a failed load, which shows a dash).
-    final guestSignedIn = session != null && !session.isStaff;
-    final savedDishes = guestSignedIn ? (ref.watch(savedDishesProvider).valueOrNull ?? const <SavedDish>[]) : const <SavedDish>[];
     // Step 1b: the points wallet, read here so the points row is left out entirely when it is not needed.
     final wallet = ref.watch(pointsWalletProvider).valueOrNull;
     // Step 1: the banner height includes the status bar, so the card overlaps the same spot as the design.
@@ -133,7 +127,7 @@ class MyProfileScreen extends ConsumerWidget {
             ),
           ],
         ),
-        // Step 2: the guest's activity: bookings, invoices, past visits and saved dishes.
+        // Step 2: the guest's activity: bookings, invoices and past visits.
         if (guest) ...[
           const ProfileSectionTitle('Resort Activity'),
           ProfileActionGroup(
@@ -160,14 +154,6 @@ class MyProfileScreen extends ConsumerWidget {
                 icon: Icons.account_balance_outlined,
                 onTap: () =>
                     Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const PastVisitsScreen())),
-              ),
-              // Live: the first few saved dish names, and the count (a dash while loading or when none).
-              ProfileActionRow(
-                title: 'Saved Dishes',
-                subtitle: savedNames(savedDishes),
-                icon: Icons.restaurant_outlined,
-                trailing: Text(savedCountLabel(savedDishes), style: context.text.labelMedium?.copyWith(color: context.palette.textMuted)),
-                onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const SavedDishesScreen())),
               ),
             ],
           ),
@@ -215,16 +201,6 @@ class MyProfileScreen extends ConsumerWidget {
     return guest ? AnnotatedRegion<SystemUiOverlayStyle>(value: SystemUiOverlayStyle.light, child: list) : list;
   }
 }
-
-/// The first three saved dish names, joined; a dash when there are none.
-String savedNames(List<SavedDish> dishes) => dishes.isEmpty ? '—' : dishes.take(3).map((d) => d.name).join(', ');
-
-/// The saved dish count as the row's trailing label, or a dash when there are none.
-String savedCountLabel(List<SavedDish> dishes) => switch (dishes.length) {
-  0 => '—',
-  1 => '1 item',
-  final n => '$n items',
-};
 
 /// The card shown when nobody is signed in: a short line and the sign-in button.
 class _SignInPrompt extends StatelessWidget {

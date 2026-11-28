@@ -104,8 +104,9 @@ export const deliveryPins = ordersSchema.table("delivery_pins", {
 export const settings = moduleSettingsTable(ordersSchema);
 
 /**
- * Each guest's saved dishes (the heart on a dish): one row per guest and
- * dish, so a guest only ever reads and changes their own list.
+ * Guests' saved dishes from the removed wishlist. No code reads or writes this
+ * table any more. It is kept, with its rows, so no guest data is lost; a later
+ * change may drop it only by a deliberate migration the owner approves.
  */
 export const savedDishes = ordersSchema.table(
   "saved_dishes",
