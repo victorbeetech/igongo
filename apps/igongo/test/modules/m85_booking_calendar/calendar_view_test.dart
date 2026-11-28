@@ -35,7 +35,7 @@ void main() {
     });
 
     test('a day the calendar does not hold is not found', () {
-      final view = CalendarView.fromJson({'enabled': true, 'days': []});
+      final view = CalendarView.fromJson({'enabled': true, 'days': <Map<String, dynamic>>[]});
       expect(view.dayFor(DateTime(2026, 12, 1)), isNull);
     });
 
@@ -44,7 +44,7 @@ void main() {
     });
 
     test('a switched-off calendar has no days', () {
-      final view = CalendarView.fromJson({'enabled': false, 'days': []});
+      final view = CalendarView.fromJson({'enabled': false, 'days': <Map<String, dynamic>>[]});
       expect(view.enabled, isFalse);
       expect(view.days, isEmpty);
     });

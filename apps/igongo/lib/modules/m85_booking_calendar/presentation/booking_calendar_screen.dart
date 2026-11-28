@@ -14,6 +14,7 @@ import '../../../shared/screens/parts/screen_list_view.dart';
 import '../../../shared/theme/theme.dart';
 import '../../../shared/ui/message/state_message.dart';
 import '../application/booking_calendar_providers.dart';
+import '../domain/calendar_day_status.dart';
 import '../domain/calendar_view.dart';
 import 'booking_calendar_day_panel.dart';
 import 'booking_calendar_grid.dart';
