@@ -162,7 +162,11 @@ class _ItemPageState extends ConsumerState<ItemPage> {
             top: 0,
             left: 0,
             right: 0,
-            child: DishTopBar(name: item.name, titleShown: _titleShown, onBack: () => Navigator.of(context).maybePop()),
+            child: DishTopBar(
+              name: item.name,
+              titleShown: _titleShown,
+              onBack: () => Navigator.of(context).maybePop(),
+            ),
           ),
           // Layer 3: the order bar sits at the bottom.
           Positioned(

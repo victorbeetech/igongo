@@ -8,6 +8,6 @@ export const MENU_PERMISSIONS = {
   /** The kitchen's out-of-stock switch; the kitchen display's edit permission works too. */
   stock: "menu-catalogue.stock.edit",
   kitchen: "kitchen-display.tickets.edit",
-  /** Change the outlets list. */
+  /** Change the outlets list. The routes also require the Super Admin role (see requireSuperAdmin). */
   settings: "menu-catalogue.settings.edit",
 } as const;

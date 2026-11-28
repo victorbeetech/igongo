@@ -20,7 +20,10 @@ import type { ModuleSwitchReader, SecretReader } from "@igongo/contracts/super-a
 import { bookingPayable, type BookingsDeps } from "@igongo/bookings-kit";
 import { AppError, type ChangeContext, type Database } from "@igongo/core";
 import { craftsBookshopDeps } from "@igongo/crafts-bookshop";
+import { SettingsGuestContentStore, type GuestContentDeps } from "@igongo/guest-content";
 import { DrizzleProfileRepository, SettingsCrmStore, type CrmDeps } from "@igongo/crm-guests";
+import type { PointsDesk } from "@igongo/contracts/points-rewards";
+import { DrizzlePointsStore, pointsDesk as buildPointsDesk, type PointsDeps } from "@igongo/points-rewards";
 import { deliveryDesk, DrizzleJobRepository, DrizzleRiderRepository, SettingsDeliveryRulesStore, type DeliveryDeps } from "@igongo/delivery-riders";
 import { eventsConferencesDeps } from "@igongo/events-conferences";
 import { DrizzleCartRepository, DrizzleLocationRepository, DrizzleOrderRepository, DrizzleRatingRepository, orderPayable, orderTracker, SettingsRulesStore, type OrderingDeps } from "@igongo/food-ordering";
@@ -31,6 +34,7 @@ import { loginUser } from "@igongo/users-login";
 import { eq } from "drizzle-orm";
 import { poolDeps } from "@igongo/pool";
 import { promoDesk, promotionsVouchersDeps } from "@igongo/promotions-vouchers";
+import { calendarSettingsStore, type CalendarDeps } from "@igongo/booking-calendar";
 import { roomBookingsDeps } from "@igongo/room-bookings";
 import { spaDeps } from "@igongo/spa";
 import { tablesDineinDeps } from "@igongo/tables-dinein";
@@ -65,8 +69,8 @@ export class GuestServices {
     private readonly ticketKey: string | null = null,
   ) {}
 
-  /** True when the super admin has [key] on and not in maintenance. */
-  private async isOn(key: string): Promise<boolean> {
+  /** True when the super admin has [key] on and not in maintenance. Public so the profile stats can skip switched-off modules. */
+  async isOn(key: string): Promise<boolean> {
     const s = await this.modules.stateOf(key);
     return s.enabled && !s.maintenance;
   }
@@ -79,11 +83,21 @@ export class GuestServices {
     return { items: new DrizzleItemRepository(this.db), settings: new SettingsMenuStore(this.db), change: this.change };
   }
 
+  /** Guest content (banners, stories, stays, facts, restaurant slides): one settings store. */
+  content(): GuestContentDeps {
+    return { store: new SettingsGuestContentStore(this.db), change: this.change };
+  }
+
+  /** Points rewards: one store for the rules, lots and history. */
+  points(): PointsDeps {
+    return { store: new DrizzlePointsStore(this.db), change: this.change };
+  }
+
   ordering(): OrderingDeps {
     const m = this.menu();
     return {
       orders: new DrizzleOrderRepository(this.db), carts: new DrizzleCartRepository(this.db), locations: new DrizzleLocationRepository(this.db), ratings: new DrizzleRatingRepository(this.db), rules: new SettingsRulesStore(this.db),
-      menu: menuReader(m.items, m.settings, this.change.now), delivery: this.deliveryDesk(), promos: this.promoDesk(), notify: this.notify, change: this.change,
+      menu: menuReader(m.items, m.settings, this.change.now), delivery: this.deliveryDesk(), promos: this.promoDesk(), points: this.pointsDesk(), notify: this.notify, change: this.change,
     };
   }
 
@@ -109,6 +123,23 @@ export class GuestServices {
     };
   }
 
+  /**
+   * Points rewards as Food Ordering sees it. Spending refuses while the module
+   * is off; earning does nothing; giving points back always runs, so no guest
+   * loses points because the module was switched off.
+   */
+  private pointsDesk(): PointsDesk {
+    const desk = () => buildPointsDesk(this.points());
+    const on = () => this.isOn("points-rewards");
+    const off = new AppError("module_disabled", "Points are switched off for now.");
+    return {
+      valueOf: async (points) => ((await on()) ? desk().valueOf(points) : Promise.reject(off)),
+      spend: async (guestId, points, orderRef) => ((await on()) ? desk().spend(guestId, points, orderRef) : Promise.reject(off)),
+      earn: async (guestId, amount, orderRef) => ((await on()) ? desk().earn(guestId, amount, orderRef) : 0),
+      reverse: (guestId, orderRef) => desk().reverse(guestId, orderRef),
+    };
+  }
+
   /** Delivery & Riders as Food Ordering sees it: refuses while the module is off. */
   private deliveryDesk(): DeliveryDesk {
     const desk = () => deliveryDesk(this.delivery());
@@ -124,9 +155,15 @@ export class GuestServices {
     };
   }
 
+  /** The booking calendar's deps: the rooms' booking engine, the settings and the clock. */
+  calendar(): CalendarDeps {
+    return { booking: this.booking("room-bookings"), settings: calendarSettingsStore(this.db), change: this.change };
+  }
+
   /** One booking module's deps. */
   booking(key: BookingModuleKey): BookingsDeps {
-    return { ...BOOKING_MODULES[key](this.db, this.change), ticketKey: this.ticketKey };
+    // The notifier lets the bookings tell the guest about each change (inbox and phones).
+    return { ...BOOKING_MODULES[key](this.db, this.change), ticketKey: this.ticketKey, notify: this.notify };
   }
 
   payments(): PaymentsDeps {

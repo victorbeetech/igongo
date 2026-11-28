@@ -11,6 +11,8 @@ import { AppError, recordChange } from "@igongo/core";
 import type { Booking } from "../../domain/booking";
 import { depositOf, startingStatus } from "../../domain/booking-math";
 import type { BookingsDeps } from "../bookings-deps";
+import { approvedMessage, cancelledMessage, confirmedMessage } from "../messages/booking-messages";
+import { tellGuest } from "../tell-guest";
 
 /** The booking [id]. @throws AppError not_found */
 export async function bookingOf(deps: BookingsDeps, id: string): Promise<Booking> {
@@ -33,7 +35,10 @@ export async function approveBooking(deps: BookingsDeps, id: string, total?: num
   if (b.kind === "enquiry" && total === undefined) throw new AppError("bad_request", "Give the quoted price.");
   const price = total ?? b.total;
   const status = startingStatus(await deps.rules.read(), b.kind, price, true);
-  return save(deps, { ...b, total: price, status }, "booking.approved", `approved at ${price} UGX`);
+  const saved = await save(deps, { ...b, total: price, status }, "booking.approved", `approved at ${price} UGX`);
+  // Step 1: tell the guest; confirmed bookings and ones still awaiting payment say different things.
+  await tellGuest(deps, saved, saved.status === "confirmed" ? confirmedMessage(saved) : approvedMessage(saved));
+  return saved;
 }
 
 export async function cancelBooking(deps: BookingsDeps, id: string, by: { userId: string; staff: boolean }, reason: string): Promise<Booking> {
@@ -47,7 +52,10 @@ export async function cancelBooking(deps: BookingsDeps, id: string, by: { userId
   if (b.status === "checked_in" || b.status === "cancelled") throw new AppError("conflict", "This booking can no longer be cancelled.");
   if (b.kind === "stock") await deps.offerings.moveStock(b.offeringId, b.units);
   const note = b.paid > 0 ? `${reason} (refund ${b.paid} UGX)` : reason;
-  return save(deps, { ...b, status: "cancelled", cancelReason: note }, "booking.cancelled", `cancelled: ${note}`);
+  const saved = await save(deps, { ...b, status: "cancelled", cancelReason: note }, "booking.cancelled", `cancelled: ${note}`);
+  // Only staff cancellations are told to the guest; a guest already knows they cancelled.
+  if (by.staff) await tellGuest(deps, saved, cancelledMessage(saved, reason));
+  return saved;
 }
 
 export async function checkIn(deps: BookingsDeps, b: Booking): Promise<Booking> {
@@ -60,7 +68,10 @@ export async function recordBookingPayment(deps: BookingsDeps, id: string, amoun
   const b = await bookingOf(deps, id);
   const paid = b.paid + amount;
   const enough = paid >= depositOf(await deps.rules.read(), b.total);
-  await save(deps, { ...b, paid, status: b.status === "awaiting_payment" && enough ? "confirmed" : b.status }, "booking.paid", `paid ${amount} UGX`);
+  const becameConfirmed = b.status === "awaiting_payment" && enough;
+  const saved = await save(deps, { ...b, paid, status: becameConfirmed ? "confirmed" : b.status }, "booking.paid", `paid ${amount} UGX`);
+  // Step 2: tell the guest only when this payment confirmed the booking.
+  if (becameConfirmed) await tellGuest(deps, saved, confirmedMessage(saved));
 }
 
 /**

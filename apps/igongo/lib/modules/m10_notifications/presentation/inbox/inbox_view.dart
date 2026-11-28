@@ -14,17 +14,22 @@ import '../../../../shared/ui/message/state_message.dart';
 import '../../application/inbox_providers.dart';
 import '../../domain/inbox_item.dart';
 import '../../domain/inbox_page.dart';
+import 'inbox_failure.dart';
+import 'mark_all_read_button.dart';
 
 /// Draws [page]. [onChanged] runs after any change so the screen reloads.
 class InboxView extends ConsumerWidget {
-  /// Creates the view for [page].
-  const InboxView({super.key, required this.page, required this.onChanged});
+  /// Creates the view for [page]. [showUnreadBar] false hides the bar when the screen has its own mark-all action.
+  const InboxView({super.key, required this.page, required this.onChanged, this.showUnreadBar = true});
 
   /// The items and unread count to draw.
   final InboxPage page;
 
   /// Called after an alert is marked read, so the list refreshes.
   final VoidCallback onChanged;
+
+  /// Whether the unread count and its mark-all bar show above the list.
+  final bool showUnreadBar;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,7 +44,7 @@ class InboxView extends ConsumerWidget {
     // Step 2: the list, with the unread bar on top when something is unread.
     return ScreenListView(
       children: [
-        if (page.unreadCount > 0) _UnreadBar(count: page.unreadCount, onChanged: onChanged),
+        if (showUnreadBar && page.unreadCount > 0) _UnreadBar(count: page.unreadCount, onChanged: onChanged),
         for (final item in page.items) _AlertRow(item: item, onChanged: onChanged),
       ],
     );
@@ -47,7 +52,7 @@ class InboxView extends ConsumerWidget {
 }
 
 /// The count of unread alerts and the button that marks them all read.
-class _UnreadBar extends ConsumerWidget {
+class _UnreadBar extends StatelessWidget {
   /// Creates the bar for [count] unread alerts.
   const _UnreadBar({required this.count, required this.onChanged});
 
@@ -58,24 +63,12 @@ class _UnreadBar extends ConsumerWidget {
   final VoidCallback onChanged;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => Padding(
+  Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg, vertical: IgongoSpace.sm),
     child: Row(
       children: [
         Expanded(child: Text('$count unread', style: context.text.titleSmall)),
-        TextButton(
-          onPressed: () async {
-            // Step 1: ask the API to mark every unread alert read.
-            try {
-              await ref.read(inboxApiProvider).markAllRead();
-              onChanged();
-            } on Exception {
-              // Step 2: a failed call leaves the alerts as they were, and says so.
-              if (context.mounted) _showFailure(context);
-            }
-          },
-          child: const Text('Mark all read'),
-        ),
+        MarkAllReadButton(enabled: true, onChanged: onChanged),
       ],
     ),
   );
@@ -104,7 +97,7 @@ class _AlertRow extends ConsumerWidget {
           await ref.read(inboxApiProvider).markRead(item.id);
           onChanged();
         } on Exception {
-          if (context.mounted) _showFailure(context);
+          if (context.mounted) showInboxFailure(context);
           return;
         }
       }
@@ -112,12 +105,5 @@ class _AlertRow extends ConsumerWidget {
       final link = item.link;
       if (link != null && context.mounted) await context.push<void>(link);
     },
-  );
-}
-
-/// Shows the message for a failed inbox change.
-void _showFailure(BuildContext context) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(content: Text('We could not update your alerts. Try again.')),
   );
 }

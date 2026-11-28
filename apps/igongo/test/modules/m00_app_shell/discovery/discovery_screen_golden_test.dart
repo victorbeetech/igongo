@@ -1,17 +1,19 @@
-// Golden test for the search screen's layout: the top bar, the search box, the
+// Golden test for the search screen's layout: the search box, the
 // recent searches, the categories, the curated findings and the trending list,
 // in light and dark mode at a phone width. Compare with the design before merging.
 
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:igongo/modules/m00_app_shell/presentation/global_search/discovery_placeholders.dart';
+import 'package:igongo/modules/m00_app_shell/presentation/global_search/discovery_categories.dart';
 import 'package:igongo/modules/m00_app_shell/presentation/global_search/widgets/curated_findings_section.dart';
 import 'package:igongo/modules/m00_app_shell/presentation/global_search/widgets/discovery_search_row.dart';
-import 'package:igongo/modules/m00_app_shell/presentation/global_search/widgets/discovery_top_bar.dart';
 import 'package:igongo/modules/m00_app_shell/presentation/global_search/widgets/explore_categories.dart';
 import 'package:igongo/modules/m00_app_shell/presentation/global_search/widgets/recent_searches.dart';
 import 'package:igongo/modules/m00_app_shell/presentation/global_search/widgets/trending_experiences_card.dart';
 import 'package:igongo/shared/theme/theme.dart';
+
+
+import 'discovery_fixtures.dart';
 
 void main() {
   for (final mode in [ThemeMode.light, ThemeMode.dark]) {
@@ -28,25 +30,34 @@ void main() {
           home: Scaffold(
             body: ListView(
               children: [
-                DiscoveryTopBar(onBell: () {}),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                  child: DiscoverySearchRow(onFilter: () {}, onChanged: (_) {}, onSubmitted: (_) {}, onVoice: () {}),
+                  child: DiscoverySearchRow(
+                    controller: TextEditingController(),
+                    listening: false,
+                    filtersActive: false,
+                    onFilter: () {},
+                    onChanged: (_) {},
+                    onSubmitted: (_) {},
+                    onVoice: () {},
+                  ),
                 ),
                 RecentSearches(
-                  searches: DiscoveryPlaceholders.recentSearches,
+                  searches: const ['Grilled Tilapia', 'Heritage Cottage'],
                   onRemove: (_) {},
                   onClear: () {},
                 ),
                 const SizedBox(height: 16),
-                ExploreCategories(categories: DiscoveryPlaceholders.categories, selected: 0, onSelected: (_) {}),
+                ExploreCategories(categories: discoveryCategories, selected: 0, onSelected: (_) {}),
                 const SizedBox(height: 24),
                 CuratedFindingsSection(
-                  findings: DiscoveryPlaceholders.findings,
-                  favourites: const {0},
+                  findings: testFindingModels,
+                  favourites: const {},
                   onFavourite: (_) {},
+                  onOpen: (_) {},
+                  onSort: () {},
                 ),
-                const TrendingExperiencesCard(experiences: DiscoveryPlaceholders.trending),
+                TrendingExperiencesCard(experiences: testTrendingModels, onOpen: (_) {}),
               ],
             ),
           ),

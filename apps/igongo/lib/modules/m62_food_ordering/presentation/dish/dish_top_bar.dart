@@ -1,7 +1,6 @@
 // The bar over the top of the dish page: Back on the left, the dish name
-// (shown once the guest scrolls past the photo) in the middle, and the
-// favourite and share buttons on the right. Favourite and share are shown
-// but disabled until they are wired.
+// (shown once the guest scrolls past the photo) in the middle, and the share
+// button on the right. Share is shown but disabled until it is wired.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
@@ -27,6 +26,7 @@ class DishTopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // The palette gives the text and border colours used on the bar.
     final palette = context.palette;
     return SafeArea(
       bottom: false,
@@ -65,9 +65,7 @@ class DishTopBar extends StatelessWidget {
                 ),
               ),
             ),
-            // Step 3: favourite and share, shown but disabled until they are wired.
-            const DishGlassButton(icon: Icons.favorite_border, tooltip: dishComingSoon),
-            const SizedBox(width: IgongoSpace.sm),
+            // Step 3: share, shown but disabled until it is wired.
             const DishGlassButton(icon: Icons.ios_share, tooltip: dishComingSoon),
           ],
         ),

@@ -34,6 +34,31 @@ describe("settings", () => {
     expect((await readSection(store, "branding"))["announcement"]).toBe("Pool closed today");
     await expect(updateSection(store, ctx, "regional", { currency: "shillings" })).rejects.toThrow(/currency/);
   });
+
+  it("stores home banners in the public content section and refuses a banner without a title", async () => {
+    const { store, ctx } = await setup();
+    expect((await readSection(store, "content"))["banners"]).toEqual([]);
+    expect((await readSection(store, "content"))["findings"]).toEqual([]);
+    const banner = { id: "b1", title: "Heritage Suite", subtitle: "Two nights", imageFileId: "", screen: "S67-01", active: true };
+    await updateSection(store, ctx, "content", { banners: [banner], findings: [], trending: [] });
+    expect((await readSection(store, "content"))["banners"]).toEqual([banner]);
+    await expect(updateSection(store, ctx, "content", { banners: [{ ...banner, title: "" }], findings: [], trending: [] })).rejects.toThrow();
+  });
+});
+
+describe("hotel contact details", () => {
+  it("keeps the contact fields and the Contact Us switch, and starts them empty", async () => {
+    const { store, ctx } = await setup();
+    // Nothing is invented: phone, email and WhatsApp start empty, and the switch starts on.
+    expect(await readSection(store, "hotel")).toMatchObject({ phone: "", email: "", whatsapp: "", hours: "", contactUsOn: true });
+    await updateSection(store, ctx, "hotel", { phone: "+256 700 000 001", email: "front@example.com", whatsapp: "256700000002", hours: "24/7", contactUsOn: false });
+    expect(await readSection(store, "hotel")).toMatchObject({ phone: "+256 700 000 001", hours: "24/7", contactUsOn: false });
+  });
+
+  it("refuses a contact switch that is not true or false", async () => {
+    const { store, ctx } = await setup();
+    await expect(updateSection(store, ctx, "hotel", { contactUsOn: "yes" })).rejects.toThrow(/contactUsOn/);
+  });
 });
 
 describe("encrypted keys", () => {

@@ -2,7 +2,7 @@
 
 The written results of the full security audit. It runs twice: right after the access and security phase, and again just before TestFlight (see the [build checklist](BUILD-CHECKLIST.md)). Each check gets a result line here: passed (with the test or proof), not applicable (with the reason), or open (with the fix and who owns it). No secret, key or password is ever written in this file.
 
-Status: **planned, not run yet** (26 Nov 2026).
+Status: **first code review done (28 Nov 2026), full run still to do.** The item-by-item ledger is [SECURITY-CHECKLIST.md](SECURITY-CHECKLIST.md). The full audit is not finished, so nothing here is a release sign-off.
 
 What the audit covers:
 
@@ -14,25 +14,25 @@ What the audit covers:
 
 From a list of the 20 ways AI-built ("vibe-coded") apps get hacked. Each one gets a check and a result line before launch. The "how we check" column says what Igongo does about it.
 
-| # | Shortcut | How we check it in Igongo | Result |
+| # | Shortcut | How we check it in Igongo | Result (28 Nov code review) |
 |---|----------|---------------------------|--------|
-| 1 | Secret keys in code | Scan the code, the app and web bundles and the whole git history; keys live only as Cloudflare Worker secrets or in the super admin's encrypted settings. | Open |
-| 2 | Database open to the internet | Neon is reached only through the API; least-privilege database user; no public connection string in any client. | Open |
-| 3 | Any password works | Real sign-in (Better Auth), hashed passwords, a test that a wrong password is refused. | Open |
-| 4 | No limit on tries | Sign-in rate limit and lockout after repeated wrong passwords, with a test. | Open |
-| 5 | People can see each other's data | Every record read checks the owner or a staff permission on the server; a test that another person's order returns 403. | Open |
-| 6 | Only `/admin` is protected | Every staff and super admin API route checks permissions on the server, not just the page; the web portal refuses guest accounts. | Open |
-| 7 | Trusting whatever is sent | Every body and query is validated on the server (zod); prices and totals are always recalculated on the server. | Open |
-| 8 | Unsafe file uploads | The safe-upload rules (real content check, size limits, re-encoding, random names, R2 only). | Open |
-| 9 | No two-step sign-in | Mandatory 2-step sign-in for the super admin and staff in sensitive roles. | Open |
-| 10 | Test accounts or test pages left live | No test users, seed accounts, demo data or development routes in production; checked before each release. | Open |
-| 11 | The app tells hackers too much | Production errors show only "Something went wrong, reference …"; details go to private logs (Sentry). | Open |
-| 12 | Copied code nobody checked | Every package is reviewed and pinned; unused packages removed; dependency scan in CI. | Open |
-| 13 | Old pages still online | Old routes, preview builds and the old website's pages are removed or redirected. | Open |
-| 14 | Payments checks skipped | Payments are confirmed with the provider on the server, callbacks verified, amounts rechecked, double pays blocked (idempotency). | Open |
+| 1 | Secret keys in code | Scan the code, the app and web bundles and the whole git history; keys live only as Cloudflare Worker secrets or in the super admin's encrypted settings. | Pass for the repo (no key shapes or `.env` files tracked). Git history and built bundles not yet scanned. Demo keys to be replaced: [NEEDS-YOU](NEEDS-YOU.md). |
+| 2 | Database open to the internet | Neon is reached only through the API; least-privilege database user; no public connection string in any client. | Open: needs Victor to confirm the Neon role at go-live ([NEEDS-YOU](NEEDS-YOU.md)). |
+| 3 | Any password works | Real sign-in (Better Auth), hashed passwords, a test that a wrong password is refused. | Pass in code (Better Auth; `password-minimum.test.ts`). Wrong-password test to be confirmed in CI. |
+| 4 | No limit on tries | Sign-in rate limit and lockout after repeated wrong passwords, with a test. | Pass (`rate-limit-rules.ts`, `rate-limits-and-revocation.test.ts`, lockout in `login-lockout.ts`). |
+| 5 | People can see each other's data | Every record read checks the owner or a staff permission on the server; a test that another person's order returns 403. | Partly pass: object checks in HR, notices and files. Routes with no guard still to check one by one ([SECURITY-CHECKLIST](SECURITY-CHECKLIST.md) 1.2). |
+| 6 | Only `/admin` is protected | Every staff and super admin API route checks permissions on the server, not just the page; the web portal refuses guest accounts. | Pass for the write routes; guest refusal on web is in `request-gate.ts`. |
+| 7 | Trusting whatever is sent | Every body and query is validated on the server (zod); prices and totals are always recalculated on the server. | Pass: zod on every write route; prices recalculated in `priceCart`. |
+| 8 | Unsafe file uploads | The safe-upload rules (real content check, size limits, re-encoding, random names, R2 only). | Partly pass: type allow-list, size limit, sandboxed download. Real content check and random names still open. |
+| 9 | No two-step sign-in | Mandatory 2-step sign-in for the super admin and staff in sensitive roles. | Pass (`request-gate.ts` rule 3; `check-session-start.ts` step 5). |
+| 10 | Test accounts or test pages left live | No test users, seed accounts, demo data or development routes in production; checked before each release. | Open: the web preview still shows sample data (noted in the web headers file). Checked again before each release. |
+| 11 | The app tells hackers too much | Production errors show only "Something went wrong, reference …"; details go to private logs (Sentry). | Pass (`error-handler.ts`; Sentry does not send personal data). |
+| 12 | Copied code nobody checked | Every package is reviewed and pinned; unused packages removed; dependency scan in CI. | Open: `pnpm audit` reports one moderate esbuild issue; add an audit step to CI. |
+| 13 | Old pages still online | Old routes, preview builds and the old website's pages are removed or redirected. | Open: not checked in this pass. |
+| 14 | Payments checks skipped | Payments are confirmed with the provider on the server, callbacks verified, amounts rechecked, double pays blocked (idempotency). | Not applicable yet: payment gateways come later. Re-check when added. |
 | 15 | AI chatbot risks | Igongo has no AI chatbot. If one is added: no secrets or other people's data in its context, and prompt-injection tests. | Not applicable for now |
-| 16 | Data kept in plain text | Passwords hashed; provider keys encrypted at rest; HTTPS everywhere; no personal data in logs. | Open |
-| 17 | Anyone can sign up as admin | Nobody is admin by default; guests sign up as guests only; staff roles only by the super admin, recorded in the audit log. | Open |
-| 18 | Never updating | Regular dependency updates and security patches; outdated-package check in CI. | Open |
-| 19 | No backup | Automatic database snapshots and one tested restore. | Open |
-| 20 | No activity log ("what happened?") | The Audit Trail records every change, sign-in and payment; alerts for new devices and failed sign-ins. | Open |
+| 16 | Data kept in plain text | Passwords hashed; provider keys encrypted at rest; HTTPS everywhere; no personal data in logs. | Pass for passwords, keys and logs; HTTPS and HSTS set on the web (see [SECURITY-CHECKLIST](SECURITY-CHECKLIST.md)). |
+| 17 | Anyone can sign up as admin | Nobody is admin by default; guests sign up as guests only; staff roles only by the super admin, recorded in the audit log. | Pass (`claim-first-super-admin.ts`, `request-gate.ts`, `login-guard-hooks.ts`). |
+| 18 | Never updating | Regular dependency updates and security patches; outdated-package check in CI. | Open: see item 12. |
+| 19 | No backup | Automatic database snapshots and one tested restore. | Open: needs a tested restore ([BACKUPS.md](BACKUPS.md)). |
+| 20 | No activity log ("what happened?") | The Audit Trail records every change, sign-in and payment; alerts for new devices and failed sign-ins. | Pass for changes and sign-ins (`recordChange`, hash chain, new-device alert). |

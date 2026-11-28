@@ -11,6 +11,7 @@ import { PurposeText } from "@/shared/screens/parts/PurposeText";
 import { Button } from "@/shared/ui/button/Button";
 import { TextInput } from "@/shared/ui/field/TextInput";
 import { SectionHeader } from "@/shared/ui/section/SectionHeader";
+import { SwitchRow } from "@/shared/ui/switch/SwitchRow";
 
 /** Readable names for each section. */
 const TITLES: Record<string, string> = { hotel: "Hotel profile", branding: "Branding and banner", regional: "Time, money and formats" };
@@ -37,9 +38,14 @@ function SectionForm({ name, initial }: { name: string; initial: Record<string, 
     <section className="grid gap-3 rounded-md border border-line bg-surface p-3">
       <SectionHeader title={TITLES[name] ?? name} />
       <div className="grid gap-3 sm:grid-cols-2">
-        {Object.entries(values).map(([key, value]) => (
-          <TextInput key={key} label={label(key)} value={String(value ?? "")} onChange={(v) => setValues({ ...values, [key]: typeof initial[key] === "number" ? Number(v) : v })} />
-        ))}
+        {Object.entries(values).map(([key, value]) =>
+          // A true/false setting (such as the Contact Us switch) gets a switch; everything else a text box.
+          typeof initial[key] === "boolean" ? (
+            <SwitchRow key={key} label={label(key)} on={Boolean(value)} onChange={(on) => setValues({ ...values, [key]: on })} />
+          ) : (
+            <TextInput key={key} label={label(key)} value={String(value ?? "")} onChange={(v) => setValues({ ...values, [key]: typeof initial[key] === "number" ? Number(v) : v })} />
+          ),
+        )}
       </div>
       <Button onClick={() => save.mutate({ section: name, values })} disabled={save.isPending}>Save {TITLES[name]?.toLowerCase() ?? name}</Button>
     </section>

@@ -10,6 +10,7 @@ import '../../../../../shared/clock/app_clock.dart';
 import '../../../../../shared/format/greeting.dart';
 import '../../../../../shared/theme/theme.dart';
 import '../../../../../shared/ui/icons/round_icon_button.dart';
+import '../../../../m10_notifications/presentation/inbox/inbox_bell_button.dart';
 
 /// The guest home's top row. [name] is the signed-in guest's, or null when signed out.
 class GuestTopBar extends ConsumerWidget {
@@ -59,7 +60,7 @@ class GuestTopBar extends ConsumerWidget {
         // Step 3: the search button and the bell, on the right, the same round style.
         RoundIconButton(icon: Icons.search, tooltip: 'Search', onPressed: onSearch),
         const SizedBox(width: IgongoSpace.sm),
-        RoundIconButton(icon: Icons.notifications_none, tooltip: 'Notifications', showDot: true, onPressed: onBell),
+        InboxBellButton(onPressed: onBell),
       ],
     );
   }

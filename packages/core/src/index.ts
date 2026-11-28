@@ -23,5 +23,6 @@ export { toCsv, type CsvCell } from "./data/to-csv";
 export { normalizeUid } from "./nfc/normalize-uid";
 export { createLogger, type Logger, type LogLevel } from "./logging/logger";
 export type { ActorEnv, ActorVariables } from "./http/actor-env";
-export { actorOf, can, canForOthers, requirePermission, requireSignIn, requireStaffPermission } from "./http/guards";
+export { actorOf, can, canForOthers, isSuperAdmin, requirePermission, requireSignIn, requireStaffPermission, requireSuperAdmin } from "./http/guards";
 export { recordChange, type ChangeContext, type ChangeEntry } from "./audit/change-context";
+export { historyPage, type HistoryPage } from "./paging/history-page";

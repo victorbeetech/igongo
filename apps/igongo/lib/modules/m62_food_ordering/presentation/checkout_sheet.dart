@@ -27,6 +27,8 @@ import '../demo/demo_orders.dart';
 import '../application/saved_pin_providers.dart';
 import '../domain/cart_quote.dart';
 import '../domain/delivery_pin.dart';
+import '../../m57_loyalty/points/application/points_providers.dart';
+import '../../m57_loyalty/points/presentation/points_use_switch.dart';
 import 'map/delivery_pin_map.dart';
 import '../domain/order_type.dart';
 
@@ -48,6 +50,8 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
   /// This checkout's key: the same order comes back if "Place order" is tapped twice.
   final _requestKey = newRequestKey();
   CartQuote? _quote;
+  /// Whether the guest wants to spend points on this order (only offered while the programme is on).
+  bool _usePoints = false;
   String? _type;
   String? _zone;
   DateTime? _arriveAt;
@@ -187,7 +191,11 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
     setState(() => _busy = true);
     try {
       // Step 2: place it; the API prices it again and applies the rules and the code.
-      final order = await ref.read(ordersApiProvider).place({..._body(outlet, type), 'requestKey': _requestKey});
+      // Points: only when the guest switched them on, and never more than the quoted total allows.
+      final wallet = ref.read(pointsWalletProvider).valueOrNull;
+      final quote = _quote;
+      final points = _usePoints && wallet != null && quote != null ? wallet.pointsFor(quote.total) : 0;
+      final order = await ref.read(ordersApiProvider).place({..._body(outlet, type), 'requestKey': _requestKey, if (points > 0) 'pointsToSpend': points});
       ref.read(cartProvider.notifier).clear();
       if (type == 'delivery') ref.read(lastDeliveryProvider.notifier).set(_zone, _text(_place) ?? '');
       ref.invalidate(myOrdersProvider);
@@ -348,6 +356,9 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
                 IgongoButton(label: 'Apply', variant: ButtonVariant.secondary, onPressed: () => _applyCode(outlet)),
               ],
             ),
+            // The points switch appears once the order is quoted, and only while the programme is on.
+            if (_quote case final q?)
+              PointsUseSwitch(total: q.total, on: _usePoints, onChanged: (v) => setState(() => _usePoints = v)),
             if (_quote case final q?)
               Text(
                 [

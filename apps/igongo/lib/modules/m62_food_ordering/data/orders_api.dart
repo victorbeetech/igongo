@@ -2,6 +2,7 @@
 // tracking (`/api/delivery`) and orders (`/api/orders`).
 
 import '../../../shared/api/api_client.dart';
+import '../../../shared/api/history_pages.dart';
 import '../domain/cart_line.dart';
 import '../domain/cart_quote.dart';
 import '../domain/delivery_track.dart';
@@ -74,8 +75,8 @@ class OrdersApi {
   /// Places an order; [body] is the cart and details as the API takes them.
   Future<Order> place(Json body) async => Order.fromJson(await _api.post('/api/orders', body));
 
-  /// My orders, newest first.
-  Future<List<Order>> mine() async => _items(await _api.get('/api/orders/mine'), Order.fromJson);
+  /// My orders, newest first, across every page of my history.
+  Future<List<Order>> mine() => readAllPages(_api, '/api/orders/mine', Order.fromJson);
 
   /// Cancels my order [id].
   Future<void> cancel(String id) => _api.post('/api/orders/$id/cancel', {'reason': 'Cancelled by the guest'});

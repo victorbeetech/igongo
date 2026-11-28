@@ -19,11 +19,13 @@ export class DrizzlePaymentRepository implements PaymentRepository {
     return this.db.select().from(payments).where(and(eq(payments.module, module), eq(payments.recordId, recordId))).orderBy(asc(payments.createdAt));
   }
 
-  list(filter: { status?: PaymentStatus; module?: string; payerUserId?: string; limit: number }): Promise<Payment[]> {
+  list(filter: { status?: PaymentStatus; module?: string; payerUserId?: string; before?: Date; limit: number }): Promise<Payment[]> {
     const where = and(
       filter.status ? eq(payments.status, filter.status) : undefined,
       filter.module ? eq(payments.module, filter.module) : undefined,
       filter.payerUserId ? eq(payments.payerUserId, filter.payerUserId) : undefined,
+      // Paging: only payments made before the cursor time.
+      filter.before ? lt(payments.createdAt, filter.before) : undefined,
     );
     return this.db.select().from(payments).where(where).orderBy(desc(payments.createdAt)).limit(filter.limit);
   }

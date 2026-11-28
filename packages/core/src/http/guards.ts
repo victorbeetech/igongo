@@ -8,6 +8,7 @@ import type { Context, MiddlewareHandler } from "hono";
 import type { Actor } from "@igongo/contracts/users-login";
 import { hasPermission } from "../access/permission-matches";
 import { scopeOf } from "../access/scope-of";
+import { SUPER_ADMIN_ROLE_KEY } from "@igongo/contracts/roles-permissions";
 import { AppError } from "../errors/app-error";
 import type { ActorEnv } from "./actor-env";
 
@@ -64,6 +65,29 @@ export function canForOthers(actor: Actor, permission: string): boolean {
 export function requireStaffPermission(permission: string): MiddlewareHandler<ActorEnv> {
   return async (c, next) => {
     if (!canForOthers(actorOf(c), permission)) throw new AppError("permission_denied", `You need the permission ${permission}.`);
+    await next();
+  };
+}
+
+/**
+ * True when [actor] holds the Super Admin role, the one role that can change
+ * what the hotel sells and shows to guests (such as the venues list).
+ */
+export function isSuperAdmin(actor: Actor): boolean {
+  // Step 1: look through the roles the person holds today, by their role key.
+  return actor.access.roles.some((role) => role.key === SUPER_ADMIN_ROLE_KEY);
+}
+
+/**
+ * Middleware: the caller must be the Super Admin. Any other role, even one with
+ * the right permission, is refused.
+ * @example router.put("/settings", requireSuperAdmin(), handler)
+ */
+export function requireSuperAdmin(): MiddlewareHandler<ActorEnv> {
+  return async (c, next) => {
+    // Step 1: nobody signed in is refused by actorOf; a signed-in non-super-admin is refused here.
+    if (!isSuperAdmin(actorOf(c))) throw new AppError("permission_denied", "Only the super admin can change this.");
+    // Step 2: the super admin goes on to the route.
     await next();
   };
 }

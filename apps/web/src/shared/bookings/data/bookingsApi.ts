@@ -3,6 +3,7 @@
 // module's place (API path), so rooms, museum, events, pool and shop share them.
 
 import { useQuery } from "@tanstack/react-query";
+import { allHistoryPages } from "@/shared/api/allHistoryPages";
 import { api } from "@/shared/api/apiClient";
 import { useApiMutation } from "@/shared/api/useApiMutation";
 import type { Booking } from "../types/booking";
@@ -14,7 +15,7 @@ import type { Offering } from "../types/offering";
 export const useOfferings = (p: BookingPlace, all = false) =>
   useQuery({ queryKey: [p.path, "offerings", all], queryFn: () => api<{ items: Offering[] }>(`${p.path}/offerings${all ? "?all=1" : ""}`) });
 
-export const useMyBookings = (p: BookingPlace) => useQuery({ queryKey: [p.path, "mine"], queryFn: () => api<{ items: Booking[] }>(`${p.path}/bookings/mine`) });
+export const useMyBookings = (p: BookingPlace) => useQuery({ queryKey: [p.path, "mine"], queryFn: () => allHistoryPages<Booking>(`${p.path}/bookings/mine`) });
 
 export const useDayBookings = (p: BookingPlace, date: string) =>
   useQuery({ queryKey: [p.path, "day", date], queryFn: () => api<{ items: Booking[] }>(`${p.path}/bookings${date ? `?date=${date}` : ""}`), refetchInterval: 30000 });

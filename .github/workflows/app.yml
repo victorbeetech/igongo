@@ -112,13 +112,14 @@ jobs:
       - run: flutter pub get
       # Step 4: run every test and save the new images in place of the old ones.
       - run: flutter test --update-goldens
-      # Step 5: commit only the changed images (golden folder and store screenshots), if any.
+      # Step 5: commit only the changed images (test pictures and store screenshots), if any.
       - name: Commit regenerated images
         working-directory: .
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A -- apps/igongo/test/golden packages/brand/store
+          # Every golden picture lives under apps/igongo/test (some sit beside their test file).
+          git add -A -- apps/igongo/test packages/brand/store
           if git diff --cached --quiet; then
             echo "No image changed."
           else

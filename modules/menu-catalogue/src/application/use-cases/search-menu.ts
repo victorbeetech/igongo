@@ -1,12 +1,12 @@
 /**
  * Global search over the menu (S00-25): finds dishes and outlets the guest
- * may see. The rule is the client view's: a dish must be switched on, shown to
+ * may see. An outlet is listed when its name matches or it sells a matched dish. The rule is the client view's: a dish must be switched on, shown to
  * clients and sold at a client outlet; an outlet must be a client outlet.
  * Anyone may search (guests browse before they sign in), so nothing hidden
  * or staff-only is ever returned.
  */
 
-import { matchItems, matchOutlets, menuSearchResult, searchWords } from "../../domain/menu-search";
+import { matchItems, menuSearchResult, outletsForSearch, searchWords } from "../../domain/menu-search";
 import type { MenuSearchResult } from "../../domain/menu-search-result";
 import type { MenuDeps } from "../menu-deps";
 
@@ -20,8 +20,14 @@ export async function searchMenu(deps: MenuDeps, text: string): Promise<MenuSear
   const clientOutlets = new Set(settings.clientOutlets);
   // Step 3: only the dishes the client view shows (switched on, visible, at a client outlet).
   const visible = (await deps.items.list({})).filter((i) => i.active && i.visibleToClients && clientOutlets.has(i.outlet));
-  // Step 4: the outlets the client view shows.
-  const outlets = settings.outlets.filter((o) => clientOutlets.has(o.key));
-  // Step 5: match the words, rank, and cut each list to its limit.
-  return menuSearchResult(matchItems(visible, words, deps.change.now), matchOutlets(outlets, words));
+  // Step 4: match the words and rank the dishes.
+  const items = matchItems(visible, words, deps.change.now);
+  // Step 5: the outlets the client view shows, that match by name or sell a matched dish.
+  const outlets = outletsForSearch(
+    settings.outlets.filter((o) => clientOutlets.has(o.key)),
+    words,
+    new Set(items.map((i) => i.outlet)),
+  );
+  // Step 6: cut each list to its limit.
+  return menuSearchResult(items, outlets);
 }
