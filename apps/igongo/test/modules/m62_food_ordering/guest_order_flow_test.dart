@@ -1,14 +1,13 @@
 // End to end as a signed-in guest on one venue ("Main restaurant", served by the
-// fake food API with the sample dishes as its menu): open the food shop, add a
+// fake food API with one test dish as its menu): open the food shop, add a
 // dish, open the cart, check out and place the order. The session and the food
-// API are faked, so nothing is sent anywhere. The sample dishes are test fixtures
-// only; the app never shows them to a real person.
+// API are faked, so nothing is sent anywhere. The dish and zone below are test
+// fixtures only; the app never shows them to a real person.
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:igongo/modules/m62_food_ordering/application/orders_providers.dart';
 import 'package:igongo/modules/m62_food_ordering/data/orders_api.dart';
-import 'package:igongo/modules/m62_food_ordering/demo/demo_menu.dart';
 import 'package:igongo/modules/m62_food_ordering/domain/cart_quote.dart';
 import 'package:igongo/modules/m62_food_ordering/domain/menu_item.dart';
 import 'package:igongo/modules/m62_food_ordering/domain/ordering_rules.dart';
@@ -39,6 +38,22 @@ class _Guest extends SessionController {
 /// The one venue the fake food API serves.
 const _venueKey = 'main';
 
+/// The one test dish on the fake menu (a Rolex, 5,000).
+const _menu = <MenuItem>[
+  MenuItem(
+    id: 'test-rolex',
+    section: 'Snacks',
+    name: 'Rolex',
+    price: 5000,
+    available: true,
+    options: [],
+    allergens: ['egg', 'gluten'],
+  ),
+];
+
+/// The one test delivery zone the fake food API serves.
+const _zones = <DeliveryZone>[DeliveryZone(zone: 'test-grounds', name: 'Lodge grounds', fee: 3000, minutes: 20)];
+
 /// A food API with one venue ("Main restaurant") that takes dine-in, takeaway and
 /// delivery, with a 1,000 container fee. Prices and orders are made up here, and
 /// nothing is sent to a server.
@@ -47,7 +62,7 @@ class _OneVenueApi extends OrdersApi {
   @override
   Future<List<Outlet>> outlets() async => const [Outlet(key: _venueKey, name: 'Main restaurant')];
   @override
-  Future<List<MenuItem>> menu(String outlet) async => outlet == _venueKey ? demoMenuItems : const [];
+  Future<List<MenuItem>> menu(String outlet) async => outlet == _venueKey ? _menu : const [];
   @override
   Future<OrderingRules> rules() async => const OrderingRules(
     types: {
@@ -83,7 +98,7 @@ class _OneVenueApi extends OrdersApi {
   @override
   Future<Map<String, ItemStars>> stars() async => const {};
   @override
-  Future<List<DeliveryZone>> zones() async => demoZones;
+  Future<List<DeliveryZone>> zones() async => _zones;
 }
 
 /// Lets screens, sheets and toasts finish moving (the app has looping
@@ -94,7 +109,7 @@ Future<void> _settle(WidgetTester tester, {int seconds = 1}) async {
   }
 }
 
-/// Opens the demo food shop as a guest, adds a Rolex, and opens checkout from the cart.
+/// Opens the food shop as a guest, adds a Rolex, and opens checkout from the cart.
 Future<void> _openCheckout(WidgetTester tester) async {
   usePhoneWindow(tester);
   await openApp(
@@ -123,7 +138,7 @@ Future<void> _tapVisible(WidgetTester tester, Finder finder) async {
 }
 
 void main() {
-  testWidgets('a guest adds a demo dish, checks out and the order is placed', (tester) async {
+  testWidgets('a guest adds a dish, checks out and the order is placed', (tester) async {
     usePhoneWindow(tester);
     await openApp(
       tester,
@@ -132,7 +147,7 @@ void main() {
       overrides: [sessionProvider.overrideWith(_Guest.new), ordersApiProvider.overrideWithValue(_OneVenueApi())],
     );
     await tester.pump(const Duration(milliseconds: 500));
-    // Step 1: the demo menu shows its dishes, with the guest bar (5 tabs).
+    // Step 1: the menu shows its dishes, with the guest bar (5 tabs).
     expect(find.text('Rolex'), findsOneWidget);
     for (final tab in ['Home', 'Food', 'Bookings', 'Cart', 'Me']) {
       expect(find.text(tab), findsWidgets);
