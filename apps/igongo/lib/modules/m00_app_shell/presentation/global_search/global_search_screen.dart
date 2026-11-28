@@ -21,6 +21,7 @@ import '../../domain/menu_search_results.dart';
 import '../../domain/search_limits.dart';
 import '../../domain/curated_finding.dart';
 import '../../domain/trending_experience.dart';
+import '../../../../../shared/search/application/recent_searches_provider.dart';
 import '../../../../../shared/search/application/search_filters_provider.dart';
 import '../../../../../shared/search/domain/apply_search_filters.dart';
 import '../../../../../shared/refine/presentation/show_filter_refine.dart';
@@ -40,8 +41,6 @@ const String _resultsScreenId = 'S00-26';
 /// The screen a finding or experience opens when the admin gave it none: the menu.
 const String _defaultContentScreen = 'S62-01';
 
-/// How many recent searches are kept on the screen.
-const int _maxRecent = 8;
 
 /// Pause after the last key press before the search is sent, so typing does not send a request per letter.
 const Duration _typingPause = Duration(milliseconds: 350);
@@ -74,9 +73,6 @@ class _GlobalSearchScreenState extends ConsumerState<GlobalSearchScreen> {
   /// The index of the chosen category pill.
   int _category = 0;
 
-  /// The searches made on this screen (newest first), shown as recent searches.
-  final List<String> _recent = [];
-
   /// The indexes of the curated findings the guest marked as favourite (kept while the screen is open).
   final Set<int> _favourites = {};
 
@@ -92,23 +88,13 @@ class _GlobalSearchScreenState extends ConsumerState<GlobalSearchScreen> {
     super.dispose();
   }
 
-  /// Remembers a search the guest made, newest first, without repeats.
-  void _remember(String query) {
-    setState(() {
-      _recent
-        ..remove(query)
-        ..insert(0, query);
-      if (_recent.length > _maxRecent) _recent.removeRange(_maxRecent, _recent.length);
-    });
-  }
-
   /// The search key: opens the full results screen for the text, when it is long enough.
   void _onSubmitted(String text) {
     final query = text.trim();
     if (query.length < minSearchLength) return;
     final results = CatalogIndex.instance.screens[_resultsScreenId];
     if (results == null) return;
-    _remember(query);
+    ref.read(recentSearchesProvider.notifier).remember(query);
     // The text travels in the address (`?q=...`), so the results can be shared and reloaded.
     context.push(Uri(path: CatalogIndex.instance.locationOf(results), queryParameters: {'q': query}).toString());
   }
@@ -120,7 +106,7 @@ class _GlobalSearchScreenState extends ConsumerState<GlobalSearchScreen> {
       if (!mounted) return;
       final query = text.trim();
       setState(() => _query = query);
-      if (query.length >= minSearchLength) _remember(query);
+      if (query.length >= minSearchLength) ref.read(recentSearchesProvider.notifier).remember(query);
     });
   }
 
@@ -209,12 +195,11 @@ class _GlobalSearchScreenState extends ConsumerState<GlobalSearchScreen> {
     }
     // Step 4: otherwise the discovery design, one scrolling column of sections.
     return _Discovery(
-      recent: _recent,
       category: _category,
       favourites: _favourites,
       sortedAz: _findingsSortedAz,
-      onRemoveRecent: (search) => setState(() => _recent.remove(search)),
-      onClearRecent: () => setState(_recent.clear),
+      onRemoveRecent: (search) => ref.read(recentSearchesProvider.notifier).remove(search),
+      onClearRecent: () => ref.read(recentSearchesProvider.notifier).clear(),
       onCategory: (index) => setState(() => _category = index),
       onFavourite: _toggleFavourite,
       onSort: () => setState(() => _findingsSortedAz = !_findingsSortedAz),
@@ -227,7 +212,6 @@ class _GlobalSearchScreenState extends ConsumerState<GlobalSearchScreen> {
 /// The last two come from the super admin's public settings; a loading state keeps the layout steady.
 class _Discovery extends ConsumerWidget {
   const _Discovery({
-    required this.recent,
     required this.category,
     required this.favourites,
     required this.sortedAz,
@@ -238,9 +222,6 @@ class _Discovery extends ConsumerWidget {
     required this.onSort,
     required this.onOpen,
   });
-
-  /// The searches made on this screen, newest first.
-  final List<String> recent;
 
   /// The chosen category pill.
   final int category;
@@ -273,6 +254,7 @@ class _Discovery extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Step 1: the admin's findings and trending experiences. An unreadable reply shows as empty.
     final settings = ref.watch(publicSettingsProvider);
+    final recent = ref.watch(recentSearchesProvider).valueOrNull ?? const <String>[];
     final items = settings.valueOrNull?.findings ?? const <HotelContentItem>[];
     final ordered = sortedAz ? ([...items]..sort((a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()))) : items;
     final findings = [for (final item in ordered) CuratedFinding.fromContent(item)];
