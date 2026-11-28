@@ -196,6 +196,19 @@ export const m69EventsConferences: ModuleSpec = {
       ],
       "dialogs": [],
       "fields": []
+    },
+    {
+      "id": "S69-13",
+      "name": "Events settings",
+      "purpose": "Event types and packages on sale, with prices, capacity and dates; Booking rules: deposit, approval, cancel deadline and limit",
+      "route": "/events-conferences/events-settings",
+      "kind": "settings",
+      "surfaces": [
+        "web"
+      ],
+      "opens": [],
+      "dialogs": [],
+      "fields": []
     }
   ],
   "dialogs": [

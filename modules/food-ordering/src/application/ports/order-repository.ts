@@ -11,7 +11,8 @@ export interface OrderRepository {
   nextSeq(): Promise<number>;
   /** Orders in the kitchen now at [outlet] (received or preparing), for ready times. */
   queued(outlet: string): Promise<number>;
-  list(filter: { userId?: string; outlet?: string; statuses?: OrderStatus[]; since?: Date; limit: number }): Promise<Order[]>;
+  /** Newest first. `before` keeps only orders placed earlier than that time (the next page of history). */
+  list(filter: { userId?: string; outlet?: string; statuses?: OrderStatus[]; since?: Date; before?: Date; limit: number }): Promise<Order[]>;
   add(order: Order): Promise<void>;
   update(order: Order): Promise<void>;
 }

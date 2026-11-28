@@ -21,7 +21,7 @@ export function PaymentsListPage({ screen }: { screen: ScreenContext }) {
         <LiveData query={list} name="Payments">
           {(d) => (
             <DataTable
-              rows={d.items}
+              rows={d}
               rowKey={(p) => p.id}
               empty="No payments yet."
               columns={[

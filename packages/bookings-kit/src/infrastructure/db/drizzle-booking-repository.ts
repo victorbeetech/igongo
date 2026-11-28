@@ -22,9 +22,15 @@ export class DrizzleBookingRepository implements BookingRepository {
     return row ?? null;
   }
 
-  list(filter: { userId?: string; date?: string; status?: BookingStatus; limit: number }): Promise<Booking[]> {
+  list(filter: { userId?: string; date?: string; status?: BookingStatus; before?: Date; limit: number }): Promise<Booking[]> {
     const b = this.t.bookings;
-    const where = and(filter.userId ? eq(b.userId, filter.userId) : undefined, filter.date ? eq(b.date, filter.date) : undefined, filter.status ? eq(b.status, filter.status) : undefined);
+    const where = and(
+      filter.userId ? eq(b.userId, filter.userId) : undefined,
+      filter.date ? eq(b.date, filter.date) : undefined,
+      filter.status ? eq(b.status, filter.status) : undefined,
+      // Paging: only bookings made before the cursor time.
+      filter.before ? lt(b.createdAt, filter.before) : undefined,
+    );
     return this.db.select().from(b).where(where).orderBy(desc(b.createdAt)).limit(filter.limit);
   }
 

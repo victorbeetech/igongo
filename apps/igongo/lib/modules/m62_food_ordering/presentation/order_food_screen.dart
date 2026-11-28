@@ -22,8 +22,6 @@ import '../../../shared/ui/section/section_header.dart';
 import '../../../shared/ui/toast/igongo_toast.dart';
 import '../application/cart_controller.dart';
 import '../application/orders_providers.dart';
-import '../demo/demo_menu.dart';
-import '../demo/demo_orders.dart';
 import '../domain/cart_total.dart';
 import '../domain/order_type.dart';
 import '../domain/ordering_rules.dart';
@@ -53,20 +51,13 @@ class OrderFoodScreen extends ConsumerWidget {
   static Future<void> _open(BuildContext context, Widget sheet) =>
       showModalBottomSheet<void>(context: context, isScrollControlled: true, builder: (_) => sheet);
 
-  /// A venue's photo: each demo venue has its own hotel photo, Kaahwa Kanuzire
-  /// uses its restaurant photo, and any other venue shows the placeholder until it has one.
-  static String? _venuePhoto(Outlet o) {
-    // Step 1: Kaahwa Kanuzire is matched by name (the real outlet has no photo field yet).
-    if (o.name.toLowerCase().contains('kaahwa')) return GuestPhotos.hotelKaahwaKanuzire;
-    // Step 2: the demo venues each get a different hotel photo.
-    if (!isDemoOutlet(o.key)) return null;
-    return o.key == demoGrillKey ? GuestPhotos.hotelTerraceView : GuestPhotos.outletRestaurant;
-  }
+  /// A venue's photo. Kaahwa Kanuzire is matched by name (the venue has no photo
+  /// field from the API yet); any other venue shows the placeholder until it has one.
+  static String? _venuePhoto(Outlet o) => o.name.toLowerCase().contains('kaahwa') ? GuestPhotos.hotelKaahwaKanuzire : null;
 
   /// Words for the order types a venue takes, shown as small tags on its card.
   static List<String> _badgesOf(Outlet o, OrderingRules? rules) => [
-    for (final t in (isDemoOutlet(o.key) ? demoOrderTypes : (rules?.typesAt(o.key) ?? const <String>[])))
-      orderTypeWords(t),
+    for (final t in rules?.typesAt(o.key) ?? const <String>[]) orderTypeWords(t),
   ];
 
   @override
@@ -91,7 +82,7 @@ class OrderFoodScreen extends ConsumerWidget {
       final rules = ref.watch(orderingRulesProvider).valueOrNull;
       return Column(
         children: [
-          // Step 3: the one-row top bar (venue, wish list, WhatsApp); the cart is in the bottom bar.
+          // Step 3: the one-row top bar (the venue); the cart is in the bottom bar.
           FoodTopBar(venue: venueName),
           Expanded(
             child: ScreenListView(

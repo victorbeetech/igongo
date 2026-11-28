@@ -1,4 +1,4 @@
-// A round icon button that floats over the dish photo (favourite, share).
+// A round icon button that floats over the dish photo (share).
 // It sits inside a DishGlassFrame, so it matches the Back button.
 
 import 'package:material_ui/material_ui.dart';

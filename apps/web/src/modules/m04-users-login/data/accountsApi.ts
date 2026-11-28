@@ -55,6 +55,10 @@ export const useMySessions = () => useQuery({ queryKey: ["my-sessions"], queryFn
 export const useSetStatus = (id: string) =>
   useApiMutation((status: Account["status"]) => api(`/api/users/${id}/status`, { method: "PATCH", body: { status } }), { done: "Account updated", refresh: [["accounts"]] });
 
+/** Deletes a guest account (super admin only). The server refuses staff and the admin's own account. */
+export const useDeleteAccount = (id: string) =>
+  useApiMutation(() => api(`/api/users/${id}`, { method: "DELETE" }), { done: "Guest account deleted", refresh: [["accounts"]] });
+
 export const useSignOutAccount = (id: string) =>
   useApiMutation(() => api(`/api/users/${id}/sessions`, { method: "DELETE" }), { done: "Signed out everywhere", refresh: [["accounts", id, "sessions"]] });
 

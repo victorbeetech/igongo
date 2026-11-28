@@ -231,15 +231,11 @@ No key is written in the repository. The code is `modules/payments/src/infrastru
 
 **Optional, later:** if the hotel or the owner has the official brand files, replace those two SVG files with the official ones. The buttons follow the file names, so nothing else changes.
 
-## Contact Us: confirm the hotel's numbers and address (27 Nov 2026)
+## Contact Us: enter the hotel's contact details in the super admin settings (27 Nov 2026)
 
-**Status:** the Contact Us screen (S00-46) is built, and the "Contact Us" links on the sign-in and create account screens open it. It is in the PR, waiting for your visual approval.
+**Status:** the Contact Us screen (S00-46) reads every detail from the super admin's Hotel profile. Nothing is shown until the super admin enters it; the app has no placeholder numbers.
 
-**What is needed:** please confirm these are the final details. They are placeholders taken from the design, and the app shows them as they are:
-- Front desk number: +256 393 262 050 (Call Now button, and the top-bar call icon uses +256 392 722 963 from the design)
-- Reservations email: reservations@igongo.co.ug
-- WhatsApp number shown on the card: +256 772 123 456. The chat button itself opens the number the super admin sets in the hotel settings, not this one.
-- Address: Mbarara - Masaka Highway, Biharwe, Mbarara, Uganda
+**What is needed:** in the web portal, Business settings, Hotel profile, enter the phone (front desk), email (reservations), WhatsApp (digits with the country code, such as 256700000002), address and hours (such as 24/7). The Contact Us switch on the same page hides the details from the app when it is off.
 
 **Exact steps:** send the final numbers and address. Claude then changes them in one file, `apps/igongo/lib/shared/contact/contact_details.dart`. For the WhatsApp number, the super admin sets it in the web settings (Hotel profile, "Whatsapp").
 
@@ -287,3 +283,18 @@ Why: the app already limits sign-in attempts in its own database. This second la
 
 Note for Claude: the menu names come from Cloudflare's current documentation and can change; if a name differs, the same setting is in the rule builder under **Rate limiting rules**.
 - **Confirm the database role.** In Neon, make sure the API connects with a role that has only the permissions the app needs, and that no public connection string is shared with any client. Why: the database must never be reachable from a browser or the app.
+**Exact steps:** sign in to the web portal as the super admin, open Business settings, fill in Hotel profile, and save.
+
+## Notifications: what is built, and what still needs you (28 Nov 2026)
+
+**Built and tested:** every notification goes through one path (`notifyPeople` in `modules/notifications`), which writes the Updates inbox item and then sends the phone push. Guests now hear about their booking when it is received, approved, confirmed by payment, or cancelled by staff (`packages/bookings-kit`). Chat messages and food order updates already used this path. The super admin can post an update to people holding chosen roles from the web portal (S10-04, "Post an update"). The super admin role now has the two permissions that broadcast and the test push need (migration `0011`).
+
+**Needs you before phones get pushes:**
+- Add the Firebase service-account key as the Worker secret `FCM_SERVICE_ACCOUNT`. Until then the inbox still gets every item, and the push result says "not configured". Steps: Firebase console, Project settings, Service accounts, Generate new private key, then `wrangler secret put FCM_SERVICE_ACCOUNT` with the whole JSON. Sign-in on the app also needs the Firebase app config files.
+- The app must register its push token on sign-in. That needs the Firebase config in the app (on hold).
+
+**Not built yet (so these notifications do not fire on their own):**
+- The notification rule editor (S10-02) does not save rules yet. Rules come from an empty list, so no rule-based notification fires until the editor is built (Phase 7). Posts from the super admin and the order, chat and booking messages do not need rules.
+- Quiet hours are not in the rule model yet.
+- Topic broadcasts (everyone, guests, staff) send to phones only and do not write Updates inbox items, because a topic has no list of people. The web page only posts to roles, so this affects nothing in the app today.
+- Staff-side booking cancellations (from the desk) may not tell the guest, because only the guest's booking services carry the notifier. Check when the desk screens are wired.

@@ -1,5 +1,5 @@
 // The crimson top stub of the ticket: the hotel logo and folio name on the
-// left, the QR-style badge with its number on the right, then the pass number
+// left, the scannable QR code of the pass on the right, then the pass number
 // and the points earned.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
@@ -7,7 +7,11 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../../../shared/theme/theme.dart';
 import '../../../../../shared/ui/logo/igongo_logo.dart';
+import '../../../../../shared/ui/ticket/ticket_qr_code.dart';
 import '../../../domain/guest_receipt.dart';
+
+/// The side of the pass QR code: large enough to scan from a short distance.
+const _qrSize = IgongoSpace.xxl * 3;
 
 /// The crimson band at the top of the ticket.
 class ReceiptTicketStub extends StatelessWidget {
@@ -27,7 +31,7 @@ class ReceiptTicketStub extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: IgongoSpace.md,
         children: [
-          // Step 1: the logo and the folio name, with the folio number badge beside them.
+          // Step 1: the logo and the folio name, with the pass QR code beside them.
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -49,17 +53,11 @@ class ReceiptTicketStub extends StatelessWidget {
                   ],
                 ),
               ),
-              // The folio number badge: a small white tile with the number under it.
-              Container(
-                padding: const EdgeInsets.all(IgongoSpace.sm),
-                decoration: BoxDecoration(color: p.surface, borderRadius: BorderRadius.circular(IgongoRadius.sm)),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.qr_code_2, size: IgongoSpace.xxl, color: p.text),
-                    Text(receipt.passNumber.split('-').last, style: context.text.labelSmall),
-                  ],
-                ),
+              // The real QR code of the pass number, with its last part as the caption.
+              TicketQrCode(
+                data: receipt.passNumber,
+                size: _qrSize,
+                caption: receipt.passNumber.split('-').last,
               ),
             ],
           ),

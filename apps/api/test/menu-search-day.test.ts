@@ -40,6 +40,8 @@ describe("menu search for guests", () => {
     expect(items.map((i) => i.name).sort()).toEqual(["Beef tikka", "Fried beef"]);
     expect(items.find((i) => i.name === "Beef tikka")?.available).toBe(false);
     expect(items.find((i) => i.name === "Fried beef")?.available).toBe(true);
+    // The outlet that sells them is listed too, so the Filter & Refine outlet choices work for a dish search.
+    expect(res.body["outlets"]).toEqual([{ key: "main", name: "Main restaurant" }]);
   });
 
   it("finds client outlets by name and leaves out the hidden one", async () => {

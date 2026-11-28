@@ -7,7 +7,8 @@ export interface PaymentRepository {
   byId(id: string): Promise<Payment | null>;
   /** Payments of one record, oldest first. */
   forRecord(module: string, recordId: string): Promise<Payment[]>;
-  list(filter: { status?: PaymentStatus; module?: string; payerUserId?: string; limit: number }): Promise<Payment[]>;
+  /** Newest first. `before` keeps only payments made earlier than that time (the next page). */
+  list(filter: { status?: PaymentStatus; module?: string; payerUserId?: string; before?: Date; limit: number }): Promise<Payment[]>;
   add(payment: Payment): Promise<void>;
   /**
    * Moves a payment out of `pending` once, and only once.

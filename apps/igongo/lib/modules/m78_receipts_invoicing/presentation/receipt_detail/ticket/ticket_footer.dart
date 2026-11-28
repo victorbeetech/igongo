@@ -6,6 +6,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../../../shared/theme/theme.dart';
 import '../../../../../shared/ui/ticket/barcode_strip.dart';
+import '../../../../../shared/ui/ticket/ticket_code_panel.dart';
 import '../../../domain/guest_receipt.dart';
 
 /// The footer with the security row and the barcode.
@@ -47,21 +48,15 @@ class TicketFooter extends StatelessWidget {
               ),
             ],
           ),
-          // Step 2: the barcode, from the shared ticket widget, with its code under it.
-          Container(
-            padding: const EdgeInsets.all(IgongoSpace.md),
-            decoration: BoxDecoration(
-              color: p.surface,
-              borderRadius: BorderRadius.circular(IgongoRadius.md),
-              border: Border.all(color: p.border),
-            ),
+          // Step 2: the barcode on the same white panel as the QR code, with its code under it.
+          TicketCodePanel(
             child: Column(
               children: [
                 BarcodeStrip(code: receipt.passNumber),
                 const SizedBox(height: IgongoSpace.xs),
                 Text(
                   '* ${receipt.passNumber} *',
-                  style: context.text.labelSmall?.copyWith(color: p.textMuted, letterSpacing: 2),
+                  style: context.text.labelSmall?.copyWith(color: IgongoColorsLight.brandInk, letterSpacing: 2),
                 ),
               ],
             ),

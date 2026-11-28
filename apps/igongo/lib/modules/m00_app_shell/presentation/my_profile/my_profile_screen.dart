@@ -10,6 +10,7 @@ import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../shared/api/api_exception.dart';
+import '../../data/account_actions.dart';
 import '../../../../shared/catalog/catalog.dart';
 import '../../../../shared/dialogs/delete_account/delete_account_dialog.dart';
 import '../../../../shared/dialogs/sign_out/sign_out_dialog.dart';
@@ -18,6 +19,8 @@ import '../../../../shared/screens/parts/screen_list_view.dart';
 import '../../../../shared/session/session_controller.dart';
 import '../../../../shared/theme/theme.dart';
 import '../../../m54_crm_guests/presentation/past_visits_screen.dart';
+import '../../../m57_loyalty/points/application/points_providers.dart';
+import '../../../m57_loyalty/points/presentation/points_activity_row.dart';
 import '../../../../shared/ui/button/igongo_button.dart';
 import '../../../../shared/ui/card/igongo_card.dart';
 import '../../../../shared/ui/toast/igongo_toast.dart';
@@ -29,7 +32,6 @@ import 'profile_footer.dart';
 import 'profile_row_tone.dart';
 import 'profile_section_title.dart';
 import 'profile_stats.dart';
-import 'profile_status_badge.dart';
 
 /// Height of the red banner below the status bar, as in the design.
 const _bannerBodyHeight = 190.0;
@@ -69,15 +71,21 @@ class MyProfileScreen extends ConsumerWidget {
       await ref.read(sessionProvider.notifier).deleteMyAccount();
       if (context.mounted) screen.open('S00-05');
     } on ApiException catch (e) {
-      if (context.mounted) showIgongoToast(context, e.message);
+      // The server only deletes with a fresh sign-in: ask the person to sign in again.
+      final message = e.code == 'SESSION_EXPIRED' ? 'For your safety, sign in again before deleting your account.' : e.message;
+      if (context.mounted) showIgongoToast(context, message);
     }
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final session = ref.watch(sessionProvider).valueOrNull;
+    // The super admin's switches: a loading or failed read keeps both actions shown (the server still checks).
+    final actions = ref.watch(accountActionsProvider).valueOrNull ?? AccountActions.defaults;
     final prefs = PreferencesScope.of(context);
     final guest = session != null && !session.isStaff;
+    // Step 1b: the points wallet, read here so the points row is left out entirely when it is not needed.
+    final wallet = ref.watch(pointsWalletProvider).valueOrNull;
     // Step 1: the banner height includes the status bar, so the card overlaps the same spot as the design.
     final bannerHeight = MediaQuery.paddingOf(context).top + _bannerBodyHeight;
     final list = ScreenListView(
@@ -119,19 +127,20 @@ class MyProfileScreen extends ConsumerWidget {
             ),
           ],
         ),
-        // Step 2: the guest's activity: bookings, invoices, past visits and saved dishes.
+        // Step 2: the guest's activity: bookings, invoices and past visits.
         if (guest) ...[
           const ProfileSectionTitle('Resort Activity'),
           ProfileActionGroup(
             children: [
-              // PLACEHOLDER: the room and the active stay count are not read yet; dashes show for now.
+              // My points: left out while the programme is off or the wallet has not loaded, so no empty divider shows.
+              if (wallet != null && wallet.enabled) PointsActivityRow(wallet: wallet, onTap: () => screen.open('S57-01')),
+              // The bookings and orders list (the Bookings tab, S67-01).
               ProfileActionRow(
                 title: 'My Bookings & Orders',
-                subtitle: 'Room — • — active stays',
+                subtitle: 'Stays, tables, tours and food orders',
                 icon: Icons.event_available_outlined,
                 tone: ProfileRowTone.solid,
-                trailing: const ProfileStatusBadge(label: '— Active'),
-                onTap: () => screen.open('S54-05'),
+                onTap: () => screen.open('S67-01'),
               ),
               ProfileActionRow(
                 title: 'Folio & Digital Invoices',
@@ -146,13 +155,6 @@ class MyProfileScreen extends ConsumerWidget {
                 onTap: () =>
                     Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const PastVisitsScreen())),
               ),
-              // PLACEHOLDER: the saved dishes screen and count are not built yet; the row is inert.
-              ProfileActionRow(
-                title: 'Saved Dishes',
-                subtitle: 'Eshabwe, Tilapia & Luwombo',
-                icon: Icons.restaurant_outlined,
-                trailing: Text('— items', style: context.text.labelMedium?.copyWith(color: context.palette.textMuted)),
-              ),
             ],
           ),
         ],
@@ -161,21 +163,22 @@ class MyProfileScreen extends ConsumerWidget {
           const ProfileSectionTitle('Account & Security'),
           ProfileActionGroup(
             children: [
-              // PLACEHOLDER: the device list is not read yet; a dash shows for now.
+              // The devices signed in to the account (S00-36).
               ProfileActionRow(
                 title: 'Signed-in Devices',
-                subtitle: '—',
+                subtitle: 'Phones and browsers signed in to your account',
                 icon: Icons.smartphone_outlined,
                 tone: ProfileRowTone.neutral,
                 onTap: () => screen.open('S00-36'),
               ),
-              ProfileActionRow(
-                title: 'Sign Out',
-                icon: Icons.logout,
-                tone: ProfileRowTone.neutral,
-                onTap: () => _signOut(context, ref),
-              ),
-              if (!session.isStaff)
+              if (actions.allowSignOut)
+                ProfileActionRow(
+                  title: 'Sign Out',
+                  icon: Icons.logout,
+                  tone: ProfileRowTone.neutral,
+                  onTap: () => _signOut(context, ref),
+                ),
+              if (!session.isStaff && actions.allowSelfDelete)
                 ProfileActionRow(
                   title: 'Delete Account',
                   icon: Icons.delete_outline,
