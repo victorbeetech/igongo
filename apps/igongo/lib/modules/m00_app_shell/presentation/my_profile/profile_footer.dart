@@ -1,4 +1,4 @@
-// The footer of My profile: the hotel's heritage quote and the app's name and version.
+// The footer of My profile: the hotel's heritage quote and the hotel line.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
@@ -9,9 +9,6 @@ import '../../../../shared/theme/theme.dart';
 class ProfileFooter extends StatelessWidget {
   /// Creates the footer.
   const ProfileFooter({super.key});
-
-  // PLACEHOLDER: the version is not read from the build yet.
-  static const _version = 'v—';
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +24,7 @@ class ProfileFooter extends StatelessWidget {
           ),
           const SizedBox(height: IgongoSpace.xs),
           Text(
-            'Igongo Country Hotel & Cultural Centre • $_version',
+            'Igongo Country Hotel & Cultural Centre',
             style: context.text.labelSmall?.copyWith(color: p.textMuted),
             textAlign: TextAlign.center,
           ),

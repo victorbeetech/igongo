@@ -2,6 +2,7 @@
  * Users & Login account routes, mounted by the gateway at `/api/users`.
  *
  *   GET    /me                        my account
+ *   PUT    /me/photo                  save my profile photo (data URL, JPG or PNG)
  *   GET    /me/sessions               my signed-in devices
  *   DELETE /me/sessions/:sessionId    sign out one of my devices
  *   POST   /me/sessions/sign-out-others  sign out all my other devices
@@ -20,8 +21,9 @@ import { Hono, type Context } from "hono";
 import { actorOf, AppError, requirePermission, type ActorEnv } from "@igongo/core";
 import { createStaffAccount } from "../application/use-cases/create-staff-account";
 import { revokeAllSessions, revokeSession, setAccountStatus, signOutEveryone } from "../application/use-cases/manage-accounts";
+import { checkProfilePhoto } from "../domain/profile-photo";
 import { USER_PERMISSIONS as P } from "./permissions";
-import { createAccountBody, searchQuery, statusBody } from "./request-schemas";
+import { createAccountBody, photoBody, searchQuery, statusBody } from "./request-schemas";
 import type { UsersDeps } from "./users-deps";
 
 export function usersRouter(deps: (c: Context<ActorEnv>) => UsersDeps) {
@@ -36,6 +38,12 @@ export function usersRouter(deps: (c: Context<ActorEnv>) => UsersDeps) {
     new Hono<ActorEnv>()
       // --- The caller's own account ---
       .get("/me", async (c) => c.json({ account: await accountOr404(c, actorOf(c).userId), access: actorOf(c).access }))
+      // Saves my profile photo. The app crops it first; the server checks the type and size.
+      .put("/me/photo", zValidator("json", photoBody), async (c) => {
+        const image = checkProfilePhoto(c.req.valid("json").image);
+        await deps(c).accounts.setImage(actorOf(c).userId, image);
+        return c.json({ image });
+      })
       .get("/me/sessions", async (c) => {
         const me = actorOf(c);
         const items = await deps(c).accounts.sessionsOf(me.userId);

@@ -1,7 +1,7 @@
 // The bar over the top of the dish page: Back on the left, the dish name
 // (shown once the guest scrolls past the photo) in the middle, and the
-// favourite and share buttons on the right. Favourite and share are shown
-// but disabled until they are wired.
+// favourite (heart, saves the dish to the guest's list) and share buttons on
+// the right. Share is shown but disabled until it is wired.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
@@ -13,8 +13,14 @@ import 'dish_placeholder.dart';
 
 /// The floating top bar. [titleShown] fades the dish name in.
 class DishTopBar extends StatelessWidget {
-  /// Creates the bar for the dish called [name].
-  const DishTopBar({super.key, required this.name, required this.titleShown, required this.onBack});
+  /// Creates the bar for the dish called [name]. [saved] shows the heart filled; [onFavourite] toggles it.
+  const DishTopBar({super.key, required this.name, required this.titleShown, required this.onBack, required this.saved, required this.onFavourite});
+
+  /// True when the dish is on the guest's saved list (the heart is filled).
+  final bool saved;
+
+  /// Saves or removes the dish from the guest's saved list.
+  final VoidCallback onFavourite;
 
   /// The dish name, shown in the middle once the photo has scrolled away.
   final String name;
@@ -65,8 +71,12 @@ class DishTopBar extends StatelessWidget {
                 ),
               ),
             ),
-            // Step 3: favourite and share, shown but disabled until they are wired.
-            const DishGlassButton(icon: Icons.favorite_border, tooltip: dishComingSoon),
+            // Step 3: the heart saves or removes the dish; share stays disabled until it is wired.
+            DishGlassButton(
+              icon: saved ? Icons.favorite : Icons.favorite_border,
+              tooltip: saved ? 'Remove from saved dishes' : 'Save dish',
+              onPressed: onFavourite,
+            ),
             const SizedBox(width: IgongoSpace.sm),
             const DishGlassButton(icon: Icons.ios_share, tooltip: dishComingSoon),
           ],

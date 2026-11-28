@@ -19,7 +19,11 @@ class CuratedFindingCard extends StatelessWidget {
     required this.finding,
     required this.favourite,
     required this.onFavourite,
+    required this.onOpen,
   });
+
+  /// Called when the card's button is tapped.
+  final VoidCallback onOpen;
 
   /// The finding to show.
   final CuratedFinding finding;
@@ -78,11 +82,11 @@ class CuratedFindingCard extends StatelessWidget {
                   children: [
                     Icon(Icons.star, size: IgongoSpace.lg, color: p.warning),
                     const SizedBox(width: IgongoSpace.xxs),
-                    Text(finding.rating.toStringAsFixed(1), style: context.text.labelMedium?.copyWith(fontWeight: FontWeight.w700)),
+                    Text(finding.rating?.toStringAsFixed(1) ?? _dash, style: context.text.labelMedium?.copyWith(fontWeight: FontWeight.w700)),
                     const SizedBox(width: IgongoSpace.xs),
                     Flexible(
                       child: Text(
-                        '(${finding.reviews} reviews)',
+                        '(${finding.reviews ?? _dash} reviews)',
                         overflow: TextOverflow.ellipsis,
                         style: context.text.bodySmall,
                       ),
@@ -90,7 +94,7 @@ class CuratedFindingCard extends StatelessWidget {
                     const SizedBox(width: IgongoSpace.sm),
                     Flexible(
                       child: Text(
-                        finding.tagline.toUpperCase(),
+                        (finding.tagline ?? _dash).toUpperCase(),
                         textAlign: TextAlign.end,
                         overflow: TextOverflow.ellipsis,
                         style: context.text.labelSmall?.copyWith(
@@ -122,7 +126,7 @@ class CuratedFindingCard extends StatelessWidget {
                   children: [
                     Expanded(child: _PriceBlock(label: finding.priceLabel, price: finding.price, unit: finding.unit)),
                     FilledButton(
-                      onPressed: () {}, // Booking and ordering are wired later.
+                      onPressed: onOpen,
                       style: FilledButton.styleFrom(
                         backgroundColor: p.primary,
                         foregroundColor: p.onPrimary,
@@ -148,18 +152,22 @@ class CuratedFindingCard extends StatelessWidget {
   }
 }
 
+/// The dash shown for any value the super admin has not set yet.
+const String _dash = '—';
+
 /// The kind badge on the picture: its icon, word and colour. Colours follow the kind.
 class _KindBadge extends StatelessWidget {
   const _KindBadge({required this.kind});
 
-  /// Food, stay or tour.
-  final DiscoveryKind kind;
+  /// Food, stay or tour. Null until the admin sets one; the badge then shows a dash.
+  final DiscoveryKind? kind;
 
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
     // Step 1: pick the icon, word, fill and text colour for this kind.
     final (IconData icon, String word, Color fill, Color ink) = switch (kind) {
+      null => (Icons.label_outline, _dash, p.surfaceAlt, p.text),
       DiscoveryKind.food => (Icons.dinner_dining, 'Food', p.primary, p.onPrimary),
       DiscoveryKind.stay => (Icons.hotel, 'Stay', p.warning, p.background),
       DiscoveryKind.tour => (Icons.museum, 'Tour', p.secondary, p.background),
@@ -242,8 +250,8 @@ class _PriceBlock extends StatelessWidget {
   /// "Price" or "Rate".
   final String label;
 
-  /// The amount in whole shillings.
-  final int price;
+  /// The amount in whole shillings, or null for a dash.
+  final int? price;
 
   /// What the amount is for, such as "/night" (may be empty).
   final String unit;
@@ -260,7 +268,7 @@ class _PriceBlock extends StatelessWidget {
           TextSpan(
             children: [
               TextSpan(
-                text: ugx(price),
+                text: price == null ? _dash : ugx(price!),
                 style: context.text.labelLarge?.copyWith(color: p.primary, fontWeight: FontWeight.w700),
               ),
               if (unit.isNotEmpty) TextSpan(text: unit, style: context.text.bodySmall),
