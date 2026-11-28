@@ -5,6 +5,7 @@
 
 export { dispatchEvent } from "./application/use-cases/dispatch-event";
 export { listInbox } from "./application/use-cases/list-inbox";
+export { notifyPeople, type NotifyPeopleDeps } from "./application/use-cases/notify-people";
 export { recordInboxItems, type InboxMessage } from "./application/use-cases/record-inbox-items";
 export type { InboxRepository } from "./application/ports/inbox-repository";
 export { sendPush } from "./application/use-cases/send-push";

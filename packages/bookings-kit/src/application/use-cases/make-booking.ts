@@ -12,6 +12,8 @@ import { AppError, hotelDate, newId, recordChange } from "@igongo/core";
 import type { Booking } from "../../domain/booking";
 import { bookingCode, priceOf, startingStatus } from "../../domain/booking-math";
 import type { BookingsDeps } from "../bookings-deps";
+import { receivedMessage } from "../messages/booking-messages";
+import { tellGuest } from "../tell-guest";
 import { checkTime, unitsLeft, type WantedTime } from "./check-availability";
 
 export interface BookInput extends WantedTime {
@@ -49,5 +51,7 @@ export async function makeBooking(deps: BookingsDeps, input: BookInput): Promise
   // 5. Save and record.
   await deps.bookings.add(booking);
   await recordChange(deps.change, { module: deps.module.key, action: "booking.created", recordType: "booking", recordId: booking.id, summary: `${booking.code}: ${offering.name} x${booking.units} for ${booking.guestName}, ${total} UGX` });
+  // The guest hears their booking was received (walk-ins have no account, so nothing is sent).
+  await tellGuest(deps, booking, receivedMessage(booking));
   return booking;
 }

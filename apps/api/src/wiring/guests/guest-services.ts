@@ -126,7 +126,8 @@ export class GuestServices {
 
   /** One booking module's deps. */
   booking(key: BookingModuleKey): BookingsDeps {
-    return { ...BOOKING_MODULES[key](this.db, this.change), ticketKey: this.ticketKey };
+    // The notifier lets the bookings tell the guest about each change (inbox and phones).
+    return { ...BOOKING_MODULES[key](this.db, this.change), ticketKey: this.ticketKey, notify: this.notify };
   }
 
   payments(): PaymentsDeps {
