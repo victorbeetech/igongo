@@ -62,3 +62,14 @@ export async function recordBookingPayment(deps: BookingsDeps, id: string, amoun
   const enough = paid >= depositOf(await deps.rules.read(), b.total);
   await save(deps, { ...b, paid, status: b.status === "awaiting_payment" && enough ? "confirmed" : b.status }, "booking.paid", `paid ${amount} UGX`);
 }
+
+/**
+ * Staff assign (or clear) the room or cottage number of a booking. The guest sees it on the receipt.
+ * Recorded in the audit trail with the old and new number.
+ */
+export async function assignUnit(deps: BookingsDeps, id: string, unit: string | null): Promise<Booking> {
+  const b = await bookingOf(deps, id);
+  if (b.status === "cancelled") throw new AppError("conflict", "A cancelled booking cannot be assigned a room.");
+  const label = unit ?? "none";
+  return save(deps, { ...b, unit }, "booking.unit_assigned", `room set to ${label} (was ${b.unit ?? "none"})`);
+}

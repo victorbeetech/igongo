@@ -42,7 +42,7 @@ export async function makeBooking(deps: BookingsDeps, input: BookInput): Promise
   const total = priceOf(offering, input.units, time.nights);
   const booking: Booking = {
     id: newId("bkg"), code: bookingCode(deps.module.prefix), offeringId: offering.id, offeringName: offering.name, kind: offering.kind,
-    userId: input.guest.userId, guestName: input.guest.name, guestPhone: input.guest.phone, date: time.date, endDate: time.endDate, slot: time.slot,
+    userId: input.guest.userId, guestName: input.guest.name, guestPhone: input.guest.phone, date: time.date, endDate: time.endDate, slot: time.slot, unit: null,
     units: input.units, total, paid: 0, status: startingStatus(rules, offering.kind, total, false), notes: input.notes ?? null,
     createdBy: input.byStaff ? deps.change.actorId : null, cancelReason: null, checkedInAt: null, createdAt: now, updatedAt: now,
   };

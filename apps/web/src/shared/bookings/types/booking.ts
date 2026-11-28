@@ -14,6 +14,8 @@ export interface Booking {
   date: string | null;
   endDate: string | null;
   slot: string | null;
+  /** The room or cottage number, once staff assign one. */
+  unit: string | null;
   units: number;
   total: number;
   paid: number;

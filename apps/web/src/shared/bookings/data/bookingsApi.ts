@@ -37,6 +37,10 @@ export const useBook = (p: BookingPlace) => useApiMutation((b: BookInput) => api
 export const useCancelBooking = (p: BookingPlace) =>
   useApiMutation((v: { id: string; reason: string }) => api<Booking>(`${p.path}/bookings/${v.id}/cancel`, { method: "POST", body: { reason: v.reason } }), { done: "Cancelled", refresh: [[p.path]] });
 
+/** Staff assign (or clear, with an empty value) the room or cottage number of a booking. */
+export const useAssignUnit = (p: BookingPlace) =>
+  useApiMutation((v: { id: string; unit: string }) => api<Booking>(`${p.path}/bookings/${v.id}/unit`, { method: "PATCH", body: { unit: v.unit.trim() || null } }), { done: "Room saved", refresh: [[p.path]] });
+
 export const useApprove = (p: BookingPlace) =>
   useApiMutation((v: { id: string; total?: number }) => api<Booking>(`${p.path}/bookings/${v.id}/approve`, { method: "POST", body: v.total === undefined ? {} : { total: v.total } }), { done: "Approved", refresh: [[p.path]] });
 

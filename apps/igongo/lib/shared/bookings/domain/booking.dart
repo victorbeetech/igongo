@@ -17,6 +17,7 @@ class Booking {
     this.date,
     this.endDate,
     this.slot,
+    this.unit,
   });
 
   /// Reads one from the API's JSON.
@@ -32,6 +33,7 @@ class Booking {
     date: json['date'] as String?,
     endDate: json['endDate'] as String?,
     slot: json['slot'] as String?,
+    unit: json['unit'] as String?,
   );
 
   /// The booking's ID.
@@ -66,6 +68,9 @@ class Booking {
 
   /// The time slot.
   final String? slot;
+
+  /// The room or cottage number, once staff assign one (null until then).
+  final String? unit;
 
   /// What is still owed now (nothing for requests or cancelled bookings).
   int get owed => status == 'requested' || status == 'cancelled' ? 0 : total - paid;

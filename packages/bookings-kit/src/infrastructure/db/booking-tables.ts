@@ -46,6 +46,8 @@ export function bookingTables(schema: PgSchema) {
       date: text("date"),
       endDate: text("end_date"),
       slot: text("slot"),
+      /** The room or cottage number, set when staff assign one (null until then). */
+      unit: text("unit"),
       units: integer("units").notNull(),
       total: integer("total").notNull(),
       paid: integer("paid").notNull(),
