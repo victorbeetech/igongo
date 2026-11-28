@@ -68,11 +68,12 @@ class _PoolAccommodationScreenState extends ConsumerState<PoolAccommodationScree
       context,
       ref,
       widget.place,
-      offering: pass,
-      units: _adults + _children,
+      lines: [
+        (offering: pass, units: _adults + _children),
+        for (final i in _addOns) (offering: addOns[i], units: 1),
+      ],
       date: dayKey(_day),
       slot: pass.slots.isEmpty ? null : pass.slots[_session],
-      extras: [for (final i in _addOns) addOns[i]],
     );
     if (mounted) setState(() => _busy = false);
   }

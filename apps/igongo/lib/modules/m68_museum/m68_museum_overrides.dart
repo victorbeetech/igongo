@@ -3,6 +3,7 @@
 
 import '../../shared/catalog/catalog.dart';
 import '../../shared/bookings/presentation/book_screen.dart';
+import '../../shared/bookings/presentation/flow/screens/museum_booking_review_screen.dart';
 import '../../shared/bookings/presentation/bookings_desk_screen.dart';
 import '../../shared/bookings/presentation/my_bookings_screen.dart';
 import 'domain/place.dart';
@@ -11,7 +12,8 @@ import 'domain/place.dart';
 final m68Overrides = <String, ScreenOverride>{
   'S68-01': (_, s) => BookScreen(s, place),
   'S68-02': (_, s) => BookScreen(s, place),
-  'S68-03': (_, s) => BookScreen(s, place),
+  // S68-03 Book a tour: the designed tour, visitor and schedule review, live from the museum API.
+  'S68-03': (_, s) => const MuseumBookingReviewScreen(place: place),
   'S68-09': (_, s) => BookScreen(s, place),
   'S68-05': (_, s) => MyBookingsScreen(s, place),
   'S68-04': (_, s) => BookScreen(s, place),
