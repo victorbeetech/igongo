@@ -9,18 +9,22 @@
  *   POST   /menu/items              add an item (S61-03)
  *   PATCH  /menu/items/:id          change an item (S61-03)
  *   POST   /menu/items/:id/stock    out of stock today, or back (S61-04)
- *   GET|PUT /menu/settings          outlets (S61-01)
+ *   GET|PUT /menu/settings          outlets (S61-01); PUT is the super admin only
+ *   POST   /menu/outlets            add a venue (super admin only)
+ *   PATCH  /menu/outlets/:key       rename a venue or switch it on or off for guests (super admin only)
+ *   DELETE /menu/outlets/:key       remove a venue with no dishes (super admin only)
  */
 
 import { zValidator } from "@hono/zod-validator";
-import { actorOf, AppError, canForOthers, recordChange, requireStaffPermission, type ActorEnv } from "@igongo/core";
+import { actorOf, AppError, canForOthers, recordChange, requireStaffPermission, requireSuperAdmin, type ActorEnv } from "@igongo/core";
 import { Hono, type Context } from "hono";
 import type { MenuDeps } from "../application/menu-deps";
 import { addItem, editItem, setInStock } from "../application/use-cases/save-item";
+import { addOutlet, editOutlet, removeOutlet } from "../application/use-cases/save-outlet";
 import { searchMenu } from "../application/use-cases/search-menu";
 import { isAvailable, type MenuItem } from "../domain/menu-item";
 import { MENU_PERMISSIONS as P } from "./permissions";
-import { itemBody, itemPatch, itemsQuery, searchQuery, settingsBody, stockBody } from "./request-schemas";
+import { itemBody, itemPatch, itemsQuery, outletBody, outletPatch, searchQuery, settingsBody, stockBody } from "./request-schemas";
 
 /** True when the caller (maybe nobody) is staff holding [permission] (guests hold menu view as `public`). */
 function callerCan(c: Context<ActorEnv>, permission: string): boolean {
@@ -63,7 +67,11 @@ export function menuRouter(deps: (c: Context<ActorEnv>) => MenuDeps) {
       return c.json(await setInStock(deps(c), c.req.param("id"), c.req.valid("json").inStock));
     })
     .get("/settings", async (c) => c.json(await deps(c).settings.read()))
-    .put("/settings", requireStaffPermission(P.settings), zValidator("json", settingsBody), async (c) => {
+    // Venues: only the Super Admin may change them (checked by role, not only by permission).
+    .post("/outlets", requireSuperAdmin(), zValidator("json", outletBody), async (c) => c.json(await addOutlet(deps(c), c.req.valid("json")), 201))
+    .patch("/outlets/:key", requireSuperAdmin(), zValidator("json", outletPatch), async (c) => c.json(await editOutlet(deps(c), c.req.param("key"), c.req.valid("json"))))
+    .delete("/outlets/:key", requireSuperAdmin(), async (c) => c.json(await removeOutlet(deps(c), c.req.param("key"))))
+    .put("/settings", requireSuperAdmin(), zValidator("json", settingsBody), async (c) => {
       const d = deps(c);
       const value = c.req.valid("json");
       await d.settings.write(value, d.change.actorId, d.change.now);

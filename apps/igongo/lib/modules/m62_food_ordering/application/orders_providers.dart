@@ -18,12 +18,12 @@ import '../domain/outlet.dart';
 /// The food APIs on the app's client.
 final ordersApiProvider = Provider((ref) => OrdersApi(ref.watch(apiClientProvider)));
 
-/// Outlets guests may order from.
-// The demo outlet shows only while the server has no outlets (see demo/demo_menu.dart).
+/// The venues guests may order from: exactly the super admin's venues that are
+/// switched on, as the server sends them. No sample venue is ever added here, so
+/// the Food venue carousel never shows a venue the hotel did not set up.
 final outletsProvider = FutureProvider.autoDispose<List<Outlet>>((ref) async {
   ref.watch(sessionProvider);
-  final live = await ref.watch(ordersApiProvider).outlets();
-  return live.isEmpty && demoMenuOn ? demoOutlets : live;
+  return ref.watch(ordersApiProvider).outlets();
 });
 
 /// One outlet's menu.
