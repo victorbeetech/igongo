@@ -66,6 +66,26 @@ void main() {
     expect(r.lines.single.detail, '2026-11-27');
   });
 
+  test('a food payment takes its table and lines from the order', () {
+    // An order as the orders API returns it (test fixture).
+    final order = <String, dynamic>{
+      'id': 'ord-1',
+      'number': 'F-0042',
+      'outlet': 'Kaahwa Kanuzire Restaurant',
+      'table': 'L-04',
+      'lines': [
+        {'name': 'Grilled Tilapia', 'quantity': 2, 'lineTotal': 56000},
+      ],
+    };
+    final r = receiptFromPayment({...payment, 'module': 'food-ordering', 'recordId': 'ord-1'}, order: order, guestName: 'Grace');
+    expect(r.tableLabel, 'L-04');
+    expect(r.passNumber, 'F-0042');
+    expect(r.outlet, 'Kaahwa Kanuzire Restaurant');
+    expect(r.lines.single.name, '2 × Grilled Tilapia');
+    expect(r.lines.single.amount, 56000);
+    expect(r.guestName, 'Grace');
+  });
+
   test('an unknown method code shows its words, not its code', () {
     expect(methodLabel('mystery_pay'), 'mystery pay');
   });

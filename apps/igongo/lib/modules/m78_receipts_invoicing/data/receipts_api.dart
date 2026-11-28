@@ -45,6 +45,9 @@ class ReceiptsApi {
   Future<Map<String, dynamic>> emailReceipt(String paymentId) =>
       _api.post('/api/payments/${Uri.encodeComponent(paymentId)}/email');
 
+  /// The person's food orders as JSON objects (table, lines and number included).
+  Future<List<Map<String, dynamic>>> foodOrders() async => _items(await _api.get('/api/orders/mine'));
+
   /// Pulls the `items` list out of an API response, keeping only JSON objects.
   List<Map<String, dynamic>> _items(Map<String, dynamic> json) {
     final items = json['items'];

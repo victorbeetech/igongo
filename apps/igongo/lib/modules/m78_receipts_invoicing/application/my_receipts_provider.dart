@@ -24,14 +24,23 @@ final myReceiptsProvider = FutureProvider.autoDispose<List<GuestReceipt>>((ref) 
   // Step 2: read the settled payments.
   final payments = await api.settledPayments();
 
-  // Step 3: read the booking lists for the booking modules the payments use, once each.
-  final modules = {for (final p in payments) p['module'] as String? ?? ''}..removeWhere((m) => !bookingModulePaths.containsKey(m));
+  // Step 3a: read the booking lists for the booking modules the payments use, once each.
+  final modules = {for (final p in payments) p['module'] as String? ?? ''}
+    ..removeWhere((m) => !bookingModulePaths.containsKey(m));
   final bookingLists = await Future.wait(modules.map(api.bookingsOf));
   final bookingById = {for (final b in bookingLists.expand((l) => l)) b['id'] as String? ?? '': b};
+  // Step 3b: a food payment's order gives its table and lines.
+  final orderById = {for (final o in await api.foodOrders()) o['id'] as String? ?? '': o};
 
   // Step 4: map each payment with its booking, then sort newest first.
   final receipts = [
-    for (final p in payments) receiptFromPayment(p, booking: bookingById[p['recordId'] as String? ?? ''], guestName: guestName),
+    for (final p in payments)
+      receiptFromPayment(
+        p,
+        booking: bookingById[p['recordId'] as String? ?? ''],
+        order: orderById[p['recordId'] as String? ?? ''],
+        guestName: guestName,
+      ),
   ]..sort((a, b) => b.at.compareTo(a.at));
   return receipts;
 });

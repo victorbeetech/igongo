@@ -45,7 +45,11 @@ class _MyReceiptsScreenState extends ConsumerState<MyReceiptsScreen> {
     return async.when(
       loading: () => const Center(child: SpiralLoader()),
       error: (_, _) => const Center(
-        child: StateMessage(icon: Icons.error_outline, title: 'Receipts could not load', message: 'Check your connection and open this screen again.'),
+        child: StateMessage(
+          icon: Icons.error_outline,
+          title: 'Receipts could not load',
+          message: 'Check your connection and open this screen again.',
+        ),
       ),
       data: (all) => _content(context, all),
     );

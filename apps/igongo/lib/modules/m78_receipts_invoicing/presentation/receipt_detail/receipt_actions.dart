@@ -86,7 +86,10 @@ class ReceiptActions extends ConsumerWidget {
       final result = await ref.read(receiptsApiProvider).emailReceipt(receipt.id);
       if (!context.mounted) return;
       final sent = result['sent'] == true;
-      showIgongoToast(context, sent ? 'Receipt emailed' : (result['reason'] as String? ?? 'Receipt could not be emailed'));
+      showIgongoToast(
+        context,
+        sent ? 'Receipt emailed' : (result['reason'] as String? ?? 'Receipt could not be emailed'),
+      );
     } on Object {
       if (context.mounted) showIgongoToast(context, 'Receipt could not be emailed');
     }

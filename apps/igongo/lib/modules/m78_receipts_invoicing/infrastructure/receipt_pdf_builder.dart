@@ -22,7 +22,10 @@ Future<Uint8List> buildReceiptPdf(GuestReceipt receipt) async {
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
           // Step 2: the hotel name and the receipt reference.
-          pw.Text('IGONGO COUNTRY HOTEL & CULTURAL CENTRE', style: const pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold)),
+          pw.Text(
+            'IGONGO COUNTRY HOTEL & CULTURAL CENTRE',
+            style: const pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold),
+          ),
           pw.SizedBox(height: 4),
           pw.Text('Receipt ${receipt.ref}', style: const pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
           pw.SizedBox(height: 12),
@@ -64,7 +67,10 @@ pw.Widget _row(String label, String value, {String? detail, bool bold = false}) 
         child: pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
-            pw.Text(label, style: pw.TextStyle(fontSize: 10, fontWeight: bold ? pw.FontWeight.bold : pw.FontWeight.normal)),
+            pw.Text(
+              label,
+              style: pw.TextStyle(fontSize: 10, fontWeight: bold ? pw.FontWeight.bold : pw.FontWeight.normal),
+            ),
             if (detail != null && detail.isNotEmpty) pw.Text(detail, style: const pw.TextStyle(fontSize: 8)),
           ],
         ),
