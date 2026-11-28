@@ -37,6 +37,8 @@ export const methodParam = z.object({ method: z.enum(LOGIN_METHODS) });
 /** `PATCH /login-methods/policy`. */
 export const policyBody = z.object({
   allowSelfRegistration: z.boolean().optional(),
+  allowSelfDelete: z.boolean().optional(),
+  allowSignOut: z.boolean().optional(),
   newAccountsNeedApproval: z.boolean().optional(),
   sessionDays: z.number().int().min(1).max(365).optional(),
   firstMethod: z.enum(LOGIN_METHODS).optional(),

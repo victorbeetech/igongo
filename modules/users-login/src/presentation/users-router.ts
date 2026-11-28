@@ -12,6 +12,7 @@
  *   GET    /:id/sessions              their devices (admin)
  *   DELETE /:id/sessions              sign them out everywhere (admin)
  *   DELETE /:id/sessions/:sessionId   sign out one device (admin)
+ *   DELETE /:id                       delete a guest account (admin; never staff, never yourself)
  *   POST   /sessions/sign-out-everyone   emergency: everyone but me (admin)
  */
 
@@ -19,6 +20,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono, type Context } from "hono";
 import { actorOf, AppError, requirePermission, type ActorEnv } from "@igongo/core";
 import { createStaffAccount } from "../application/use-cases/create-staff-account";
+import { deleteGuestAccount } from "../application/use-cases/delete-guest-account";
 import { revokeAllSessions, revokeSession, setAccountStatus, signOutEveryone } from "../application/use-cases/manage-accounts";
 import { USER_PERMISSIONS as P } from "./permissions";
 import { createAccountBody, searchQuery, statusBody } from "./request-schemas";
@@ -63,6 +65,13 @@ export function usersRouter(deps: (c: Context<ActorEnv>) => UsersDeps) {
         return c.json(await createStaffAccount(writer, d.change, c.req.valid("json")), 201);
       })
       .get("/:id", requirePermission(P.viewAccounts), async (c) => c.json(await accountOr404(c, c.req.param("id"))))
+      // Deletes a guest account. The admin's own name goes into the Audit Trail (see the use case).
+      .delete("/:id", requirePermission(P.deleteAccounts), async (c) => {
+        const d = deps(c);
+        const writer = (await (await d.auth()).$context).internalAdapter;
+        await deleteGuestAccount(d.accounts, writer, d.change, c.req.param("id"));
+        return c.body(null, 204);
+      })
       .patch("/:id/status", requirePermission(P.editAccounts), zValidator("json", statusBody), async (c) => {
         await setAccountStatus(deps(c).accounts, deps(c).change, c.req.param("id"), c.req.valid("json").status);
         return c.body(null, 204);

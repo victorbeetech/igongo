@@ -38,6 +38,9 @@ export function LoginMethodsPage({ screen }: { screen: ScreenContext }) {
             <div className="rounded-md border border-line bg-surface">
               <SwitchRow label="Guests can create their own accounts" on={d.policy["allowSelfRegistration"] === true} onChange={(v) => policy.mutate({ allowSelfRegistration: v })} />
               <SwitchRow label="New guest accounts wait for approval" on={d.policy["newAccountsNeedApproval"] === true} onChange={(v) => policy.mutate({ newAccountsNeedApproval: v })} />
+              {/* Guests' own controls in the app: off hides the button and, for delete, the server refuses it. */}
+              <SwitchRow label="Guests can sign out in the app" on={d.policy["allowSignOut"] !== false} onChange={(v) => policy.mutate({ allowSignOut: v })} />
+              <SwitchRow label="Guests can delete their own account in the app" on={d.policy["allowSelfDelete"] !== false} onChange={(v) => policy.mutate({ allowSelfDelete: v })} />
             </div>
           </div>
         )}
