@@ -29,7 +29,7 @@ void main() {
     );
     // Step 2: the banner shows its title, and there is no app bar of its own.
     expect(find.byType(ProfileBanner), findsOneWidget);
-    expect(find.text('My profile'), findsOneWidget);
+    expect(find.text('Guest Profile'), findsOneWidget);
     expect(find.byType(AppBar), findsNothing);
     // Step 3: the bottom bar stays, and the staff menu does not exist for a guest.
     expect(find.byType(NavigationBar), findsOneWidget);

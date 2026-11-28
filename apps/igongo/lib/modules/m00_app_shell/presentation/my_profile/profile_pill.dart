@@ -1,27 +1,20 @@
-// A small rounded label with an icon, used for "Guest account" and the Edit button.
-// Give [onTap] to make it a button.
+// A small rounded label, used for the "Guest account" chip and the Edit button.
+// Give [onTap] to make it a button, and [icon] to put an icon before the words.
 
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../shared/theme/theme.dart';
 
-/// A rounded pill: an icon and a short label.
+/// A rounded pill with an optional icon and a short label.
 class ProfilePill extends StatelessWidget {
   /// Creates a pill. Colours default to the light red container.
-  const ProfilePill({
-    super.key,
-    required this.icon,
-    required this.label,
-    this.onTap,
-    this.fill,
-    this.foreground,
-  });
-
-  /// The icon shown before the label.
-  final IconData icon;
+  const ProfilePill({super.key, required this.label, this.icon, this.onTap, this.fill, this.foreground});
 
   /// The words, such as "Guest account".
   final String label;
+
+  /// The icon shown before the label, if any.
+  final IconData? icon;
 
   /// What happens on tap; null makes the pill a plain label.
   final VoidCallback? onTap;
@@ -43,15 +36,19 @@ class ProfilePill extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 16, color: ink),
-          const SizedBox(width: 6),
+          // Step 2: the optional icon, then the label.
+          if (icon != null) ...[Icon(icon, size: 14, color: ink), const SizedBox(width: 4)],
           Flexible(
-            child: Text(label, style: context.text.labelMedium?.copyWith(color: ink), overflow: TextOverflow.ellipsis),
+            child: Text(
+              label,
+              style: context.text.labelMedium?.copyWith(color: ink),
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ],
       ),
     );
-    // Step 2: a plain label, or a button when there is something to do.
+    // Step 3: a plain label, or a button when there is something to do.
     if (onTap == null) return body;
     return Semantics(
       button: true,

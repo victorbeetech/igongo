@@ -26,18 +26,22 @@ class ProfileStats extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Step 1: the live order count (shows a dash while loading or if it fails).
-    final orders = ref.watch(myOrdersProvider).when(
-      data: (list) => '${list.length}',
-      loading: () => _unknown,
-      error: (_, _) => _unknown,
-    );
+    final orders = ref
+        .watch(myOrdersProvider)
+        .when(data: (list) => '${list.length}', loading: () => _unknown, error: (_, _) => _unknown);
     // Step 2: three equal tiles side by side.
     return Row(
       spacing: IgongoSpace.sm,
       children: [
-        const Expanded(child: ProfileStatTile(icon: Icons.event_available_outlined, label: 'Bookings', value: _unknown)),
-        Expanded(child: ProfileStatTile(icon: Icons.shopping_cart_outlined, label: 'Orders', value: orders)),
-        const Expanded(child: ProfileStatTile(icon: Icons.star_rounded, label: 'Points', value: _pointsPlaceholder)),
+        const Expanded(
+          child: ProfileStatTile(icon: Icons.calendar_today_outlined, label: 'Bookings', value: _unknown),
+        ),
+        Expanded(
+          child: ProfileStatTile(icon: Icons.shopping_bag_outlined, label: 'Orders', value: orders),
+        ),
+        const Expanded(
+          child: ProfileStatTile(icon: Icons.auto_awesome_outlined, label: 'Points', value: _pointsPlaceholder),
+        ),
       ],
     );
   }

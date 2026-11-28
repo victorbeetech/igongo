@@ -1,84 +1,96 @@
-// One row of an action list on My profile: a round icon, the title, an
-// optional value on the right (such as "Light") and a chevron. Rows in the
-// activity group have a solid red icon; the others have a soft one; the
-// delete row is red.
+// One row of a list on My profile: a round icon disc, a title and an optional
+// subtitle, an optional trailing widget (such as a badge) and a chevron. The
+// disc colours come from the row's tone.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../shared/theme/theme.dart';
+import 'profile_row_tone.dart';
 
 /// A tappable row with an icon disc, a title and a chevron.
 class ProfileActionRow extends StatelessWidget {
-  /// Creates a row. Give [onTap] to make it tappable.
+  /// Creates a row. Give [onTap] to make it tappable; without it the row is inert.
   const ProfileActionRow({
     super.key,
     required this.title,
     required this.icon,
-    required this.onTap,
-    this.value,
-    this.solid = false,
-    this.destructive = false,
+    this.onTap,
+    this.subtitle,
+    this.trailing,
+    this.tone = ProfileRowTone.soft,
+    this.chevron = true,
   });
 
-  /// The row's words, such as "Receipts".
+  /// The row's words, such as "Folio & Digital Invoices".
   final String title;
 
   /// The icon in the round disc.
   final IconData icon;
 
-  /// What happens on tap.
-  final VoidCallback onTap;
+  /// What happens on tap, or null for a row with nothing to open yet.
+  final VoidCallback? onTap;
 
-  /// Words shown before the chevron, such as the current theme.
-  final String? value;
+  /// A line of smaller words under the title, such as "UGX Billing & Statements".
+  final String? subtitle;
 
-  /// True for the activity rows: a solid red disc with a light icon.
-  final bool solid;
+  /// A widget shown before the chevron, such as a badge or a count.
+  final Widget? trailing;
 
-  /// True for the delete row: red title and icon.
-  final bool destructive;
+  /// The colour family of the icon disc.
+  final ProfileRowTone tone;
+
+  /// Whether to show the chevron on the right.
+  final bool chevron;
 
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
-    // Step 1: colours for the disc and the title, by the row's kind.
-    final discFill = solid ? p.primary : p.primaryContainer;
-    final discInk = solid ? p.onPrimary : (destructive ? p.error : p.primaryText);
-    final titleInk = destructive ? p.error : p.text;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg, vertical: IgongoSpace.xxs),
-      child: Material(
-        color: p.surface,
-        borderRadius: BorderRadius.circular(IgongoRadius.md),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(IgongoRadius.md),
-          onTap: onTap,
-          child: ConstrainedBox(
-            // Step 2: at least a comfortable tap target tall.
-            constraints: const BoxConstraints(minHeight: IgongoTouch.preferred + 4),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.sm, vertical: IgongoSpace.xs),
-              child: Row(
-                spacing: IgongoSpace.md,
-                children: [
-                  // Step 3: the round icon disc.
-                  Container(
-                    width: 40,
-                    height: 40,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(color: discFill, shape: BoxShape.circle),
-                    child: Icon(icon, size: 20, color: discInk),
-                  ),
-                  // Step 4: the title fills the middle; the value sits before the chevron.
-                  Expanded(
-                    child: Text(title, style: context.text.titleSmall?.copyWith(color: titleInk), maxLines: 2, overflow: TextOverflow.ellipsis),
-                  ),
-                  if (value != null) Text(value!, style: context.text.bodyMedium?.copyWith(color: p.textMuted)),
-                  Icon(Icons.chevron_right, size: 22, color: p.textMuted),
-                ],
+    // Step 1: the disc fill, icon colour and title colour, by the row's tone.
+    final (discFill, discInk, titleInk) = switch (tone) {
+      ProfileRowTone.solid => (p.primary, p.onPrimary, p.text),
+      ProfileRowTone.soft => (p.primaryContainer, p.primaryText, p.text),
+      ProfileRowTone.neutral => (p.surfaceAlt, p.textMuted, p.text),
+      ProfileRowTone.danger => (p.error.withValues(alpha: 0.1), p.error, p.error),
+    };
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          // Step 2: a comfortable tap target, with the icon, words and extras in one line.
+          padding: const EdgeInsets.all(IgongoSpace.md),
+          child: Row(
+            spacing: IgongoSpace.md,
+            children: [
+              // Step 3: the rounded icon disc.
+              Container(
+                width: 36,
+                height: 36,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(color: discFill, borderRadius: BorderRadius.circular(IgongoRadius.md)),
+                child: Icon(icon, size: 18, color: discInk),
               ),
-            ),
+              // Step 4: the title and subtitle fill the middle.
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: context.text.titleSmall?.copyWith(color: titleInk),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    if (subtitle != null)
+                      Text(subtitle!, style: context.text.bodySmall, maxLines: 1, overflow: TextOverflow.ellipsis),
+                  ],
+                ),
+              ),
+              // Step 5: the trailing widget and the chevron.
+              ?trailing,
+              if (chevron) Icon(Icons.chevron_right, size: 20, color: p.textMuted),
+            ],
           ),
         ),
       ),
