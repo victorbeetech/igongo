@@ -25,6 +25,7 @@ export const MODULES = [
   "crm-guests",
   "menu-catalogue",
   "guest-content",
+  "points-rewards",
   "food-ordering",
   "delivery-riders",
   "payments",

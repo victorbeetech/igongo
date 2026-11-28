@@ -68,6 +68,7 @@
     "@igongo/notifications": "workspace:*",
     "@igongo/onboarding-exit": "workspace:*",
     "@igongo/payments": "workspace:*",
+    "@igongo/points-rewards": "workspace:*",
     "@igongo/payroll": "workspace:*",
     "@igongo/performance": "workspace:*",
     "@igongo/petty-cash": "workspace:*",

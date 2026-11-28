@@ -89,6 +89,12 @@ export const MIGRATIONS: Migration[] = [
   "sql": "-- Guest content (banners, stories, featured stays, did-you-know cards and\n-- restaurant slides): the super admin can view and edit everything the guest\n-- app shows, without code. Other roles get these keys from the super admin screens.\n--> statement-breakpoint\nINSERT INTO \"roles\".\"role_permissions\" (\"role_id\",\"permission_key\",\"scope\") SELECT r.\"id\", p.key, 'all' FROM \"roles\".\"roles\" r CROSS JOIN (VALUES ('guest-content.content.edit'), ('guest-content.content.view')) AS p(key) WHERE r.\"id\" = 'role_super-admin' ON CONFLICT DO NOTHING;\n"
  },
  {
+  "module": "roles-permissions",
+  "name": "0012_points_rewards_permissions",
+  "checksum": "e724843e4a5d2716",
+  "sql": "-- Points rewards: the super admin can view and change the points rules,\n-- run expiry and adjust a guest's points by hand, without code. Other roles\n-- get these keys from the super admin screens.\n--> statement-breakpoint\nINSERT INTO \"roles\".\"role_permissions\" (\"role_id\",\"permission_key\",\"scope\") SELECT r.\"id\", p.key, 'all' FROM \"roles\".\"roles\" r CROSS JOIN (VALUES ('points-rewards.rules.view'), ('points-rewards.rules.edit'), ('points-rewards.points.adjust')) AS p(key) WHERE r.\"id\" = 'role_super-admin' ON CONFLICT DO NOTHING;\n"
+ },
+ {
   "module": "users-login",
   "name": "0000_users_login",
   "checksum": "26c20af258cc84a8",
@@ -183,6 +189,12 @@ export const MIGRATIONS: Migration[] = [
   "name": "0000_orange_maximus",
   "checksum": "5b1b591b6b12efc1",
   "sql": "CREATE SCHEMA \"guest_content\";\n--> statement-breakpoint\nCREATE TABLE \"guest_content\".\"settings\" (\n\t\"key\" text PRIMARY KEY NOT NULL,\n\t\"value\" jsonb NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_by\" text\n);\n"
+ },
+ {
+  "module": "points-rewards",
+  "name": "0000_good_nebula",
+  "checksum": "9fcc723ea20585e3",
+  "sql": "CREATE SCHEMA \"points_rewards\";\n--> statement-breakpoint\nCREATE TABLE \"points_rewards\".\"events\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"guest_id\" text NOT NULL,\n\t\"kind\" text NOT NULL,\n\t\"points\" integer NOT NULL,\n\t\"source_ref\" text NOT NULL,\n\t\"note\" text NOT NULL,\n\t\"created_at\" timestamp with time zone NOT NULL\n);\n--> statement-breakpoint\nCREATE TABLE \"points_rewards\".\"lots\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"guest_id\" text NOT NULL,\n\t\"earned\" integer NOT NULL,\n\t\"remaining\" integer NOT NULL,\n\t\"earned_at\" timestamp with time zone NOT NULL,\n\t\"expires_at\" timestamp with time zone,\n\t\"source_ref\" text NOT NULL\n);\n--> statement-breakpoint\nCREATE TABLE \"points_rewards\".\"settings\" (\n\t\"key\" text PRIMARY KEY NOT NULL,\n\t\"value\" jsonb NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_by\" text\n);\n--> statement-breakpoint\nCREATE UNIQUE INDEX \"events_source_ref_key\" ON \"points_rewards\".\"events\" USING btree (\"source_ref\");--> statement-breakpoint\nCREATE UNIQUE INDEX \"lots_source_ref_key\" ON \"points_rewards\".\"lots\" USING btree (\"source_ref\");"
  },
  {
   "module": "food-ordering",

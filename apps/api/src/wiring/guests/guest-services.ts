@@ -22,6 +22,7 @@ import { AppError, type ChangeContext, type Database } from "@igongo/core";
 import { craftsBookshopDeps } from "@igongo/crafts-bookshop";
 import { SettingsGuestContentStore, type GuestContentDeps } from "@igongo/guest-content";
 import { DrizzleProfileRepository, SettingsCrmStore, type CrmDeps } from "@igongo/crm-guests";
+import { DrizzlePointsStore, type PointsDeps } from "@igongo/points-rewards";
 import { deliveryDesk, DrizzleJobRepository, DrizzleRiderRepository, SettingsDeliveryRulesStore, type DeliveryDeps } from "@igongo/delivery-riders";
 import { eventsConferencesDeps } from "@igongo/events-conferences";
 import { DrizzleCartRepository, DrizzleLocationRepository, DrizzleOrderRepository, DrizzleRatingRepository, orderPayable, orderTracker, SettingsRulesStore, type OrderingDeps } from "@igongo/food-ordering";
@@ -83,6 +84,11 @@ export class GuestServices {
   /** Guest content (banners, stories, stays, facts, restaurant slides): one settings store. */
   content(): GuestContentDeps {
     return { store: new SettingsGuestContentStore(this.db), change: this.change };
+  }
+
+  /** Points rewards: one store for the rules, lots and history. */
+  points(): PointsDeps {
+    return { store: new DrizzlePointsStore(this.db), change: this.change };
   }
 
   ordering(): OrderingDeps {
