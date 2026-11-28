@@ -11,7 +11,8 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../../shared/api/api_exception.dart';
 import '../../../../shared/catalog/catalog.dart';
-import '../../../../shared/dialogs/igongo_dialog.dart';
+import '../../../../shared/dialogs/delete_account/delete_account_dialog.dart';
+import '../../../../shared/dialogs/sign_out/sign_out_dialog.dart';
 import '../../../../shared/preferences/preferences.dart';
 import '../../../../shared/screens/parts/screen_list_view.dart';
 import '../../../../shared/session/session_controller.dart';
@@ -46,14 +47,24 @@ class MyProfileScreen extends ConsumerWidget {
 
   /// Asks, then signs out and returns to the sign-in screen.
   Future<void> _signOut(BuildContext context, WidgetRef ref) async {
-    if (!await _confirm(context, _signOutDialog)) return;
+    // Step 1: the confirmation shows the signed-in person's name and email.
+    final session = ref.read(sessionProvider).valueOrNull;
+    final yes = await showDialog<bool>(
+      context: context,
+      builder: (_) => SignOutDialog(name: session?.name ?? '', email: session?.email ?? ''),
+    );
+    if (yes != true) return;
+    // Step 2: sign out, then leave the screen.
     await ref.read(sessionProvider.notifier).signOut();
     if (context.mounted) screen.open('S00-05');
   }
 
   /// Asks, then deletes the account; the server's refusal shows as a toast.
   Future<void> _delete(BuildContext context, WidgetRef ref) async {
-    if (!await _confirm(context, _deleteDialog)) return;
+    // Step 1: the person must type DELETE; the dialog answers true only when confirmed.
+    final yes = await showDialog<bool>(context: context, builder: (_) => const DeleteAccountDialog());
+    if (yes != true) return;
+    // Step 2: delete the account; a refusal from the server shows as a toast.
     try {
       await ref.read(sessionProvider.notifier).deleteMyAccount();
       if (context.mounted) screen.open('S00-05');
@@ -209,30 +220,3 @@ class _SignInPrompt extends StatelessWidget {
     ),
   );
 }
-
-/// Shows [dialog] and completes with true when the person confirms.
-Future<bool> _confirm(BuildContext context, DialogSpec dialog) async {
-  var yes = false;
-  await showDialog<void>(
-    context: context,
-    builder: (_) => IgongoDialog(dialog: dialog, onConfirm: () => yes = true),
-  );
-  return yes;
-}
-
-const _signOutDialog = DialogSpec(
-  id: 'D00-sign-out',
-  name: 'Sign out?',
-  purpose: 'You will need your email and password to sign in again on this phone.',
-  slug: 'sign-out',
-  tone: DialogTone.confirm,
-);
-
-const _deleteDialog = DialogSpec(
-  id: 'D00-delete-account',
-  name: 'Delete your account?',
-  purpose:
-      'Your account and sign-in methods are removed for good. Receipts the hotel must keep by law stay with the hotel.',
-  slug: 'delete-account',
-  tone: DialogTone.danger,
-);
