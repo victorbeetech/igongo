@@ -27,7 +27,7 @@
  */
 
 import { zValidator } from "@hono/zod-validator";
-import { actorOf, AppError, canForOthers, omitKey, recordChange, requirePermission, requireSignIn, requireStaffPermission, type ActorEnv } from "@igongo/core";
+import { actorOf, AppError, canForOthers, historyPage, omitKey, recordChange, requirePermission, requireSignIn, requireStaffPermission, type ActorEnv } from "@igongo/core";
 import type { Actor } from "@igongo/contracts/users-login";
 import { Hono, type Context } from "hono";
 import type { OrderingDeps } from "../application/ordering-deps";
@@ -43,7 +43,7 @@ import type { OrderRating } from "../domain/order-rating";
 import { nextStatuses } from "../domain/order-flow";
 import { ORDER_PERMISSIONS as P } from "./permissions";
 import { savedCartBody } from "./cart-schemas";
-import { boardQuery, cancelBody, cartBody, hideBody, pinBody, placeBody, ratingBody, reviewsQuery, rulesBody, statusBody } from "./request-schemas";
+import { boardQuery, cancelBody, cartBody, hideBody, historyQuery, pinBody, placeBody, ratingBody, reviewsQuery, rulesBody, statusBody } from "./request-schemas";
 
 /** True when [actor] works the orders (board, kitchen or front of house). Guests hold these only as `own`. */
 const isOrderStaff = (actor: Actor) => [P.view, P.kitchen, P.kitchenView, P.edit].some((p) => canForOthers(actor, p));
@@ -93,11 +93,14 @@ export function ordersRouter(deps: (c: Context<ActorEnv>) => OrderingDeps) {
       });
       return c.json(shown(order), 201);
     })
-    .get("/mine", requireSignIn, async (c) => {
+    // My orders, one page at a time: read one row more than the page to learn whether an older page exists.
+    .get("/mine", requireSignIn, zValidator("query", historyQuery), async (c) => {
       const d = deps(c);
-      const items = await d.orders.list({ userId: actorOf(c).userId, limit: 100 });
-      const rated = await d.ratings.ratedAmong(items.map((o) => o.id));
-      return c.json({ items: items.map((o) => ({ ...shown(o), rated: rated.has(o.id) })) });
+      const { before, limit } = c.req.valid("query");
+      const rows = await d.orders.list({ userId: actorOf(c).userId, ...(before ? { before: new Date(before) } : {}), limit: limit + 1 });
+      const page = historyPage(rows, limit);
+      const rated = await d.ratings.ratedAmong(page.items.map((o) => o.id));
+      return c.json({ items: page.items.map((o) => ({ ...shown(o), rated: rated.has(o.id) })), nextBefore: page.nextBefore });
     })
     // Saved cart: always the caller's own (the user ID comes from the session, never the URL or body).
     .get("/cart", requireSignIn, async (c) => c.json(await readSavedCart(deps(c), actorOf(c).userId)))

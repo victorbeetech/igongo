@@ -9,6 +9,12 @@ const text = (max: number) => z.string().trim().min(1).max(max);
 
 const place = z.object({ label: text(200), zone: key.nullable(), lat: z.number().min(-90).max(90).nullable(), lng: z.number().min(-180).max(180).nullable() });
 
+/** `GET /orders/mine` paging: `before` is the last page's `nextBefore`; `limit` is the page size. */
+export const historyQuery = z.object({
+  before: z.iso.datetime({ offset: true }).optional(),
+  limit: z.coerce.number().int().min(1).max(100).default(100),
+});
+
 /** The cart, for `POST /orders/quote` and `POST /orders`. */
 export const cartBody = z.object({
   outlet: key,
