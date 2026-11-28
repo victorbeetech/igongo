@@ -9,13 +9,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../shared/api/api_exception.dart';
+import '../../../shared/session/session_controller.dart';
 import '../../../shared/theme/theme.dart';
 import '../../../shared/ui/toast/igongo_toast.dart';
 import '../application/cart_controller.dart';
+import '../application/saved_dish_toggle.dart';
+import '../application/saved_dishes_providers.dart';
 import '../domain/cart_line.dart';
 import '../domain/dish_pricing.dart';
 import '../domain/menu_item.dart';
 import '../domain/option_group.dart';
+import '../domain/saved_dish.dart';
 import 'dish/dish_hero.dart';
 import 'dish/dish_note_field.dart';
 import 'dish/dish_option_section.dart';
@@ -95,6 +100,19 @@ class _ItemPageState extends ConsumerState<ItemPage> {
   /// Flips [choice] in a multi-choice (checkbox) group.
   void _toggle(OptionGroup group, String choice) => setState(() => _picks = dishTogglePick(_picks, group, choice));
 
+  /// Saves this dish to the guest's saved list, or removes it when [saved]. Signed out, it asks for a sign-in first.
+  Future<void> _toggleSaved(bool saved) async {
+    // Step 1: saved dishes belong to a guest account, so a visitor is asked to sign in.
+    if (ref.read(sessionProvider).valueOrNull == null) return showIgongoToast(context, 'Sign in to save dishes.');
+    // Step 2: change the list; a refusal (such as the dish leaving the menu) shows as a toast.
+    try {
+      await setDishSaved(ref, itemId: widget.item.id, saved: !saved);
+      if (mounted) showIgongoToast(context, saved ? 'Removed from saved dishes' : 'Saved to your dishes');
+    } on ApiException catch (e) {
+      if (mounted) showIgongoToast(context, e.message);
+    }
+  }
+
   /// Adds the dish to the cart once every required group has a pick, then goes back to the menu.
   void _add() {
     final item = widget.item;
@@ -121,6 +139,9 @@ class _ItemPageState extends ConsumerState<ItemPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Step 0: is this dish on the guest's saved list? Only a signed-in guest has one; false while loading or on a failed load.
+    final signedIn = ref.watch(sessionProvider).valueOrNull != null;
+    final saved = signedIn && (ref.watch(savedDishesProvider).valueOrNull ?? const <SavedDish>[]).any((d) => d.itemId == widget.item.id);
     final item = widget.item;
     final palette = context.palette;
     final total = dishTotal(item, _picks, _quantity);
@@ -162,7 +183,13 @@ class _ItemPageState extends ConsumerState<ItemPage> {
             top: 0,
             left: 0,
             right: 0,
-            child: DishTopBar(name: item.name, titleShown: _titleShown, onBack: () => Navigator.of(context).maybePop()),
+            child: DishTopBar(
+              name: item.name,
+              titleShown: _titleShown,
+              onBack: () => Navigator.of(context).maybePop(),
+              saved: saved,
+              onFavourite: () => _toggleSaved(saved),
+            ),
           ),
           // Layer 3: the order bar sits at the bottom.
           Positioned(

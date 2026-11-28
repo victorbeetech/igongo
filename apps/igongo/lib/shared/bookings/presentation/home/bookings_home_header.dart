@@ -8,11 +8,14 @@ import '../../../theme/theme.dart';
 
 /// The Bookings tab header.
 class BookingsHomeHeader extends StatelessWidget {
-  /// Creates the header; [onReceipts] opens the receipts, and [onNotifications] is the bell.
-  const BookingsHomeHeader({super.key, required this.onReceipts, this.onNotifications});
+  /// Creates the header; [onReceipts] opens the receipts, [onCalendar] opens the booking calendar, and [onNotifications] is the bell.
+  const BookingsHomeHeader({super.key, required this.onReceipts, this.onCalendar, this.onNotifications});
 
   /// Opens the receipts and invoices.
   final VoidCallback onReceipts;
+
+  /// Opens the booking calendar when tapped; null leaves the badge as a plain picture.
+  final VoidCallback? onCalendar;
 
   /// Opens notifications; null while no notifications screen is wired here (placeholder).
   final VoidCallback? onNotifications;
@@ -26,12 +29,26 @@ class BookingsHomeHeader extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(IgongoSpace.md, IgongoSpace.sm, IgongoSpace.xs, IgongoSpace.sm),
         child: Row(
           children: [
-            // Step 1: the calendar badge and the title (the title may wrap on small text sizes).
-            CircleAvatar(
-              radius: 18,
-              backgroundColor: p.primaryContainer,
-              foregroundColor: p.primaryText,
-              child: const Icon(Icons.calendar_month_outlined, size: 20),
+            // Step 1: the calendar badge (it opens the booking calendar) and the title (the title may wrap on small text sizes).
+            // The tap area is the preferred touch size (48), so the small badge is still easy to hit.
+            SizedBox(
+              width: IgongoTouch.preferred,
+              height: IgongoTouch.preferred,
+              child: Tooltip(
+                message: 'Booking calendar',
+                child: InkWell(
+                  customBorder: const CircleBorder(),
+                  onTap: onCalendar,
+                  child: Center(
+                    child: CircleAvatar(
+                      radius: 18,
+                      backgroundColor: p.primaryContainer,
+                      foregroundColor: p.primaryText,
+                      child: const Icon(Icons.calendar_month_outlined, size: 20),
+                    ),
+                  ),
+                ),
+              ),
             ),
             const SizedBox(width: IgongoSpace.sm),
             Expanded(

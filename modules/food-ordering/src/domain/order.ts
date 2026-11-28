@@ -33,6 +33,10 @@ export interface Order {
   discount: number;
   /** The promo or voucher code used, in capitals, or null. */
   promoCode: string | null;
+  /** Points the guest spent on this order (0 for none). */
+  pointsSpent: number;
+  /** Shillings taken off by those points (0 for none). Taken off the total. */
+  pointsDiscount: number;
   deliveryFee: number;
   /** The takeaway container fee charged (0 when free). */
   containerFee: number;

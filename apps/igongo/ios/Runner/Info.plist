@@ -50,6 +50,10 @@
 	<!-- Why the app asks for each permission (shown to the person by iOS). -->
 	<key>NFCReaderUsageDescription</key>
 	<string>Igongo reads your staff card or event wristband to clock you in and show your details.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Igongo uses the microphone so you can search by voice.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Igongo turns what you say into search words, on your phone.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Igongo uses the camera to scan card and wristband QR codes and to take photos for reports.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

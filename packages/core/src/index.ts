@@ -25,3 +25,4 @@ export { createLogger, type Logger, type LogLevel } from "./logging/logger";
 export type { ActorEnv, ActorVariables } from "./http/actor-env";
 export { actorOf, can, canForOthers, isSuperAdmin, requirePermission, requireSignIn, requireStaffPermission, requireSuperAdmin } from "./http/guards";
 export { recordChange, type ChangeContext, type ChangeEntry } from "./audit/change-context";
+export { historyPage, type HistoryPage } from "./paging/history-page";

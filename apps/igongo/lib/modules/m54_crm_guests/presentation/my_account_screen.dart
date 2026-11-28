@@ -1,14 +1,20 @@
 // S54-05..07 Edit Profile, live: the guest's name, phone, email, accommodation,
-// likes and allergies, and the messages they agree to get. The server checks
-// every detail; a refused one shows its sentence in a toast. Signed out, the
-// prototype design shows. Photo upload and the accommodation are not wired yet.
+// likes and allergies, the messages they agree to get, and the profile photo
+// (picked, cropped, then saved). The server checks every detail; a refused one
+// shows its sentence in a toast. Signed out, the prototype design shows.
+// The accommodation is not wired yet.
+
+import 'dart:typed_data';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../shared/api/api_exception.dart';
 import '../../../shared/catalog/catalog.dart';
+import '../../../shared/files/crop_photo_screen.dart';
+import '../../../shared/files/profile_photo_providers.dart';
 import '../../../shared/live/live_view.dart';
 import '../../../shared/screens/parts/screen_list_view.dart';
 import '../../../shared/screens/screen_layout.dart';
@@ -102,14 +108,38 @@ class _AccountFormState extends ConsumerState<_AccountForm> {
     }
   }
 
-  /// Photo upload is not wired yet; the controls only say so.
-  void _changePhoto() => showIgongoToast(context, 'Photo upload is coming soon.');
+  /// Picks a photo, lets the person crop it, then saves it to their account.
+  Future<void> _changePhoto() async {
+    // Step 1: pick a picture from the phone.
+    final file = await ImagePicker().pickImage(source: ImageSource.gallery, maxWidth: 1600, imageQuality: 90);
+    if (file == null || !mounted) return;
+    final bytes = await file.readAsBytes();
+    if (!mounted) return;
+    // Step 2: crop it to a round photo. Cancel returns null and nothing is saved.
+    final cropped = await Navigator.of(context).push<Uint8List>(MaterialPageRoute(builder: (_) => CropPhotoScreen(source: bytes)));
+    if (cropped == null || !mounted) return;
+    // Step 3: save it, then reload the photo so the avatar shows it.
+    try {
+      await ref.read(profilePhotoApiProvider).save(cropped);
+      ref.invalidate(currentProfilePhotoProvider);
+      if (mounted) showIgongoToast(context, 'Profile photo saved.');
+    } on Exception catch (e) {
+      if (mounted) showIgongoToast(context, '$e');
+    }
+  }
 
   /// Leaves the screen without saving.
   void _discard() => Navigator.of(context).maybePop();
 
   @override
-  Widget build(BuildContext context) => Column(
+  Widget build(BuildContext context) {
+    // Step 4: my saved photo, or null while it loads or when I have none.
+    final photo = ref.watch(currentProfilePhotoProvider).valueOrNull;
+    return _form(context, photo);
+  }
+
+  /// The form itself, showing [photo] in the avatar.
+  Widget _form(BuildContext context, Uint8List? photo) => Column(
     children: [
       // Step 5: the top bar, which follows the name as it is typed.
       ListenableBuilder(
@@ -128,7 +158,7 @@ class _AccountFormState extends ConsumerState<_AccountForm> {
                   const RoyalMemberLabel(),
                   ListenableBuilder(
                     listenable: _name,
-                    builder: (context, _) => ProfilePhotoEditor(name: _name.text, onChangePhoto: _changePhoto),
+                    builder: (context, _) => ProfilePhotoEditor(name: _name.text, onChangePhoto: _changePhoto, photo: photo),
                   ),
                   PersonalInfoCard(name: _name, phone: _phone, email: _email, accommodation: _accommodation),
                   PreferencesCard(likes: _likes, allergies: _allergies),

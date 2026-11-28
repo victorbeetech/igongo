@@ -14,6 +14,7 @@ export type { Offering, OfferingKind } from "./domain/offering";
 export { bookingTables, type BookingTables } from "./infrastructure/db/booking-tables";
 export { bookingKpis } from "./infrastructure/booking-kpis";
 export { bookingPayable } from "./infrastructure/booking-payable";
+export { unitsLeft } from "./application/use-cases/check-availability";
 export { bookingsDeps } from "./infrastructure/bookings-deps-factory";
 export { bookingPermissions } from "./presentation/booking-permissions";
 export { BOOKING_QR_PREFIX, bookingsRouter } from "./presentation/bookings-router";
