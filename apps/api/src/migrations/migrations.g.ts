@@ -281,6 +281,12 @@ export const MIGRATIONS: Migration[] = [
   "sql": "CREATE SCHEMA \"rooms\";\n--> statement-breakpoint\nCREATE TABLE \"rooms\".\"bookings\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"code\" text NOT NULL,\n\t\"offering_id\" text NOT NULL,\n\t\"offering_name\" text NOT NULL,\n\t\"kind\" text NOT NULL,\n\t\"user_id\" text,\n\t\"guest_name\" text NOT NULL,\n\t\"guest_phone\" text,\n\t\"date\" text,\n\t\"end_date\" text,\n\t\"slot\" text,\n\t\"units\" integer NOT NULL,\n\t\"total\" integer NOT NULL,\n\t\"paid\" integer NOT NULL,\n\t\"status\" text NOT NULL,\n\t\"notes\" text,\n\t\"created_by\" text,\n\t\"cancel_reason\" text,\n\t\"checked_in_at\" timestamp with time zone,\n\t\"created_at\" timestamp with time zone NOT NULL,\n\t\"updated_at\" timestamp with time zone NOT NULL\n);\n--> statement-breakpoint\nCREATE TABLE \"rooms\".\"offerings\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"kind\" text NOT NULL,\n\t\"name\" text NOT NULL,\n\t\"description\" text,\n\t\"price\" integer NOT NULL,\n\t\"capacity\" integer NOT NULL,\n\t\"slots\" jsonb NOT NULL,\n\t\"on_date\" text,\n\t\"photo_url\" text,\n\t\"details\" jsonb NOT NULL,\n\t\"active\" boolean NOT NULL,\n\t\"visible_to_clients\" boolean NOT NULL,\n\t\"sort_order\" integer NOT NULL,\n\t\"updated_at\" timestamp with time zone NOT NULL\n);\n--> statement-breakpoint\nCREATE TABLE \"rooms\".\"settings\" (\n\t\"key\" text PRIMARY KEY NOT NULL,\n\t\"value\" jsonb NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_by\" text\n);\n--> statement-breakpoint\nCREATE UNIQUE INDEX \"bookings_code_key\" ON \"rooms\".\"bookings\" USING btree (\"code\");--> statement-breakpoint\nCREATE INDEX \"bookings_offering_idx\" ON \"rooms\".\"bookings\" USING btree (\"offering_id\",\"date\");--> statement-breakpoint\nCREATE INDEX \"bookings_user_idx\" ON \"rooms\".\"bookings\" USING btree (\"user_id\",\"created_at\");--> statement-breakpoint\nCREATE INDEX \"bookings_day_idx\" ON \"rooms\".\"bookings\" USING btree (\"date\",\"status\");"
  },
  {
+  "module": "room-bookings",
+  "name": "0001_booking_unit",
+  "checksum": "b5b0c71b647450d7",
+  "sql": "ALTER TABLE \"rooms\".\"bookings\" ADD COLUMN IF NOT EXISTS \"unit\" text;\n"
+ },
+ {
   "module": "booking-calendar",
   "name": "0000_loving_piledriver",
   "checksum": "8d5fb90b5dd54eee",
@@ -293,10 +299,22 @@ export const MIGRATIONS: Migration[] = [
   "sql": "CREATE SCHEMA \"museum\";\n--> statement-breakpoint\nCREATE TABLE \"museum\".\"bookings\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"code\" text NOT NULL,\n\t\"offering_id\" text NOT NULL,\n\t\"offering_name\" text NOT NULL,\n\t\"kind\" text NOT NULL,\n\t\"user_id\" text,\n\t\"guest_name\" text NOT NULL,\n\t\"guest_phone\" text,\n\t\"date\" text,\n\t\"end_date\" text,\n\t\"slot\" text,\n\t\"units\" integer NOT NULL,\n\t\"total\" integer NOT NULL,\n\t\"paid\" integer NOT NULL,\n\t\"status\" text NOT NULL,\n\t\"notes\" text,\n\t\"created_by\" text,\n\t\"cancel_reason\" text,\n\t\"checked_in_at\" timestamp with time zone,\n\t\"created_at\" timestamp with time zone NOT NULL,\n\t\"updated_at\" timestamp with time zone NOT NULL\n);\n--> statement-breakpoint\nCREATE TABLE \"museum\".\"offerings\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"kind\" text NOT NULL,\n\t\"name\" text NOT NULL,\n\t\"description\" text,\n\t\"price\" integer NOT NULL,\n\t\"capacity\" integer NOT NULL,\n\t\"slots\" jsonb NOT NULL,\n\t\"on_date\" text,\n\t\"photo_url\" text,\n\t\"details\" jsonb NOT NULL,\n\t\"active\" boolean NOT NULL,\n\t\"visible_to_clients\" boolean NOT NULL,\n\t\"sort_order\" integer NOT NULL,\n\t\"updated_at\" timestamp with time zone NOT NULL\n);\n--> statement-breakpoint\nCREATE TABLE \"museum\".\"settings\" (\n\t\"key\" text PRIMARY KEY NOT NULL,\n\t\"value\" jsonb NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_by\" text\n);\n--> statement-breakpoint\nCREATE UNIQUE INDEX \"bookings_code_key\" ON \"museum\".\"bookings\" USING btree (\"code\");--> statement-breakpoint\nCREATE INDEX \"bookings_offering_idx\" ON \"museum\".\"bookings\" USING btree (\"offering_id\",\"date\");--> statement-breakpoint\nCREATE INDEX \"bookings_user_idx\" ON \"museum\".\"bookings\" USING btree (\"user_id\",\"created_at\");--> statement-breakpoint\nCREATE INDEX \"bookings_day_idx\" ON \"museum\".\"bookings\" USING btree (\"date\",\"status\");"
  },
  {
+  "module": "museum",
+  "name": "0001_booking_unit",
+  "checksum": "a42972dcaef97fa1",
+  "sql": "ALTER TABLE \"museum\".\"bookings\" ADD COLUMN IF NOT EXISTS \"unit\" text;\n"
+ },
+ {
   "module": "events-conferences",
   "name": "0000_init",
   "checksum": "f803a417bdb07a10",
   "sql": "CREATE SCHEMA \"events\";\n--> statement-breakpoint\nCREATE TABLE \"events\".\"bookings\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"code\" text NOT NULL,\n\t\"offering_id\" text NOT NULL,\n\t\"offering_name\" text NOT NULL,\n\t\"kind\" text NOT NULL,\n\t\"user_id\" text,\n\t\"guest_name\" text NOT NULL,\n\t\"guest_phone\" text,\n\t\"date\" text,\n\t\"end_date\" text,\n\t\"slot\" text,\n\t\"units\" integer NOT NULL,\n\t\"total\" integer NOT NULL,\n\t\"paid\" integer NOT NULL,\n\t\"status\" text NOT NULL,\n\t\"notes\" text,\n\t\"created_by\" text,\n\t\"cancel_reason\" text,\n\t\"checked_in_at\" timestamp with time zone,\n\t\"created_at\" timestamp with time zone NOT NULL,\n\t\"updated_at\" timestamp with time zone NOT NULL\n);\n--> statement-breakpoint\nCREATE TABLE \"events\".\"offerings\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"kind\" text NOT NULL,\n\t\"name\" text NOT NULL,\n\t\"description\" text,\n\t\"price\" integer NOT NULL,\n\t\"capacity\" integer NOT NULL,\n\t\"slots\" jsonb NOT NULL,\n\t\"on_date\" text,\n\t\"photo_url\" text,\n\t\"details\" jsonb NOT NULL,\n\t\"active\" boolean NOT NULL,\n\t\"visible_to_clients\" boolean NOT NULL,\n\t\"sort_order\" integer NOT NULL,\n\t\"updated_at\" timestamp with time zone NOT NULL\n);\n--> statement-breakpoint\nCREATE TABLE \"events\".\"settings\" (\n\t\"key\" text PRIMARY KEY NOT NULL,\n\t\"value\" jsonb NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_by\" text\n);\n--> statement-breakpoint\nCREATE UNIQUE INDEX \"bookings_code_key\" ON \"events\".\"bookings\" USING btree (\"code\");--> statement-breakpoint\nCREATE INDEX \"bookings_offering_idx\" ON \"events\".\"bookings\" USING btree (\"offering_id\",\"date\");--> statement-breakpoint\nCREATE INDEX \"bookings_user_idx\" ON \"events\".\"bookings\" USING btree (\"user_id\",\"created_at\");--> statement-breakpoint\nCREATE INDEX \"bookings_day_idx\" ON \"events\".\"bookings\" USING btree (\"date\",\"status\");"
+ },
+ {
+  "module": "events-conferences",
+  "name": "0001_booking_unit",
+  "checksum": "63208b80a6b66626",
+  "sql": "ALTER TABLE \"events\".\"bookings\" ADD COLUMN IF NOT EXISTS \"unit\" text;\n"
  },
  {
   "module": "pool",
@@ -305,10 +323,22 @@ export const MIGRATIONS: Migration[] = [
   "sql": "CREATE SCHEMA \"pool\";\n--> statement-breakpoint\nCREATE TABLE \"pool\".\"bookings\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"code\" text NOT NULL,\n\t\"offering_id\" text NOT NULL,\n\t\"offering_name\" text NOT NULL,\n\t\"kind\" text NOT NULL,\n\t\"user_id\" text,\n\t\"guest_name\" text NOT NULL,\n\t\"guest_phone\" text,\n\t\"date\" text,\n\t\"end_date\" text,\n\t\"slot\" text,\n\t\"units\" integer NOT NULL,\n\t\"total\" integer NOT NULL,\n\t\"paid\" integer NOT NULL,\n\t\"status\" text NOT NULL,\n\t\"notes\" text,\n\t\"created_by\" text,\n\t\"cancel_reason\" text,\n\t\"checked_in_at\" timestamp with time zone,\n\t\"created_at\" timestamp with time zone NOT NULL,\n\t\"updated_at\" timestamp with time zone NOT NULL\n);\n--> statement-breakpoint\nCREATE TABLE \"pool\".\"offerings\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"kind\" text NOT NULL,\n\t\"name\" text NOT NULL,\n\t\"description\" text,\n\t\"price\" integer NOT NULL,\n\t\"capacity\" integer NOT NULL,\n\t\"slots\" jsonb NOT NULL,\n\t\"on_date\" text,\n\t\"photo_url\" text,\n\t\"details\" jsonb NOT NULL,\n\t\"active\" boolean NOT NULL,\n\t\"visible_to_clients\" boolean NOT NULL,\n\t\"sort_order\" integer NOT NULL,\n\t\"updated_at\" timestamp with time zone NOT NULL\n);\n--> statement-breakpoint\nCREATE TABLE \"pool\".\"settings\" (\n\t\"key\" text PRIMARY KEY NOT NULL,\n\t\"value\" jsonb NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_by\" text\n);\n--> statement-breakpoint\nCREATE UNIQUE INDEX \"bookings_code_key\" ON \"pool\".\"bookings\" USING btree (\"code\");--> statement-breakpoint\nCREATE INDEX \"bookings_offering_idx\" ON \"pool\".\"bookings\" USING btree (\"offering_id\",\"date\");--> statement-breakpoint\nCREATE INDEX \"bookings_user_idx\" ON \"pool\".\"bookings\" USING btree (\"user_id\",\"created_at\");--> statement-breakpoint\nCREATE INDEX \"bookings_day_idx\" ON \"pool\".\"bookings\" USING btree (\"date\",\"status\");"
  },
  {
+  "module": "pool",
+  "name": "0001_booking_unit",
+  "checksum": "b43e0bdf0acb2c30",
+  "sql": "ALTER TABLE \"pool\".\"bookings\" ADD COLUMN IF NOT EXISTS \"unit\" text;\n"
+ },
+ {
   "module": "crafts-bookshop",
   "name": "0000_init",
   "checksum": "cdc7b3c0c9e55167",
   "sql": "CREATE SCHEMA \"shop\";\n--> statement-breakpoint\nCREATE TABLE \"shop\".\"bookings\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"code\" text NOT NULL,\n\t\"offering_id\" text NOT NULL,\n\t\"offering_name\" text NOT NULL,\n\t\"kind\" text NOT NULL,\n\t\"user_id\" text,\n\t\"guest_name\" text NOT NULL,\n\t\"guest_phone\" text,\n\t\"date\" text,\n\t\"end_date\" text,\n\t\"slot\" text,\n\t\"units\" integer NOT NULL,\n\t\"total\" integer NOT NULL,\n\t\"paid\" integer NOT NULL,\n\t\"status\" text NOT NULL,\n\t\"notes\" text,\n\t\"created_by\" text,\n\t\"cancel_reason\" text,\n\t\"checked_in_at\" timestamp with time zone,\n\t\"created_at\" timestamp with time zone NOT NULL,\n\t\"updated_at\" timestamp with time zone NOT NULL\n);\n--> statement-breakpoint\nCREATE TABLE \"shop\".\"offerings\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"kind\" text NOT NULL,\n\t\"name\" text NOT NULL,\n\t\"description\" text,\n\t\"price\" integer NOT NULL,\n\t\"capacity\" integer NOT NULL,\n\t\"slots\" jsonb NOT NULL,\n\t\"on_date\" text,\n\t\"photo_url\" text,\n\t\"details\" jsonb NOT NULL,\n\t\"active\" boolean NOT NULL,\n\t\"visible_to_clients\" boolean NOT NULL,\n\t\"sort_order\" integer NOT NULL,\n\t\"updated_at\" timestamp with time zone NOT NULL\n);\n--> statement-breakpoint\nCREATE TABLE \"shop\".\"settings\" (\n\t\"key\" text PRIMARY KEY NOT NULL,\n\t\"value\" jsonb NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_by\" text\n);\n--> statement-breakpoint\nCREATE UNIQUE INDEX \"bookings_code_key\" ON \"shop\".\"bookings\" USING btree (\"code\");--> statement-breakpoint\nCREATE INDEX \"bookings_offering_idx\" ON \"shop\".\"bookings\" USING btree (\"offering_id\",\"date\");--> statement-breakpoint\nCREATE INDEX \"bookings_user_idx\" ON \"shop\".\"bookings\" USING btree (\"user_id\",\"created_at\");--> statement-breakpoint\nCREATE INDEX \"bookings_day_idx\" ON \"shop\".\"bookings\" USING btree (\"date\",\"status\");"
+ },
+ {
+  "module": "crafts-bookshop",
+  "name": "0001_booking_unit",
+  "checksum": "d09e386c61f8145b",
+  "sql": "ALTER TABLE \"shop\".\"bookings\" ADD COLUMN IF NOT EXISTS \"unit\" text;\n"
  },
  {
   "module": "files-media",
@@ -617,16 +647,34 @@ export const MIGRATIONS: Migration[] = [
   "sql": "CREATE SCHEMA \"spa\";\n--> statement-breakpoint\nCREATE TABLE \"spa\".\"bookings\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"code\" text NOT NULL,\n\t\"offering_id\" text NOT NULL,\n\t\"offering_name\" text NOT NULL,\n\t\"kind\" text NOT NULL,\n\t\"user_id\" text,\n\t\"guest_name\" text NOT NULL,\n\t\"guest_phone\" text,\n\t\"date\" text,\n\t\"end_date\" text,\n\t\"slot\" text,\n\t\"units\" integer NOT NULL,\n\t\"total\" integer NOT NULL,\n\t\"paid\" integer NOT NULL,\n\t\"status\" text NOT NULL,\n\t\"notes\" text,\n\t\"created_by\" text,\n\t\"cancel_reason\" text,\n\t\"checked_in_at\" timestamp with time zone,\n\t\"created_at\" timestamp with time zone NOT NULL,\n\t\"updated_at\" timestamp with time zone NOT NULL\n);\n--> statement-breakpoint\nCREATE TABLE \"spa\".\"offerings\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"kind\" text NOT NULL,\n\t\"name\" text NOT NULL,\n\t\"description\" text,\n\t\"price\" integer NOT NULL,\n\t\"capacity\" integer NOT NULL,\n\t\"slots\" jsonb NOT NULL,\n\t\"on_date\" text,\n\t\"photo_url\" text,\n\t\"details\" jsonb NOT NULL,\n\t\"active\" boolean NOT NULL,\n\t\"visible_to_clients\" boolean NOT NULL,\n\t\"sort_order\" integer NOT NULL,\n\t\"updated_at\" timestamp with time zone NOT NULL\n);\n--> statement-breakpoint\nCREATE TABLE \"spa\".\"settings\" (\n\t\"key\" text PRIMARY KEY NOT NULL,\n\t\"value\" jsonb NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_by\" text\n);\n--> statement-breakpoint\nCREATE UNIQUE INDEX \"bookings_code_key\" ON \"spa\".\"bookings\" USING btree (\"code\");--> statement-breakpoint\nCREATE INDEX \"bookings_offering_idx\" ON \"spa\".\"bookings\" USING btree (\"offering_id\",\"date\");--> statement-breakpoint\nCREATE INDEX \"bookings_user_idx\" ON \"spa\".\"bookings\" USING btree (\"user_id\",\"created_at\");--> statement-breakpoint\nCREATE INDEX \"bookings_day_idx\" ON \"spa\".\"bookings\" USING btree (\"date\",\"status\");"
  },
  {
+  "module": "spa",
+  "name": "0001_booking_unit",
+  "checksum": "ed15eeb54c0bc942",
+  "sql": "ALTER TABLE \"spa\".\"bookings\" ADD COLUMN IF NOT EXISTS \"unit\" text;\n"
+ },
+ {
   "module": "venues-equipment",
   "name": "0000_init",
   "checksum": "57bf5334089d595f",
   "sql": "CREATE SCHEMA \"venues\";\n--> statement-breakpoint\nCREATE TABLE \"venues\".\"bookings\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"code\" text NOT NULL,\n\t\"offering_id\" text NOT NULL,\n\t\"offering_name\" text NOT NULL,\n\t\"kind\" text NOT NULL,\n\t\"user_id\" text,\n\t\"guest_name\" text NOT NULL,\n\t\"guest_phone\" text,\n\t\"date\" text,\n\t\"end_date\" text,\n\t\"slot\" text,\n\t\"units\" integer NOT NULL,\n\t\"total\" integer NOT NULL,\n\t\"paid\" integer NOT NULL,\n\t\"status\" text NOT NULL,\n\t\"notes\" text,\n\t\"created_by\" text,\n\t\"cancel_reason\" text,\n\t\"checked_in_at\" timestamp with time zone,\n\t\"created_at\" timestamp with time zone NOT NULL,\n\t\"updated_at\" timestamp with time zone NOT NULL\n);\n--> statement-breakpoint\nCREATE TABLE \"venues\".\"offerings\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"kind\" text NOT NULL,\n\t\"name\" text NOT NULL,\n\t\"description\" text,\n\t\"price\" integer NOT NULL,\n\t\"capacity\" integer NOT NULL,\n\t\"slots\" jsonb NOT NULL,\n\t\"on_date\" text,\n\t\"photo_url\" text,\n\t\"details\" jsonb NOT NULL,\n\t\"active\" boolean NOT NULL,\n\t\"visible_to_clients\" boolean NOT NULL,\n\t\"sort_order\" integer NOT NULL,\n\t\"updated_at\" timestamp with time zone NOT NULL\n);\n--> statement-breakpoint\nCREATE TABLE \"venues\".\"settings\" (\n\t\"key\" text PRIMARY KEY NOT NULL,\n\t\"value\" jsonb NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_by\" text\n);\n--> statement-breakpoint\nCREATE UNIQUE INDEX \"bookings_code_key\" ON \"venues\".\"bookings\" USING btree (\"code\");--> statement-breakpoint\nCREATE INDEX \"bookings_offering_idx\" ON \"venues\".\"bookings\" USING btree (\"offering_id\",\"date\");--> statement-breakpoint\nCREATE INDEX \"bookings_user_idx\" ON \"venues\".\"bookings\" USING btree (\"user_id\",\"created_at\");--> statement-breakpoint\nCREATE INDEX \"bookings_day_idx\" ON \"venues\".\"bookings\" USING btree (\"date\",\"status\");"
  },
  {
+  "module": "venues-equipment",
+  "name": "0001_booking_unit",
+  "checksum": "fc89d1681bbe19b2",
+  "sql": "ALTER TABLE \"venues\".\"bookings\" ADD COLUMN IF NOT EXISTS \"unit\" text;\n"
+ },
+ {
   "module": "tables-dinein",
   "name": "0000_init",
   "checksum": "43352be2083131e2",
   "sql": "CREATE SCHEMA \"tables\";\n--> statement-breakpoint\nCREATE TABLE \"tables\".\"bookings\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"code\" text NOT NULL,\n\t\"offering_id\" text NOT NULL,\n\t\"offering_name\" text NOT NULL,\n\t\"kind\" text NOT NULL,\n\t\"user_id\" text,\n\t\"guest_name\" text NOT NULL,\n\t\"guest_phone\" text,\n\t\"date\" text,\n\t\"end_date\" text,\n\t\"slot\" text,\n\t\"units\" integer NOT NULL,\n\t\"total\" integer NOT NULL,\n\t\"paid\" integer NOT NULL,\n\t\"status\" text NOT NULL,\n\t\"notes\" text,\n\t\"created_by\" text,\n\t\"cancel_reason\" text,\n\t\"checked_in_at\" timestamp with time zone,\n\t\"created_at\" timestamp with time zone NOT NULL,\n\t\"updated_at\" timestamp with time zone NOT NULL\n);\n--> statement-breakpoint\nCREATE TABLE \"tables\".\"offerings\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"kind\" text NOT NULL,\n\t\"name\" text NOT NULL,\n\t\"description\" text,\n\t\"price\" integer NOT NULL,\n\t\"capacity\" integer NOT NULL,\n\t\"slots\" jsonb NOT NULL,\n\t\"on_date\" text,\n\t\"photo_url\" text,\n\t\"details\" jsonb NOT NULL,\n\t\"active\" boolean NOT NULL,\n\t\"visible_to_clients\" boolean NOT NULL,\n\t\"sort_order\" integer NOT NULL,\n\t\"updated_at\" timestamp with time zone NOT NULL\n);\n--> statement-breakpoint\nCREATE TABLE \"tables\".\"settings\" (\n\t\"key\" text PRIMARY KEY NOT NULL,\n\t\"value\" jsonb NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_by\" text\n);\n--> statement-breakpoint\nCREATE UNIQUE INDEX \"bookings_code_key\" ON \"tables\".\"bookings\" USING btree (\"code\");--> statement-breakpoint\nCREATE INDEX \"bookings_offering_idx\" ON \"tables\".\"bookings\" USING btree (\"offering_id\",\"date\");--> statement-breakpoint\nCREATE INDEX \"bookings_user_idx\" ON \"tables\".\"bookings\" USING btree (\"user_id\",\"created_at\");--> statement-breakpoint\nCREATE INDEX \"bookings_day_idx\" ON \"tables\".\"bookings\" USING btree (\"date\",\"status\");"
+ },
+ {
+  "module": "tables-dinein",
+  "name": "0001_booking_unit",
+  "checksum": "46b4c8aaaf06bd5e",
+  "sql": "ALTER TABLE \"tables\".\"bookings\" ADD COLUMN IF NOT EXISTS \"unit\" text;\n"
  },
  {
   "module": "app-builder",

@@ -16,6 +16,7 @@ function booking(status: BookingStatus, id = "bk-1", code = "RB-7KQ2MX"): Bookin
   return {
     id,
     code,
+    unit: null,
     offeringId: "o",
     offeringName: "Standard Room",
     kind: "nights",

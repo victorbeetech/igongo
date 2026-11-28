@@ -43,10 +43,19 @@ class BookingPaymentScreen extends ConsumerWidget {
     );
     ref.invalidate(myBookingsProvider(place));
     if (!paid || !context.mounted) return;
-    // Step 1: paid, so the receipt is generated and replaces this step.
+    // Step 1: read the booking again, so the receipt shows the amount now paid and its new status.
+    final Booking fresh;
+    try {
+      fresh = await ref.read(bookingsApiProvider(place)).one(booking.id);
+    } on Exception catch (e) {
+      if (context.mounted) showIgongoToast(context, 'Paid, but the receipt could not load: $e');
+      return;
+    }
+    if (!context.mounted) return;
+    // Step 2: paid, so the receipt replaces this step.
     await Navigator.of(context).pushReplacement(
       MaterialPageRoute<void>(
-        builder: (_) => BookingConfirmedScreen(booking: booking, place: place),
+        builder: (_) => BookingConfirmedScreen(booking: fresh, place: place),
       ),
     );
   }

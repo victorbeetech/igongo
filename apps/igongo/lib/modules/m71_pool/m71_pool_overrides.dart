@@ -4,12 +4,14 @@
 import '../../shared/catalog/catalog.dart';
 import '../../shared/bookings/presentation/book_screen.dart';
 import '../../shared/bookings/presentation/bookings_desk_screen.dart';
+import '../../shared/bookings/presentation/flow/screens/pool_accommodation_screen.dart';
 import 'domain/place.dart';
 
 /// Module 71's hand-made screens.
 final m71Overrides = <String, ScreenOverride>{
   'S71-01': (_, s) => BookScreen(s, place),
-  'S71-02': (_, s) => BookScreen(s, place),
+  // S71-02 Buy pool pass: the designed pass, session and add-on screen, live from the pool API.
+  'S71-02': (_, s) => const PoolAccommodationScreen(place: place),
   'S71-07': (_, s) => BookScreen(s, place),
   'S71-03': (_, s) => BookingsDeskScreen(s, place, status: 'confirmed', todayOnly: true),
 };

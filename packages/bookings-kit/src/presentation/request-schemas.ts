@@ -68,3 +68,6 @@ export const ticketBody = z.object({ ticket: z.string().trim().min(4).max(200) }
 
 /** `PUT /rules`. */
 export const rulesBody = z.object({ depositPercent: z.number().int().min(0).max(100), requireApproval: z.boolean(), cancelHoursBefore: z.number().int().min(0).max(24 * 60), maxUnits: z.number().int().min(1).max(1000) });
+
+/** Staff assign a room or cottage number (or clear it with null). */
+export const unitBody = z.object({ unit: z.string().trim().max(20).nullable() });

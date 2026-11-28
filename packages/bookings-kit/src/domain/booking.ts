@@ -30,6 +30,8 @@ export interface Booking {
   /** The check-out day, for nights. */
   endDate: string | null;
   slot: string | null;
+  /** The room or cottage number, once staff assign one (null until then). */
+  unit: string | null;
   /** Rooms, people or items. */
   units: number;
   total: number;

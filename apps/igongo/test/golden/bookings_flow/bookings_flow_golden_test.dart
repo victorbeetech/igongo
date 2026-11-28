@@ -14,11 +14,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:igongo/shared/bookings/presentation/flow/screens/boarding_pass_confirmation_screen.dart';
 import 'package:igongo/shared/bookings/presentation/flow/screens/cottage_guest_details_screen.dart';
-import 'package:igongo/shared/bookings/presentation/flow/screens/event_room_selection_screen.dart';
-import 'package:igongo/shared/bookings/presentation/flow/screens/museum_booking_review_screen.dart';
-import 'package:igongo/shared/bookings/presentation/flow/screens/pool_accommodation_screen.dart';
 import 'package:igongo/shared/bookings/presentation/flow/screens/safari_dates_guests_screen.dart';
-import 'package:igongo/shared/bookings/presentation/flow/screens/spa_payment_confirmation_screen.dart';
 import 'package:igongo/shared/bookings/presentation/flow/screens/stay_room_guest_details_screen.dart';
 import 'package:igongo/shared/theme/igongo_theme.dart';
 
@@ -27,11 +23,7 @@ import '../../support/open_app.dart';
 void main() {
   // Step 1: each screen, paired with the file name its picture is saved under.
   final screens = <String, Widget Function()>{
-    'museum_booking_review': () => const MuseumBookingReviewScreen(),
-    'event_room_selection': () => const EventRoomSelectionScreen(),
     'safari_dates_guests': () => const SafariDatesGuestsScreen(),
-    'spa_payment_confirmation': () => const SpaPaymentConfirmationScreen(),
-    'pool_accommodation': () => const PoolAccommodationScreen(),
     'stay_room_guest_details': () => const StayRoomGuestDetailsScreen(),
     'cottage_guest_details': () => const CottageGuestDetailsScreen(),
     'boarding_pass_confirmation': () => const BoardingPassConfirmationScreen(),

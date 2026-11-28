@@ -14,7 +14,7 @@ import { StatusChip } from "@/shared/ui/chip/StatusChip";
 import { TextInput } from "@/shared/ui/field/TextInput";
 import { ScanEntry } from "@/shared/ui/scan/ScanEntry";
 import { DataTable } from "@/shared/ui/table/DataTable";
-import { useApprove, useCheckIn, useDayBookings } from "../data/bookingsApi";
+import { useApprove, useAssignUnit, useCheckIn, useDayBookings } from "../data/bookingsApi";
 import type { BookingPlace } from "../types/bookingPlace";
 import { whenOf } from "./MyBookingsPage";
 
@@ -23,7 +23,10 @@ export function StaffBookingsPage({ screen, place, allDays }: { screen: ScreenCo
   const list = useDayBookings(place, date);
   const checkIn = useCheckIn(place);
   const approve = useApprove(place);
+  const assignUnit = useAssignUnit(place);
   const [quote, setQuote] = useState<Record<string, string>>({});
+  // The room or cottage number being typed for each booking (starts as the saved number).
+  const [room, setRoom] = useState<Record<string, string>>({});
   return (
     <>
       <PurposeText text={screen.spec.purpose} />
@@ -44,6 +47,16 @@ export function StaffBookingsPage({ screen, place, allDays }: { screen: ScreenCo
                 { label: "Guest", cell: (b) => b.guestName },
                 { label: "What", cell: (b) => `${b.offeringName} x${b.units}` },
                 { label: "When", cell: (b) => whenOf(b) || "-" },
+                {
+                  label: "Room",
+                  cell: (b) =>
+                    b.status === "cancelled" ? (b.unit ?? "-") : (
+                      <span className="flex items-end gap-2">
+                        <TextInput label="Room or cottage" value={room[b.id] ?? b.unit ?? ""} onChange={(v) => setRoom({ ...room, [b.id]: v })} />
+                        <Button variant="secondary" onClick={() => assignUnit.mutate({ id: b.id, unit: room[b.id] ?? b.unit ?? "" })}>Save room</Button>
+                      </span>
+                    ),
+                },
                 { label: "Paid", cell: (b) => `${ugx(b.paid)} / ${ugx(b.total)}` },
                 { label: "Status", cell: (b) => <StatusChip status={words(b.status)} /> },
                 {

@@ -15,6 +15,7 @@
  *   GET   /bookings/:id                 one booking
  *   POST  /bookings/:id/cancel          cancel
  *   POST  /bookings/:id/approve         approve a request or quote an enquiry (staff)
+ *   PATCH /bookings/:id/unit            assign a room or cottage number (staff)
  *   POST  /check-in                     scan a signed ticket QR (staff); typed codes are refused
  */
 
@@ -22,7 +23,7 @@ import { zValidator } from "@hono/zod-validator";
 import { actorOf, AppError, canForOthers, historyPage, recordChange, requirePermission, requireSignIn, requireStaffPermission, type ActorEnv } from "@igongo/core";
 import { Hono, type Context } from "hono";
 import type { BookingsDeps } from "../application/bookings-deps";
-import { approveBooking, cancelBooking, checkIn } from "../application/use-cases/change-booking";
+import { approveBooking, assignUnit, cancelBooking, checkIn } from "../application/use-cases/change-booking";
 import { unitsLeft } from "../application/use-cases/check-availability";
 import { makeBooking } from "../application/use-cases/make-booking";
 import { addOffering, editOffering } from "../application/use-cases/save-offering";
@@ -31,7 +32,7 @@ import { BOOKING_QR_PREFIX, issueTicket, parseTicket } from "../domain/ticket-si
 import type { TicketVerdict } from "../domain/ticket-verdict";
 import { verifyTicket } from "../application/use-cases/verify-ticket";
 import { bookingPermissions } from "./booking-permissions";
-import { approveBody, availabilityQuery, bookBody, cancelBody, checkInBody, listQuery, myBookingsQuery, offeringBody, offeringPatch, rulesBody, ticketBody } from "./request-schemas";
+import { approveBody, availabilityQuery, bookBody, cancelBody, checkInBody, listQuery, myBookingsQuery, offeringBody, offeringPatch, rulesBody, ticketBody, unitBody } from "./request-schemas";
 
 /** The text inside a booking's QR code. */
 export { BOOKING_QR_PREFIX } from "../domain/ticket-signature";
@@ -115,6 +116,8 @@ export function bookingsRouter(moduleKey: string, deps: (c: Context<ActorEnv>) =
       return c.json(await present(c, await cancelBooking(deps(c), c.req.param("id"), { userId: actor.userId, staff: canForOthers(actor, P.edit) }, c.req.valid("json").reason)));
     })
     .post("/bookings/:id/approve", requireStaffPermission(P.approve), zValidator("json", approveBody), async (c) => c.json(await present(c, await approveBooking(deps(c), c.req.param("id"), c.req.valid("json").total))))
+    // Staff assign the room or cottage number of a booking (null clears it).
+    .patch("/bookings/:id/unit", requireStaffPermission(P.edit), zValidator("json", unitBody), async (c) => c.json(await present(c, await assignUnit(deps(c), c.req.param("id"), c.req.valid("json").unit))))
     .post("/check-in", requireStaffPermission(P.edit), zValidator("json", checkInBody), async (c) => {
       const d = deps(c);
       const text = c.req.valid("json").code;

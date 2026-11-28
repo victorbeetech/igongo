@@ -24,6 +24,7 @@ function bookingFor(id: string, userId: string | null, date: string, status: Boo
     id,
     code: `RB-${id.toUpperCase()}`,
     offeringId: "off_1",
+    unit: null,
     offeringName: "Deluxe room",
     kind: "nights",
     userId,

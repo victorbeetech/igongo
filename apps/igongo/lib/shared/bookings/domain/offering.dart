@@ -15,6 +15,7 @@ class Offering {
     required this.slots,
     this.description,
     this.onDate,
+    this.details = const {},
   });
 
   /// Reads one from the API's JSON.
@@ -27,6 +28,7 @@ class Offering {
     slots: [for (final s in json['slots'] as List<dynamic>? ?? const []) '$s'],
     description: json['description'] as String?,
     onDate: json['onDate'] as String?,
+    details: {for (final e in (json['details'] as Map<String, dynamic>? ?? const {}).entries) e.key: '${e.value}'},
   );
 
   /// The offering's ID.
@@ -52,4 +54,7 @@ class Offering {
 
   /// A fixed date (an event), or null for any day.
   final String? onDate;
+
+  /// Extra facts from the admin, such as a visitor type (`visitor`: adult, resident or child).
+  final Map<String, String> details;
 }

@@ -4,6 +4,7 @@ import '../../api/api_client.dart';
 import '../../api/history_pages.dart';
 import '../domain/booking.dart';
 import '../domain/booking_place.dart';
+import '../domain/booking_rules.dart';
 import '../domain/offering.dart';
 import '../domain/ticket_scan.dart';
 
@@ -33,6 +34,7 @@ class BookingsApi {
     String? date,
     String? endDate,
     String? slot,
+    String? notes,
   }) async => Booking.fromJson(
     await _api.post('${place.path}/bookings', {
       'offeringId': offeringId,
@@ -40,8 +42,15 @@ class BookingsApi {
       'date': ?date,
       'endDate': ?endDate,
       'slot': ?slot,
+      'notes': ?notes,
     }),
   );
+
+  /// The module's booking rules (deposit percent and the rest).
+  Future<BookingRules> rules() async => BookingRules.fromJson(await _api.get('${place.path}/rules'));
+
+  /// One booking by [id], read fresh from the API (used after a payment so the receipt shows the new amount paid).
+  Future<Booking> one(String id) async => Booking.fromJson(await _api.get('${place.path}/bookings/$id'));
 
   /// Cancels my booking [id].
   Future<void> cancel(String id) =>
