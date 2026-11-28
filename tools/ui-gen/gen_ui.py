@@ -316,7 +316,7 @@ def dart_tokens(tokens: dict) -> str:
         if isinstance(v, (int, float)):
             out.append(f"  static const {key} = {float(v)};")
     out += ["}", ""]
-    for group, cls in (("space", "IgongoSpace"), ("radius", "IgongoRadius"), ("touchTarget", "IgongoTouch"), ("elevation", "IgongoElevation"), ("motion", "IgongoMotion")):
+    for group, cls in (("space", "IgongoSpace"), ("radius", "IgongoRadius"), ("touchTarget", "IgongoTouch"), ("elevation", "IgongoElevation"), ("motion", "IgongoMotion"), ("quickAction", "IgongoQuickAction")):
         out.append(f"/// {group} values from the tokens.")
         out.append(f"abstract final class {cls} {{")
         for key, v in tokens[group].items():
