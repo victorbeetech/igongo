@@ -1,7 +1,8 @@
-// S00-25 Global search, drawn to the Igongo discovery design: a top bar, a search
-// box with a filter button, recent searches, explore categories, curated findings
+// S00-25 Global search, drawn to the Igongo discovery design: a search box with a
+// filter button and a mic, recent searches, explore categories, curated findings
 // and trending experiences. The findings and trending items come from the super
-// admin. Typing two letters or more shows the live menu results instead.
+// admin. Typing two letters or more shows the live results instead (the dishes,
+// outlets and matching findings, after the Filter & Refine choices).
 
 import 'dart:async';
 
@@ -23,23 +24,19 @@ import '../../domain/curated_finding.dart';
 import '../../domain/trending_experience.dart';
 import '../../../../../shared/search/application/recent_searches_provider.dart';
 import '../../../../../shared/search/application/search_filters_provider.dart';
-import '../../../../../shared/search/domain/apply_search_filters.dart';
 import '../../../../../shared/refine/presentation/show_filter_refine.dart';
 import '../../../../../shared/voice/voice_search.dart';
 import 'discovery_categories.dart';
+import 'open_hotel_content.dart';
 import 'search_results_view.dart';
 import 'widgets/curated_findings_section.dart';
 import 'widgets/discovery_search_row.dart';
-import 'widgets/discovery_top_bar.dart';
 import 'widgets/explore_categories.dart';
 import 'widgets/recent_searches.dart';
 import 'widgets/trending_experiences_card.dart';
 
 /// The results screen (S00-26) that the search key opens.
 const String _resultsScreenId = 'S00-26';
-
-/// The screen a finding or experience opens when the admin gave it none: the menu.
-const String _defaultContentScreen = 'S62-01';
 
 
 /// Pause after the last key press before the search is sent, so typing does not send a request per letter.
@@ -115,28 +112,16 @@ class _GlobalSearchScreenState extends ConsumerState<GlobalSearchScreen> {
     if (!_favourites.remove(index)) _favourites.add(index);
   });
 
-  /// Opens a finding or experience's screen, or the menu when the admin gave none.
-  void _openContent(HotelContentItem item) {
-    final code = item.screen.isEmpty ? _defaultContentScreen : item.screen;
-    final target = CatalogIndex.instance.screens[code];
-    if (target == null) {
-      showIgongoToast(context, 'This item is not linked to a screen yet.');
-      return;
-    }
-    context.push(CatalogIndex.instance.locationOf(target));
-  }
-
   @override
   Widget build(BuildContext context) => Column(
     children: [
-      // Step 1: the top bar with the logo, the bell and the profile picture.
-      DiscoveryTopBar(onBell: () {}), // The notification inbox is wired later.
-      // Step 2: the search box, the filter button and the mic.
+      // Step 1: the search box, the filter button (dotted while a filter is set) and the mic.
       Padding(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
         child: DiscoverySearchRow(
           controller: _controller,
           listening: _listening,
+          filtersActive: ref.watch(searchFiltersProvider).isActive,
           onFilter: () => showFilterRefine(context, _currentResults()),
           onChanged: _onTyped,
           onSubmitted: _onSubmitted,
@@ -157,10 +142,9 @@ class _GlobalSearchScreenState extends ConsumerState<GlobalSearchScreen> {
   /// What the guest says goes into the search box and is searched as if typed.
   Future<void> _onVoice() async {
     final voice = ref.read(voiceSearchProvider);
-    // Step 1: a second tap stops the listening, keeping the words so far.
+    // Step 1: a second tap stops the listening, keeping the words so far (the end is told by onEnded).
     if (_listening) {
       await voice.stop();
-      if (mounted) setState(() => _listening = false);
       return;
     }
     // Step 2: the phone must be able to listen (and the guest must allow the microphone).
@@ -172,25 +156,29 @@ class _GlobalSearchScreenState extends ConsumerState<GlobalSearchScreen> {
     }
     // Step 3: show the listening state and put each recognised phrase into the search box.
     setState(() => _listening = true);
-    await voice.listen((text, {required finished}) {
-      if (!mounted) return;
-      _controller.value = TextEditingValue(text: text, selection: TextSelection.collapsed(offset: text.length));
-      _onTyped(text);
-      if (finished) setState(() => _listening = false);
-    });
+    await voice.listen(
+      (text) {
+        if (!mounted) return;
+        _controller.value = TextEditingValue(text: text, selection: TextSelection.collapsed(offset: text.length));
+        _onTyped(text);
+      },
+      // Step 4: the phone stopped listening (a pause, a timeout or an error), so the mic goes back to idle.
+      onEnded: () {
+        if (mounted) setState(() => _listening = false);
+      },
+    );
   }
 
   /// The body under the search box: the discovery sections, or the live results for the search text.
   Widget _body() {
     // Step 3: two letters or more typed, so show the live menu results with the Filter & Refine choices applied.
     if (_query.length >= minSearchLength) {
-      final filters = ref.watch(searchFiltersProvider);
       return LiveView<MenuSearchResults>(
         screenName: widget.screen.spec.name,
         value: ref.watch(globalSearchProvider(_query)),
         sample: (_) => screenLayout(widget.screen),
         onRetry: () => ref.invalidate(globalSearchProvider(_query)),
-        builder: (context, results, _) => SearchResultsView(results: applySearchFilters(results, filters), query: _query),
+        builder: (context, results, _) => SearchResultsView(results: results, query: _query),
       );
     }
     // Step 4: otherwise the discovery design, one scrolling column of sections.
@@ -203,7 +191,7 @@ class _GlobalSearchScreenState extends ConsumerState<GlobalSearchScreen> {
       onCategory: (index) => setState(() => _category = index),
       onFavourite: _toggleFavourite,
       onSort: () => setState(() => _findingsSortedAz = !_findingsSortedAz),
-      onOpen: _openContent,
+      onOpen: (item) => openHotelContent(context, item),
     );
   }
 }

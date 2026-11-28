@@ -1,4 +1,4 @@
-// Golden test for the search screen's layout: the top bar, the search box, the
+// Golden test for the search screen's layout: the search box, the
 // recent searches, the categories, the curated findings and the trending list,
 // in light and dark mode at a phone width. Compare with the design before merging.
 
@@ -7,7 +7,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:igongo/modules/m00_app_shell/presentation/global_search/discovery_categories.dart';
 import 'package:igongo/modules/m00_app_shell/presentation/global_search/widgets/curated_findings_section.dart';
 import 'package:igongo/modules/m00_app_shell/presentation/global_search/widgets/discovery_search_row.dart';
-import 'package:igongo/modules/m00_app_shell/presentation/global_search/widgets/discovery_top_bar.dart';
 import 'package:igongo/modules/m00_app_shell/presentation/global_search/widgets/explore_categories.dart';
 import 'package:igongo/modules/m00_app_shell/presentation/global_search/widgets/recent_searches.dart';
 import 'package:igongo/modules/m00_app_shell/presentation/global_search/widgets/trending_experiences_card.dart';
@@ -31,12 +30,12 @@ void main() {
           home: Scaffold(
             body: ListView(
               children: [
-                DiscoveryTopBar(onBell: () {}),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                   child: DiscoverySearchRow(
                     controller: TextEditingController(),
                     listening: false,
+                    filtersActive: false,
                     onFilter: () {},
                     onChanged: (_) {},
                     onSubmitted: (_) {},
