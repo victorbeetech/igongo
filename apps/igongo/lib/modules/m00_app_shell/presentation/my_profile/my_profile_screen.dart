@@ -18,6 +18,8 @@ import '../../../../shared/screens/parts/screen_list_view.dart';
 import '../../../../shared/session/session_controller.dart';
 import '../../../../shared/theme/theme.dart';
 import '../../../m54_crm_guests/presentation/past_visits_screen.dart';
+import '../../../m57_loyalty/points/application/points_providers.dart';
+import '../../../m57_loyalty/points/presentation/points_activity_row.dart';
 import '../../../m62_food_ordering/application/saved_dishes_providers.dart';
 import '../../../m62_food_ordering/domain/saved_dish.dart';
 import '../../../m62_food_ordering/presentation/saved_dishes/saved_dishes_screen.dart';
@@ -32,7 +34,6 @@ import 'profile_footer.dart';
 import 'profile_row_tone.dart';
 import 'profile_section_title.dart';
 import 'profile_stats.dart';
-import 'profile_status_badge.dart';
 
 /// Height of the red banner below the status bar, as in the design.
 const _bannerBodyHeight = 190.0;
@@ -82,7 +83,10 @@ class MyProfileScreen extends ConsumerWidget {
     final prefs = PreferencesScope.of(context);
     final guest = session != null && !session.isStaff;
     // Step 0: the saved dishes, read only for a guest (empty while loading or on a failed load, which shows a dash).
-    final savedDishes = guest ? (ref.watch(savedDishesProvider).valueOrNull ?? const <SavedDish>[]) : const <SavedDish>[];
+    final guestSignedIn = session != null && !session.isStaff;
+    final savedDishes = guestSignedIn ? (ref.watch(savedDishesProvider).valueOrNull ?? const <SavedDish>[]) : const <SavedDish>[];
+    // Step 1b: the points wallet, read here so the points row is left out entirely when it is not needed.
+    final wallet = ref.watch(pointsWalletProvider).valueOrNull;
     // Step 1: the banner height includes the status bar, so the card overlaps the same spot as the design.
     final bannerHeight = MediaQuery.paddingOf(context).top + _bannerBodyHeight;
     final list = ScreenListView(
@@ -129,14 +133,15 @@ class MyProfileScreen extends ConsumerWidget {
           const ProfileSectionTitle('Resort Activity'),
           ProfileActionGroup(
             children: [
-              // PLACEHOLDER: the room and the active stay count are not read yet; dashes show for now.
+              // My points: left out while the programme is off or the wallet has not loaded, so no empty divider shows.
+              if (wallet != null && wallet.enabled) PointsActivityRow(wallet: wallet, onTap: () => screen.open('S57-01')),
+              // The bookings and orders list (the Bookings tab, S67-01).
               ProfileActionRow(
                 title: 'My Bookings & Orders',
-                subtitle: 'Room — • — active stays',
+                subtitle: 'Stays, tables, tours and food orders',
                 icon: Icons.event_available_outlined,
                 tone: ProfileRowTone.solid,
-                trailing: const ProfileStatusBadge(label: '— Active'),
-                onTap: () => screen.open('S54-05'),
+                onTap: () => screen.open('S67-01'),
               ),
               ProfileActionRow(
                 title: 'Folio & Digital Invoices',
@@ -167,10 +172,10 @@ class MyProfileScreen extends ConsumerWidget {
           const ProfileSectionTitle('Account & Security'),
           ProfileActionGroup(
             children: [
-              // PLACEHOLDER: the device list is not read yet; a dash shows for now.
+              // The devices signed in to the account (S00-36).
               ProfileActionRow(
                 title: 'Signed-in Devices',
-                subtitle: '—',
+                subtitle: 'Phones and browsers signed in to your account',
                 icon: Icons.smartphone_outlined,
                 tone: ProfileRowTone.neutral,
                 onTap: () => screen.open('S00-36'),

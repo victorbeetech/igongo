@@ -12,6 +12,4 @@ export interface OrderingRules {
   scheduleAheadDays: number;
   /** Takeaway container fee in shillings (0: containers are free). */
   containerFee: number;
-  /** Loyalty points per 1,000 UGX of delivered food (0: points are off). */
-  pointsPer1000: number;
 }

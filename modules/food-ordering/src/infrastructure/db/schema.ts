@@ -33,6 +33,8 @@ export const orders = ordersSchema.table(
     subtotal: integer("subtotal").notNull(),
     discount: integer("discount").notNull().default(0),
     promoCode: text("promo_code"),
+    pointsSpent: integer("points_spent").notNull().default(0),
+    pointsDiscount: integer("points_discount").notNull().default(0),
     deliveryFee: integer("delivery_fee").notNull(),
     containerFee: integer("container_fee").notNull().default(0),
     total: integer("total").notNull(),

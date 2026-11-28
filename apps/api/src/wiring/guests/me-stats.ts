@@ -1,11 +1,12 @@
 /**
  * The profile numbers of the signed-in guest (`GET /api/me/stats`): bookings
- * across the booking modules, orders, loyalty points and saved dishes. Each
+ * across the booking modules, orders, loyalty points (Points rewards) and saved dishes. Each
  * number counts only the caller's own data (the user ID comes from the
  * session). A module the super admin switched off contributes 0.
  */
 
 import { foodSummary } from "@igongo/food-ordering";
+import { walletFor } from "@igongo/points-rewards";
 import { actorOf, requireSignIn, type ActorEnv } from "@igongo/core";
 import { Hono, type Context } from "hono";
 import { BOOKING_MODULES, type BookingModuleKey, type GuestServices } from "./guest-services";
@@ -16,7 +17,7 @@ export interface ProfileStats {
   bookings: number;
   /** Food orders placed. */
   orders: number;
-  /** Loyalty points earned from delivered food. */
+  /** Spendable loyalty points (Points rewards). */
   points: number;
   /** Dishes on the saved list. */
   savedDishes: number;
@@ -39,11 +40,14 @@ async function bookingCount(services: GuestServices, userId: string): Promise<nu
 /** Every profile figure of [userId]. */
 export async function profileStats(services: GuestServices, userId: string): Promise<ProfileStats> {
   // Step 1: food figures only while Food Ordering is on.
-  const food = (await services.isOn("food-ordering")) ? await foodSummary(services.ordering(), userId) : { orders: 0, points: 0, savedDishes: 0 };
+  const food = (await services.isOn("food-ordering")) ? await foodSummary(services.ordering(), userId) : { orders: 0, savedDishes: 0 };
   // Step 2: bookings across the booking modules.
   const bookings = await bookingCount(services, userId);
-  // Step 3: one answer with all four numbers.
-  return { bookings, orders: food.orders, points: food.points, savedDishes: food.savedDishes };
+  // Step 3: the spendable points balance from Points rewards (0 while the programme is off).
+  const wallet = await walletFor(services.points(), userId, new Date());
+  const points = wallet.enabled ? wallet.balance : 0;
+  // Step 4: one answer with all four numbers.
+  return { bookings, orders: food.orders, points, savedDishes: food.savedDishes };
 }
 
 /** The `/api/me` routes: the signed-in guest's own profile numbers. */
