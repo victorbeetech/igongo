@@ -32,14 +32,14 @@ class ResortExperiencesGrid extends StatelessWidget {
           'Handcrafted cultural & bespoke leisure services',
           style: context.text.bodySmall?.copyWith(color: p.textMuted),
         ),
-        // Step 2: two columns of tiles; each tile is about 4:5 (a little taller than wide).
+        // Step 2: two columns of tiles; each tile is about square (a little taller than wide), so less empty photo space shows.
         GridView.count(
           crossAxisCount: 2,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           crossAxisSpacing: IgongoSpace.sm,
           mainAxisSpacing: IgongoSpace.sm,
-          childAspectRatio: 0.8,
+          childAspectRatio: 0.95,
           children: [
             for (final e in experiences)
               ExperienceTile(experience: e, onTap: e.screenId == null ? null : () => open(e.screenId!)),
