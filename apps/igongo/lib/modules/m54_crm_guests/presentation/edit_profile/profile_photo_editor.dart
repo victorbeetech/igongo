@@ -1,5 +1,7 @@
 // The centred avatar with a camera badge, the "Change photo" link and the file
-// rules. Photo upload is not wired yet, so the taps only call [onChangePhoto].
+// rules. The avatar shows the saved photo when there is one, else the initial.
+
+import 'dart:typed_data';
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
@@ -10,10 +12,13 @@ import '../../../../../shared/theme/theme.dart';
 /// The profile photo with its change controls.
 class ProfilePhotoEditor extends StatelessWidget {
   /// Creates the editor for [name]. [onChangePhoto] runs when a change control is tapped.
-  const ProfilePhotoEditor({super.key, required this.name, required this.onChangePhoto});
+  const ProfilePhotoEditor({super.key, required this.name, required this.onChangePhoto, this.photo});
 
   /// The person's name; its first initial shows until a photo exists.
   final String name;
+
+  /// The saved profile photo bytes, or null to show the initial.
+  final Uint8List? photo;
 
   /// What a tap on the avatar or the link does.
   final VoidCallback onChangePhoto;
@@ -38,7 +43,10 @@ class ProfilePhotoEditor extends StatelessWidget {
                 shape: BoxShape.circle,
                 border: Border.all(color: p.surfaceAlt, width: 4),
               ),
-              child: Text(initial, style: context.text.displaySmall?.copyWith(color: p.onPrimary)),
+              clipBehavior: Clip.antiAlias,
+              child: photo == null
+                  ? Text(initial, style: context.text.displaySmall?.copyWith(color: p.onPrimary))
+                  : Image.memory(photo!, fit: BoxFit.cover, width: 96, height: 96, gaplessPlayback: true),
             ),
             // Step 2: the camera badge on the lower right edge.
             Positioned(

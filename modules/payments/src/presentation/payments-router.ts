@@ -17,7 +17,7 @@
 
 import { zValidator } from "@hono/zod-validator";
 import { PAYMENT_METHODS, type PaymentMethod } from "@igongo/contracts/payments";
-import { actorOf, AppError, canForOthers, recordChange, requirePermission, requireSignIn, requireStaffPermission, toCsv, type ActorEnv } from "@igongo/core";
+import { actorOf, AppError, canForOthers, historyPage, recordChange, requirePermission, requireSignIn, requireStaffPermission, toCsv, type ActorEnv } from "@igongo/core";
 import { Hono, type Context } from "hono";
 import type { PaymentsDeps } from "../application/payments-deps";
 import { recordManualPayment } from "../application/use-cases/record-manual-payment";
@@ -79,9 +79,15 @@ export function paymentsRouter(deps: (c: Context<ActorEnv>) => PaymentsDeps) {
       return c.json(await recordManualPayment(deps(c), { ref: { module, recordId }, method, ...(amount ? { amount } : {}), ...(reference ? { reference } : {}) }), 201);
     })
     .get("/", requireSignIn, zValidator("query", listQuery), async (c) => {
-      const { status, module, mine } = c.req.valid("query");
+      const { status, module, mine, before, limit } = c.req.valid("query");
       const own = mine === "1" || !isStaffFor(c, P.view);
-      return c.json({ items: await deps(c).payments.list({ ...(status ? { status } : {}), ...(module ? { module } : {}), ...(own ? { payerUserId: actorOf(c).userId } : {}), limit: 200 }) });
+      // One row more than the page tells us whether an older page exists; the cursor is the last row kept.
+      const rows = await deps(c).payments.list({
+        ...(status ? { status } : {}), ...(module ? { module } : {}), ...(own ? { payerUserId: actorOf(c).userId } : {}),
+        ...(before ? { before: new Date(before) } : {}), limit: limit + 1,
+      });
+      const page = historyPage(rows, limit);
+      return c.json({ items: page.items, nextBefore: page.nextBefore });
     })
     .get("/for/:module/:recordId", requireSignIn, async (c) => {
       const items = await deps(c).payments.forRecord(c.req.param("module"), c.req.param("recordId"));

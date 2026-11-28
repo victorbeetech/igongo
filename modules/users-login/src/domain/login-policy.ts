@@ -21,6 +21,10 @@ export const DEFAULT_SENSITIVE_ROLE_KEYS = [
 export interface LoginPolicy {
   /** Guests may create their own accounts in the app. */
   allowSelfRegistration: boolean;
+  /** Guests may delete their own account in the app. Off: the server refuses it and the app hides the button. */
+  allowSelfDelete: boolean;
+  /** Guests see the Sign Out button in the app. Off: the app hides it (sessions still end on their own). */
+  allowSignOut: boolean;
   /** New self-registered and Google/Apple accounts wait for approval. */
   newAccountsNeedApproval: boolean;
   /** Days an app session lasts without use. */
@@ -46,6 +50,8 @@ export interface LoginPolicy {
 
 export const DEFAULT_LOGIN_POLICY: LoginPolicy = {
   allowSelfRegistration: true,
+  allowSelfDelete: true,
+  allowSignOut: true,
   newAccountsNeedApproval: false,
   sessionDays: 30,
   firstMethod: "email_password",

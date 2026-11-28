@@ -9,6 +9,10 @@ import 'package:igongo/shared/preferences/preferences.dart';
 import 'package:igongo/shared/states/view_state.dart';
 import 'package:material_ui/material_ui.dart';
 
+import 'package:igongo/shared/hotel/domain/public_settings.dart';
+
+import 'public_settings_fixture.dart';
+
 /// The pinned time for every test: 09:00 in the hotel's time zone (UTC+3), so
 /// the guest greeting always reads "Good morning" and the screenshots never change.
 final _pinnedClock = clockProvider.overrideWithValue(() => DateTime.utc(2026, 11, 27, 6));
@@ -33,6 +37,7 @@ Future<void> openApp(
   String? role,
   bool preview = true,
   List<Override> overrides = const [],
+  PublicSettings settings = testPublicSettings,
 }) async {
   // Step 1: the preferences for this run.
   final prefs = AppPreferences()
@@ -43,7 +48,12 @@ Future<void> openApp(
   if (role != null) prefs.roleKey = role;
   // Step 2: a fresh app each time, so nothing carries over between screens.
   await tester.pumpWidget(
-    IgongoApp(key: UniqueKey(), initialLocation: location, preferences: prefs, overrides: [_pinnedClock, ...overrides]),
+    IgongoApp(
+      key: UniqueKey(),
+      initialLocation: location,
+      preferences: prefs,
+      overrides: [_pinnedClock, publicSettingsFixture(settings), ...overrides],
+    ),
   );
   // Step 3: a few frames for the theme; animations are not waited for (they loop).
   await tester.pump(const Duration(milliseconds: 50));

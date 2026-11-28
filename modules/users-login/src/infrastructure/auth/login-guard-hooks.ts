@@ -90,6 +90,10 @@ export function loginGuardHooks(deps: AuthDeps, webOrigins: string[]): Pick<Bett
           throw new APIError("FORBIDDEN", { message: "This sign-in method is switched off.", code: "METHOD_DISABLED" });
         }
         const policy = await deps.settings.policy();
+        // 2b. A guest deleting their own account, with the super admin's switch off, is refused here.
+        if (ctx.path === "/delete-user" && !policy.allowSelfDelete) {
+          throw new APIError("FORBIDDEN", { message: "Deleting your account in the app is switched off. Please contact the hotel.", code: "SELF_DELETE_OFF" });
+        }
         if (ctx.path === "/sign-up/email" && !policy.allowSelfRegistration) {
           throw new APIError("FORBIDDEN", { message: "New accounts are created by the hotel.", code: "SIGN_UP_DISABLED" });
         }

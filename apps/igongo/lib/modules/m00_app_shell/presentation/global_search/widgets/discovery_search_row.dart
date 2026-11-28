@@ -11,11 +11,19 @@ class DiscoverySearchRow extends StatelessWidget {
   /// Creates the row. Typing calls [onChanged]; the search key calls [onSubmitted].
   const DiscoverySearchRow({
     super.key,
+    required this.controller,
+    required this.listening,
     required this.onFilter,
     required this.onChanged,
     required this.onSubmitted,
     required this.onVoice,
   });
+
+  /// The text box's controller (the mic fills it with speech).
+  final TextEditingController controller;
+
+  /// True while the mic is listening; the mic then shows as active.
+  final bool listening;
 
   /// Called when the filter button is tapped.
   final VoidCallback onFilter;
@@ -47,6 +55,7 @@ class DiscoverySearchRow extends StatelessWidget {
                 Icon(Icons.search, color: p.textMuted),
                 Expanded(
                   child: TextField(
+                    controller: controller,
                     onChanged: onChanged,
                     onSubmitted: onSubmitted,
                     textInputAction: TextInputAction.search,
@@ -60,10 +69,11 @@ class DiscoverySearchRow extends StatelessWidget {
                     ),
                   ),
                 ),
+                // Step 1a: the mic; it turns red while it is listening.
                 IconButton(
-                  tooltip: 'Voice search',
+                  tooltip: listening ? 'Stop listening' : 'Voice search',
                   onPressed: onVoice,
-                  icon: Icon(Icons.mic, color: p.textMuted),
+                  icon: Icon(listening ? Icons.mic : Icons.mic_none, color: listening ? p.primary : p.textMuted),
                 ),
               ],
             ),

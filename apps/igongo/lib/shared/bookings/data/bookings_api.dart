@@ -1,6 +1,7 @@
 // The booking endpoints every booking module has (packages/bookings-kit), as typed calls.
 
 import '../../api/api_client.dart';
+import '../../api/history_pages.dart';
 import '../domain/booking.dart';
 import '../domain/booking_place.dart';
 import '../domain/offering.dart';
@@ -22,11 +23,8 @@ class BookingsApi {
     return [for (final o in json['items'] as List<dynamic>) Offering.fromJson(o as Json)];
   }
 
-  /// My bookings, newest first.
-  Future<List<Booking>> mine() async {
-    final json = await _api.get('${place.path}/bookings/mine');
-    return [for (final b in json['items'] as List<dynamic>) Booking.fromJson(b as Json)];
-  }
+  /// My bookings, newest first, across every page of my history.
+  Future<List<Booking>> mine() => readAllPages(_api, '${place.path}/bookings/mine', Booking.fromJson);
 
   /// Books [units] of [offeringId] at the given dates or slot.
   Future<Booking> book({

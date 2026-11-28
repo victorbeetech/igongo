@@ -48,6 +48,12 @@ export const bookBody = z.object({
 /** `GET /bookings`. */
 export const listQuery = z.object({ date: z.iso.date().optional(), status: z.enum(BOOKING_STATUSES).optional() });
 
+/** `GET /bookings/mine` paging: `before` is the last page's `nextBefore`; `limit` is the page size. */
+export const myBookingsQuery = z.object({
+  before: z.iso.datetime({ offset: true }).optional(),
+  limit: z.coerce.number().int().min(1).max(200).default(200),
+});
+
 /** `POST /bookings/:id/cancel`. */
 export const cancelBody = z.object({ reason: z.string().trim().min(2).max(300) });
 

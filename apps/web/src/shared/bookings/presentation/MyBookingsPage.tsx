@@ -25,9 +25,9 @@ export function MyBookingsPage({ screen, place }: { screen: ScreenContext; place
     <>
       <PurposeText text={screen.spec.purpose} />
       <div className="grid gap-3 p-4">
-        <LiveData query={mine} name={screen.spec.name} isEmpty={(d) => d.items.length === 0}>
+        <LiveData query={mine} name={screen.spec.name} isEmpty={(d) => d.length === 0}>
           {(d) =>
-            d.items.map((b) => (
+            d.map((b) => (
               <Card key={b.id} className="grid gap-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <h3 className="text-subtitle font-bold">{b.offeringName}</h3>
