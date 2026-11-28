@@ -23,6 +23,7 @@ import '../../../shared/ui/chip/status_chip.dart';
 import '../../../shared/ui/toast/igongo_toast.dart';
 import '../application/cart_controller.dart';
 import '../application/orders_providers.dart';
+import 'checkout_flow/order_tracking/order_tracking_screen.dart';
 import '../domain/order.dart';
 import '../domain/order_type.dart';
 import 'checkout_sheet.dart';
@@ -98,7 +99,7 @@ class MyOrdersScreen extends ConsumerWidget {
                     if (o.promoCode case final code?)
                       Text('Code $code: ${ugx(o.discount)} off', style: context.text.bodySmall),
                     if (o.arriveAt case final at? when o.status != 'delivered' && o.status != 'cancelled')
-                      Text('For ${dayTime(DateTime.parse(at))}', style: context.text.bodySmall),
+                      Text('For ${DateTime.tryParse(at) == null ? at : dayTime(DateTime.parse(at).toLocal())}', style: context.text.bodySmall),
                     if (o.tracking) _Track(orderId: o.id),
                     Wrap(
                       spacing: IgongoSpace.sm,
@@ -117,6 +118,14 @@ class MyOrdersScreen extends ConsumerWidget {
                               );
                               ref.invalidate(myOrdersProvider);
                             },
+                          ),
+                        // Track: opens the live tracker for this order (not for cancelled ones).
+                        if (o.status != 'cancelled')
+                          IgongoButton(
+                            label: 'Track',
+                            icon: Icons.route_outlined,
+                            variant: ButtonVariant.secondary,
+                            onPressed: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => OrderTrackingScreen(orderId: o.id))),
                           ),
                         if (o.canRate)
                           IgongoButton(

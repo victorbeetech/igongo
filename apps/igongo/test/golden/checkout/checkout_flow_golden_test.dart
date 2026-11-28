@@ -13,7 +13,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:igongo/modules/m62_food_ordering/presentation/checkout_flow/booking_review_screen.dart';
 import 'package:igongo/modules/m62_food_ordering/presentation/checkout_flow/guest_details_screen.dart';
 import 'package:igongo/modules/m62_food_ordering/presentation/checkout_flow/order_confirmed_screen.dart';
-import 'package:igongo/modules/m62_food_ordering/presentation/checkout_flow/order_tracking/order_tracking_screen.dart';
 import 'package:igongo/modules/m62_food_ordering/presentation/checkout_flow/payment_selection_screen.dart';
 import 'package:igongo/shared/theme/igongo_theme.dart';
 
@@ -26,8 +25,6 @@ void main() {
     'guest_details': () => const GuestDetailsScreen(),
     'payment_selection': () => const PaymentSelectionScreen(),
     'order_confirmed': () => const OrderConfirmedScreen(),
-    'order_tracking_live': () => const OrderTrackingScreen(status: TrackingStatus.live),
-    'order_tracking_delivered': () => const OrderTrackingScreen(status: TrackingStatus.delivered),
   };
 
   // Step 2: the two modes, each shown with the same brand theme.

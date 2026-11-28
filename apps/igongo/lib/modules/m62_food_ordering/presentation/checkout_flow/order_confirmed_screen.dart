@@ -7,10 +7,10 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../../shared/theme/theme.dart';
 import '../../../../shared/ui/button/igongo_button.dart';
+import '../../../../shared/ui/toast/igongo_toast.dart';
 import 'checkout_app_bar.dart';
 import 'checkout_placeholders.dart';
 import 'checkout_section_card.dart';
-import 'order_tracking/order_tracking_screen.dart';
 
 /// The reservation (order) confirmed screen.
 class OrderConfirmedScreen extends StatelessWidget {
@@ -45,9 +45,8 @@ class OrderConfirmedScreen extends StatelessWidget {
           label: 'Track my order',
           icon: Icons.local_fire_department_outlined,
           expand: true,
-          // Step 5: open the live order tracker.
-          onPressed: () => Navigator.of(context)
-              .push(MaterialPageRoute<void>(builder: (_) => const OrderTrackingScreen(status: TrackingStatus.live))),
+          // Step 5: the live tracker opens from My orders, which knows the real order.
+          onPressed: () => showIgongoToast(context, 'Open the order in My orders to track it'),
         ),
       ),
     );
