@@ -28,7 +28,8 @@ class ContactUsScreen extends ConsumerWidget {
     return settings.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (_, _) => _RetryNotice(onRetry: () => ref.invalidate(publicSettingsProvider)),
-      data: (data) => _ContactBody(hotel: data.hotel),
+      // Step 2: the switch from the admin: off shows a notice instead of the channels.
+      data: (data) => data.hotel.contactUsOn ? _ContactBody(hotel: data.hotel) : const _SwitchedOff(),
     );
   }
 }
@@ -73,8 +74,9 @@ class _ContactBody extends ConsumerWidget {
             glyph: Icon(Icons.phone_in_talk_outlined, color: p.primary, size: 24),
             discColor: p.primaryContainer,
             title: 'Call Front Desk',
-            chip: '24/7',
-            detail: _detailOrNotSet(hotel.phone, 'Available 24/7'),
+            // The chip shows the admin's opening hours, and is left out when none are set.
+            chip: hotel.hours.trim().isEmpty ? null : hotel.hours.trim(),
+            detail: _valueOrNotSet(hotel.phone),
             actionLabel: 'Call Now',
             actionIcon: Icons.call,
             actionColor: p.primary,
@@ -86,8 +88,7 @@ class _ContactBody extends ConsumerWidget {
             glyph: Icon(Icons.mail_outline, color: p.secondary, size: 24),
             discColor: p.accent.withValues(alpha: 0.2),
             title: 'Send an Email',
-            chip: '~2h Reply',
-            detail: _detailOrNotSet(hotel.email, 'Fast reply within 2 hrs'),
+            detail: _valueOrNotSet(hotel.email),
             actionLabel: 'Send Email',
             actionIcon: Icons.send_outlined,
             actionColor: p.surfaceAlt,
@@ -101,7 +102,7 @@ class _ContactBody extends ConsumerWidget {
             title: 'Chat on WhatsApp',
             chip: 'Live',
             chipLive: true,
-            detail: _detailOrNotSet(hotel.whatsapp, 'Instant chat with Guest Butler'),
+            detail: _valueOrNotSet(hotel.whatsapp),
             actionLabel: 'Open WhatsApp',
             actionIcon: Icons.chat_bubble_outline,
             actionColor: p.success,
@@ -116,9 +117,25 @@ class _ContactBody extends ConsumerWidget {
     );
   }
 
-  /// The detail line: the value and the note, or a "not set yet" line when the admin has left the value empty.
-  static String _detailOrNotSet(String value, String note) =>
-      value.trim().isEmpty ? 'Not set yet' : '$value • $note';
+  /// The detail line: the value the admin set, or "Not set yet" when it is empty. Nothing is made up.
+  static String _valueOrNotSet(String value) => value.trim().isEmpty ? 'Not set yet' : value.trim();
+}
+
+/// Shown when the super admin has switched the Contact Us details off.
+class _SwitchedOff extends StatelessWidget {
+  const _SwitchedOff();
+
+  @override
+  Widget build(BuildContext context) => Center(
+    child: Padding(
+      padding: const EdgeInsets.all(IgongoSpace.lg),
+      child: Text(
+        'Contact details are not available right now. Please try again later.',
+        style: context.text.bodyMedium,
+        textAlign: TextAlign.center,
+      ),
+    ),
+  );
 }
 
 /// Shown when the hotel details cannot be read: a sentence and a retry button.

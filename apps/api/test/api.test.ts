@@ -70,6 +70,9 @@ describe("the super admin's first day", () => {
     const keys = (await owner("GET", "/api/admin/keys")).body as { items: { key: string; isSet: boolean; lastFour: string }[] };
     expect(keys.items.find((k) => k.key === "apple.team_id")).toMatchObject({ isSet: true, lastFour: "3456" });
     expect((await owner("GET", "/api/public/settings")).body).toMatchObject({ branding: { announcement: "Welcome" } });
+    // Only the super admin can change the hotel's contact details: a signed-in guest is refused, and nothing changes.
+    expect((await phone()("PATCH", "/api/admin/settings/hotel", { phone: "+256 999 999 999", contactUsOn: false })).status).toBeGreaterThanOrEqual(400);
+    expect((await owner("GET", "/api/public/settings")).body).toMatchObject({ hotel: { phone: "", contactUsOn: true } });
     // Everything is in the Audit Trail, and the chain is intact.
     const audit = (await owner("GET", "/api/audit/entries?limit=100")).body as { items: { action: string }[] };
     const actions = audit.items.map((e) => e.action);

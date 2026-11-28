@@ -46,6 +46,21 @@ describe("settings", () => {
   });
 });
 
+describe("hotel contact details", () => {
+  it("keeps the contact fields and the Contact Us switch, and starts them empty", async () => {
+    const { store, ctx } = await setup();
+    // Nothing is invented: phone, email and WhatsApp start empty, and the switch starts on.
+    expect(await readSection(store, "hotel")).toMatchObject({ phone: "", email: "", whatsapp: "", hours: "", contactUsOn: true });
+    await updateSection(store, ctx, "hotel", { phone: "+256 700 000 001", email: "front@example.com", whatsapp: "256700000002", hours: "24/7", contactUsOn: false });
+    expect(await readSection(store, "hotel")).toMatchObject({ phone: "+256 700 000 001", hours: "24/7", contactUsOn: false });
+  });
+
+  it("refuses a contact switch that is not true or false", async () => {
+    const { store, ctx } = await setup();
+    await expect(updateSection(store, ctx, "hotel", { contactUsOn: "yes" })).rejects.toThrow(/contactUsOn/);
+  });
+});
+
 describe("encrypted keys", () => {
   it("stores keys encrypted, lists only the last four, and reads them back on the server", async () => {
     const { store, ctx, client, audit } = await setup();

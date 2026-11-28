@@ -10,6 +10,8 @@ class HotelProfile {
     required this.phone,
     required this.whatsapp,
     required this.email,
+    this.hours = '',
+    this.contactUsOn = true,
   });
 
   /// Reads the `hotel` block of `/api/public/settings`. Missing keys become empty text.
@@ -19,6 +21,9 @@ class HotelProfile {
     phone: '${json['phone'] ?? ''}',
     whatsapp: '${json['whatsapp'] ?? ''}',
     email: '${json['email'] ?? ''}',
+    hours: '${json['hours'] ?? ''}',
+    // The Contact Us switch: on unless the super admin turned it off.
+    contactUsOn: json['contactUsOn'] as bool? ?? true,
   );
 
   /// The hotel's name, shown above the screen title.
@@ -35,4 +40,10 @@ class HotelProfile {
 
   /// The reservations email (may be empty until the admin sets it).
   final String email;
+
+  /// The opening hours, such as "24/7" (empty until the admin sets it). Shown as the front desk chip.
+  final String hours;
+
+  /// False when the super admin has switched the Contact Us details off.
+  final bool contactUsOn;
 }
