@@ -1,4 +1,5 @@
-// One of the three stat tiles under the profile card: an icon, a label and a value.
+// One of the three stat tiles under the profile card: a soft icon disc, the
+// label in small capitals, and the number in bold.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
@@ -35,10 +36,20 @@ class ProfileStatTile extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Step 2: the red icon, the label, then the number in bold.
-            Icon(icon, color: p.primaryText, size: 22),
+            // Step 2: the icon in a soft red disc, the label in small capitals, then the number.
+            Container(
+              width: 32,
+              height: 32,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(color: p.primaryContainer, shape: BoxShape.circle),
+              child: Icon(icon, color: p.primaryText, size: 16),
+            ),
             const SizedBox(height: IgongoSpace.xs),
-            Text(label, style: context.text.labelSmall?.copyWith(color: p.textMuted), textAlign: TextAlign.center),
+            Text(
+              label.toUpperCase(),
+              style: context.text.labelSmall?.copyWith(color: p.textMuted, letterSpacing: 1.1),
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: IgongoSpace.xxs),
             Text(value, style: context.text.titleLarge, textAlign: TextAlign.center),
           ],
