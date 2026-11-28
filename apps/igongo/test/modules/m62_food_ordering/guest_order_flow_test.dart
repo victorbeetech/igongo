@@ -9,12 +9,15 @@ import 'package:material_ui/material_ui.dart';
 import 'package:igongo/modules/m62_food_ordering/application/orders_providers.dart';
 import 'package:igongo/modules/m62_food_ordering/data/orders_api.dart';
 import 'package:igongo/modules/m62_food_ordering/domain/cart_quote.dart';
+import 'package:igongo/modules/m62_food_ordering/presentation/checkout_sheet.dart';
 import 'package:igongo/modules/m62_food_ordering/presentation/food_home/dish_card.dart';
 import 'package:igongo/modules/m62_food_ordering/domain/menu_item.dart';
 import 'package:igongo/modules/m62_food_ordering/domain/ordering_rules.dart';
 import 'package:igongo/modules/m62_food_ordering/domain/type_rule.dart';
 import 'package:igongo/modules/m62_food_ordering/domain/delivery_zone.dart';
 import 'package:igongo/modules/m62_food_ordering/domain/item_stars.dart';
+import 'package:igongo/modules/m62_food_ordering/domain/option_choice.dart';
+import 'package:igongo/modules/m62_food_ordering/domain/option_group.dart';
 import 'package:igongo/modules/m62_food_ordering/domain/order.dart';
 import 'package:igongo/modules/m62_food_ordering/domain/outlet.dart';
 import 'package:igongo/shared/api/api_client.dart';
@@ -39,16 +42,56 @@ class _Guest extends SessionController {
 /// The one venue the fake food API serves.
 const _venueKey = 'main';
 
-/// The one test dish on the fake menu (a Rolex, 5,000).
+/// The add-on group on the test dishes: one optional drink (passion juice or soda).
+const _drinkAddOn = OptionGroup(
+  key: 'drink',
+  name: 'Add a drink',
+  required: false,
+  multiple: false,
+  choices: [
+    OptionChoice(key: 'passion', name: 'Passion juice', priceDelta: 6000),
+    OptionChoice(key: 'soda', name: 'Soda', priceDelta: 3000),
+  ],
+);
+
+/// The test menu: two grill and snack dishes with the optional drink, a drink, and one dish out today.
 const _menu = <MenuItem>[
+  MenuItem(
+    id: 'test-tilapia',
+    section: 'Grill',
+    name: 'Grilled tilapia',
+    price: 28000,
+    available: true,
+    options: [_drinkAddOn],
+    allergens: ['fish'],
+    description: 'Whole tilapia on the grill with greens.',
+  ),
   MenuItem(
     id: 'test-rolex',
     section: 'Snacks',
     name: 'Rolex',
     price: 5000,
     available: true,
-    options: [],
+    options: [_drinkAddOn],
     allergens: ['egg', 'gluten'],
+  ),
+  MenuItem(
+    id: 'test-passion',
+    section: 'Drinks',
+    name: 'Fresh passion juice',
+    price: 6000,
+    available: true,
+    options: [],
+    allergens: [],
+  ),
+  MenuItem(
+    id: 'test-luwombo',
+    section: 'Local',
+    name: 'Chicken luwombo',
+    price: 35000,
+    available: false,
+    options: [],
+    allergens: ['nuts'],
   ),
 ];
 
@@ -124,6 +167,9 @@ Future<void> _openCheckout(WidgetTester tester) async {
   await _settle(tester);
 }
 
+/// Finds [text] inside the open checkout sheet only (the food screen behind it shows the same words).
+Finder _inSheet(String text) => find.descendant(of: find.byType(CheckoutSheet), matching: find.text(text));
+
 /// Scrolls [finder] into view inside the checkout sheet, then taps it.
 Future<void> _tapVisible(WidgetTester tester, Finder finder) async {
   await tester.ensureVisible(finder);
@@ -152,13 +198,15 @@ void main() {
     await _settle(tester);
     expect(find.text('Proceed to Checkout'), findsNothing);
     // Step 3: choose takeaway, place the order.
-    await tester.tap(find.text('Takeaway'));
+    await tester.tap(_inSheet('Takeaway'));
     await _settle(tester);
-    await tester.tap(find.text('Place order'));
+    await tester.tap(_inSheet('Place order'));
     await tester.pump(const Duration(milliseconds: 300));
     expect(find.textContaining('Order F-0001 placed'), findsOneWidget);
     // Step 4: the cart is empty again.
     await _settle(tester, seconds: 5);
+    await tester.tap(find.text('Cart').last);
+    await _settle(tester);
     expect(find.text('Your cart is empty'), findsOneWidget);
   });
 
@@ -220,7 +268,7 @@ void main() {
     expect(find.byType(BackButton), findsOneWidget);
   });
 
-  testWidgets('the item page previews the dish, offers optional add-ons and a note, and adds them to the cart', (
+  testWidgets('the item page previews the dish, offers optional add-ons and a note, and Order now checks it out', (
     tester,
   ) async {
     usePhoneWindow(tester);
@@ -245,12 +293,11 @@ void main() {
     await tester.tap(find.textContaining('Passion juice'));
     await tester.enterText(find.byType(TextField), 'no tomatoes');
     await _settle(tester);
-    await tester.tap(find.textContaining('Add to Order'));
+    // Order now skips the cart: checkout opens with this dish, its add-on, its note and the total.
+    await tester.tap(find.textContaining('Order now'));
     await _settle(tester);
-    await tester.tap(find.text('Cart').last);
-    await _settle(tester);
+    expect(find.byType(CheckoutSheet), findsOneWidget);
     expect(find.text('Grilled tilapia'), findsOneWidget);
-    expect(find.text('Note: no tomatoes'), findsOneWidget);
     expect(find.textContaining('UGX 34,000'), findsWidgets);
   });
 
@@ -276,34 +323,34 @@ void main() {
 
   testWidgets('dine-in must ask what time before ordering', (tester) async {
     await _openCheckout(tester);
-    await _tapVisible(tester, find.text('Dine-in'));
+    await _tapVisible(tester, _inSheet('Dine-in'));
     expect(find.text('What time are you coming?'), findsOneWidget);
     // A table is needed too; with it typed, the order still waits for a time.
     await tester.enterText(find.widgetWithText(TextField, 'Table'), '4');
-    await _tapVisible(tester, find.text('Place order'));
+    await _tapVisible(tester, _inSheet('Place order'));
     expect(find.text('Choose what time you are coming.'), findsOneWidget);
   });
 
   testWidgets('takeaway shows the container price (when the super admin set one) in the total', (tester) async {
     await _openCheckout(tester);
     expect(find.textContaining('About UGX 5,000 before delivery'), findsOneWidget);
-    await _tapVisible(tester, find.text('Takeaway'));
+    await _tapVisible(tester, _inSheet('Takeaway'));
     expect(find.textContaining('Container +UGX 1,000'), findsOneWidget);
     expect(find.textContaining('About UGX 6,000 before delivery (container included)'), findsOneWidget);
   });
 
   testWidgets('delivery asks the guest to confirm the location before ordering', (tester) async {
     await _openCheckout(tester);
-    await _tapVisible(tester, find.text('Delivery'));
+    await _tapVisible(tester, _inSheet('Delivery'));
     await _tapVisible(tester, find.textContaining('Lodge grounds'));
     await tester.enterText(find.widgetWithText(TextField, 'Where to deliver'), 'Pool terrace');
     await _settle(tester);
     // Not confirmed yet: the order is refused.
-    await _tapVisible(tester, find.text('Place order'));
+    await _tapVisible(tester, _inSheet('Place order'));
     expect(find.text('Confirm the delivery location.'), findsOneWidget);
     // Confirm the location, then the order goes through.
     await _tapVisible(tester, find.textContaining('Confirm delivery to Lodge grounds: Pool terrace'));
-    await _tapVisible(tester, find.text('Place order'));
+    await _tapVisible(tester, _inSheet('Place order'));
     expect(find.textContaining('Order F-0001 placed'), findsOneWidget);
   });
 }

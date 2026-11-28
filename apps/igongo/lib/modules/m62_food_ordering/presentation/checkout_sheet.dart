@@ -30,6 +30,13 @@ import '../../m57_loyalty/points/presentation/points_use_switch.dart';
 import 'map/delivery_pin_map.dart';
 import '../domain/order_type.dart';
 
+/// Opens the checkout sheet from the bottom, for the cart as it is.
+Future<void> openCheckoutSheet(BuildContext context) => showModalBottomSheet<void>(
+  context: context,
+  isScrollControlled: true,
+  builder: (_) => const CheckoutSheet(),
+);
+
 /// The checkout sheet for the cart.
 class CheckoutSheet extends ConsumerStatefulWidget {
   /// Creates the sheet.

@@ -49,10 +49,6 @@ class OrderFoodScreen extends ConsumerWidget {
   /// The screen's context.
   final ScreenContext screen;
 
-  /// Opens [sheet] from the bottom.
-  static Future<void> _open(BuildContext context, Widget sheet) =>
-      showModalBottomSheet<void>(context: context, isScrollControlled: true, builder: (_) => sheet);
-
   /// A venue's photo. Kaahwa Kanuzire is matched by name (the venue has no photo
   /// field from the API yet); any other venue shows the placeholder until it has one.
   static String? _venuePhoto(Outlet o) => o.name.toLowerCase().contains('kaahwa') ? GuestPhotos.hotelKaahwaKanuzire : null;
@@ -92,7 +88,7 @@ class OrderFoodScreen extends ConsumerWidget {
     }
     // Step 2: the cart becomes this one dish, then the checkout sheet opens on it.
     ref.read(cartProvider.notifier).refill(outlet, [quickCartLine(item)]);
-    _open(context, const CheckoutSheet());
+    openCheckoutSheet(context);
   }
 
   @override
@@ -264,7 +260,7 @@ class OrderFoodScreen extends ConsumerWidget {
           ),
           // Step 11: the Your order bar, only while the cart has dishes.
           if (count > 0)
-            OrderSummaryBar(count: count, total: total, onView: () => _open(context, const CheckoutSheet())),
+            OrderSummaryBar(count: count, total: total, onView: () => openCheckoutSheet(context)),
         ],
       );
     },
