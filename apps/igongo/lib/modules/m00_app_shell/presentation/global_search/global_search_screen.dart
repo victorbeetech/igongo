@@ -126,11 +126,17 @@ class _GlobalSearchScreenState extends ConsumerState<GlobalSearchScreen> {
     context.push(CatalogIndex.instance.locationOf(target));
   }
 
+  /// Opens the Updates screen (S00-28), the same screen the guest home's bell opens.
+  void _openUpdates(BuildContext context) {
+    final target = CatalogIndex.instance.screens['S00-28'];
+    if (target != null) context.push(CatalogIndex.instance.locationOf(target));
+  }
+
   @override
   Widget build(BuildContext context) => Column(
     children: [
       // Step 1: the top bar with the logo, the bell and the profile picture.
-      DiscoveryTopBar(onBell: () {}), // The notification inbox is wired later.
+      DiscoveryTopBar(onBell: () => _openUpdates(context)),
       // Step 2: the search box, the filter button and the mic.
       Padding(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),

@@ -6,8 +6,8 @@ import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../../shared/theme/theme.dart';
-import '../../../../../shared/ui/icons/round_icon_button.dart';
 import '../../../../../shared/ui/logo/igongo_logo.dart';
+import '../../../../m10_notifications/presentation/inbox/inbox_bell_button.dart';
 
 /// The search screen's top bar.
 class DiscoveryTopBar extends StatelessWidget {
@@ -53,7 +53,7 @@ class DiscoveryTopBar extends StatelessWidget {
             ),
           ),
           // Step 2: the bell with its alert dot, then the profile picture (a placeholder until wired).
-          RoundIconButton(icon: Icons.notifications_none, tooltip: 'Notifications', showDot: true, onPressed: onBell),
+          InboxBellButton(onPressed: onBell),
           const SizedBox(width: IgongoSpace.sm),
           Tooltip(
             message: 'Profile',
