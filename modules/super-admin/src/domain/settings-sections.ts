@@ -31,6 +31,26 @@ const branding = z.object({
   minimumAppVersion: z.string().max(20),
 });
 
+/**
+ * One home-screen banner the super admin manages (the carousel in the guest app).
+ * `imageFileId` is a file id from the Files upload ("" for no picture);
+ * `screen` is the app screen code the banner opens ("" for none).
+ */
+const banner = z.object({
+  id: z.string().min(1).max(40),
+  title: z.string().min(1).max(120),
+  subtitle: z.string().max(200),
+  imageFileId: z.string().max(80),
+  screen: z.string().max(20),
+  active: z.boolean(),
+});
+
+/** Content the apps show that the super admin changes without code (banners, and later more). */
+const content = z.object({
+  /** The carousel's banners, in order. The app shows only the active ones. */
+  banners: z.array(banner).max(10),
+});
+
 /** Time, money and number formats. */
 const regional = z.object({
   timeZone: z.string().max(60),
@@ -40,7 +60,7 @@ const regional = z.object({
   financialYearStartMonth: z.number().int().min(1).max(12),
 });
 
-export const SETTINGS_SECTIONS = { hotel, branding, regional } as const;
+export const SETTINGS_SECTIONS = { hotel, branding, content, regional } as const;
 export type SettingsSection = keyof typeof SETTINGS_SECTIONS;
 export const SECTION_NAMES = Object.keys(SETTINGS_SECTIONS) as SettingsSection[];
 
@@ -48,8 +68,9 @@ export const SECTION_NAMES = Object.keys(SETTINGS_SECTIONS) as SettingsSection[]
 export const SETTINGS_DEFAULTS: { [K in SettingsSection]: z.infer<(typeof SETTINGS_SECTIONS)[K]> } = {
   hotel: { name: "Igongo Country Hotel & Cultural Centre", shortName: "Igongo", address: "Mbarara, Uganda", phone: "", whatsapp: "256793128137", email: "", tin: "", registration: "" },
   branding: { logo: "stacked", announcement: "", loginWelcome: "Welcome to Igongo", minimumAppVersion: "0.0.0" },
+  content: { banners: [] },
   regional: { timeZone: "Africa/Kampala", currency: "UGX", dateFormat: "DD/MM/YYYY", businessDayCutoff: "04:00", financialYearStartMonth: 7 },
 };
 
 /** Sections anyone may read (the login screen needs them before sign-in). */
-export const PUBLIC_SECTIONS: SettingsSection[] = ["hotel", "branding"];
+export const PUBLIC_SECTIONS: SettingsSection[] = ["hotel", "branding", "content"];

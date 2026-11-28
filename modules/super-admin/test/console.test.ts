@@ -34,6 +34,15 @@ describe("settings", () => {
     expect((await readSection(store, "branding"))["announcement"]).toBe("Pool closed today");
     await expect(updateSection(store, ctx, "regional", { currency: "shillings" })).rejects.toThrow(/currency/);
   });
+
+  it("stores home banners in the public content section and refuses a banner without a title", async () => {
+    const { store, ctx } = await setup();
+    expect((await readSection(store, "content"))["banners"]).toEqual([]);
+    const banner = { id: "b1", title: "Heritage Suite", subtitle: "Two nights", imageFileId: "", screen: "S67-01", active: true };
+    await updateSection(store, ctx, "content", { banners: [banner] });
+    expect((await readSection(store, "content"))["banners"]).toEqual([banner]);
+    await expect(updateSection(store, ctx, "content", { banners: [{ ...banner, title: "" }] })).rejects.toThrow();
+  });
 });
 
 describe("encrypted keys", () => {
