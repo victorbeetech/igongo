@@ -84,7 +84,25 @@ export const MIGRATIONS: Migration[] = [
  },
  {
   "module": "roles-permissions",
-  "name": "0011_booking_calendar_permissions",
+  "name": "0011_guest_content_permissions",
+  "checksum": "c5dfe41a9d35d4df",
+  "sql": "-- Guest content (banners, stories, featured stays, did-you-know cards and\n-- restaurant slides): the super admin can view and edit everything the guest\n-- app shows, without code. Other roles get these keys from the super admin screens.\n--> statement-breakpoint\nINSERT INTO \"roles\".\"role_permissions\" (\"role_id\",\"permission_key\",\"scope\") SELECT r.\"id\", p.key, 'all' FROM \"roles\".\"roles\" r CROSS JOIN (VALUES ('guest-content.content.edit'), ('guest-content.content.view')) AS p(key) WHERE r.\"id\" = 'role_super-admin' ON CONFLICT DO NOTHING;\n"
+ },
+ {
+  "module": "roles-permissions",
+  "name": "0011_super_admin_notify_permissions",
+  "checksum": "10d8fe72b7c40e69",
+  "sql": "-- The super admin posts updates and notifications from the web portal, which\n-- calls POST /api/notifications/push/broadcast (needs notifications.broadcast.send)\n-- and sends a test push (needs notifications.push.test). Migration 0010 granted\n-- the super admin every key the modules defined then, and these two were not in\n-- that list, so the super admin got \"permission_denied\". Grants them now.\n-- ON CONFLICT DO NOTHING keeps any change already made in the app.\nINSERT INTO \"roles\".\"role_permissions\" (\"role_id\",\"permission_key\",\"scope\") VALUES\n('role_super-admin','notifications.broadcast.send','all'),\n('role_super-admin','notifications.push.test','all')\nON CONFLICT DO NOTHING;\n"
+ },
+ {
+  "module": "roles-permissions",
+  "name": "0012_points_rewards_permissions",
+  "checksum": "e724843e4a5d2716",
+  "sql": "-- Points rewards: the super admin can view and change the points rules,\n-- run expiry and adjust a guest's points by hand, without code. Other roles\n-- get these keys from the super admin screens.\n--> statement-breakpoint\nINSERT INTO \"roles\".\"role_permissions\" (\"role_id\",\"permission_key\",\"scope\") SELECT r.\"id\", p.key, 'all' FROM \"roles\".\"roles\" r CROSS JOIN (VALUES ('points-rewards.rules.view'), ('points-rewards.rules.edit'), ('points-rewards.points.adjust')) AS p(key) WHERE r.\"id\" = 'role_super-admin' ON CONFLICT DO NOTHING;\n"
+ },
+ {
+  "module": "roles-permissions",
+  "name": "0013_booking_calendar_permissions",
   "checksum": "29891b199d8fa13a",
   "sql": "-- The booking calendar's settings (on/off, opening days, full rule, window)\n-- are changed by the super admin. Granted to the super admin role through the\n-- roles tables, like every other role permission, so the super admin can change\n-- the role later in the app. ON CONFLICT DO NOTHING keeps any change already made.\n--> statement-breakpoint\nINSERT INTO \"roles\".\"role_permissions\" (\"role_id\",\"permission_key\",\"scope\") SELECT r.\"id\", 'booking-calendar.settings.view', 'all' FROM \"roles\".\"roles\" r WHERE r.\"id\" = 'role_super-admin' ON CONFLICT DO NOTHING;\n--> statement-breakpoint\nINSERT INTO \"roles\".\"role_permissions\" (\"role_id\",\"permission_key\",\"scope\") SELECT r.\"id\", 'booking-calendar.settings.edit', 'all' FROM \"roles\".\"roles\" r WHERE r.\"id\" = 'role_super-admin' ON CONFLICT DO NOTHING;\n"
  },
@@ -179,6 +197,18 @@ export const MIGRATIONS: Migration[] = [
   "sql": "CREATE SCHEMA \"menu\";\n--> statement-breakpoint\nCREATE TABLE \"menu\".\"items\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"outlet\" text NOT NULL,\n\t\"section\" text NOT NULL,\n\t\"name\" text NOT NULL,\n\t\"description\" text,\n\t\"price\" integer NOT NULL,\n\t\"prep_minutes\" integer NOT NULL,\n\t\"options\" jsonb NOT NULL,\n\t\"tags\" jsonb NOT NULL,\n\t\"allergens\" jsonb NOT NULL,\n\t\"photo_url\" text,\n\t\"active\" boolean NOT NULL,\n\t\"visible_to_clients\" boolean NOT NULL,\n\t\"out_of_stock_on\" text,\n\t\"sort_order\" integer NOT NULL,\n\t\"updated_at\" timestamp with time zone NOT NULL\n);\n--> statement-breakpoint\nCREATE TABLE \"menu\".\"settings\" (\n\t\"key\" text PRIMARY KEY NOT NULL,\n\t\"value\" jsonb NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_by\" text\n);\n--> statement-breakpoint\nCREATE INDEX \"items_outlet_idx\" ON \"menu\".\"items\" USING btree (\"outlet\",\"section\",\"sort_order\");"
  },
  {
+  "module": "guest-content",
+  "name": "0000_orange_maximus",
+  "checksum": "5b1b591b6b12efc1",
+  "sql": "CREATE SCHEMA \"guest_content\";\n--> statement-breakpoint\nCREATE TABLE \"guest_content\".\"settings\" (\n\t\"key\" text PRIMARY KEY NOT NULL,\n\t\"value\" jsonb NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_by\" text\n);\n"
+ },
+ {
+  "module": "points-rewards",
+  "name": "0000_good_nebula",
+  "checksum": "9fcc723ea20585e3",
+  "sql": "CREATE SCHEMA \"points_rewards\";\n--> statement-breakpoint\nCREATE TABLE \"points_rewards\".\"events\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"guest_id\" text NOT NULL,\n\t\"kind\" text NOT NULL,\n\t\"points\" integer NOT NULL,\n\t\"source_ref\" text NOT NULL,\n\t\"note\" text NOT NULL,\n\t\"created_at\" timestamp with time zone NOT NULL\n);\n--> statement-breakpoint\nCREATE TABLE \"points_rewards\".\"lots\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"guest_id\" text NOT NULL,\n\t\"earned\" integer NOT NULL,\n\t\"remaining\" integer NOT NULL,\n\t\"earned_at\" timestamp with time zone NOT NULL,\n\t\"expires_at\" timestamp with time zone,\n\t\"source_ref\" text NOT NULL\n);\n--> statement-breakpoint\nCREATE TABLE \"points_rewards\".\"settings\" (\n\t\"key\" text PRIMARY KEY NOT NULL,\n\t\"value\" jsonb NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_by\" text\n);\n--> statement-breakpoint\nCREATE UNIQUE INDEX \"events_source_ref_key\" ON \"points_rewards\".\"events\" USING btree (\"source_ref\");--> statement-breakpoint\nCREATE UNIQUE INDEX \"lots_source_ref_key\" ON \"points_rewards\".\"lots\" USING btree (\"source_ref\");"
+ },
+ {
   "module": "food-ordering",
   "name": "0000_init",
   "checksum": "6deacf7e8c1f1d68",
@@ -207,6 +237,12 @@ export const MIGRATIONS: Migration[] = [
   "name": "0004_guest_locations",
   "checksum": "30d2b0ec42163bb3",
   "sql": "CREATE TABLE \"orders\".\"delivery_pins\" (\n\t\"user_id\" text PRIMARY KEY NOT NULL,\n\t\"label\" text NOT NULL,\n\t\"zone\" text,\n\t\"lat\" double precision NOT NULL,\n\t\"lng\" double precision NOT NULL,\n\t\"updated_at\" timestamp with time zone NOT NULL\n);\n"
+ },
+ {
+  "module": "food-ordering",
+  "name": "0005_lethal_millenium_guard",
+  "checksum": "85d3e3cf7ee8403c",
+  "sql": "ALTER TABLE \"orders\".\"orders\" ADD COLUMN \"points_spent\" integer DEFAULT 0 NOT NULL;--> statement-breakpoint\nALTER TABLE \"orders\".\"orders\" ADD COLUMN \"points_discount\" integer DEFAULT 0 NOT NULL;"
  },
  {
   "module": "delivery-riders",

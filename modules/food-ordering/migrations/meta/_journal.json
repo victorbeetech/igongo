@@ -36,6 +36,13 @@
       "when": 1795756208532,
       "tag": "0004_guest_locations",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1795852127766,
+      "tag": "0005_lethal_millenium_guard",
+      "breakpoints": true
     }
   ]
 }
