@@ -26,7 +26,7 @@ export interface PublicMethod {
 export async function publicMethods(
   store: LoginSettingsStore,
   providerReady: ProviderReadiness = { google: true, apple: true },
-): Promise<{ methods: PublicMethod[]; firstMethod: string; allowSelfRegistration: boolean }> {
+): Promise<{ methods: PublicMethod[]; firstMethod: string; allowSelfRegistration: boolean; allowSelfDelete: boolean; allowSignOut: boolean }> {
   const [methods, policy] = await Promise.all([store.methods(), store.policy()]);
   return {
     methods: methods
@@ -35,6 +35,9 @@ export async function publicMethods(
       .map((m) => ({ method: m.method, label: METHOD_INFO[m.method].label, platform: METHOD_INFO[m.method].platform })),
     firstMethod: policy.firstMethod,
     allowSelfRegistration: policy.allowSelfRegistration,
+    // The app reads these two switches to show or hide Sign Out and Delete Account.
+    allowSelfDelete: policy.allowSelfDelete,
+    allowSignOut: policy.allowSignOut,
   };
 }
 

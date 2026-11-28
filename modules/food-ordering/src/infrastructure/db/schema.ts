@@ -5,7 +5,7 @@
 
 import type { DeliveryPlace } from "@igongo/contracts/food-ordering";
 import { moduleSettingsTable } from "@igongo/core";
-import { boolean, doublePrecision, index, integer, jsonb, pgSchema, smallint, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
+import { boolean, doublePrecision, index, integer, jsonb, pgSchema, primaryKey, smallint, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 import type { OrderLine } from "../../domain/order-line";
 import type { SavedCartLine } from "../../domain/saved-cart";
 import type { StatusChange } from "../../domain/status-change";
@@ -33,6 +33,8 @@ export const orders = ordersSchema.table(
     subtotal: integer("subtotal").notNull(),
     discount: integer("discount").notNull().default(0),
     promoCode: text("promo_code"),
+    pointsSpent: integer("points_spent").notNull().default(0),
+    pointsDiscount: integer("points_discount").notNull().default(0),
     deliveryFee: integer("delivery_fee").notNull(),
     containerFee: integer("container_fee").notNull().default(0),
     total: integer("total").notNull(),
@@ -100,3 +102,19 @@ export const deliveryPins = ordersSchema.table("delivery_pins", {
 
 /** The ordering rules (key `rules`). */
 export const settings = moduleSettingsTable(ordersSchema);
+
+/**
+ * Each guest's saved dishes (the heart on a dish): one row per guest and
+ * dish, so a guest only ever reads and changes their own list.
+ */
+export const savedDishes = ordersSchema.table(
+  "saved_dishes",
+  {
+    userId: text("user_id").notNull(),
+    itemId: text("item_id").notNull(),
+    outlet: text("outlet").notNull(),
+    savedAt: timestamp("saved_at", { withTimezone: true }).notNull(),
+  },
+  // One row per guest and dish; the newest-first list reads by guest.
+  (t) => [primaryKey({ columns: [t.userId, t.itemId] }), index("saved_dishes_user_idx").on(t.userId, t.savedAt)],
+);

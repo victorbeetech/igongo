@@ -2,6 +2,7 @@
 // Queries and changes for the Payments pages (S77-01 to S77-10).
 
 import { useQuery } from "@tanstack/react-query";
+import { allHistoryPages } from "@/shared/api/allHistoryPages";
 import { api } from "@/shared/api/apiClient";
 import { useApiMutation } from "@/shared/api/useApiMutation";
 import type { MethodInfo, MethodSettings } from "../domain/methodInfo";
@@ -15,7 +16,7 @@ export const useMethods = (module: string, outlet?: string) =>
 export const usePayment = (id: string) =>
   useQuery({ queryKey: ["payments", id], queryFn: () => api<Payment>(`/api/payments/${id}`), enabled: !!id, refetchInterval: (q) => (q.state.data?.status === "pending" ? 4000 : false) });
 
-export const usePayments = (mine: boolean) => useQuery({ queryKey: ["payments", "list", mine], queryFn: () => api<{ items: Payment[] }>(`/api/payments${mine ? "?mine=1" : ""}`) });
+export const usePayments = (mine: boolean) => useQuery({ queryKey: ["payments", "list", mine], queryFn: () => allHistoryPages<Payment>(`/api/payments${mine ? "?mine=1" : ""}`) });
 
 export const useMethodSettings = () => useQuery({ queryKey: ["payments", "settings"], queryFn: () => api<MethodSettings>("/api/payments/settings") });
 

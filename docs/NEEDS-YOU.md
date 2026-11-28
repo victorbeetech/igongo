@@ -242,3 +242,16 @@ No key is written in the repository. The code is `modules/payments/src/infrastru
 - Address: Mbarara - Masaka Highway, Biharwe, Mbarara, Uganda
 
 **Exact steps:** send the final numbers and address. Claude then changes them in one file, `apps/igongo/lib/shared/contact/contact_details.dart`. For the WhatsApp number, the super admin sets it in the web settings (Hotel profile, "Whatsapp").
+## Notifications: what is built, and what still needs you (28 Nov 2026)
+
+**Built and tested:** every notification goes through one path (`notifyPeople` in `modules/notifications`), which writes the Updates inbox item and then sends the phone push. Guests now hear about their booking when it is received, approved, confirmed by payment, or cancelled by staff (`packages/bookings-kit`). Chat messages and food order updates already used this path. The super admin can post an update to people holding chosen roles from the web portal (S10-04, "Post an update"). The super admin role now has the two permissions that broadcast and the test push need (migration `0011`).
+
+**Needs you before phones get pushes:**
+- Add the Firebase service-account key as the Worker secret `FCM_SERVICE_ACCOUNT`. Until then the inbox still gets every item, and the push result says "not configured". Steps: Firebase console, Project settings, Service accounts, Generate new private key, then `wrangler secret put FCM_SERVICE_ACCOUNT` with the whole JSON. Sign-in on the app also needs the Firebase app config files.
+- The app must register its push token on sign-in. That needs the Firebase config in the app (on hold).
+
+**Not built yet (so these notifications do not fire on their own):**
+- The notification rule editor (S10-02) does not save rules yet. Rules come from an empty list, so no rule-based notification fires until the editor is built (Phase 7). Posts from the super admin and the order, chat and booking messages do not need rules.
+- Quiet hours are not in the rule model yet.
+- Topic broadcasts (everyone, guests, staff) send to phones only and do not write Updates inbox items, because a topic has no list of people. The web page only posts to roles, so this affects nothing in the app today.
+- Staff-side booking cancellations (from the desk) may not tell the guest, because only the guest's booking services carry the notifier. Check when the desk screens are wired.

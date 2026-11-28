@@ -40,7 +40,10 @@ export async function cancelOrder(deps: OrderingDeps, id: string, by: { userId: 
   }
   if (!cancellable(order.status)) throw new AppError("conflict", "This order can no longer be cancelled.");
   // Money already paid is refunded by Payments staff; the note says so.
-  return moveTo(deps, order, "cancelled", order.paid > 0 ? `${reason} (refund ${order.paid} UGX)` : reason);
+  const cancelled = await moveTo(deps, order, "cancelled", order.paid > 0 ? `${reason} (refund ${order.paid} UGX)` : reason);
+  // Points come back: spent ones returned, earned ones taken back (once per order).
+  if (deps.points && order.userId) await deps.points.reverse(order.userId, order.id);
+  return cancelled;
 }
 
 export async function recordOrderPayment(deps: OrderingDeps, id: string, amount: number): Promise<void> {
@@ -49,4 +52,6 @@ export async function recordOrderPayment(deps: OrderingDeps, id: string, amount:
   await deps.orders.update(paid);
   const needed = paidBeforeKitchen(await deps.rules.read(), order.type, order.total);
   if (order.status === "awaiting_payment" && paid.paid >= needed) await moveTo(deps, paid, "received", `Paid ${paid.paid} UGX`);
+  // Earn points once the order is paid in full (a guest's order only; once per order).
+  if (deps.points && order.userId && paid.paid >= order.total) await deps.points.earn(order.userId, order.total, order.id);
 }

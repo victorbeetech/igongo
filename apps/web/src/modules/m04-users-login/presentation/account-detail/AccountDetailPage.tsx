@@ -4,8 +4,9 @@
 // Roles are given on the Role holders page (Roles & Permissions). A guest
 // account becomes staff only through the staff match panel.
 
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useAccount, useAccountSessions, useSetStatus, useSignOutAccount, type Account } from "@/modules/m04-users-login/data/accountsApi";
+import { useAccount, useAccountSessions, useDeleteAccount, useSetStatus, useSignOutAccount, type Account } from "@/modules/m04-users-login/data/accountsApi";
 import { api } from "@/shared/api/apiClient";
 import { LiveData } from "@/shared/api/LiveData";
 import type { ScreenContext } from "@/shared/catalog/types";
@@ -35,6 +36,9 @@ function AccountBody({ account: a }: { account: Account }) {
   const roles = useQuery({ queryKey: ["user-roles", a.id], queryFn: () => api<{ items: { roleId: string; endsAt: string | null }[] }>(`/api/access/users/${a.id}/roles`) });
   const setStatus = useSetStatus(a.id);
   const signOut = useSignOutAccount(a.id);
+  const deleteAccount = useDeleteAccount(a.id);
+  // Step 1: deleting is two clicks: first "Delete guest account", then "Confirm delete" (asked here, not in a browser pop-up).
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
   const me = useMe();
   return (
     <div className="grid gap-4 p-4">
@@ -52,6 +56,26 @@ function AccountBody({ account: a }: { account: Account }) {
           {a.status === "active" && <Button variant="secondary" onClick={() => setStatus.mutate("suspended")}>Suspend</Button>}
           <Button variant="secondary" onClick={() => signOut.mutate(undefined)}>Sign out everywhere</Button>
         </div>
+        {/* Step 2: delete a guest account. Staff and the admin's own account are never offered this. */}
+        {a.kind === "client" && a.id !== me.data?.account.id && can(me.data, "users-login.accounts.delete") && (
+          <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-line pt-3">
+            {!confirmingDelete ? (
+              <Button variant="danger" onClick={() => setConfirmingDelete(true)}>Delete guest account</Button>
+            ) : (
+              <>
+                <p className="text-body text-muted">This erases the account and signs it out everywhere. It cannot be undone.</p>
+                <Button
+                  variant="danger"
+                  disabled={deleteAccount.isPending}
+                  onClick={() => deleteAccount.mutate(undefined, { onSuccess: () => setConfirmingDelete(false) })}
+                >
+                  Confirm delete
+                </Button>
+                <Button variant="secondary" onClick={() => setConfirmingDelete(false)}>Cancel</Button>
+              </>
+            )}
+          </div>
+        )}
       </Card>
       {a.kind === "client" && can(me.data, "users-login.staff-match.approve") && <StaffMatchPanel userId={a.id} emailVerified={a.emailVerified} />}
       <SectionHeader title="Roles" />

@@ -12,7 +12,10 @@ import '../../../domain/trending_tone.dart';
 /// The trending block on the search screen.
 class TrendingExperiencesCard extends StatelessWidget {
   /// Creates the block for [experiences].
-  const TrendingExperiencesCard({super.key, required this.experiences});
+  const TrendingExperiencesCard({super.key, required this.experiences, required this.onOpen});
+
+  /// Called with the index of the experience that was tapped.
+  final void Function(int index) onOpen;
 
   /// The experiences to list, in order.
   final List<TrendingExperience> experiences;
@@ -43,12 +46,15 @@ class TrendingExperiencesCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: IgongoSpace.md),
-              // Step 2: one row per experience.
-              for (final experience in experiences)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: IgongoSpace.sm),
-                  child: _ExperienceRow(experience: experience),
-                ),
+              // Step 2: one row per experience, or a short note while the admin has added none.
+              if (experiences.isEmpty)
+                Text('Nothing trending yet.', style: context.text.bodyMedium?.copyWith(color: p.textMuted))
+              else
+                for (var i = 0; i < experiences.length; i++)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: IgongoSpace.sm),
+                    child: _ExperienceRow(experience: experiences[i], onTap: () => onOpen(i)),
+                  ),
             ],
           ),
         ),
@@ -59,21 +65,28 @@ class TrendingExperiencesCard extends StatelessWidget {
 
 /// One experience: its icon tile, name and subtitle, and the price pill on the right.
 class _ExperienceRow extends StatelessWidget {
-  const _ExperienceRow({required this.experience});
+  const _ExperienceRow({required this.experience, required this.onTap});
 
   /// The experience to show.
   final TrendingExperience experience;
+
+  /// Called when the row is tapped.
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
     // Step 1: the icon and the colours for this tone.
     final (IconData icon, Color tile, Color ink) = switch (experience.tone) {
+      null => (Icons.auto_awesome_outlined, p.primaryContainer, p.primary),
       TrendingTone.heritage => (Icons.auto_stories, p.warmCard, p.warning),
       TrendingTone.culinary => (Icons.soup_kitchen, p.primaryContainer, p.primary),
       TrendingTone.wellness => (Icons.spa, p.background, p.text),
     };
-    return DecoratedBox(
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: DecoratedBox(
       decoration: BoxDecoration(color: p.surface, borderRadius: BorderRadius.circular(IgongoRadius.md)),
       child: Padding(
         padding: const EdgeInsets.all(IgongoSpace.md),
@@ -106,7 +119,7 @@ class _ExperienceRow extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.sm, vertical: IgongoSpace.xxs),
                 child: Text(
-                  ugx(experience.price),
+                  experience.price == null ? '—' : ugx(experience.price!),
                   style: context.text.labelSmall?.copyWith(color: ink, fontWeight: FontWeight.w700),
                 ),
               ),
@@ -114,6 +127,7 @@ class _ExperienceRow extends StatelessWidget {
           ],
         ),
       ),
+    ),
     );
   }
 }
