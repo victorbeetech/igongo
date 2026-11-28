@@ -30,16 +30,23 @@ class BookingsHomeHeader extends StatelessWidget {
         child: Row(
           children: [
             // Step 1: the calendar badge (it opens the booking calendar) and the title (the title may wrap on small text sizes).
-            Tooltip(
-              message: 'Booking calendar',
-              child: InkWell(
-                customBorder: const CircleBorder(),
-                onTap: onCalendar,
-                child: CircleAvatar(
-                  radius: 18,
-                  backgroundColor: p.primaryContainer,
-                  foregroundColor: p.primaryText,
-                  child: const Icon(Icons.calendar_month_outlined, size: 20),
+            // The tap area is the touch minimum, so the small badge is still easy to hit.
+            SizedBox(
+              width: IgongoTouch.minimum,
+              height: IgongoTouch.minimum,
+              child: Tooltip(
+                message: 'Booking calendar',
+                child: InkWell(
+                  customBorder: const CircleBorder(),
+                  onTap: onCalendar,
+                  child: Center(
+                    child: CircleAvatar(
+                      radius: 18,
+                      backgroundColor: p.primaryContainer,
+                      foregroundColor: p.primaryText,
+                      child: const Icon(Icons.calendar_month_outlined, size: 20),
+                    ),
+                  ),
                 ),
               ),
             ),
