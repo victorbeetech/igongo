@@ -231,14 +231,12 @@ No key is written in the repository. The code is `modules/payments/src/infrastru
 
 **Optional, later:** if the hotel or the owner has the official brand files, replace those two SVG files with the official ones. The buttons follow the file names, so nothing else changes.
 
-## Contact Us: confirm the hotel's numbers and address (27 Nov 2026)
+## Contact Us: enter the hotel's contact details in the super admin settings (27 Nov 2026)
 
-**Status:** the Contact Us screen (S00-46) is built, and the "Contact Us" links on the sign-in and create account screens open it. It is in the PR, waiting for your visual approval.
+**Status:** the Contact Us screen (S00-46) now reads every detail from the super admin's Hotel profile. Nothing is shown until the super admin enters it; there are no placeholder numbers in the app.
 
-**What is needed:** please confirm these are the final details. They are placeholders taken from the design, and the app shows them as they are:
-- Front desk number: +256 393 262 050 (Call Now button, and the top-bar call icon uses +256 392 722 963 from the design)
-- Reservations email: reservations@igongo.co.ug
-- WhatsApp number shown on the card: +256 772 123 456. The chat button itself opens the number the super admin sets in the hotel settings, not this one.
-- Address: Mbarara - Masaka Highway, Biharwe, Mbarara, Uganda
+**What is needed:** in the web portal, Business settings, Hotel profile, enter:
+- Phone (front desk), Email (reservations), WhatsApp (digits with the country code, such as 256700000002), Address, and Hours (such as 24/7).
+- Contact Us on/off switch: switch it off to hide the details from the app.
 
-**Exact steps:** send the final numbers and address. Claude then changes them in one file, `apps/igongo/lib/shared/contact/contact_details.dart`. For the WhatsApp number, the super admin sets it in the web settings (Hotel profile, "Whatsapp").
+**Exact steps:** sign in to the web portal as the super admin, open Business settings, fill in Hotel profile, and save. Channels with an empty field are left out of the screen. Please send Claude the final numbers only if you want Claude to enter them.

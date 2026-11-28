@@ -11,10 +11,21 @@ import 'whatsapp_number.dart';
 /// The message that is already typed when WhatsApp opens.
 const String whatsappHelloMessage = 'Hello Igongo, I need some help.';
 
-/// Opens the WhatsApp chat with the super admin's number. Shows a short notice if it cannot open.
+/// Opens the WhatsApp chat with the super admin's number. Shows a short notice if the number
+/// is not set yet, or if WhatsApp cannot open.
 Future<void> openWhatsappChat(BuildContext context, WidgetRef ref) async {
-  // Step 1: the number, from the super admin's setting.
-  final number = await ref.read(whatsappNumberProvider.future);
+  // Step 1: the number from the super admin's Hotel profile. Stop with a notice if it is missing or unreachable.
+  String? number;
+  try {
+    number = await ref.read(whatsappNumberProvider.future);
+  } on Object {
+    if (context.mounted) showIgongoToast(context, "Couldn't reach Igongo. Check your connection and try again.");
+    return;
+  }
+  if (number == null) {
+    if (context.mounted) showIgongoToast(context, 'WhatsApp chat is not set up yet.');
+    return;
+  }
   // Step 2: tap-to-chat link with the short message; WhatsApp (or the browser) opens it.
   final link = Uri.parse('https://wa.me/$number?text=${Uri.encodeComponent(whatsappHelloMessage)}');
   final opened = await launchUrl(link, mode: LaunchMode.externalApplication).catchError((_) => false);
