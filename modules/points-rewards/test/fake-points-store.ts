@@ -34,6 +34,9 @@ export class FakePointsStore implements PointsStore {
   async hasSource(sourceRef: string): Promise<boolean> {
     return this.events.some((e) => e.sourceRef === sourceRef);
   }
+  async eventBySource(sourceRef: string): Promise<PointsEvent | null> {
+    return this.events.find((e) => e.sourceRef === sourceRef) ?? null;
+  }
   async eventsOf(guestId: string, limit: number): Promise<PointsEvent[]> {
     return this.events
       .filter((e) => e.guestId === guestId)

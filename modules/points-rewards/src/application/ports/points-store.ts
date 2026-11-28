@@ -21,6 +21,8 @@ export interface PointsStore {
   lotsOf(guestId: string): Promise<PointsLot[]>;
   /** Lots with points left whose expiry date has passed at [now]. */
   lotsDueForExpiry(now: Date): Promise<PointsLot[]>;
+  /** The history line with this source, or null (used to read back what an order took or earned). */
+  eventBySource(sourceRef: string): Promise<PointsEvent | null>;
   /** True when a history line with this source is already recorded (so a retry never adds points twice). */
   hasSource(sourceRef: string): Promise<boolean>;
   /** A guest's newest history lines, newest first, at most [limit]. */

@@ -63,6 +63,12 @@ export class DrizzlePointsStore implements PointsStore {
     return row !== undefined;
   }
 
+  /** The history line with this source, or null. */
+  async eventBySource(sourceRef: string): Promise<PointsEvent | null> {
+    const [row] = await this.db.select().from(events).where(eq(events.sourceRef, sourceRef)).limit(1);
+    return row ? toEvent(row) : null;
+  }
+
   /** The guest's newest history lines first. */
   async eventsOf(guestId: string, limit: number): Promise<PointsEvent[]> {
     const rows = await this.db.select().from(events).where(eq(events.guestId, guestId)).orderBy(desc(events.createdAt)).limit(limit);

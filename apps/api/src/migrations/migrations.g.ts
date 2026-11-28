@@ -227,6 +227,12 @@ export const MIGRATIONS: Migration[] = [
   "sql": "CREATE TABLE \"orders\".\"delivery_pins\" (\n\t\"user_id\" text PRIMARY KEY NOT NULL,\n\t\"label\" text NOT NULL,\n\t\"zone\" text,\n\t\"lat\" double precision NOT NULL,\n\t\"lng\" double precision NOT NULL,\n\t\"updated_at\" timestamp with time zone NOT NULL\n);\n"
  },
  {
+  "module": "food-ordering",
+  "name": "0005_lethal_millenium_guard",
+  "checksum": "85d3e3cf7ee8403c",
+  "sql": "ALTER TABLE \"orders\".\"orders\" ADD COLUMN \"points_spent\" integer DEFAULT 0 NOT NULL;--> statement-breakpoint\nALTER TABLE \"orders\".\"orders\" ADD COLUMN \"points_discount\" integer DEFAULT 0 NOT NULL;"
+ },
+ {
   "module": "delivery-riders",
   "name": "0000_init",
   "checksum": "c2b38ace91546101",

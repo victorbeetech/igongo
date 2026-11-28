@@ -18,3 +18,5 @@ export { expireDue, type ExpiryResult } from "./application/use-cases/expire";
 export { adjustPoints, type AdjustInput } from "./application/use-cases/adjust";
 export { POINTS_PERMISSIONS } from "./presentation/permissions";
 export { pointsRouter } from "./presentation/points-router";
+export { pointsValue, reverseForOrder } from "./application/use-cases/checkout";
+export { pointsDesk } from "./infrastructure/points-desk";
