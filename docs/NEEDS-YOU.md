@@ -237,6 +237,52 @@ No key is written in the repository. The code is `modules/payments/src/infrastru
 
 **What is needed:** in the web portal, Business settings, Hotel profile, enter the phone (front desk), email (reservations), WhatsApp (digits with the country code, such as 256700000002), address and hours (such as 24/7). The Contact Us switch on the same page hides the details from the app when it is off.
 
+**Exact steps:** send the final numbers and address. Claude then changes them in one file, `apps/igongo/lib/shared/contact/contact_details.dart`. For the WhatsApp number, the super admin sets it in the web settings (Hotel profile, "Whatsapp").
+
+## Security review (28 Nov 2026)
+
+Full results: [SECURITY-CHECKLIST.md](SECURITY-CHECKLIST.md).
+
+### A. Replace the demo keys before go-live (about 20 minutes)
+
+Why: the keys pasted in the project chat are demo keys, so they must be replaced before real guests and staff use the system.
+
+Two kinds of key, two places:
+
+1. **Keys the super admin enters in the app (most of them).** Sign in at https://igongo.victorbee.com with the super admin's email and password. Open **Integrations** > **API keys**. Each key has a name, and the page shows only the last four characters once saved. The real key names are:
+   - Google sign-in: `google.client_id`, `google.client_secret`
+   - Apple sign-in: `apple.team_id`, `apple.key_id`, `apple.client_id`, `apple.private_key`, `apple.app_bundle_id`
+   - Email (Resend): `resend.api_key`, `resend.sender`
+   - Google Maps: `google_maps.api_key`
+   - Payments and messaging (when added): `africas_talking.api_key`, `africas_talking.username`, `whatsapp.access_token`, `whatsapp.phone_number_id`, `mtn_momo.api_user`, `mtn_momo.api_key`, `mtn_momo.subscription_key`, `airtel_money.client_id`, `airtel_money.client_secret`, `flutterwave.secret_key`, `flutterwave.public_key`, `flutterwave.secret_hash`
+   
+   For each one: create a fresh key at that provider's dashboard, paste it into the matching field, and save. The change is recorded in the Audit Trail.
+
+2. **Worker secrets in Cloudflare (set once, in the Cloudflare dashboard).** Open https://dash.cloudflare.com > **Workers & Pages** > **igongo-api** > **Settings** > **Variables and Secrets** > **+ Add**. Choose type **Secret**, enter the name exactly as listed, paste the new value, and save. The names are `BETTER_AUTH_SECRET`, `SETTINGS_ENCRYPTION_KEY`, `GOOGLE_CLIENT_SECRET`, `APPLE_PRIVATE_KEY`, `APNS_PRIVATE_KEY`, `SENTRY_DSN`, and `BOOTSTRAP_ADMIN_EMAIL` (an email, not a secret). Do not change `SETTINGS_ENCRYPTION_KEY` after keys are saved in the console: they would no longer decrypt. Ask Claude first if you need to rotate it.
+
+3. **Revoke the demo keys** at each provider once the new ones work. Sign-in with Google and the test push are the quickest checks.
+
+Why this matters: demo keys may have been seen outside the project.
+
+### B. Add the Cloudflare rate-limit rule on sign-in (about 5 minutes)
+
+Why: the app already limits sign-in attempts in its own database. This second layer stops floods at Cloudflare before they reach the Worker.
+
+1. Open https://dash.cloudflare.com and choose the **victorbee.com** zone (the domain that serves `igongo-api.victorbee.com`).
+2. In the left menu, click **Security** > **Security rules**.
+3. Click **Create rule** > **Rate limiting rules**.
+4. **Rule name:** `Igongo sign-in limit`.
+5. **When incoming requests match:** click **Edit expression** and paste exactly:
+   `(http.host eq "igongo-api.victorbee.com" and starts_with(http.request.uri.path, "/api/auth/"))`
+   If the expression editor is not available on your plan, choose **Field** `URI Path`, **Operator** `starts with`, **Value** `/api/auth/`, and add the host check as a second condition.
+6. **With the same characteristics:** tick **IP**.
+7. **When rate exceeds:** **Requests** `30`, **Period** `1 minute`. (The free plan allows only 10-second periods; if so, use 5 requests per 10 seconds.)
+8. **Then take action:** choose **Block**, and set the duration to `1 minute`.
+9. Click **Deploy**.
+10. Test: open the sign-in page and try a wrong password more than 30 times in a minute. The last attempts should show a Cloudflare block page instead of the app's error. Then check **Security** > **Security events** (or **Analytics**) for the matching block.
+
+Note for Claude: the menu names come from Cloudflare's current documentation and can change; if a name differs, the same setting is in the rule builder under **Rate limiting rules**.
+- **Confirm the database role.** In Neon, make sure the API connects with a role that has only the permissions the app needs, and that no public connection string is shared with any client. Why: the database must never be reachable from a browser or the app.
 **Exact steps:** sign in to the web portal as the super admin, open Business settings, fill in Hotel profile, and save.
 
 ## Notifications: what is built, and what still needs you (28 Nov 2026)

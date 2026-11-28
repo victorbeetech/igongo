@@ -7,6 +7,10 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: SAMEORIGIN
+  # Force HTTPS for this host for a year (no includeSubDomains, so other victorbee.com subdomains are not affected).
+  Strict-Transport-Security: max-age=31536000
+  # The portal never uses the camera, microphone or payment APIs, so the browser is told to refuse them.
+  Permissions-Policy: camera=(), microphone=(), payment=()
 
 # Built scripts and styles have content hashes in their names, so browsers may
 # keep them for a year.
