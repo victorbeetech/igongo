@@ -12,6 +12,7 @@
  */
 
 import { zValidator } from "@hono/zod-validator";
+import { hasPermission } from "@igongo/core";
 import { Hono, type Context } from "hono";
 import type { AudienceDirectory } from "../application/ports/audience-directory";
 import type { DeviceTokenRepository } from "../application/ports/device-token-repository";
@@ -65,7 +66,7 @@ export function notificationsRouter(deps: (c: Context<Env>) => NotificationsDeps
   // A test push to your own phones, to check the Firebase key works.
   app.post("/push/test", zValidator("json", testPushBody), async (c) => {
     const actor = actorOf(c);
-    if (!actor.permissions.includes(PERMISSIONS.testPush)) return c.json({ error: "permission_denied" }, 403);
+    if (!hasPermission(actor.permissions, PERMISSIONS.testPush)) return c.json({ error: "permission_denied" }, 403);
     const d = deps(c);
     const { title, body } = c.req.valid("json");
     const results = await sendPush(d, { kind: "users", userIds: [actor.userId] }, {
@@ -79,7 +80,8 @@ export function notificationsRouter(deps: (c: Context<Env>) => NotificationsDeps
 
   // A broadcast written by hand, such as a notice to all staff.
   app.post("/push/broadcast", zValidator("json", broadcastBody), async (c) => {
-    if (!actorOf(c).permissions.includes(PERMISSIONS.broadcast)) return c.json({ error: "permission_denied" }, 403);
+    // hasPermission matches wildcard grants (such as notifications.*.*), the same as every other module.
+    if (!hasPermission(actorOf(c).permissions, PERMISSIONS.broadcast)) return c.json({ error: "permission_denied" }, 403);
     const d = deps(c);
     const { target, title, body, channel, link } = c.req.valid("json");
     // The same path as every other notification: the inbox item, then the phones.
