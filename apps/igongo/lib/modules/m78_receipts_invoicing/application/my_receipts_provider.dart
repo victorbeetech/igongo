@@ -17,7 +17,8 @@ final receiptsApiProvider = Provider((ref) => ReceiptsApi(ref.watch(apiClientPro
 /// The person's receipts, newest first. An empty list shows the empty state.
 final myReceiptsProvider = FutureProvider.autoDispose<List<GuestReceipt>>((ref) async {
   // Step 1: depend on the session, so the list reloads after sign-in or sign-out.
-  ref.watch(sessionProvider);
+  // The signed-in person's name is the guest on each ticket.
+  final guestName = ref.watch(sessionProvider).valueOrNull?.name ?? '';
   final api = ref.watch(receiptsApiProvider);
 
   // Step 2: read the settled payments.
@@ -30,7 +31,7 @@ final myReceiptsProvider = FutureProvider.autoDispose<List<GuestReceipt>>((ref) 
 
   // Step 4: map each payment with its booking, then sort newest first.
   final receipts = [
-    for (final p in payments) receiptFromPayment(p, booking: bookingById[p['recordId'] as String? ?? '']),
+    for (final p in payments) receiptFromPayment(p, booking: bookingById[p['recordId'] as String? ?? ''], guestName: guestName),
   ]..sort((a, b) => b.at.compareTo(a.at));
   return receipts;
 });

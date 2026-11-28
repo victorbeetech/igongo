@@ -1,15 +1,17 @@
 // The buttons under the ticket: Download PDF as the main action, then Print and
-// Email receipt. Email is wired to the API; Download PDF and Print are still
-// placeholders until the receipt file is built.
+// Email receipt goes through the API. Download PDF and Print build the receipt
+// as a PDF on the phone and share it or send it to the printer.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:printing/printing.dart';
 
 import '../../../../shared/ui/button/igongo_button.dart';
 import '../../../../shared/ui/toast/igongo_toast.dart';
 import '../../application/my_receipts_provider.dart';
 import '../../domain/guest_receipt.dart';
+import '../../infrastructure/receipt_pdf_builder.dart';
 
 /// The three action buttons for [receipt].
 class ReceiptActions extends ConsumerWidget {
@@ -29,7 +31,7 @@ class ReceiptActions extends ConsumerWidget {
         label: 'Download PDF Pass',
         icon: Icons.file_download_outlined,
         expand: true,
-        onPressed: () => _comingSoon(context),
+        onPressed: () => _downloadPdf(context),
       ),
       // The two smaller actions side by side.
       Row(
@@ -41,7 +43,7 @@ class ReceiptActions extends ConsumerWidget {
               icon: Icons.print_outlined,
               variant: ButtonVariant.secondary,
               expand: true,
-              onPressed: () => _comingSoon(context),
+              onPressed: () => _print(context),
             ),
           ),
           Expanded(
@@ -58,8 +60,25 @@ class ReceiptActions extends ConsumerWidget {
     ],
   );
 
-  /// Shows the placeholder toast for the actions that are not built yet (PDF, print).
-  void _comingSoon(BuildContext context) => showIgongoToast(context, 'Coming soon for ${receipt.ref}');
+  /// Builds the receipt PDF and opens the phone's share sheet so it can be saved.
+  Future<void> _downloadPdf(BuildContext context) async {
+    try {
+      final bytes = await buildReceiptPdf(receipt);
+      await Printing.sharePdf(bytes: bytes, filename: 'receipt-${receipt.ref}.pdf');
+    } on Object {
+      if (context.mounted) showIgongoToast(context, 'The receipt could not be saved');
+    }
+  }
+
+  /// Builds the receipt PDF and opens the phone's print dialog.
+  Future<void> _print(BuildContext context) async {
+    try {
+      final bytes = await buildReceiptPdf(receipt);
+      await Printing.layoutPdf(onLayout: (_) async => bytes, name: 'receipt-${receipt.ref}');
+    } on Object {
+      if (context.mounted) showIgongoToast(context, 'The receipt could not be printed');
+    }
+  }
 
   /// Asks the API to email this receipt to the payer and reports the result in a toast.
   Future<void> _emailReceipt(BuildContext context, WidgetRef ref) async {

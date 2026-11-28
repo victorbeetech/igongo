@@ -1,6 +1,6 @@
 // Turns one API payment (and, for a booking, its booking record) into a
 // GuestReceipt for the My receipts list and the Receipt Detail ticket. Only
-// real fields are filled in. Fields no API holds (guest name, gate, table,
+// real fields are filled in. Fields no API holds yet (unit, gate, table,
 // loyalty points, tax levy) stay empty, so the screens show nothing for them.
 
 import '../domain/guest_receipt.dart';
@@ -8,8 +8,9 @@ import '../domain/receipt_category.dart';
 import '../domain/receipt_line.dart';
 
 /// Builds one receipt from a payment's JSON. [booking] is the payment's booking
-/// record when it pays for one, otherwise null.
-GuestReceipt receiptFromPayment(Map<String, dynamic> p, {Map<String, dynamic>? booking}) {
+/// record when it pays for one, otherwise null. [guestName] is the signed-in
+/// person's name, printed as the guest on the ticket.
+GuestReceipt receiptFromPayment(Map<String, dynamic> p, {Map<String, dynamic>? booking, String guestName = ''}) {
   // Step 1: the payment's own fields, with safe fallbacks for missing values.
   final id = p['id'] as String? ?? '';
   final label = p['label'] as String? ?? '';
@@ -35,7 +36,7 @@ GuestReceipt receiptFromPayment(Map<String, dynamic> p, {Map<String, dynamic>? b
     place: '',
     at: at.toLocal(),
     points: 0,
-    guestName: '',
+    guestName: guestName,
     guestUnit: '',
     passNumber: code,
     gateCode: '',
