@@ -21,9 +21,6 @@ class GuestDishRow extends ConsumerWidget {
   /// The number of placeholder cards shown when there are no dishes yet.
   static const _placeholderCount = 3;
 
-  /// The row's height: the card plus room for its shadow.
-  static const _rowHeight = 280.0;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Step 1: the first outlet, then its available dishes (containers are not dishes).
@@ -56,17 +53,24 @@ class GuestDishRow extends ConsumerWidget {
           ];
 
     // Step 3: the cards in a row that scrolls sideways, with the same edge margins as the page.
+    // IntrinsicHeight makes every card as tall as the tallest one, and no taller, so there is
+    // no fixed empty space inside the cards.
     return Semantics(
       label: 'Meals to order',
       container: true,
-      child: SizedBox(
-        height: _rowHeight,
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
-          itemCount: cards.length,
-          separatorBuilder: (_, _) => const SizedBox(width: IgongoSpace.md),
-          itemBuilder: (_, i) => cards[i],
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              for (var i = 0; i < cards.length; i++) ...[
+                if (i > 0) const SizedBox(width: IgongoSpace.md),
+                cards[i],
+              ],
+            ],
+          ),
         ),
       ),
     );
