@@ -20,7 +20,10 @@ import type { ModuleSwitchReader, SecretReader } from "@igongo/contracts/super-a
 import { bookingPayable, type BookingsDeps } from "@igongo/bookings-kit";
 import { AppError, type ChangeContext, type Database } from "@igongo/core";
 import { craftsBookshopDeps } from "@igongo/crafts-bookshop";
+import { SettingsGuestContentStore, type GuestContentDeps } from "@igongo/guest-content";
 import { DrizzleProfileRepository, SettingsCrmStore, type CrmDeps } from "@igongo/crm-guests";
+import type { PointsDesk } from "@igongo/contracts/points-rewards";
+import { DrizzlePointsStore, pointsDesk as buildPointsDesk, type PointsDeps } from "@igongo/points-rewards";
 import { deliveryDesk, DrizzleJobRepository, DrizzleRiderRepository, SettingsDeliveryRulesStore, type DeliveryDeps } from "@igongo/delivery-riders";
 import { eventsConferencesDeps } from "@igongo/events-conferences";
 import { DrizzleCartRepository, DrizzleLocationRepository, DrizzleOrderRepository, DrizzleRatingRepository, orderPayable, orderTracker, SettingsRulesStore, type OrderingDeps } from "@igongo/food-ordering";
@@ -79,11 +82,21 @@ export class GuestServices {
     return { items: new DrizzleItemRepository(this.db), settings: new SettingsMenuStore(this.db), change: this.change };
   }
 
+  /** Guest content (banners, stories, stays, facts, restaurant slides): one settings store. */
+  content(): GuestContentDeps {
+    return { store: new SettingsGuestContentStore(this.db), change: this.change };
+  }
+
+  /** Points rewards: one store for the rules, lots and history. */
+  points(): PointsDeps {
+    return { store: new DrizzlePointsStore(this.db), change: this.change };
+  }
+
   ordering(): OrderingDeps {
     const m = this.menu();
     return {
       orders: new DrizzleOrderRepository(this.db), carts: new DrizzleCartRepository(this.db), locations: new DrizzleLocationRepository(this.db), ratings: new DrizzleRatingRepository(this.db), rules: new SettingsRulesStore(this.db),
-      menu: menuReader(m.items, m.settings, this.change.now), delivery: this.deliveryDesk(), promos: this.promoDesk(), notify: this.notify, change: this.change,
+      menu: menuReader(m.items, m.settings, this.change.now), delivery: this.deliveryDesk(), promos: this.promoDesk(), points: this.pointsDesk(), notify: this.notify, change: this.change,
     };
   }
 
@@ -106,6 +119,23 @@ export class GuestServices {
       },
       redeem: async (code, recordId) => desk().redeem(code, recordId),
       release: async (code, recordId) => desk().release(code, recordId),
+    };
+  }
+
+  /**
+   * Points rewards as Food Ordering sees it. Spending refuses while the module
+   * is off; earning does nothing; giving points back always runs, so no guest
+   * loses points because the module was switched off.
+   */
+  private pointsDesk(): PointsDesk {
+    const desk = () => buildPointsDesk(this.points());
+    const on = () => this.isOn("points-rewards");
+    const off = new AppError("module_disabled", "Points are switched off for now.");
+    return {
+      valueOf: async (points) => ((await on()) ? desk().valueOf(points) : Promise.reject(off)),
+      spend: async (guestId, points, orderRef) => ((await on()) ? desk().spend(guestId, points, orderRef) : Promise.reject(off)),
+      earn: async (guestId, amount, orderRef) => ((await on()) ? desk().earn(guestId, amount, orderRef) : 0),
+      reverse: (guestId, orderRef) => desk().reverse(guestId, orderRef),
     };
   }
 

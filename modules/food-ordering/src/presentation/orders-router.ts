@@ -81,7 +81,7 @@ export function ordersRouter(deps: (c: Context<ActorEnv>) => OrderingDeps) {
     })
     .post("/", requirePermission(P.create), zValidator("json", placeBody), async (c) => {
       const actor = actorOf(c);
-      const { customer, notes, allergies, table, ...cart } = c.req.valid("json");
+      const { customer, notes, allergies, table, pointsToSpend, ...cart } = c.req.valid("json");
       // Staff taking an order for someone else name the customer; guests order for themselves.
       const forOther = !!customer && canForOthers(actor, P.create);
       if (customer && !forOther) throw new AppError("permission_denied", "Only staff can take orders for other people.");
@@ -89,7 +89,7 @@ export function ordersRouter(deps: (c: Context<ActorEnv>) => OrderingDeps) {
         ...cartOf(cart),
         customer: forOther ? { userId: null, name: customer.name, phone: customer.phone ?? null } : { userId: actor.userId, name: actor.name, phone: null },
         channel: forOther ? "staff" : "app",
-        ...(notes ? { notes } : {}), ...(allergies ? { allergies } : {}), ...(table ? { table } : {}),
+        ...(notes ? { notes } : {}), ...(allergies ? { allergies } : {}), ...(table ? { table } : {}), ...(pointsToSpend ? { pointsToSpend } : {}),
       });
       return c.json(shown(order), 201);
     })

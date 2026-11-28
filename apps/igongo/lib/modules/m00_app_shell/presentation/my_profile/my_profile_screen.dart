@@ -18,6 +18,8 @@ import '../../../../shared/screens/parts/screen_list_view.dart';
 import '../../../../shared/session/session_controller.dart';
 import '../../../../shared/theme/theme.dart';
 import '../../../m54_crm_guests/presentation/past_visits_screen.dart';
+import '../../../m57_loyalty/points/application/points_providers.dart';
+import '../../../m57_loyalty/points/presentation/points_activity_row.dart';
 import '../../../../shared/ui/button/igongo_button.dart';
 import '../../../../shared/ui/card/igongo_card.dart';
 import '../../../../shared/ui/toast/igongo_toast.dart';
@@ -77,6 +79,8 @@ class MyProfileScreen extends ConsumerWidget {
     final session = ref.watch(sessionProvider).valueOrNull;
     final prefs = PreferencesScope.of(context);
     final guest = session != null && !session.isStaff;
+    // Step 1b: the points wallet, read here so the points row is left out entirely when it is not needed.
+    final wallet = ref.watch(pointsWalletProvider).valueOrNull;
     // Step 1: the banner height includes the status bar, so the card overlaps the same spot as the design.
     final bannerHeight = MediaQuery.paddingOf(context).top + _bannerBodyHeight;
     final list = ScreenListView(
@@ -123,6 +127,8 @@ class MyProfileScreen extends ConsumerWidget {
           const ProfileSectionTitle('Resort Activity'),
           ProfileActionGroup(
             children: [
+              // My points: left out while the programme is off or the wallet has not loaded, so no empty divider shows.
+              if (wallet != null && wallet.enabled) PointsActivityRow(wallet: wallet, onTap: () => screen.open('S57-01')),
               // The bookings and orders list (the Bookings tab, S67-01).
               ProfileActionRow(
                 title: 'My Bookings & Orders',
