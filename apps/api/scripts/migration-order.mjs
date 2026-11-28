@@ -30,6 +30,7 @@ export const MODULES = [
   "delivery-riders",
   "payments",
   "room-bookings",
+  "booking-calendar",
   "museum",
   "events-conferences",
   "pool",

@@ -275,6 +275,12 @@ export const MIGRATIONS: Migration[] = [
   "sql": "CREATE SCHEMA \"rooms\";\n--> statement-breakpoint\nCREATE TABLE \"rooms\".\"bookings\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"code\" text NOT NULL,\n\t\"offering_id\" text NOT NULL,\n\t\"offering_name\" text NOT NULL,\n\t\"kind\" text NOT NULL,\n\t\"user_id\" text,\n\t\"guest_name\" text NOT NULL,\n\t\"guest_phone\" text,\n\t\"date\" text,\n\t\"end_date\" text,\n\t\"slot\" text,\n\t\"units\" integer NOT NULL,\n\t\"total\" integer NOT NULL,\n\t\"paid\" integer NOT NULL,\n\t\"status\" text NOT NULL,\n\t\"notes\" text,\n\t\"created_by\" text,\n\t\"cancel_reason\" text,\n\t\"checked_in_at\" timestamp with time zone,\n\t\"created_at\" timestamp with time zone NOT NULL,\n\t\"updated_at\" timestamp with time zone NOT NULL\n);\n--> statement-breakpoint\nCREATE TABLE \"rooms\".\"offerings\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"kind\" text NOT NULL,\n\t\"name\" text NOT NULL,\n\t\"description\" text,\n\t\"price\" integer NOT NULL,\n\t\"capacity\" integer NOT NULL,\n\t\"slots\" jsonb NOT NULL,\n\t\"on_date\" text,\n\t\"photo_url\" text,\n\t\"details\" jsonb NOT NULL,\n\t\"active\" boolean NOT NULL,\n\t\"visible_to_clients\" boolean NOT NULL,\n\t\"sort_order\" integer NOT NULL,\n\t\"updated_at\" timestamp with time zone NOT NULL\n);\n--> statement-breakpoint\nCREATE TABLE \"rooms\".\"settings\" (\n\t\"key\" text PRIMARY KEY NOT NULL,\n\t\"value\" jsonb NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_by\" text\n);\n--> statement-breakpoint\nCREATE UNIQUE INDEX \"bookings_code_key\" ON \"rooms\".\"bookings\" USING btree (\"code\");--> statement-breakpoint\nCREATE INDEX \"bookings_offering_idx\" ON \"rooms\".\"bookings\" USING btree (\"offering_id\",\"date\");--> statement-breakpoint\nCREATE INDEX \"bookings_user_idx\" ON \"rooms\".\"bookings\" USING btree (\"user_id\",\"created_at\");--> statement-breakpoint\nCREATE INDEX \"bookings_day_idx\" ON \"rooms\".\"bookings\" USING btree (\"date\",\"status\");"
  },
  {
+  "module": "booking-calendar",
+  "name": "0000_loving_piledriver",
+  "checksum": "8d5fb90b5dd54eee",
+  "sql": "CREATE SCHEMA \"booking_calendar\";\n--> statement-breakpoint\nCREATE TABLE \"booking_calendar\".\"settings\" (\n\t\"key\" text PRIMARY KEY NOT NULL,\n\t\"value\" jsonb NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_by\" text\n);\n"
+ },
+ {
   "module": "museum",
   "name": "0000_init",
   "checksum": "7a067e46e5a7c343",
