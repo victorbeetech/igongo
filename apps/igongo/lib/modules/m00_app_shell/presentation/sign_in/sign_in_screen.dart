@@ -99,25 +99,26 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       children: [
         // Step 3: the title and a short line under it, centred as in the design.
         Text('Welcome Back', textAlign: TextAlign.center, style: context.text.headlineSmall),
-        Text('Sign in to continue', textAlign: TextAlign.center, style: context.text.bodySmall),
+        Text('Sign in to continue your luxury experience', textAlign: TextAlign.center, style: context.text.bodySmall),
         // Step 3: Google and Apple at the top, always shown; the ones not set up say so when tapped.
         SocialAuthRow(available: social, busy: _busy, onPressed: _signInSocial),
         // Step 4: email and password, signed in for real.
+        // Step 4a: the boxes show only placeholders until focused; the label then floats to the border.
         IgongoField(
-          label: 'Email address',
-          hint: 'name@example.com',
+          label: 'Email Address',
           icon: Icons.mail_outline,
           controller: _email,
           keyboardType: TextInputType.emailAddress,
+          floatingLabel: true,
         ),
         PasswordField(
           label: 'Password',
-          hint: 'Password',
           icon: Icons.lock_outline,
           controller: _password,
           shown: _showPassword,
           onToggle: () => setState(() => _showPassword = !_showPassword),
           onSubmitted: (_) => _signIn(),
+          floatingLabel: true,
         ),
         // Step 5: "Remember me" on the left, "Forgot password?" on the right.
         Row(

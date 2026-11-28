@@ -8,9 +8,10 @@ import 'package:flutter/widgets.dart';
 import 'igongo_field.dart';
 import 'password_eye.dart';
 
-/// A labelled password box with an eye at the end. Typed text is kept when the eye is tapped.
+/// A password box with an eye at the end. Typed text is kept when the eye is tapped.
 class PasswordField extends StatelessWidget {
   /// Creates a password box. [shown] says whether the text is visible; [onToggle] flips it.
+  /// [floatingLabel] passes through to [IgongoField]: the label becomes the placeholder.
   const PasswordField({
     super.key,
     required this.label,
@@ -20,9 +21,10 @@ class PasswordField extends StatelessWidget {
     this.hint,
     this.icon,
     this.onSubmitted,
+    this.floatingLabel = false,
   });
 
-  /// The label above the box.
+  /// The label above the box, or the placeholder inside it when [floatingLabel] is on.
   final String label;
 
   /// Sample text inside the box, when different from the label.
@@ -43,6 +45,9 @@ class PasswordField extends StatelessWidget {
   /// Called when the person presses Done on the keyboard.
   final ValueChanged<String>? onSubmitted;
 
+  /// True to show the label only as a floating placeholder inside the box.
+  final bool floatingLabel;
+
   @override
   Widget build(BuildContext context) => IgongoField(
     label: label,
@@ -52,6 +57,7 @@ class PasswordField extends StatelessWidget {
     obscure: !shown,
     controller: controller,
     onSubmitted: onSubmitted,
+    floatingLabel: floatingLabel,
     // Step 2: the eye at the end of the box, which only flips the flag.
     suffix: PasswordEyeButton(shown: shown, onPressed: onToggle),
   );

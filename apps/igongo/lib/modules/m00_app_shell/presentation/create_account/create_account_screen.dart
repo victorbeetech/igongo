@@ -4,6 +4,7 @@
 // Google and Apple sit at the top when on and set up. The layout follows the
 // approved Create your account design. Uses the shared Auth frame.
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
@@ -48,8 +49,12 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
   bool _showPassword = false;
   bool _showConfirmPassword = false;
 
+  // Step A: the tap on the privacy notice words, created once and disposed with the screen.
+  late final TapGestureRecognizer _privacyTap = TapGestureRecognizer()..onTap = () => widget.screen.open('S00-38');
+
   @override
   void dispose() {
+    _privacyTap.dispose();
     _name.dispose();
     _email.dispose();
     _password.dispose();
@@ -117,50 +122,58 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
         // Step 2: the title and what this is, centred as in the design.
         Text('Create your account', textAlign: TextAlign.center, style: context.text.headlineSmall),
         Text(
-          'Book rooms and events, order food and track it.',
+          'Book rooms and events, order food and track it seamlessly.',
           textAlign: TextAlign.center,
           style: context.text.bodySmall,
         ),
         // Step 3: Google and Apple at the top, always shown; the ones not set up say so when tapped.
         SocialAuthRow(available: social, busy: _busy, onPressed: _signUpSocial),
-        // Step 4: the fields.
-        IgongoField(label: 'Full name', hint: 'Enter full name', icon: Icons.person_outline, controller: _name),
+        // Step 4: the boxes show only placeholders until focused; the label then floats to the border.
+        IgongoField(label: 'Full Name', icon: Icons.person_outline, controller: _name, floatingLabel: true),
         IgongoField(
-          label: 'Email address',
-          hint: 'name@example.com',
+          label: 'Email Address',
           icon: Icons.mail_outline,
           controller: _email,
           keyboardType: TextInputType.emailAddress,
+          floatingLabel: true,
         ),
-        // Step 4a: the password box, with its own eye and the rule under it.
+        // Step 4a: the password box, with its own eye.
         PasswordField(
           label: 'Password',
-          hint: 'Create strong password',
           icon: Icons.lock_outline,
           controller: _password,
           shown: _showPassword,
           onToggle: () => setState(() => _showPassword = !_showPassword),
-        ),
-        Text(
-          'At least 8 characters, a letter and a number',
-          style: context.text.bodySmall?.copyWith(color: context.palette.textMuted),
+          floatingLabel: true,
         ),
         // Step 4b: the confirm box, required, with its own eye.
         PasswordField(
-          label: 'Confirm password',
-          hint: 'Repeat your password',
+          label: 'Confirm Password',
           icon: Icons.lock_outline,
           controller: _passwordAgain,
           shown: _showConfirmPassword,
           onToggle: () => setState(() => _showConfirmPassword = !_showConfirmPassword),
+          floatingLabel: true,
         ),
-        // Step 5: consent to the privacy notice.
+        // Step 5: consent to the privacy notice. The words "privacy notice" open the About screen, which holds the policy.
         CheckboxListTile(
           value: _agreed,
           onChanged: (v) => setState(() => _agreed = v ?? false),
           contentPadding: EdgeInsets.zero,
           controlAffinity: ListTileControlAffinity.leading,
-          title: Text('I agree to the Igongo privacy notice.', style: context.text.bodySmall),
+          title: Text.rich(
+            TextSpan(
+              style: context.text.bodySmall,
+              children: [
+                const TextSpan(text: 'I agree to the Igongo '),
+                TextSpan(
+                  text: 'privacy notice.',
+                  style: TextStyle(color: context.palette.primary, decoration: TextDecoration.underline),
+                  recognizer: _privacyTap,
+                ),
+              ],
+            ),
+          ),
         ),
         // Step 6: the main action.
         IgongoButton(label: _busy ? 'Creating…' : 'Create account', expand: true, onPressed: _busy ? null : _create),
