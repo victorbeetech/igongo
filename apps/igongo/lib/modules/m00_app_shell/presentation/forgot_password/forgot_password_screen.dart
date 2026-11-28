@@ -64,12 +64,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   /// The form: back link, title, the email box, the reset button, and the info note.
   Widget _form(BuildContext context) => AuthShell(
     children: [
-      // Step 1: the back link at the top of the card.
-      IgongoButton(
-        label: '← Back to sign in',
-        variant: ButtonVariant.text,
-        onPressed: () => widget.screen.open('S00-05'),
-      ),
+      // Step 1: the title and the explanation.
       Text('Forgot Password?', style: context.text.headlineSmall),
       Text(
         "Enter your email address and we'll send you a link to reset your password.",
@@ -89,7 +84,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
         expand: true,
         onPressed: _busy ? null : _send,
       ),
-      // Step 3: the "or" line, a back link, and the info note.
+      // Step 3: the one back link to sign in (under the button), and the info note.
       Center(
         child: IgongoButton(
           label: 'Back to sign in',
