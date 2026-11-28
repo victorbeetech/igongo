@@ -2,7 +2,7 @@
 // on, the guest has enough points, and the order is worth at least the
 // minimum. The points it offers never go past the order's total or the balance.
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../shared/format/ugx.dart';

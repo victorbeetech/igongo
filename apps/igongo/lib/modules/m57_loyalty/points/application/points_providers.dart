@@ -2,7 +2,6 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../shared/api/api_client.dart';
 import '../../../../shared/session/session_controller.dart';
 import '../data/points_api.dart';
 import '../domain/points_wallet.dart';

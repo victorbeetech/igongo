@@ -1,7 +1,6 @@
 // The "My Points" row on the guest's Me screen. It is there only while the
 // programme is on and the wallet has loaded; while off it takes no space.
 
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
