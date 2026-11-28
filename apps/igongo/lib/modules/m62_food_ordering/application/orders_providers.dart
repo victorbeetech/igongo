@@ -5,8 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../shared/session/session_controller.dart';
 import '../data/orders_api.dart';
-import '../demo/demo_menu.dart';
-import '../demo/demo_orders.dart';
 import '../domain/delivery_track.dart';
 import '../domain/delivery_zone.dart';
 import '../domain/item_stars.dart';
@@ -19,17 +17,14 @@ import '../domain/outlet.dart';
 final ordersApiProvider = Provider((ref) => OrdersApi(ref.watch(apiClientProvider)));
 
 /// Outlets guests may order from.
-// The demo outlet shows only while the server has no outlets (see demo/demo_menu.dart).
-final outletsProvider = FutureProvider.autoDispose<List<Outlet>>((ref) async {
+final outletsProvider = FutureProvider.autoDispose<List<Outlet>>((ref) {
   ref.watch(sessionProvider);
-  final live = await ref.watch(ordersApiProvider).outlets();
-  return live.isEmpty && demoMenuOn ? demoOutlets : live;
+  return ref.watch(ordersApiProvider).outlets();
 });
 
 /// One outlet's menu.
 final menuProvider = FutureProvider.autoDispose.family<List<MenuItem>, String>((ref, outlet) async {
   ref.watch(sessionProvider);
-  if (isDemoOutlet(outlet)) return demoMenuItems;
   return ref.watch(ordersApiProvider).menu(outlet);
 });
 
@@ -46,11 +41,9 @@ final zonesProvider = FutureProvider.autoDispose<List<DeliveryZone>>((ref) {
 });
 
 /// My orders.
-// Demo orders (demo/demo_orders.dart) are listed first while the demo is on.
-final myOrdersProvider = FutureProvider.autoDispose<List<Order>>((ref) async {
+final myOrdersProvider = FutureProvider.autoDispose<List<Order>>((ref) {
   ref.watch(sessionProvider);
-  final demo = demoMenuOn ? ref.watch(demoOrdersProvider) : const <Order>[];
-  return [...demo, ...await ref.watch(ordersApiProvider).mine()];
+  return ref.watch(ordersApiProvider).mine();
 });
 
 /// Where the delivery of one order is.
