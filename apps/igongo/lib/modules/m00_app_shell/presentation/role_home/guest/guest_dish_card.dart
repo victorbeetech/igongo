@@ -78,7 +78,7 @@ class GuestDishCard extends StatelessWidget {
                   const SizedBox(
                     height: _pictureHeight,
                     width: double.infinity,
-                    child: const GuestPhoto(),
+                    child: GuestPhoto(),
                   ),
                   Positioned(
                     top: IgongoSpace.sm,
