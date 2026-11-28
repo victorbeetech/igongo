@@ -53,6 +53,8 @@ class GuestDishCard extends StatelessWidget {
               // Step 1: the placeholder picture across the top.
               const SizedBox(height: _pictureHeight, width: double.infinity, child: GuestPhoto()),
               // Step 2: the name and a short description.
+              // Step 2 is followed by a spacer so the price row always sits at the card's bottom edge,
+              // in line with the other cards in the row, whatever their description length.
               Padding(
                 padding: const EdgeInsets.fromLTRB(IgongoSpace.md, IgongoSpace.sm, IgongoSpace.md, 0),
                 child: Column(
@@ -74,9 +76,13 @@ class GuestDishCard extends StatelessWidget {
                   ],
                 ),
               ),
-              // Step 3: the price on the left, the add button on the right.
+              // Step 3: pushes the price row to the bottom edge of the card (no empty gap above it).
+              const Spacer(),
+              // Step 4: the price on the left, the add button on the right.
+              // No top padding here, so the price sits right under the text; the spacer above
+              // takes the extra height when the card is taller than its text.
               Padding(
-                padding: const EdgeInsets.all(IgongoSpace.md),
+                padding: const EdgeInsets.fromLTRB(IgongoSpace.md, 0, IgongoSpace.md, IgongoSpace.md),
                 child: Row(
                   children: [
                     Expanded(
