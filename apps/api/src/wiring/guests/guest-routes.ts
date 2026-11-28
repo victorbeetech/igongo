@@ -4,6 +4,7 @@
  * maintenance) without touching the others.
  *
  *   /api/crm/*        guest profiles, my account            module 54
+ *   /api/content/*    guest app content (banners, stories)  module 61
  *   /api/menu/*       outlets and menus                      module 61
  *   /api/orders/*     food orders                            module 62
  *   /api/delivery/*   delivery and the rider screens         module 66
@@ -18,6 +19,7 @@
  *   /api/tables/*     table reservations                     module 64
  */
 
+import { guestContentRouter } from "@igongo/guest-content";
 import { craftsBookshopRouter } from "@igongo/crafts-bookshop";
 import type { ActorEnv } from "@igongo/core";
 import { crmRouter } from "@igongo/crm-guests";
@@ -45,6 +47,7 @@ const booking = (key: BookingModuleKey) => (c: Context<ActorEnv>) => guests(c).b
 
 export function mountGuestRoutes(app: Hono<ApiEnv>) {
   mount(app, "crm", "crm-guests", crmRouter((c) => guests(c).crm()));
+  mount(app, "content", "guest-content", guestContentRouter((c) => guests(c).content()));
   mount(app, "menu", "menu-catalogue", menuRouter((c) => guests(c).menu()));
   mount(app, "orders", "food-ordering", ordersRouter((c) => guests(c).ordering()));
   mount(app, "delivery", "delivery-riders", deliveryRouter((c) => guests(c).delivery()));
