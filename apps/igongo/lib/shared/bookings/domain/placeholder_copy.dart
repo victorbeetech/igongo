@@ -11,3 +11,6 @@ const heroPlaceName = 'Mbarara';
 
 /// The short label on the hero's theme chip (fixed copy).
 const heroThemeLabel = 'Cultural Sanctuary';
+
+/// The guests and view line on the active reservation card until the API sends them (placeholder copy).
+const stayGuestsPlaceholder = '2 Adults • Garden & Hill View';
