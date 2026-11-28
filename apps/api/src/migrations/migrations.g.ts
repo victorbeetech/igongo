@@ -101,6 +101,12 @@ export const MIGRATIONS: Migration[] = [
   "sql": "-- Points rewards: the super admin can view and change the points rules,\n-- run expiry and adjust a guest's points by hand, without code. Other roles\n-- get these keys from the super admin screens.\n--> statement-breakpoint\nINSERT INTO \"roles\".\"role_permissions\" (\"role_id\",\"permission_key\",\"scope\") SELECT r.\"id\", p.key, 'all' FROM \"roles\".\"roles\" r CROSS JOIN (VALUES ('points-rewards.rules.view'), ('points-rewards.rules.edit'), ('points-rewards.points.adjust')) AS p(key) WHERE r.\"id\" = 'role_super-admin' ON CONFLICT DO NOTHING;\n"
  },
  {
+  "module": "roles-permissions",
+  "name": "0013_booking_calendar_permissions",
+  "checksum": "29891b199d8fa13a",
+  "sql": "-- The booking calendar's settings (on/off, opening days, full rule, window)\n-- are changed by the super admin. Granted to the super admin role through the\n-- roles tables, like every other role permission, so the super admin can change\n-- the role later in the app. ON CONFLICT DO NOTHING keeps any change already made.\n--> statement-breakpoint\nINSERT INTO \"roles\".\"role_permissions\" (\"role_id\",\"permission_key\",\"scope\") SELECT r.\"id\", 'booking-calendar.settings.view', 'all' FROM \"roles\".\"roles\" r WHERE r.\"id\" = 'role_super-admin' ON CONFLICT DO NOTHING;\n--> statement-breakpoint\nINSERT INTO \"roles\".\"role_permissions\" (\"role_id\",\"permission_key\",\"scope\") SELECT r.\"id\", 'booking-calendar.settings.edit', 'all' FROM \"roles\".\"roles\" r WHERE r.\"id\" = 'role_super-admin' ON CONFLICT DO NOTHING;\n"
+ },
+ {
   "module": "users-login",
   "name": "0000_users_login",
   "checksum": "26c20af258cc84a8",
