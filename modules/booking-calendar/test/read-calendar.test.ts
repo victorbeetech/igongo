@@ -58,9 +58,15 @@ describe("readCalendar", () => {
     const view = await readCalendar(deps([room("a", 2)], {}, { enabled: false }), "2026-11-29", 3);
     expect(view).toEqual({ enabled: false, days: [] });
   });
-  it("caps the days at the super admin's window", async () => {
-    const view = await readCalendar(deps([room("a", 2)], {}, { windowDays: 2 }), "2026-11-29", 10);
-    expect(view.days).toHaveLength(2);
+  it("caps the days at the super admin's window, counted from today", async () => {
+    // Today is 28 Nov; a 2-day window shows 28 and 29 Nov only.
+    const view = await readCalendar(deps([room("a", 2)], {}, { windowDays: 2 }), "2026-11-28", 10);
+    expect(view.days.map((d) => d.date)).toEqual(["2026-11-28", "2026-11-29"]);
+  });
+  it("shows no days past the window, even when a guest asks for later dates", async () => {
+    // A guest asking from 20 Dec must not see anything beyond the 2-day window from today.
+    const view = await readCalendar(deps([room("a", 2)], {}, { windowDays: 2 }), "2026-12-20", 31);
+    expect(view.days).toHaveLength(0);
   });
   it("gives guests availability only: no guest name or booking detail", async () => {
     const view = await readCalendar(deps([room("a", 2)], { a: 1 }), "2026-11-29", 1);
