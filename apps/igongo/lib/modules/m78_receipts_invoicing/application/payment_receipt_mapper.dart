@@ -2,6 +2,8 @@
 // GuestReceipt for the My receipts list and the Receipt Detail ticket. Only
 // real fields are filled in. Fields no API holds yet (unit, gate, table,
 // loyalty points, tax levy) stay empty, so the screens show nothing for them.
+// A booking's `unit` (room or cottage) and `gate` read through once the booking
+// module sends them; until then they stay empty.
 
 import '../domain/guest_receipt.dart';
 import '../domain/receipt_category.dart';
@@ -57,9 +59,9 @@ GuestReceipt receiptFromPayment(
     at: at.toLocal(),
     points: 0,
     guestName: (bookedBy != null && bookedBy.isNotEmpty) ? bookedBy : guestName,
-    guestUnit: '',
+    guestUnit: booking?['unit'] as String? ?? '',
     passNumber: code.isNotEmpty ? code : order?['number'] as String? ?? '',
-    gateCode: '',
+    gateCode: booking?['gate'] as String? ?? '',
     tableLabel: order?['table'] as String? ?? '',
     lines: booking != null ? [ReceiptLine(name: offering ?? label, detail: bookedOn, amount: total)] : orderLines,
     levy: 0,
