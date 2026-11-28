@@ -27,13 +27,9 @@ void main() {
     expect(find.byType(RoleDrawer), findsNothing);
     // Step 2b: the meals slideshow replaces the old "Today's menu" words.
     expect(find.text("Today's menu"), findsNothing);
-    // The two-row quick actions push the dish row below the fold, so scroll down to it first.
-    await tester.scrollUntilVisible(
-      find.bySemanticsLabel('Meals to order'),
-      200,
-      scrollable: find.byType(Scrollable).first,
-    );
-    expect(find.bySemanticsLabel('Meals to order'), findsOneWidget);
+    // The dish row shows only when the menu has dishes. With no dishes it is hidden
+    // (no placeholder cards), so the home has no "Meals to order" row to scroll to.
+    expect(find.bySemanticsLabel('Meals to order'), findsNothing);
     // Step 3: no super admin Preview button for a guest.
     expect(find.byTooltip('Preview'), findsNothing);
   });
