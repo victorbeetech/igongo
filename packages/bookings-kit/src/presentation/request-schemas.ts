@@ -22,7 +22,15 @@ export const offeringBody = z.object({
   visibleToClients: z.boolean().default(true),
   sortOrder: z.number().int().min(0).max(10_000).default(0),
 });
-export const offeringPatch = offeringBody.partial();
+/**
+ * `PATCH /offerings/:id`: only the fields sent are changed. `.partial()` alone would
+ * still fill each default (empty times, no details, shown to clients) for a field the
+ * caller left out, so a switch that only sends `active` would wipe the rest. Each field
+ * here is made optional without its default, so a missing field is left as it is.
+ */
+export const offeringPatch = z.object(
+  Object.fromEntries(Object.entries(offeringBody.shape).map(([key, field]) => [key, (field instanceof z.ZodDefault ? field.unwrap() : field).optional()])),
+);
 
 /** The wanted dates or slot, for availability and booking. */
 const wanted = { date: z.iso.date().optional(), endDate: z.iso.date().optional(), slot: time.optional() };
