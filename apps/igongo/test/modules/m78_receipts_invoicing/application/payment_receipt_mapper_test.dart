@@ -49,6 +49,23 @@ void main() {
     expect(categoryForModule('events-conferences'), ReceiptCategory.dining);
   });
 
+  test('a booking payment takes its code, offering and total from the booking', () {
+    // A booking record as the booking module returns it (test fixture).
+    final booking = <String, dynamic>{
+      'id': 'bkg-1',
+      'code': 'RB-7KQ2MX',
+      'offeringName': 'Deluxe Cottage 04',
+      'total': 260000,
+      'date': '2026-11-27T00:00:00.000Z',
+    };
+    final r = receiptFromPayment(payment, booking: booking);
+    expect(r.passNumber, 'RB-7KQ2MX');
+    expect(r.outlet, 'Deluxe Cottage 04');
+    expect(r.lines.single.name, 'Deluxe Cottage 04');
+    expect(r.lines.single.amount, 260000);
+    expect(r.lines.single.detail, '2026-11-27');
+  });
+
   test('an unknown method code shows its words, not its code', () {
     expect(methodLabel('mystery_pay'), 'mystery pay');
   });
