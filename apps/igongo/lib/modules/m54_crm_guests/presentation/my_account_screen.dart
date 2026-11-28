@@ -1,7 +1,7 @@
-// S54-05..07 My account, live: my name, phone, email, likes and allergies, and
-// the messages I agree to get (SMS, WhatsApp, email). The server checks every
-// detail; a refused one shows its sentence in a toast. Signed out, the
-// prototype design shows.
+// S54-05..07 Edit Profile, live: the guest's name, phone, email, accommodation,
+// likes and allergies, and the messages they agree to get. The server checks
+// every detail; a refused one shows its sentence in a toast. Signed out, the
+// prototype design shows. Photo upload and the accommodation are not wired yet.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
@@ -10,17 +10,21 @@ import 'package:material_ui/material_ui.dart';
 import '../../../shared/api/api_exception.dart';
 import '../../../shared/catalog/catalog.dart';
 import '../../../shared/live/live_view.dart';
-import '../../../shared/screens/parts/purpose_text.dart';
 import '../../../shared/screens/parts/screen_list_view.dart';
 import '../../../shared/screens/screen_layout.dart';
 import '../../../shared/ui/button/igongo_button.dart';
-import '../../../shared/ui/field/igongo_field.dart';
-import '../../../shared/ui/section/section_header.dart';
 import '../../../shared/ui/toast/igongo_toast.dart';
 import '../application/crm_providers.dart';
 import '../domain/guest_profile.dart';
+import 'edit_profile/edit_profile_top_bar.dart';
+import 'edit_profile/message_choices_card.dart';
+import 'edit_profile/personal_help_banner.dart';
+import 'edit_profile/personal_info_card.dart';
+import 'edit_profile/preferences_card.dart';
+import 'edit_profile/profile_photo_editor.dart';
+import 'edit_profile/royal_member_label.dart';
 
-/// My account.
+/// Edit Profile, reached from the Me tab.
 class MyAccountScreen extends ConsumerWidget {
   /// Creates the screen for [screen].
   const MyAccountScreen(this.screen, {super.key});
@@ -34,16 +38,13 @@ class MyAccountScreen extends ConsumerWidget {
     value: ref.watch(myProfileProvider),
     onRetry: () => ref.invalidate(myProfileProvider),
     sample: (_) => screenLayout(screen),
-    builder: (context, profile, _) => _AccountForm(screen: screen, profile: profile),
+    builder: (context, profile, _) => _AccountForm(profile: profile),
   );
 }
 
 /// The editable form, filled from [profile].
 class _AccountForm extends ConsumerStatefulWidget {
-  const _AccountForm({required this.screen, required this.profile});
-
-  /// The screen's context, for its purpose line.
-  final ScreenContext screen;
+  const _AccountForm({required this.profile});
 
   /// The profile the form starts from.
   final GuestProfile profile;
@@ -53,10 +54,12 @@ class _AccountForm extends ConsumerStatefulWidget {
 }
 
 class _AccountFormState extends ConsumerState<_AccountForm> {
-  // Step 1: one text box per detail, filled from the profile.
+  // Step 1: one text box per detail, filled from the profile. The accommodation
+  // box has no saved value yet, so it starts empty.
   late final _name = TextEditingController(text: widget.profile.name);
   late final _phone = TextEditingController(text: widget.profile.phone ?? '');
   late final _email = TextEditingController(text: widget.profile.contactEmail ?? '');
+  final _accommodation = TextEditingController();
   late final _likes = TextEditingController(text: widget.profile.preferences ?? '');
   late final _allergies = TextEditingController(text: widget.profile.allergies ?? '');
 
@@ -67,7 +70,7 @@ class _AccountFormState extends ConsumerState<_AccountForm> {
 
   @override
   void dispose() {
-    for (final c in [_name, _phone, _email, _likes, _allergies]) {
+    for (final c in [_name, _phone, _email, _accommodation, _likes, _allergies]) {
       c.dispose();
     }
     super.dispose();
@@ -99,30 +102,52 @@ class _AccountFormState extends ConsumerState<_AccountForm> {
     }
   }
 
+  /// Photo upload is not wired yet; the controls only say so.
+  void _changePhoto() => showIgongoToast(context, 'Photo upload is coming soon.');
+
+  /// Leaves the screen without saving.
+  void _discard() => Navigator.of(context).maybePop();
+
   @override
-  Widget build(BuildContext context) => ScreenListView(
+  Widget build(BuildContext context) => Column(
     children: [
-      PurposeText(widget.screen.spec.purpose),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
-        child: Column(
-          spacing: IgongoSpace.md,
+      // Step 5: the top bar, which follows the name as it is typed.
+      ListenableBuilder(
+        listenable: _name,
+        builder: (context, _) => EditProfileTopBar(name: _name.text),
+      ),
+      Expanded(
+        child: ScreenListView(
           children: [
-            IgongoField(label: 'Name', controller: _name),
-            IgongoField(label: 'Phone', controller: _phone, keyboardType: TextInputType.phone),
-            IgongoField(label: 'Email', controller: _email, keyboardType: TextInputType.emailAddress),
-            IgongoField(label: 'What I like', controller: _likes, lines: 3),
-            IgongoField(label: 'Allergies', controller: _allergies),
+            Padding(
+              padding: const EdgeInsets.all(IgongoSpace.lg),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: IgongoSpace.lg,
+                children: [
+                  const RoyalMemberLabel(),
+                  ListenableBuilder(
+                    listenable: _name,
+                    builder: (context, _) => ProfilePhotoEditor(name: _name.text, onChangePhoto: _changePhoto),
+                  ),
+                  PersonalInfoCard(name: _name, phone: _phone, email: _email, accommodation: _accommodation),
+                  PreferencesCard(likes: _likes, allergies: _allergies),
+                  MessageChoicesCard(
+                    sms: _sms,
+                    whatsapp: _whatsapp,
+                    email: _emailMessages,
+                    onSms: (v) => setState(() => _sms = v),
+                    onWhatsapp: (v) => setState(() => _whatsapp = v),
+                    onEmail: (v) => setState(() => _emailMessages = v),
+                  ),
+                  IgongoButton(label: 'Save Changes', icon: Icons.check, expand: true, onPressed: _save),
+                  TextButton(onPressed: _discard, child: const Text('Discard Changes')),
+                  const PersonalHelpBanner(),
+                ],
+              ),
+            ),
           ],
         ),
-      ),
-      const SectionHeader('Messages I agree to get'),
-      SwitchListTile(title: const Text('SMS'), value: _sms, onChanged: (v) => setState(() => _sms = v)),
-      SwitchListTile(title: const Text('WhatsApp'), value: _whatsapp, onChanged: (v) => setState(() => _whatsapp = v)),
-      SwitchListTile(title: const Text('Email'), value: _emailMessages, onChanged: (v) => setState(() => _emailMessages = v)),
-      Padding(
-        padding: const EdgeInsets.all(IgongoSpace.lg),
-        child: IgongoButton(label: 'Save', expand: true, onPressed: _save),
       ),
     ],
   );
