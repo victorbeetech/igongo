@@ -2,7 +2,7 @@
 // of the module uses a shared layout from its kind.
 
 import '../../shared/catalog/catalog.dart';
-import '../m10_notifications/presentation/inbox/notification_inbox_screen.dart';
+import '../m10_notifications/presentation/updates/updates_screen.dart';
 import 'presentation/active_sessions/active_sessions_screen.dart';
 import 'presentation/create_account/create_account_screen.dart';
 import 'presentation/forgot_password/forgot_password_screen.dart';
@@ -26,7 +26,7 @@ final m00Overrides = <String, ScreenOverride>{
   'S00-21': (_, s) => RoleHomeScreen(s),
   'S00-25': (_, s) => GlobalSearchScreen(s),
   'S00-26': (_, s) => SearchResultsScreen(s),
-  'S00-28': (_, s) => NotificationInboxScreen(s),
+  'S00-28': (_, _) => const UpdatesScreen(),
   'S00-31': (_, s) => MyProfileScreen(s),
   'S00-32': (_, s) => MyProfileScreen(s),
   'S00-33': (_, s) => TextSizeScreen(s),
