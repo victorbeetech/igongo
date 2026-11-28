@@ -22,7 +22,7 @@ void main() {
   const phones = {'large': Size(430, 932), 'small': Size(360, 640)};
 
   // Step 2: a sample guest, used for the picture only (the app reads the real API).
-  final profile = GuestProfile(
+  const profile = GuestProfile(
     name: 'Grace Muhwezi',
     sms: true,
     whatsapp: true,
