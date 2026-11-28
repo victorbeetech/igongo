@@ -75,7 +75,7 @@ class GuestDishCard extends StatelessWidget {
               // Step 1: the placeholder picture with its tag, rating and prep time on top.
               Stack(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: _pictureHeight,
                     width: double.infinity,
                     child: const GuestPhoto(),
