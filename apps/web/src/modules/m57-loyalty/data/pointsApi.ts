@@ -1,6 +1,6 @@
 "use client";
 // Points rewards for the super admin (S57-05): reads and saves every rule,
-// and runs expiry on demand. Calls the API's `/api/points/admin` routes.
+// and runs expiry on demand, through the points admin routes of the API.
 
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/shared/api/apiClient";
