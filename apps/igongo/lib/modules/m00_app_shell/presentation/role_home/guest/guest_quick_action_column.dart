@@ -18,8 +18,9 @@ class GuestQuickActionColumn extends StatelessWidget {
     child: Column(
       spacing: IgongoSpace.xs,
       children: [
-        // Step 1: wrap each card in a box of the token width and height.
-        for (final child in children) SizedBox(height: IgongoQuickAction.height, child: child),
+        // Step 1: wrap each card in a box of the token width and height, so no card grows to fit its text.
+        for (final child in children)
+          SizedBox(width: IgongoQuickAction.width, height: IgongoQuickAction.height, child: child),
       ],
     ),
   );
