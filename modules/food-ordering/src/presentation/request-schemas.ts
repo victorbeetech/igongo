@@ -42,6 +42,8 @@ export const placeBody = cartBody.extend({
   customer: z.object({ name: text(120), phone: z.string().trim().regex(/^\+?[0-9 ]{7,20}$/).optional() }).optional(),
   /** One random key per checkout, sent again on a retry, so a double tap never orders twice. */
   requestKey: z.string().regex(/^[A-Za-z0-9-]{8,64}$/).optional(),
+  /** Points to spend on this order (a whole number; the server checks the value and the balance). */
+  pointsToSpend: z.number().int().min(0).max(1000000).optional(),
 });
 
 /** `PUT /orders/location`: the guest's saved delivery pin (both coordinates are required). */

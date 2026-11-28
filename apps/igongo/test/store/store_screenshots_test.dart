@@ -15,6 +15,7 @@ import 'package:igongo/app/igongo_app.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../support/open_app.dart';
+import '../support/public_settings_fixture.dart';
 
 // The screens the listings show, in order: what a guest and a staff member see first.
 // Each shot: its address and the role it is taken as.
@@ -34,7 +35,7 @@ void main() {
     for (final MapEntry(key: name, value: (path, role)) in _shots.entries) {
       testWidgets('$store $name', (tester) async {
         usePhoneWindow(tester, width: width, height: height);
-        await openApp(tester, path, mode: ThemeMode.light, role: role);
+        await openApp(tester, path, mode: ThemeMode.light, role: role, settings: emptyPublicSettings);
         await expectLater(
           find.byType(IgongoApp),
           matchesGoldenFile('../../../../packages/brand/store/screenshots/$store/$name.png'),

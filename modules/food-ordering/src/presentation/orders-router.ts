@@ -12,6 +12,9 @@
  *   GET   /orders/location        my saved delivery pin, or null
  *   PUT   /orders/location        save my delivery pin (the map point)
  *   DELETE /orders/location       remove my saved delivery pin
+ *   GET   /orders/dishes          my saved dishes, with today's names and prices
+ *   PUT   /orders/dishes/:itemId  save a dish to my list (the heart)
+ *   DELETE /orders/dishes/:itemId remove a dish from my list
  *   GET   /orders/stars           each dish's average stars, for the menu
  *   GET   /orders/reviews         newest reviews (all=1: staff, with hidden ones)
  *   POST  /orders/reviews/:id/hide  staff hide or show a review
@@ -37,6 +40,7 @@ import { hideReview, rateOrder } from "../application/use-cases/rate-order";
 import { reorder } from "../application/use-cases/reorder";
 import { clearSavedCart, readSavedCart, saveCart } from "../application/use-cases/guest-cart";
 import { clearSavedLocation, readSavedLocation, saveLocation } from "../application/use-cases/guest-location";
+import { listSavedDishes, removeDish, saveDish } from "../application/use-cases/saved-dishes";
 import { priceCart } from "../application/use-cases/price-cart";
 import { orderNumber, type Order } from "../domain/order";
 import type { OrderRating } from "../domain/order-rating";
@@ -81,7 +85,7 @@ export function ordersRouter(deps: (c: Context<ActorEnv>) => OrderingDeps) {
     })
     .post("/", requirePermission(P.create), zValidator("json", placeBody), async (c) => {
       const actor = actorOf(c);
-      const { customer, notes, allergies, table, ...cart } = c.req.valid("json");
+      const { customer, notes, allergies, table, pointsToSpend, ...cart } = c.req.valid("json");
       // Staff taking an order for someone else name the customer; guests order for themselves.
       const forOther = !!customer && canForOthers(actor, P.create);
       if (customer && !forOther) throw new AppError("permission_denied", "Only staff can take orders for other people.");
@@ -89,7 +93,7 @@ export function ordersRouter(deps: (c: Context<ActorEnv>) => OrderingDeps) {
         ...cartOf(cart),
         customer: forOther ? { userId: null, name: customer.name, phone: customer.phone ?? null } : { userId: actor.userId, name: actor.name, phone: null },
         channel: forOther ? "staff" : "app",
-        ...(notes ? { notes } : {}), ...(allergies ? { allergies } : {}), ...(table ? { table } : {}),
+        ...(notes ? { notes } : {}), ...(allergies ? { allergies } : {}), ...(table ? { table } : {}), ...(pointsToSpend ? { pointsToSpend } : {}),
       });
       return c.json(shown(order), 201);
     })
@@ -117,6 +121,19 @@ export function ordersRouter(deps: (c: Context<ActorEnv>) => OrderingDeps) {
     .put("/location", requireSignIn, zValidator("json", pinBody), async (c) => c.json(await saveLocation(deps(c), actorOf(c).userId, c.req.valid("json"))))
     .delete("/location", requireSignIn, async (c) => {
       await clearSavedLocation(deps(c), actorOf(c).userId);
+      return c.body(null, 204);
+    })
+    // Saved dishes: always the caller's own list (the user ID comes from the session).
+    .get("/dishes", requireSignIn, async (c) => {
+      const items = await listSavedDishes(deps(c), actorOf(c).userId);
+      return c.json({ items });
+    })
+    .put("/dishes/:itemId", requireSignIn, async (c) => {
+      await saveDish(deps(c), actorOf(c).userId, c.req.param("itemId"));
+      return c.body(null, 204);
+    })
+    .delete("/dishes/:itemId", requireSignIn, async (c) => {
+      await removeDish(deps(c), actorOf(c).userId, c.req.param("itemId"));
       return c.body(null, 204);
     })
     .get("/stars", async (c) => c.json({ items: await deps(c).ratings.stars() }))

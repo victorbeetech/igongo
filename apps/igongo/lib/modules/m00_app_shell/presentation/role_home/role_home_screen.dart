@@ -18,7 +18,7 @@ import '../../../../shared/ui/tile/home_tile.dart';
 import 'area_card.dart';
 import 'guest/guest_did_you_know.dart';
 import 'guest/guest_dish_row.dart';
-import 'guest/guest_hero_card.dart';
+import 'guest/guest_hero_section.dart';
 import 'guest/guest_quick_actions.dart';
 import 'guest/guest_section_title.dart';
 import 'guest/guest_status_strip.dart';
@@ -78,11 +78,11 @@ class RoleHomeScreen extends ConsumerWidget {
             ),
           ),
         if (role.isClient) ...[
-          // Step 2: the stories row, then the featured stay.
+          // Step 2: the stories row, then the banner carousel.
           const GuestStoriesRow(),
           Padding(
             padding: const EdgeInsets.only(top: IgongoSpace.sm),
-            child: GuestHeroCard(onBook: () => screen.open('S67-01')),
+            child: GuestHeroSection(screen: screen),
           ),
           // Step 3: the three quick actions.
           Padding(
