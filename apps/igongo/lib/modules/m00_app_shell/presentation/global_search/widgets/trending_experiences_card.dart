@@ -1,22 +1,24 @@
-// The "Trending Experiences" block: a title with "Popular this week", then one
-// row per experience the super admin added. Each row opens its screen.
+// The "Trending Experiences" block: a title with "Popular this week", then a row
+// per experience with its icon tile and a price pill. Colours come from the tokens.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
-import '../../../../../shared/hotel/domain/hotel_content_item.dart';
+import '../../../../../shared/format/ugx.dart';
 import '../../../../../shared/theme/theme.dart';
+import '../../../domain/trending_experience.dart';
+import '../../../domain/trending_tone.dart';
 
 /// The trending block on the search screen.
 class TrendingExperiencesCard extends StatelessWidget {
-  /// Creates the block for [experiences]; [onOpen] runs with the row that was tapped.
+  /// Creates the block for [experiences].
   const TrendingExperiencesCard({super.key, required this.experiences, required this.onOpen});
 
-  /// The experiences to list, in the admin's order.
-  final List<HotelContentItem> experiences;
+  /// Called with the index of the experience that was tapped.
+  final void Function(int index) onOpen;
 
-  /// Called with the tapped experience.
-  final void Function(HotelContentItem experience) onOpen;
+  /// The experiences to list, in order.
+  final List<TrendingExperience> experiences;
 
   @override
   Widget build(BuildContext context) {
@@ -44,14 +46,14 @@ class TrendingExperiencesCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: IgongoSpace.md),
-              // Step 2: no experiences yet, so say so; otherwise one row per experience.
+              // Step 2: one row per experience, or a short note while the admin has added none.
               if (experiences.isEmpty)
                 Text('Nothing trending yet.', style: context.text.bodyMedium?.copyWith(color: p.textMuted))
               else
-                for (final experience in experiences)
+                for (var i = 0; i < experiences.length; i++)
                   Padding(
                     padding: const EdgeInsets.only(bottom: IgongoSpace.sm),
-                    child: _ExperienceRow(experience: experience, onOpen: () => onOpen(experience)),
+                    child: _ExperienceRow(experience: experiences[i], onTap: () => onOpen(i)),
                   ),
             ],
           ),
@@ -61,55 +63,71 @@ class TrendingExperiencesCard extends StatelessWidget {
   }
 }
 
-/// One experience: its icon tile, name and subtitle, and an arrow on the right. The whole row is tappable.
+/// One experience: its icon tile, name and subtitle, and the price pill on the right.
 class _ExperienceRow extends StatelessWidget {
-  const _ExperienceRow({required this.experience, required this.onOpen});
+  const _ExperienceRow({required this.experience, required this.onTap});
 
   /// The experience to show.
-  final HotelContentItem experience;
+  final TrendingExperience experience;
 
   /// Called when the row is tapped.
-  final VoidCallback onOpen;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
-    return Material(
-      color: p.surface,
-      borderRadius: BorderRadius.circular(IgongoRadius.md),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(IgongoRadius.md),
-        onTap: onOpen,
-        child: Padding(
-          padding: const EdgeInsets.all(IgongoSpace.md),
-          child: Row(
-            children: [
-              // Step 1: the icon tile, the same for every experience.
-              DecoratedBox(
-                decoration: BoxDecoration(color: p.primaryContainer, borderRadius: BorderRadius.circular(IgongoRadius.sm)),
-                child: SizedBox(
-                  width: IgongoTouch.minimum - IgongoSpace.xs,
-                  height: IgongoTouch.minimum - IgongoSpace.xs,
-                  child: Icon(Icons.auto_awesome_outlined, size: IgongoSpace.xl - IgongoSpace.xs, color: p.primary),
+    // Step 1: the icon and the colours for this tone.
+    final (IconData icon, Color tile, Color ink) = switch (experience.tone) {
+      null => (Icons.auto_awesome_outlined, p.primaryContainer, p.primary),
+      TrendingTone.heritage => (Icons.auto_stories, p.warmCard, p.warning),
+      TrendingTone.culinary => (Icons.soup_kitchen, p.primaryContainer, p.primary),
+      TrendingTone.wellness => (Icons.spa, p.background, p.text),
+    };
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: DecoratedBox(
+      decoration: BoxDecoration(color: p.surface, borderRadius: BorderRadius.circular(IgongoRadius.md)),
+      child: Padding(
+        padding: const EdgeInsets.all(IgongoSpace.md),
+        child: Row(
+          children: [
+            // Step 2: the icon tile.
+            DecoratedBox(
+              decoration: BoxDecoration(color: tile, borderRadius: BorderRadius.circular(IgongoRadius.sm)),
+              child: SizedBox(
+                width: IgongoTouch.minimum - IgongoSpace.xs,
+                height: IgongoTouch.minimum - IgongoSpace.xs,
+                child: Icon(icon, size: IgongoSpace.xl - IgongoSpace.xs, color: ink),
+              ),
+            ),
+            const SizedBox(width: IgongoSpace.md),
+            // Step 3: the name and subtitle.
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(experience.title, style: context.text.labelLarge),
+                  Text(experience.subtitle, style: context.text.bodySmall),
+                ],
+              ),
+            ),
+            const SizedBox(width: IgongoSpace.sm),
+            // Step 4: the price pill on the right.
+            DecoratedBox(
+              decoration: BoxDecoration(color: tile, borderRadius: BorderRadius.circular(IgongoRadius.pill)),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.sm, vertical: IgongoSpace.xxs),
+                child: Text(
+                  experience.price == null ? '—' : ugx(experience.price!),
+                  style: context.text.labelSmall?.copyWith(color: ink, fontWeight: FontWeight.w700),
                 ),
               ),
-              const SizedBox(width: IgongoSpace.md),
-              // Step 2: the name and the subtitle from the admin.
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(experience.title, style: context.text.labelLarge),
-                    if (experience.subtitle.isNotEmpty) Text(experience.subtitle, style: context.text.bodySmall),
-                  ],
-                ),
-              ),
-              // Step 3: the arrow that says the row opens.
-              Icon(Icons.chevron_right, color: p.textMuted),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
+    ),
     );
   }
 }

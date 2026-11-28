@@ -13,6 +13,7 @@ import 'package:igongo/modules/m00_app_shell/presentation/global_search/widgets/
 import 'package:igongo/modules/m00_app_shell/presentation/global_search/widgets/trending_experiences_card.dart';
 import 'package:igongo/shared/theme/theme.dart';
 
+
 import 'discovery_fixtures.dart';
 
 void main() {
@@ -33,7 +34,14 @@ void main() {
                 DiscoveryTopBar(onBell: () {}),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                  child: DiscoverySearchRow(onFilter: () {}, onChanged: (_) {}, onSubmitted: (_) {}, onVoice: () {}),
+                  child: DiscoverySearchRow(
+                    controller: TextEditingController(),
+                    listening: false,
+                    onFilter: () {},
+                    onChanged: (_) {},
+                    onSubmitted: (_) {},
+                    onVoice: () {},
+                  ),
                 ),
                 RecentSearches(
                   searches: const ['Grilled Tilapia', 'Heritage Cottage'],
@@ -43,8 +51,14 @@ void main() {
                 const SizedBox(height: 16),
                 ExploreCategories(categories: discoveryCategories, selected: 0, onSelected: (_) {}),
                 const SizedBox(height: 24),
-                CuratedFindingsSection(findings: testFindings, onOpen: (_) {}),
-                TrendingExperiencesCard(experiences: testTrending, onOpen: (_) {}),
+                CuratedFindingsSection(
+                  findings: testFindingModels,
+                  favourites: const {},
+                  onFavourite: (_) {},
+                  onOpen: (_) {},
+                  onSort: () {},
+                ),
+                TrendingExperiencesCard(experiences: testTrendingModels, onOpen: (_) {}),
               ],
             ),
           ),

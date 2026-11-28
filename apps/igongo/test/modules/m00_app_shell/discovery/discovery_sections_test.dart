@@ -9,6 +9,7 @@ import 'package:igongo/modules/m00_app_shell/presentation/global_search/widgets/
 import 'package:igongo/shared/theme/theme.dart';
 import 'package:material_ui/material_ui.dart';
 
+
 import 'discovery_fixtures.dart';
 
 /// Pumps [child] in the light theme at [scale] times the text size.
@@ -34,18 +35,18 @@ Future<void> _pump(WidgetTester tester, Widget child, {double scale = 1.0}) asyn
 void main() {
   for (final scale in [1.0, 1.5]) {
     testWidgets('curated findings show every card at ${scale}x text', (tester) async {
-      await _pump(tester, CuratedFindingsSection(findings: testFindings, onOpen: (_) {}), scale: scale);
+      await _pump(tester, CuratedFindingsSection(findings: testFindingModels, favourites: const {}, onFavourite: (_) {}, onOpen: (_) {}, onSort: () {}), scale: scale);
       expect(tester.takeException(), isNull);
       expect(find.text('Curated Findings'), findsOneWidget);
-      expect(find.text('${testFindings.length} Matches'), findsOneWidget);
-      expect(find.text('Open'), findsNWidgets(testFindings.length));
+      expect(find.text('${testFindingModels.length} Matches'), findsOneWidget);
+      expect(find.text('Open'), findsNWidgets(testFindingModels.length));
     });
 
     testWidgets('trending experiences show every row at ${scale}x text', (tester) async {
-      await _pump(tester, TrendingExperiencesCard(experiences: testTrending, onOpen: (_) {}), scale: scale);
+      await _pump(tester, TrendingExperiencesCard(experiences: testTrendingModels, onOpen: (_) {}), scale: scale);
       expect(tester.takeException(), isNull);
       expect(find.text('Trending Experiences'), findsOneWidget);
-      expect(find.text(testTrending.first.title), findsOneWidget);
+      expect(find.text(testTrendingModels.first.title), findsOneWidget);
     });
   }
 
@@ -54,7 +55,7 @@ void main() {
       tester,
       Column(
         children: [
-          CuratedFindingsSection(findings: const [], onOpen: (_) {}),
+          CuratedFindingsSection(findings: const [], favourites: const {}, onFavourite: (_) {}, onOpen: (_) {}, onSort: () {}),
           TrendingExperiencesCard(experiences: const [], onOpen: (_) {}),
         ],
       ),
