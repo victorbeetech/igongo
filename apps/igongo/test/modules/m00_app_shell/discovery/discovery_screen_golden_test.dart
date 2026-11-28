@@ -11,6 +11,9 @@ import 'package:igongo/modules/m00_app_shell/presentation/global_search/widgets/
 import 'package:igongo/modules/m00_app_shell/presentation/global_search/widgets/explore_categories.dart';
 import 'package:igongo/modules/m00_app_shell/presentation/global_search/widgets/recent_searches.dart';
 import 'package:igongo/modules/m00_app_shell/presentation/global_search/widgets/trending_experiences_card.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:igongo/modules/m10_notifications/application/inbox_providers.dart';
+import 'package:igongo/modules/m10_notifications/domain/inbox_page.dart';
 import 'package:igongo/shared/theme/theme.dart';
 
 
@@ -23,8 +26,11 @@ void main() {
       tester.view.physicalSize = const Size(390 * 2, 2400 * 2);
       tester.view.devicePixelRatio = 2;
       addTearDown(tester.view.reset);
+      // A fixed empty inbox, so the bell's dot is off and the picture never depends on the network.
       await tester.pumpWidget(
-        MaterialApp(
+        ProviderScope(
+          overrides: [inboxProvider.overrideWith((ref) async => const InboxPage(items: [], unreadCount: 0))],
+          child: MaterialApp(
           theme: IgongoTheme.light,
           darkTheme: IgongoTheme.dark,
           themeMode: mode,
@@ -61,6 +67,7 @@ void main() {
                 TrendingExperiencesCard(experiences: testTrendingModels, onOpen: (_) {}),
               ],
             ),
+          ),
           ),
         ),
       );

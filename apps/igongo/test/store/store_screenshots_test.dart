@@ -12,6 +12,8 @@ library;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:igongo/app/igongo_app.dart';
+import 'package:igongo/modules/m10_notifications/application/inbox_providers.dart';
+import 'package:igongo/modules/m10_notifications/domain/inbox_page.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../support/open_app.dart';
@@ -35,7 +37,15 @@ void main() {
     for (final MapEntry(key: name, value: (path, role)) in _shots.entries) {
       testWidgets('$store $name', (tester) async {
         usePhoneWindow(tester, width: width, height: height);
-        await openApp(tester, path, mode: ThemeMode.light, role: role, settings: emptyPublicSettings);
+        // A fixed empty inbox, so the guest home's bell has no dot and no network call is made.
+        await openApp(
+          tester,
+          path,
+          mode: ThemeMode.light,
+          role: role,
+          settings: emptyPublicSettings,
+          overrides: [inboxProvider.overrideWith((ref) async => const InboxPage(items: [], unreadCount: 0))],
+        );
         await expectLater(
           find.byType(IgongoApp),
           matchesGoldenFile('../../../../packages/brand/store/screenshots/$store/$name.png'),
