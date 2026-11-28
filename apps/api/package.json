@@ -79,6 +79,7 @@
     "@igongo/recruitment": "workspace:*",
     "@igongo/reports-analytics": "workspace:*",
     "@igongo/roles-permissions": "workspace:*",
+    "@igongo/booking-calendar": "workspace:*",
     "@igongo/room-bookings": "workspace:*",
     "@igongo/security-incidents": "workspace:*",
     "@igongo/shifts-rosters": "workspace:*",

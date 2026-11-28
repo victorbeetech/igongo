@@ -9,6 +9,7 @@
  *   /api/delivery/*   delivery and the rider screens         module 66
  *   /api/payments/*   payments and provider callbacks        module 77
  *   /api/rooms/*      room bookings                          module 67
+ *   /api/calendar     booking calendar (guests see availability only)
  *   /api/museum/*     museum tickets and tours               module 68
  *   /api/events/*     events and enquiries                   module 69
  *   /api/pool/*       pool passes and lessons                module 71
@@ -28,6 +29,7 @@ import { menuRouter } from "@igongo/menu-catalogue";
 import { museumRouter } from "@igongo/museum";
 import { paymentsRouter } from "@igongo/payments";
 import { poolRouter } from "@igongo/pool";
+import { calendarRouter } from "@igongo/booking-calendar";
 import { roomBookingsRouter } from "@igongo/room-bookings";
 import { spaRouter } from "@igongo/spa";
 import { tablesDineinRouter } from "@igongo/tables-dinein";
@@ -49,6 +51,7 @@ export function mountGuestRoutes(app: Hono<ApiEnv>) {
   mount(app, "orders", "food-ordering", ordersRouter((c) => guests(c).ordering()));
   mount(app, "delivery", "delivery-riders", deliveryRouter((c) => guests(c).delivery()));
   mount(app, "payments", "payments", paymentsRouter((c) => guests(c).payments()));
+  mount(app, "calendar", "booking-calendar", calendarRouter((c) => guests(c).calendar()));
   mount(app, "rooms", "room-bookings", roomBookingsRouter(booking("room-bookings")));
   mount(app, "museum", "museum", museumRouter(booking("museum")));
   mount(app, "events", "events-conferences", eventsConferencesRouter(booking("events-conferences")));

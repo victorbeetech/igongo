@@ -31,6 +31,7 @@ import { loginUser } from "@igongo/users-login";
 import { eq } from "drizzle-orm";
 import { poolDeps } from "@igongo/pool";
 import { promoDesk, promotionsVouchersDeps } from "@igongo/promotions-vouchers";
+import { calendarSettingsStore, type CalendarDeps } from "@igongo/booking-calendar";
 import { roomBookingsDeps } from "@igongo/room-bookings";
 import { spaDeps } from "@igongo/spa";
 import { tablesDineinDeps } from "@igongo/tables-dinein";
@@ -122,6 +123,11 @@ export class GuestServices {
         if (await this.isOn("delivery-riders")) await desk().open(order);
       },
     };
+  }
+
+  /** The booking calendar's deps: the rooms' booking engine, the settings and the clock. */
+  calendar(): CalendarDeps {
+    return { booking: this.booking("room-bookings"), settings: calendarSettingsStore(this.db), change: this.change };
   }
 
   /** One booking module's deps. */
