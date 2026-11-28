@@ -11,6 +11,6 @@ class MeStatsApi {
 
   final ApiClient _api;
 
-  /// My profile numbers (bookings, orders, points, saved dishes).
+  /// My profile numbers (bookings, orders, points).
   Future<MeStats> load() async => MeStats.fromJson(await _api.get('/api/me/stats'));
 }

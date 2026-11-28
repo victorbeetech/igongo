@@ -2,8 +2,9 @@
 // can be seen and tested before the kitchens enter their own menus.
 //
 // How it works:
-//  * It shows only when the server has NO outlets for guests yet (a real
-//    menu always wins), and only while [demoMenuOn] is true.
+//  * It never adds venues: the Food venue list is always the server's own
+//    venues. A demo dish only shows for a demo venue key, which no venue list
+//    sends any more, so the demo menu is kept only for trying the flow.
 //  * Demo dishes can be added to the cart and ordered to try the whole flow,
 //    but the order stays on the phone (see demo_orders.dart): nothing is sent
 //    to a kitchen and nothing is charged.
@@ -16,7 +17,6 @@ import '../domain/delivery_zone.dart';
 import '../domain/menu_item.dart';
 import '../domain/option_choice.dart';
 import '../domain/option_group.dart';
-import '../domain/outlet.dart';
 
 /// Switch for the demo menu. Set to false to hide it everywhere.
 const bool demoMenuOn = true;
@@ -29,13 +29,6 @@ const String demoKaahwaKey = 'demo-kaahwa';
 
 /// The key of the third demo restaurant (it also shares the demo dishes).
 const String demoGrillKey = 'demo-grill';
-
-/// The demo outlet list, shown only when the server has no outlets.
-const List<Outlet> demoOutlets = [
-  Outlet(key: demoOutletKey, name: 'Demo restaurant'),
-  Outlet(key: demoKaahwaKey, name: 'Kaahwa Kanuzire'),
-  Outlet(key: demoGrillKey, name: 'Lakeside Grill'),
-];
 
 /// Every demo outlet key, used to tell a demo outlet from a real one.
 const List<String> demoOutletKeys = [demoOutletKey, demoKaahwaKey, demoGrillKey];

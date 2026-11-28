@@ -5,7 +5,6 @@
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../format/day_key.dart';
 import '../../format/day_label.dart';
@@ -13,6 +12,7 @@ import '../../format/ugx.dart';
 import '../../theme/theme.dart';
 import '../../ui/ticket/barcode_strip.dart';
 import '../../ui/ticket/dashed_divider.dart';
+import '../../ui/ticket/ticket_qr_code.dart';
 import '../domain/booking.dart';
 import '../domain/booking_place.dart';
 
@@ -95,7 +95,7 @@ class BookingTicketCard extends StatelessWidget {
             child: Column(
               spacing: IgongoSpace.md,
               children: [
-                _QrPanel(data: booking.qr, size: _qrSize),
+                TicketQrCode(data: booking.qr, size: _qrSize),
                 BarcodeStrip(code: booking.code, height: IgongoSpace.xl),
                 Text(
                   '${ugx(booking.paid)} paid of ${ugx(booking.total)}',
@@ -158,28 +158,4 @@ class _TearLine extends StatelessWidget {
       ],
     );
   }
-}
-
-/// The QR code on a light panel, so it scans the same in light and dark mode.
-class _QrPanel extends StatelessWidget {
-  /// Creates the panel for [data].
-  const _QrPanel({required this.data, required this.size});
-
-  /// The text the code holds.
-  final String data;
-
-  /// The square's size.
-  final double size;
-
-  @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(IgongoSpace.sm),
-    decoration: BoxDecoration(color: IgongoColorsLight.surface, borderRadius: BorderRadius.circular(IgongoRadius.md)),
-    child: QrImageView(
-      data: data,
-      size: size,
-      eyeStyle: const QrEyeStyle(color: IgongoColorsLight.brandInk),
-      dataModuleStyle: const QrDataModuleStyle(color: IgongoColorsLight.brandInk),
-    ),
-  );
 }

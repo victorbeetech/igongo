@@ -62,6 +62,18 @@ export function matchOutlets(outlets: MenuSearchOutlet[], words: string[]): Menu
   });
 }
 
+/**
+ * The outlets to list for a search: those whose name matches the words, plus
+ * every outlet that sells one of the matched dishes, so a guest can filter a
+ * dish search by outlet. Kept in the order the outlets were given.
+ */
+export function outletsForSearch(outlets: MenuSearchOutlet[], words: string[], sellingKeys: Set<string>): MenuSearchOutlet[] {
+  // Step 1: the outlets whose own name matches the words.
+  const byName = new Set(matchOutlets(outlets, words).map((o) => o.key));
+  // Step 2: keep an outlet when its name matches or it sells a matched dish.
+  return outlets.filter((o) => byName.has(o.key) || sellingKeys.has(o.key));
+}
+
 /** The whole answer: the matched dishes and outlets, each cut to its limit. */
 export function menuSearchResult(items: MenuSearchItem[], outlets: MenuSearchOutlet[]): MenuSearchResult {
   return {

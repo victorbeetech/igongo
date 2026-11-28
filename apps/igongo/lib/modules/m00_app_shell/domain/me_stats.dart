@@ -3,10 +3,10 @@
 
 import '../../../shared/api/api_client.dart';
 
-/// The profile numbers: bookings, orders, loyalty points and saved dishes.
+/// The profile numbers: bookings, orders and loyalty points.
 class MeStats {
   /// Creates the numbers.
-  const MeStats({required this.bookings, required this.orders, required this.points, required this.savedDishes});
+  const MeStats({required this.bookings, required this.orders, required this.points});
 
   /// Bookings not cancelled, across the booking modules.
   final int bookings;
@@ -17,15 +17,11 @@ class MeStats {
   /// Loyalty points earned from delivered food.
   final int points;
 
-  /// Dishes on the saved list.
-  final int savedDishes;
-
   /// Reads the numbers from the API's JSON; a missing number counts as 0.
   factory MeStats.fromJson(Json json) => MeStats(
     bookings: _count(json['bookings']),
     orders: _count(json['orders']),
     points: _count(json['points']),
-    savedDishes: _count(json['savedDishes']),
   );
 
   /// A whole number from the JSON, or 0 when it is missing.

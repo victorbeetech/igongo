@@ -1,11 +1,18 @@
-// End to end as a signed-in guest on the demo menu: open the food shop, add a
-// demo dish, open the cart, check out and place the order. The session and
-// the food API are faked, so nothing is sent anywhere.
+// End to end as a signed-in guest on one venue ("Main restaurant", served by the
+// fake food API with the sample dishes as its menu): open the food shop, add a
+// dish, open the cart, check out and place the order. The session and the food
+// API are faked, so nothing is sent anywhere. The sample dishes are test fixtures
+// only; the app never shows them to a real person.
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:igongo/modules/m62_food_ordering/application/orders_providers.dart';
 import 'package:igongo/modules/m62_food_ordering/data/orders_api.dart';
+import 'package:igongo/modules/m62_food_ordering/demo/demo_menu.dart';
+import 'package:igongo/modules/m62_food_ordering/domain/cart_quote.dart';
+import 'package:igongo/modules/m62_food_ordering/domain/menu_item.dart';
+import 'package:igongo/modules/m62_food_ordering/domain/ordering_rules.dart';
+import 'package:igongo/modules/m62_food_ordering/domain/type_rule.dart';
 import 'package:igongo/modules/m62_food_ordering/domain/delivery_zone.dart';
 import 'package:igongo/modules/m62_food_ordering/domain/item_stars.dart';
 import 'package:igongo/modules/m62_food_ordering/domain/order.dart';
@@ -29,17 +36,54 @@ class _Guest extends SessionController {
   );
 }
 
-/// A food API with no outlets, so the demo menu shows, and no real calls.
-class _NoOutletsApi extends OrdersApi {
-  _NoOutletsApi() : super(ApiClient(baseUrl: 'http://invalid.test', token: () => null));
+/// The one venue the fake food API serves.
+const _venueKey = 'main';
+
+/// A food API with one venue ("Main restaurant") that takes dine-in, takeaway and
+/// delivery, with a 1,000 container fee. Prices and orders are made up here, and
+/// nothing is sent to a server.
+class _OneVenueApi extends OrdersApi {
+  _OneVenueApi() : super(ApiClient(baseUrl: 'http://invalid.test', token: () => null));
   @override
-  Future<List<Outlet>> outlets() async => const [];
+  Future<List<Outlet>> outlets() async => const [Outlet(key: _venueKey, name: 'Main restaurant')];
+  @override
+  Future<List<MenuItem>> menu(String outlet) async => outlet == _venueKey ? demoMenuItems : const [];
+  @override
+  Future<OrderingRules> rules() async => const OrderingRules(
+    types: {
+      'dine_in': TypeRule(enabled: true, outlets: [], payment: 'later'),
+      'takeaway': TypeRule(enabled: true, outlets: [], payment: 'later'),
+      'delivery': TypeRule(enabled: true, outlets: [], payment: 'later'),
+    },
+    preorderMinNoticeMinutes: 60,
+    containerFee: 1000,
+  );
+  @override
+  Future<CartQuote> quote(Json body) async {
+    // The container fee is added only for takeaway, as the server does.
+    final container = body['type'] == 'takeaway' ? 1000 : 0;
+    return CartQuote(subtotal: 5000, discount: 0, deliveryFee: 0, containerFee: container, total: 5000 + container, readyAt: '');
+  }
+  @override
+  Future<Order> place(Json body) async => Order.fromJson({
+    'id': 'ord_test_1',
+    'number': 'F-0001',
+    'outlet': _venueKey,
+    'type': body['type'],
+    'status': 'placed',
+    'lines': const <Map<String, Object?>>[],
+    'total': 5000,
+    'paid': 0,
+    'readyAt': '',
+    'discount': 0,
+    'rated': false,
+  });
   @override
   Future<List<Order>> mine() async => const [];
   @override
   Future<Map<String, ItemStars>> stars() async => const {};
   @override
-  Future<List<DeliveryZone>> zones() async => const [];
+  Future<List<DeliveryZone>> zones() async => demoZones;
 }
 
 /// Lets screens, sheets and toasts finish moving (the app has looping
@@ -57,7 +101,7 @@ Future<void> _openCheckout(WidgetTester tester) async {
     tester,
     '/food-ordering/food-home',
     preview: false,
-    overrides: [sessionProvider.overrideWith(_Guest.new), ordersApiProvider.overrideWithValue(_NoOutletsApi())],
+    overrides: [sessionProvider.overrideWith(_Guest.new), ordersApiProvider.overrideWithValue(_OneVenueApi())],
   );
   await _settle(tester);
   await tester.tap(find.text('Rolex'));
@@ -85,7 +129,7 @@ void main() {
       tester,
       '/food-ordering/food-home',
       preview: false,
-      overrides: [sessionProvider.overrideWith(_Guest.new), ordersApiProvider.overrideWithValue(_NoOutletsApi())],
+      overrides: [sessionProvider.overrideWith(_Guest.new), ordersApiProvider.overrideWithValue(_OneVenueApi())],
     );
     await tester.pump(const Duration(milliseconds: 500));
     // Step 1: the demo menu shows its dishes, with the guest bar (5 tabs).
@@ -109,7 +153,7 @@ void main() {
     await _settle(tester);
     await tester.tap(find.text('Place order'));
     await tester.pump(const Duration(milliseconds: 300));
-    expect(find.textContaining('Demo order DEMO-0001 placed'), findsOneWidget);
+    expect(find.textContaining('Order F-0001 placed'), findsOneWidget);
     // Step 5: the cart is empty again.
     await _settle(tester, seconds: 5);
     expect(find.text('Your cart is empty'), findsOneWidget);
@@ -121,7 +165,7 @@ void main() {
       tester,
       '/food-ordering/food-home',
       preview: false,
-      overrides: [sessionProvider.overrideWith(_Guest.new), ordersApiProvider.overrideWithValue(_NoOutletsApi())],
+      overrides: [sessionProvider.overrideWith(_Guest.new), ordersApiProvider.overrideWithValue(_OneVenueApi())],
     );
     await _settle(tester);
     // A chip narrows the grid to its section (Drinks has the passion juice only).
@@ -146,7 +190,7 @@ void main() {
       tester,
       '/home',
       preview: false,
-      overrides: [sessionProvider.overrideWith(_Guest.new), ordersApiProvider.overrideWithValue(_NoOutletsApi())],
+      overrides: [sessionProvider.overrideWith(_Guest.new), ordersApiProvider.overrideWithValue(_OneVenueApi())],
     );
     await _settle(tester);
     // Home is a tab: no app bar, so no arrow.
@@ -181,7 +225,7 @@ void main() {
       tester,
       '/food-ordering/food-home',
       preview: false,
-      overrides: [sessionProvider.overrideWith(_Guest.new), ordersApiProvider.overrideWithValue(_NoOutletsApi())],
+      overrides: [sessionProvider.overrideWith(_Guest.new), ordersApiProvider.overrideWithValue(_OneVenueApi())],
     );
     await _settle(tester);
     // Two dishes sit side by side in the grid (same row).
@@ -237,6 +281,6 @@ void main() {
     // Confirm the location, then the order goes through.
     await _tapVisible(tester, find.textContaining('Confirm delivery to Lodge grounds: Pool terrace'));
     await _tapVisible(tester, find.text('Place order'));
-    expect(find.textContaining('Demo order DEMO-0001 placed'), findsOneWidget);
+    expect(find.textContaining('Order F-0001 placed'), findsOneWidget);
   });
 }
