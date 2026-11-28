@@ -15,6 +15,10 @@ const hotel = z.object({
   /** The company WhatsApp number guests chat with (digits with the country code, such as 256793128137). */
   whatsapp: z.string().regex(/^\+?[0-9 ]{0,20}$/),
   email: z.string().max(120),
+  /** Opening hours shown on the Contact Us screen, such as "24/7" or "08:00 - 22:00". */
+  hours: z.string().max(80),
+  /** Switch: false hides the Contact Us details from the app and shows a "not available" notice. */
+  contactUsOn: z.boolean(),
   tin: z.string().max(40),
   registration: z.string().max(80),
 });
@@ -71,7 +75,8 @@ export const SECTION_NAMES = Object.keys(SETTINGS_SECTIONS) as SettingsSection[]
 
 /** Starting values, used until the super admin saves a section. */
 export const SETTINGS_DEFAULTS: { [K in SettingsSection]: z.infer<(typeof SETTINGS_SECTIONS)[K]> } = {
-  hotel: { name: "Igongo Country Hotel & Cultural Centre", shortName: "Igongo", address: "Mbarara, Uganda", phone: "", whatsapp: "256793128137", email: "", tin: "", registration: "" },
+  // Contact details start empty: nothing is shown to guests until the super admin sets them.
+  hotel: { name: "Igongo Country Hotel & Cultural Centre", shortName: "Igongo", address: "Mbarara, Uganda", phone: "", whatsapp: "", email: "", hours: "", contactUsOn: true, tin: "", registration: "" },
   branding: { logo: "stacked", announcement: "", loginWelcome: "Welcome to Igongo", minimumAppVersion: "0.0.0" },
   content: { banners: [], findings: [], trending: [] },
   regional: { timeZone: "Africa/Kampala", currency: "UGX", dateFormat: "DD/MM/YYYY", businessDayCutoff: "04:00", financialYearStartMonth: 7 },
