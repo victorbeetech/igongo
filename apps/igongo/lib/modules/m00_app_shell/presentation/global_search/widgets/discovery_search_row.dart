@@ -1,5 +1,5 @@
 // The search box with its mic button, and the red filter button beside it.
-// The filter button shows or hides the active-filter line under the box.
+// The filter button opens Filter & Refine; its dot shows when a filter is set.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
@@ -13,6 +13,7 @@ class DiscoverySearchRow extends StatelessWidget {
     super.key,
     required this.controller,
     required this.listening,
+    required this.filtersActive,
     required this.onFilter,
     required this.onChanged,
     required this.onSubmitted,
@@ -24,6 +25,9 @@ class DiscoverySearchRow extends StatelessWidget {
 
   /// True while the mic is listening; the mic then shows as active.
   final bool listening;
+
+  /// True when a Filter & Refine choice is set; the filter button then shows its dot.
+  final bool filtersActive;
 
   /// Called when the filter button is tapped.
   final VoidCallback onFilter;
@@ -80,7 +84,7 @@ class DiscoverySearchRow extends StatelessWidget {
           ),
         ),
         const SizedBox(width: IgongoSpace.sm),
-        // Step 2: the red filter button, with a small accent dot to show filters are set.
+        // Step 2: the red filter button, with a small accent dot only while a filter is set.
         Semantics(
           button: true,
           label: 'Filter search',
@@ -97,18 +101,19 @@ class DiscoverySearchRow extends StatelessWidget {
                   alignment: Alignment.center,
                   children: [
                     Icon(Icons.tune, color: p.onPrimary),
-                    Positioned(
-                      top: IgongoSpace.sm,
-                      right: IgongoSpace.sm,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: p.accent,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: p.primary, width: 2),
+                    if (filtersActive)
+                      Positioned(
+                        top: IgongoSpace.sm,
+                        right: IgongoSpace.sm,
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: p.accent,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: p.primary, width: 2),
+                          ),
+                          child: const SizedBox(width: 10, height: 10),
                         ),
-                        child: const SizedBox(width: 10, height: 10),
                       ),
-                    ),
                   ],
                 ),
               ),
