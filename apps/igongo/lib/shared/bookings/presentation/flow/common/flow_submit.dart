@@ -24,6 +24,7 @@ Future<void> submitFlowBooking(
   required List<FlowLine> lines,
   String? date,
   String? slot,
+  String? notes,
 }) async {
   // Step 1: keep only the lines with units; the first of them is the main booking.
   final booked = lines.where((l) => l.units > 0).toList();
@@ -32,7 +33,7 @@ Future<void> submitFlowBooking(
     final api = ref.read(bookingsApiProvider(place));
     // Step 2: the main booking, on the day and slot picked.
     final main = booked.first;
-    final booking = await api.book(offeringId: main.offering.id, units: main.units, date: date, slot: slot);
+    final booking = await api.book(offeringId: main.offering.id, units: main.units, date: date, slot: slot, notes: notes);
     // Step 3: the other lines, each its own booking.
     for (final line in booked.skip(1)) {
       await api.book(offeringId: line.offering.id, units: line.units);

@@ -1,251 +1,276 @@
-// Room selection for an event venue (design: "Room Selection").
-// Covers the occasion, dates and times, guest capacity, the seating layout,
-// the catering and cultural add-ons, the reservation estimate with the
-// deposit, and the planner card. Amounts are placeholders until the API
-// supplies them. Selections are local UI state only.
+// Event venue booking (design: "Room Selection"), live from the events API.
+// The venue is the events' enquiry offering. Occasion, layout, guest count,
+// date, and the add-ons (the events' stock offerings) are sent with the request
+// as notes. Events are priced by the team, so the screen shows "Quoted" and
+// sends a request: the deposit comes after the quote.
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:igongo/modules/m62_food_ordering/presentation/checkout_flow/checkout_app_bar.dart';
-import 'package:igongo/modules/m62_food_ordering/presentation/checkout_flow/checkout_placeholders.dart';
 import 'package:igongo/modules/m62_food_ordering/presentation/checkout_flow/checkout_section_card.dart';
+import 'package:igongo/shared/bookings/application/bookings_providers.dart';
+import 'package:igongo/shared/bookings/domain/booking_place.dart';
+import 'package:igongo/shared/bookings/domain/offering.dart';
 import 'package:igongo/shared/bookings/presentation/flow/common/flow_bottom_bar.dart';
 import 'package:igongo/shared/bookings/presentation/flow/common/flow_dates.dart';
 import 'package:igongo/shared/bookings/presentation/flow/common/flow_hero.dart';
+import 'package:igongo/shared/bookings/presentation/flow/common/flow_offerings_scope.dart';
 import 'package:igongo/shared/bookings/presentation/flow/common/flow_price_row.dart';
 import 'package:igongo/shared/bookings/presentation/flow/common/flow_section_heading.dart';
+import 'package:igongo/shared/bookings/presentation/flow/common/flow_submit.dart';
 import 'package:igongo/shared/bookings/presentation/flow/common/flow_tag.dart';
+import 'package:igongo/shared/format/day_key.dart';
 import 'package:igongo/shared/theme/theme.dart';
 
-/// The event venue room selection screen.
-class EventRoomSelectionScreen extends StatefulWidget {
-  /// Creates the room selection screen.
-  const EventRoomSelectionScreen({super.key});
+/// The event venue booking screen, live from the events API.
+class EventRoomSelectionScreen extends ConsumerStatefulWidget {
+  /// Creates the screen for [place] (the events module).
+  const EventRoomSelectionScreen({super.key, required this.place});
+
+  /// The events module.
+  final BookingPlace place;
 
   @override
-  State<EventRoomSelectionScreen> createState() => _EventRoomSelectionScreenState();
+  ConsumerState<EventRoomSelectionScreen> createState() => _EventRoomSelectionScreenState();
 }
 
-class _EventRoomSelectionScreenState extends State<EventRoomSelectionScreen> {
-  /// The picked occasion (index into [_occasions]).
+class _EventRoomSelectionScreenState extends ConsumerState<EventRoomSelectionScreen> {
+  /// The picked occasion and layout (indexes into [_occasions] and [_layouts]).
   int _occasion = 0;
-
-  /// Whether the booking runs over several days.
-  bool _multiDay = false;
-
-  /// The guest count, from 50 to 650.
-  double _guests = 250;
-
-  /// The picked seating layout (index into [_layouts]).
   int _layout = 0;
 
-  /// The add-ons the guest ticked (indexes into [_addOns]).
-  final Set<int> _addOns = {0, 1, 2, 3};
+  /// The event day (the first day offered until the guest picks another).
+  DateTime _day = flowNextDays(1).first;
+
+  /// Whether the event runs over several days (sent as a note).
+  bool _multiDay = false;
+
+  /// The guest count, from 50 to 650 (sent as a note: an enquiry is one unit).
+  double _guests = 250;
+
+  /// The add-ons ticked (indexes into the events' stock offerings).
+  final Set<int> _addOns = {};
+
+  /// True while the request is being sent.
+  bool _busy = false;
+
+  /// The notes sent with the request: the occasion, layout, guest count, multi-day and add-ons.
+  String _notes(List<Offering> addOns) => [
+    'Occasion: ${_occasions[_occasion].$2}',
+    'Layout: ${_layouts[_layout].$2}',
+    'Guests: ${_guests.round()}',
+    if (_multiDay) 'Multi-day event',
+    if (_addOns.isNotEmpty) 'Add-ons: ${[for (final i in _addOns) addOns[i].name].join(', ')}',
+  ].join('. ');
+
+  /// Sends the request for the picked venue, the day and the notes; the events team quotes it.
+  Future<void> _send(Offering venue, List<Offering> addOns) async {
+    setState(() => _busy = true);
+    await submitFlowBooking(
+      context,
+      ref,
+      widget.place,
+      lines: [(offering: venue, units: 1)],
+      date: dayKey(_day),
+      notes: _notes(addOns),
+    );
+    if (mounted) setState(() => _busy = false);
+  }
 
   @override
   Widget build(BuildContext context) {
+    // Step 1: the venues (enquiry offerings) and the add-ons (stock) from the events API.
+    final all = ref.watch(offeringsProvider(widget.place)).valueOrNull ?? const <Offering>[];
+    final venues = [
+      for (final o in all)
+        if (o.kind == 'enquiry') o,
+    ];
+    final addOns = [
+      for (final o in all)
+        if (o.kind == 'stock') o,
+    ];
+    final venue = venues.isEmpty ? null : venues.first;
     final palette = context.palette;
-    final today = flowNextDays(1).first;
     return Scaffold(
       backgroundColor: palette.background,
-      appBar: CheckoutAppBar(
-        title: 'Room Selection',
-        actions: [IconButton(tooltip: 'Call', icon: Icon(Icons.call, color: palette.primary), onPressed: () {})],
+      appBar: const CheckoutAppBar(title: 'Room Selection'),
+      bottomNavigationBar: venue == null
+          ? null
+          : FlowBottomBar(
+              caption: 'Quote',
+              amount: 'After quote',
+              buttonLabel: 'Send request',
+              icon: Icons.lock_outline,
+              onPressed: _busy ? null : () => _send(venue, addOns),
+            ),
+      body: FlowOfferingsScope(
+        place: widget.place,
+        emptyText: 'No event venues are open for requests yet.',
+        builder: (context, _, _) => venue == null
+            ? const Center(child: Text('No event venues are open for requests yet.'))
+            : _body(venue, addOns),
       ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, 0, IgongoSpace.lg, IgongoSpace.xxl),
-        children: [
-          // Hero: the garden venue, its rating and a short line.
-          const FlowHero(
-            photo: 'assets/photos/hotel-gardens.jpg',
-            badge: FlowTag('4.9 (140+ Celebrations)', solid: true),
-            kicker: 'Mayanja Gardens & Banquet Hall',
-            title: 'Celebrate in Regal Ankole Splendor',
-            detail: 'Custom open-air garden lawns, pavilion terraces and bespoke cultural banqueting.',
-            height: 220,
-          ),
-          const SizedBox(height: IgongoSpace.lg),
-          // Step 1: the occasion grid, two per row.
-          const FlowSectionHeading(eyebrow: 'Select occasion', title: 'What are we celebrating?', meta: 'Step 1 of 4'),
-          const SizedBox(height: IgongoSpace.md),
-          _TileGrid(
+    );
+  }
+
+  /// The screen body, once the venues load.
+  Widget _body(Offering venue, List<Offering> addOns) {
+    final palette = context.palette;
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(IgongoSpace.lg, 0, IgongoSpace.lg, IgongoSpace.xxl),
+      children: [
+        // Hero: the garden venue (the venue's own name and description from the API).
+        FlowHero(
+          photo: 'assets/photos/hotel-gardens.jpg',
+          badge: const FlowTag('Event request', solid: true),
+          kicker: venue.name,
+          title: 'Celebrate in Regal Ankole Splendor',
+          detail: venue.description ?? '',
+          height: 220,
+        ),
+        const SizedBox(height: IgongoSpace.lg),
+        // Step 1: the occasion grid, two per row.
+        const FlowSectionHeading(eyebrow: 'Select occasion', title: 'What are we celebrating?', meta: 'Step 1 of 4'),
+        const SizedBox(height: IgongoSpace.md),
+        _TileGrid(
+          children: [
+            for (var i = 0; i < _occasions.length; i++)
+              _OptionBlock(
+                icon: _occasions[i].$1,
+                title: _occasions[i].$2,
+                detail: _occasions[i].$3,
+                selected: _occasion == i,
+                onTap: () => setState(() => _occasion = i),
+              ),
+          ],
+        ),
+        const SizedBox(height: IgongoSpace.lg),
+        // Dates: the event day (tap to change) and whether it runs several days.
+        CheckoutSectionCard(
+          padding: const EdgeInsets.all(IgongoSpace.lg),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              for (var i = 0; i < _occasions.length; i++)
-                _OptionBlock(
-                  icon: _occasions[i].$1,
-                  title: _occasions[i].$2,
-                  detail: _occasions[i].$3,
-                  selected: _occasion == i,
-                  onTap: () => setState(() => _occasion = i),
-                ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Dates & Schedule',
+                      style: context.text.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                  Text('Multi-day', style: context.text.labelMedium?.copyWith(color: palette.textMuted)),
+                  Switch(value: _multiDay, onChanged: (v) => setState(() => _multiDay = v)),
+                ],
+              ),
+              const SizedBox(height: IgongoSpace.sm),
+              _FieldBlock(
+                label: 'Event date',
+                value: _dateText(_day),
+                icon: Icons.event,
+                onTap: () async {
+                  final picked = await showDatePicker(
+                    context: context,
+                    initialDate: _day,
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime.now().add(const Duration(days: 730)),
+                  );
+                  if (picked != null) setState(() => _day = picked);
+                },
+              ),
             ],
           ),
-          const SizedBox(height: IgongoSpace.lg),
-          // Dates and times: start and end dates, arrival, and wind-down.
-          CheckoutSectionCard(
-            padding: const EdgeInsets.all(IgongoSpace.lg),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(child: Text('Dates & Schedule', style: context.text.titleMedium?.copyWith(fontWeight: FontWeight.w700))),
-                    Text('Multi-day', style: context.text.labelMedium?.copyWith(color: palette.textMuted)),
-                    Switch(value: _multiDay, onChanged: (v) => setState(() => _multiDay = v)),
-                  ],
-                ),
-                const SizedBox(height: IgongoSpace.sm),
-                _TileGrid(
-                  children: [
-                    _FieldBlock(label: 'Event date', value: _dateText(today), icon: Icons.event),
-                    _FieldBlock(label: 'End date', value: _multiDay ? _dateText(today) : 'Single day', icon: Icons.event_repeat),
-                    const _FieldBlock(label: 'Guest arrival', value: '11:30 AM', icon: Icons.schedule),
-                    const _FieldBlock(label: 'Curfew / wind-down', value: '08:00 PM', icon: Icons.bedtime_outlined),
-                  ],
-                ),
-              ],
-            ),
+        ),
+        const SizedBox(height: IgongoSpace.md),
+        // Step 2: guest count with a slider, then the seating layout.
+        CheckoutSectionCard(
+          padding: const EdgeInsets.all(IgongoSpace.lg),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Guest Capacity',
+                      style: context.text.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                  FlowTag('${_guests.round()} Guests', solid: true),
+                ],
+              ),
+              const SizedBox(height: IgongoSpace.xs),
+              Text(
+                '${venue.name} · 50 – 650 guests',
+                style: context.text.bodySmall?.copyWith(color: palette.textMuted),
+              ),
+              Slider(
+                min: 50,
+                max: 650,
+                divisions: 60,
+                value: _guests,
+                label: '${_guests.round()}',
+                onChanged: (v) => setState(() => _guests = v),
+              ),
+              const SizedBox(height: IgongoSpace.lg),
+              Text(
+                'FLOOR & SEATING LAYOUT',
+                style: context.text.labelSmall?.copyWith(color: palette.accent, letterSpacing: 1.2),
+              ),
+              const SizedBox(height: IgongoSpace.sm),
+              _TileGrid(
+                children: [
+                  for (var i = 0; i < _layouts.length; i++)
+                    _OptionBlock(
+                      icon: _layouts[i].$1,
+                      title: _layouts[i].$2,
+                      detail: _layouts[i].$3,
+                      selected: _layout == i,
+                      onTap: () => setState(() => _layout = i),
+                    ),
+                ],
+              ),
+            ],
           ),
-          const SizedBox(height: IgongoSpace.md),
-          // Step 2: guest capacity with a slider and the recommended venue.
-          CheckoutSectionCard(
-            padding: const EdgeInsets.all(IgongoSpace.lg),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(child: Text('Guest Capacity', style: context.text.titleMedium?.copyWith(fontWeight: FontWeight.w700))),
-                    FlowTag('${_guests.round()} Guests', solid: true),
-                  ],
-                ),
-                const SizedBox(height: IgongoSpace.xs),
-                Text('Recommended: Mayanja Upper Amphitheatre · 50 – 650 pax',
-                    style: context.text.bodySmall?.copyWith(color: palette.textMuted)),
-                Slider(
-                  min: 50,
-                  max: 650,
-                  divisions: 60,
-                  value: _guests,
-                  label: '${_guests.round()}',
-                  onChanged: (v) => setState(() => _guests = v),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('50 Intimate', style: context.text.labelSmall?.copyWith(color: palette.textMuted)),
-                    Text('250 Royal Banquet', style: context.text.labelSmall?.copyWith(color: palette.textMuted)),
-                    Text('500+ Mega Gala', style: context.text.labelSmall?.copyWith(color: palette.textMuted)),
-                  ],
-                ),
-                const SizedBox(height: IgongoSpace.lg),
-                Text('FLOOR & SEATING LAYOUT', style: context.text.labelSmall?.copyWith(color: palette.accent, letterSpacing: 1.2)),
-                const SizedBox(height: IgongoSpace.sm),
-                _TileGrid(
-                  children: [
-                    for (var i = 0; i < _layouts.length; i++)
-                      _OptionBlock(
-                        icon: _layouts[i].$1,
-                        title: _layouts[i].$2,
-                        detail: _layouts[i].$3,
-                        selected: _layout == i,
-                        onTap: () => setState(() => _layout = i),
-                      ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: IgongoSpace.lg),
-          // Step 3: catering and cultural add-ons, each with a checkbox.
+        ),
+        const SizedBox(height: IgongoSpace.lg),
+        // Step 3: the add-ons the events team offers (stock items), each ticked on or off.
+        if (addOns.isNotEmpty) ...[
           const FlowSectionHeading(eyebrow: 'Catering & cultural add-ons', title: 'Catering & Cultural Add-ons'),
-          const SizedBox(height: IgongoSpace.xs),
-          Text('Authentic touches crafted by Igongo cultural artisans',
-              style: context.text.bodySmall?.copyWith(color: palette.textMuted)),
           const SizedBox(height: IgongoSpace.md),
-          for (var i = 0; i < _addOnItems.length; i++) ...[
+          for (var i = 0; i < addOns.length; i++) ...[
             _AddOnRow(
-              item: _addOnItems[i],
+              item: _AddOnItem(addOns[i].name, addOns[i].description ?? '', null),
               checked: _addOns.contains(i),
-              onChanged: (v) => setState(() {
-                // Step 1: tick or untick this add-on; the estimate updates when wired.
-                if (v) {
-                  _addOns.add(i);
-                } else {
-                  _addOns.remove(i);
-                }
-              }),
+              onChanged: (v) => setState(() => v ? _addOns.add(i) : _addOns.remove(i)),
             ),
             const SizedBox(height: IgongoSpace.sm),
           ],
           const SizedBox(height: IgongoSpace.lg),
-          // Step 4: the reservation estimate, with the deposit due.
-          CheckoutSectionCard(
-            padding: const EdgeInsets.all(IgongoSpace.lg),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('FINANCIAL BREAKDOWN', style: context.text.labelSmall?.copyWith(color: palette.accent, letterSpacing: 1.2)),
-                Text('Reservation Estimate', style: context.text.titleLarge?.copyWith(color: palette.primary, fontFamily: IgongoFonts.brand)),
-                const SizedBox(height: IgongoSpace.sm),
-                const FlowPriceRow(label: 'Venue base hire (garden lawns & pavilion)', amount: kAmountPlaceholder),
-                const FlowPriceRow(label: 'Estimated catering & setup package', amount: kAmountPlaceholder),
-                const FlowPriceRow(label: 'Service charge & dedicated attendants', amount: 'Included'),
-                const Divider(height: IgongoSpace.xl),
-                const FlowPriceRow(label: 'Total estimated event cost', amount: kAmountPlaceholder, total: true),
-                const SizedBox(height: IgongoSpace.sm),
-                Container(
-                  padding: const EdgeInsets.all(IgongoSpace.md),
-                  decoration: BoxDecoration(
-                    color: palette.primaryContainer,
-                    borderRadius: BorderRadius.circular(IgongoRadius.md),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text('Required deposit to lock the date',
-                            style: context.text.bodyMedium?.copyWith(color: palette.onPrimaryContainer)),
-                      ),
-                      Text(kAmountPlaceholder,
-                          style: context.text.titleSmall?.copyWith(color: palette.primary, fontWeight: FontWeight.w700)),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: IgongoSpace.sm),
-                Text(
-                  'The balance is payable 7 days before the celebration or during on-site rehearsal.',
-                  style: context.text.bodySmall?.copyWith(color: palette.textMuted),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: IgongoSpace.md),
-          // Step 5: the dedicated planner, with call and WhatsApp actions.
-          CheckoutSectionCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Dedicated Event Planner', style: context.text.titleMedium?.copyWith(color: palette.primary, fontFamily: IgongoFonts.brand)),
-                Text('Banquet manager, Igongo Cultural Centre', style: context.text.bodySmall?.copyWith(color: palette.textMuted)),
-                const SizedBox(height: IgongoSpace.sm),
-                Row(
-                  children: [
-                    Expanded(child: OutlinedButton.icon(onPressed: () {}, icon: const Icon(Icons.call), label: const Text('Direct call'))),
-                    const SizedBox(width: IgongoSpace.sm),
-                    Expanded(child: OutlinedButton.icon(onPressed: () {}, icon: const Icon(Icons.chat), label: const Text('WhatsApp desk'))),
-                  ],
-                ),
-              ],
-            ),
-          ),
         ],
-      ),
-      bottomNavigationBar: const FlowBottomBar(
-        caption: 'Deposit due',
-        amount: kAmountPlaceholder,
-        buttonLabel: 'Reserve with Deposit',
-        icon: Icons.lock_outline,
-      ),
+        // Step 4: the quote is sent by the events team; nothing is charged here.
+        CheckoutSectionCard(
+          padding: const EdgeInsets.all(IgongoSpace.lg),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Reservation Quote',
+                style: context.text.titleLarge?.copyWith(color: palette.primary, fontFamily: IgongoFonts.brand),
+              ),
+              const SizedBox(height: IgongoSpace.sm),
+              const FlowPriceRow(label: 'Venue hire, catering and setup', amount: 'Quoted'),
+              const FlowPriceRow(label: 'Deposit to lock the date', amount: 'After quote'),
+              const SizedBox(height: IgongoSpace.sm),
+              Text(
+                'Our events team replies with a quote. The deposit is due once you accept it.',
+                style: context.text.bodySmall?.copyWith(color: palette.textMuted),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -269,15 +294,9 @@ class _EventRoomSelectionScreenState extends State<EventRoomSelectionScreen> {
   ];
 
   /// The catering and cultural add-on rows: title, detail, and a tag if any.
-  static const List<_AddOnItem> _addOnItems = [
-    _AddOnItem('Ankole Royal Buffet Feast', 'Slow-smoked local tender beef, matooke stewed in earthen pots, kaimati and fresh plantation salads.', 'Chef signature'),
-    _AddOnItem('Live Eshabwe Master Station', 'Traditional clarified ghee and rock salt preparation, prepared live by elder Ankole culinary matrons.', null),
-    _AddOnItem('Ekitaguriro Cultural Troupe', '8-piece traditional drumming, long-horn cow honour dances, flutes and ceremonial entrance procession.', null),
-    _AddOnItem('Pro Audio & Ambient Lighting Rig', 'Dual cordless lapel mics, outdoor speakers tuned for garden acoustics, warm string tree lighting.', null),
-  ];
 }
 
-/// One catering or cultural add-on.
+/// One add-on row's content: its title, detail and an optional tag.
 class _AddOnItem {
   const _AddOnItem(this.title, this.detail, this.tag);
 
@@ -311,15 +330,10 @@ class _AddOnRow extends StatelessWidget {
                 Text(item.title, style: context.text.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
                 const SizedBox(height: IgongoSpace.xxs),
                 Text(item.detail, style: context.text.bodySmall?.copyWith(color: palette.textMuted)),
-                if (item.tag != null) ...[
-                  const SizedBox(height: IgongoSpace.xs),
-                  FlowTag(item.tag!, solid: true),
-                ],
+                if (item.tag != null) ...[const SizedBox(height: IgongoSpace.xs), FlowTag(item.tag!, solid: true)],
               ],
             ),
           ),
-          const SizedBox(width: IgongoSpace.sm),
-          Text(kAmountPlaceholder, style: context.text.labelLarge?.copyWith(color: palette.primary, fontWeight: FontWeight.w700)),
         ],
       ),
     );
@@ -356,7 +370,13 @@ class _TileGrid extends StatelessWidget {
 
 /// A selectable block with an icon, title and detail.
 class _OptionBlock extends StatelessWidget {
-  const _OptionBlock({required this.icon, required this.title, required this.detail, required this.selected, required this.onTap});
+  const _OptionBlock({
+    required this.icon,
+    required this.title,
+    required this.detail,
+    required this.selected,
+    required this.onTap,
+  });
 
   final IconData icon;
   final String title;
@@ -382,7 +402,10 @@ class _OptionBlock extends StatelessWidget {
             children: [
               Icon(icon, color: selected ? palette.onPrimary : palette.primary),
               const SizedBox(height: IgongoSpace.xs),
-              Text(title, style: context.text.titleSmall?.copyWith(color: foreground, fontWeight: FontWeight.w700)),
+              Text(
+                title,
+                style: context.text.titleSmall?.copyWith(color: foreground, fontWeight: FontWeight.w700),
+              ),
               Text(detail, style: context.text.bodySmall?.copyWith(color: muted)),
             ],
           ),
@@ -394,34 +417,41 @@ class _OptionBlock extends StatelessWidget {
 
 /// A read-only labelled field (date or time) in the dates block.
 class _FieldBlock extends StatelessWidget {
-  const _FieldBlock({required this.label, required this.value, required this.icon});
+  const _FieldBlock({required this.label, required this.value, required this.icon, this.onTap});
 
   final String label;
   final String value;
   final IconData icon;
 
+  /// Opens the field's picker when tapped (null for a read-only field).
+  final VoidCallback? onTap;
+
   @override
   Widget build(BuildContext context) {
     final palette = context.palette;
-    return Container(
-      padding: const EdgeInsets.all(IgongoSpace.md),
-      decoration: BoxDecoration(
-        color: palette.background,
-        borderRadius: BorderRadius.circular(IgongoRadius.md),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label, style: context.text.labelSmall?.copyWith(color: palette.textMuted)),
-          const SizedBox(height: IgongoSpace.xxs),
-          Row(
-            children: [
-              Icon(icon, size: 16, color: palette.primary),
-              const SizedBox(width: IgongoSpace.xs),
-              Expanded(child: Text(value, style: context.text.bodyMedium?.copyWith(fontWeight: FontWeight.w600))),
-            ],
-          ),
-        ],
+    // The block is tappable only when it has a picker.
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(IgongoRadius.md),
+      child: Container(
+        padding: const EdgeInsets.all(IgongoSpace.md),
+        decoration: BoxDecoration(color: palette.background, borderRadius: BorderRadius.circular(IgongoRadius.md)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(label, style: context.text.labelSmall?.copyWith(color: palette.textMuted)),
+            const SizedBox(height: IgongoSpace.xxs),
+            Row(
+              children: [
+                Icon(icon, size: 16, color: palette.primary),
+                const SizedBox(width: IgongoSpace.xs),
+                Expanded(
+                  child: Text(value, style: context.text.bodyMedium?.copyWith(fontWeight: FontWeight.w600)),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

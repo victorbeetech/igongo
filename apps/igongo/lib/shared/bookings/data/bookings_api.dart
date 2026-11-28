@@ -36,6 +36,7 @@ class BookingsApi {
     String? date,
     String? endDate,
     String? slot,
+    String? notes,
   }) async => Booking.fromJson(
     await _api.post('${place.path}/bookings', {
       'offeringId': offeringId,
@@ -43,6 +44,7 @@ class BookingsApi {
       'date': ?date,
       'endDate': ?endDate,
       'slot': ?slot,
+      'notes': ?notes,
     }),
   );
 
