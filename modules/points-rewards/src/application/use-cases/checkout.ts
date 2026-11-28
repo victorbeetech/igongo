@@ -7,7 +7,7 @@
  */
 
 import { AppError } from "@igongo/core";
-import { spendOldestFirst, type PointsLot } from "../../domain/points-lot";
+import { balanceOf, isUsable, spendOldestFirst, type PointsLot } from "../../domain/points-lot";
 import type { PointsEvent } from "../../domain/points-event";
 import { expiryFor, valueOfPoints } from "../../domain/rules";
 import type { PointsDeps } from "../points-deps";
@@ -55,11 +55,9 @@ export async function reverseForOrder(deps: PointsDeps, guestId: string, orderRe
 
 /** Takes as many points as there are, up to [points], from usable lots, oldest first. */
 function partialSpend(lots: PointsLot[], points: number, now: Date): { changed: PointsLot[]; amount: number } {
-  const usable = lots.filter((l) => l.remaining > 0 && (l.expiresAt === null || l.expiresAt.getTime() > now.getTime()));
-  const available = usable.reduce((s, l) => s + l.remaining, 0);
-  const amount = Math.min(points, available);
+  // Spend no more than the usable balance, so the spend below always succeeds.
+  const amount = Math.min(points, balanceOf(lots.filter((l) => isUsable(l, now)), now));
   if (amount === 0) return { changed: [], amount: 0 };
-  // Spend exactly `amount`, which is always covered by the usable balance.
   const spend = spendOldestFirst(lots, amount, now);
   return { changed: spend?.changed ?? [], amount };
 }

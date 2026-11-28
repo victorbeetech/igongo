@@ -24,7 +24,8 @@ not change points already earned.
 - **Earning**: `earnForPurchase` gives points for a paid order, keyed by the
   order reference, so a retry never adds them twice. Nothing is earned while
   the programme is off, so switching it on later never back-dates points.
-- **Sign-up**: `grantSignupBonus` gives the bonus once per guest.
+- **Sign-up**: `grantSignupBonus` gives the bonus once per guest. Not yet called by sign-up (needs a hook in the guest sign-up flow).
+- **Checkout**: food orders call the `PointsDesk` contract (`pointsDesk`) to spend points, earn when paid in full, and give points back when cancelled.
 - **Spending**: `redeemPoints` takes points from the oldest lots first, refuses
   under the minimum or with too few points, and spends each order's points once.
 - **Expiry**: `expireDue` removes unspent points from lots past their date and
@@ -53,6 +54,6 @@ change and a history line, written in one transaction.
 
 ## Not done yet
 
-- Calling `earnForPurchase` and `redeemPoints` from checkout (food ordering).
-- The guest app's points screen and the admin rules screen.
+- The sign-up bonus hook (see above).
+- The guest app points screen and the admin rules screen (separate threads).
 - A scheduled run of `expireDue` (for now the super admin runs it from the admin route).
