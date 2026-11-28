@@ -2,6 +2,7 @@
 // the price of one dish with its picks, the total for a quantity, the cart's
 // option keys, and which required groups still need a pick.
 
+import 'cart_line.dart';
 import 'menu_item.dart';
 import 'option_group.dart';
 
@@ -36,6 +37,18 @@ List<OptionGroup> dishMissingRequired(MenuItem item, DishPicks picks) => [
   for (final group in item.options)
     if (group.required && (picks[group.key]?.isEmpty ?? true)) group,
 ];
+
+/// True when the restaurant requires a pick in some group, so the dish cannot be ordered without the dish page.
+bool dishNeedsPicks(MenuItem item) => item.options.any((group) => group.required);
+
+/// A one-dish cart line with no picks (a quick order from a food card): one dish at the base price.
+CartLine quickCartLine(MenuItem item) => CartLine(
+  itemId: item.id,
+  name: item.name,
+  quantity: 1,
+  options: const [],
+  unitPrice: item.price,
+);
 
 /// Picks or unpicks [choice] in [group]: a single-choice group keeps only the newest pick.
 DishPicks dishTogglePick(DishPicks picks, OptionGroup group, String choice) {

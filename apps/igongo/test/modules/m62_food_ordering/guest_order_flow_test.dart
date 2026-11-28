@@ -9,6 +9,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:igongo/modules/m62_food_ordering/application/orders_providers.dart';
 import 'package:igongo/modules/m62_food_ordering/data/orders_api.dart';
 import 'package:igongo/modules/m62_food_ordering/domain/cart_quote.dart';
+import 'package:igongo/modules/m62_food_ordering/presentation/food_home/dish_card.dart';
 import 'package:igongo/modules/m62_food_ordering/domain/menu_item.dart';
 import 'package:igongo/modules/m62_food_ordering/domain/ordering_rules.dart';
 import 'package:igongo/modules/m62_food_ordering/domain/type_rule.dart';
@@ -109,7 +110,7 @@ Future<void> _settle(WidgetTester tester, {int seconds = 1}) async {
   }
 }
 
-/// Opens the food shop as a guest, adds a Rolex, and opens checkout from the cart.
+/// Opens the food shop as a guest and taps the Rolex card, which goes straight to checkout.
 Future<void> _openCheckout(WidgetTester tester) async {
   usePhoneWindow(tester);
   await openApp(
@@ -120,12 +121,6 @@ Future<void> _openCheckout(WidgetTester tester) async {
   );
   await _settle(tester);
   await tester.tap(find.text('Rolex'));
-  await _settle(tester);
-  await tester.tap(find.textContaining('Add to Order'));
-  await _settle(tester);
-  await tester.tap(find.text('Cart').last);
-  await _settle(tester);
-  await tester.tap(find.text('Proceed to Checkout'));
   await _settle(tester);
 }
 
@@ -138,7 +133,7 @@ Future<void> _tapVisible(WidgetTester tester, Finder finder) async {
 }
 
 void main() {
-  testWidgets('a guest adds a dish, checks out and the order is placed', (tester) async {
+  testWidgets('tapping a dish card checks out that dish, and the order is placed', (tester) async {
     usePhoneWindow(tester);
     await openApp(
       tester,
@@ -152,24 +147,17 @@ void main() {
     for (final tab in ['Home', 'Food', 'Bookings', 'Cart', 'Me']) {
       expect(find.text(tab), findsWidgets);
     }
-    // Step 2: tap a dish and add it.
+    // Step 2: tapping the card opens checkout for that dish straight away (no cart step).
     await tester.tap(find.text('Rolex'));
     await _settle(tester);
-    await tester.tap(find.textContaining('Add to Order'));
-    await _settle(tester);
-    // Step 3: the cart tab holds it.
-    await tester.tap(find.text('Cart').last);
-    await _settle(tester);
-    expect(find.text('Rolex'), findsOneWidget);
-    // Step 4: check out, choose takeaway, place the order.
-    await tester.tap(find.text('Proceed to Checkout'));
-    await _settle(tester);
+    expect(find.text('Proceed to Checkout'), findsNothing);
+    // Step 3: choose takeaway, place the order.
     await tester.tap(find.text('Takeaway'));
     await _settle(tester);
     await tester.tap(find.text('Place order'));
     await tester.pump(const Duration(milliseconds: 300));
     expect(find.textContaining('Order F-0001 placed'), findsOneWidget);
-    // Step 5: the cart is empty again.
+    // Step 4: the cart is empty again.
     await _settle(tester, seconds: 5);
     expect(find.text('Your cart is empty'), findsOneWidget);
   });
@@ -247,8 +235,8 @@ void main() {
     final a = tester.getTopLeft(find.text('Grilled tilapia')).dy;
     final b = tester.getTopLeft(find.text('Rolex')).dy;
     expect(a, b);
-    // The item page has a Back arrow, optional add-ons and an optional note.
-    await tester.tap(find.text('Grilled tilapia'));
+    // The item page has a Back arrow, optional add-ons and an optional note. Its View button opens it (the card itself checks out).
+    await tester.tap(find.descendant(of: find.widgetWithText(DishCard, 'Grilled tilapia'), matching: find.text('View')));
     await _settle(tester);
     expect(find.byType(BackButton), findsOneWidget);
     expect(find.text('Add a drink'), findsOneWidget);
@@ -264,6 +252,26 @@ void main() {
     expect(find.text('Grilled tilapia'), findsOneWidget);
     expect(find.text('Note: no tomatoes'), findsOneWidget);
     expect(find.textContaining('UGX 34,000'), findsWidgets);
+  });
+
+  testWidgets('the cart button adds a dish to the cart and stays on the list', (tester) async {
+    usePhoneWindow(tester);
+    await openApp(
+      tester,
+      '/food-ordering/food-home',
+      preview: false,
+      overrides: [sessionProvider.overrideWith(_Guest.new), ordersApiProvider.overrideWithValue(_OneVenueApi())],
+    );
+    await _settle(tester);
+    // One tap on the cart button adds the Rolex and shows a confirmation, with no checkout sheet.
+    await tester.tap(find.byTooltip('Add Rolex to cart'));
+    await _settle(tester);
+    expect(find.text('Rolex added to your cart.'), findsOneWidget);
+    expect(find.text('Proceed to Checkout'), findsNothing);
+    // The cart tab holds it.
+    await tester.tap(find.text('Cart').last);
+    await _settle(tester);
+    expect(find.text('Rolex'), findsOneWidget);
   });
 
   testWidgets('dine-in must ask what time before ordering', (tester) async {
