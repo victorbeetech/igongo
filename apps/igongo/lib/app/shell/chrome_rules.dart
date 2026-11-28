@@ -11,11 +11,12 @@ abstract final class ChromeRules {
   /// Whether [spec] is drawn edge to edge, with no app bar.
   static bool fullScreen(ScreenSpec spec) => _fullScreen.contains(spec.id);
 
-  // Screens that draw their own photo at the very top, so the red app bar is hidden above it (the Cart).
-  static const _ownTopPhoto = {'S62-04'};
+  // Screens that draw their own top bar or photo, so the red app bar is hidden:
+  // the Cart's banner (S62-04) and Edit Profile (S54-05 to S54-07).
+  static const _ownTop = {'S62-04', 'S54-05', 'S54-06', 'S54-07'};
 
-  /// Whether [spec] hides the red app bar because it draws its own top section (the Cart's banner).
-  static bool drawsOwnTop(ScreenSpec spec) => _ownTopPhoto.contains(spec.id);
+  /// Whether [spec] hides the red app bar because it draws its own top section.
+  static bool drawsOwnTop(ScreenSpec spec) => _ownTop.contains(spec.id);
 
   /// Whether [spec] shows the bottom bar and the menu: only once signed in,
   /// and never on a shared kiosk.
