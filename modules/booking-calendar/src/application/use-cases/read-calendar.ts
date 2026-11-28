@@ -68,16 +68,18 @@ export async function readCalendar(d: CalendarDeps, from: string, days: number):
   const settings = await d.settings.read();
   if (!settings.enabled) return { enabled: false, days: [] };
 
-  // Keep the request inside the window the super admin set.
-  const span = Math.min(days, settings.windowDays);
+  // Keep the calendar inside the window the super admin set: from hotel's today, up to windowDays ahead.
   const today = hotelDate(d.change.now);
+  const windowEnd = addDays(today, settings.windowDays);
   // 2. Only rooms marked visible to clients are listed for guests.
   const offerings = (await d.booking.offerings.list()).filter(
     (o) => o.active && o.visibleToClients && (CALENDAR_KINDS as readonly string[]).includes(o.kind),
   );
 
   const result: CalendarDay[] = [];
-  for (const date of dateRange(from, span)) {
+  for (const date of dateRange(from, days)) {
+    // 0. Days past the window are not shown at all, so a guest cannot read further ahead by asking for later days.
+    if (date >= windowEnd) break;
     // Past days are closed, so skip the stock checks for them.
     if (date < today) {
       result.push({ date, status: "closed", rooms: [] });
