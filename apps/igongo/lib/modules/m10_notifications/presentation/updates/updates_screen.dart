@@ -26,7 +26,8 @@ class UpdatesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Step 1: the live inbox. Its unread count decides whether "Mark all as read" is enabled.
     final inbox = ref.watch(inboxProvider);
-    final unread = inbox.value?.unreadCount ?? 0;
+    // A failed or loading inbox has no count yet, so it reads as zero and the action stays off.
+    final unread = inbox.whenOrNull(data: (page) => page.unreadCount) ?? 0;
     return IgongoScaffold(
       // Step 2: the app bar title. Its Back arrow comes from the app bar when the screen is pushed.
       title: 'Updates',
