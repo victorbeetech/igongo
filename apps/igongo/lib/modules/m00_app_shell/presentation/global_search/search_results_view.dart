@@ -7,6 +7,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../../app/navigation/open_target.dart';
 import '../../../../shared/format/ugx.dart';
+import '../../../../shared/hotel/domain/hotel_content_item.dart';
 import '../../../../shared/hotel/application/public_settings_providers.dart';
 import '../../../../shared/screens/parts/screen_list_view.dart';
 import '../../../../shared/search/application/search_filters_provider.dart';
