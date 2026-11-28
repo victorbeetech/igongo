@@ -242,3 +242,11 @@ No key is written in the repository. The code is `modules/payments/src/infrastru
 - Address: Mbarara - Masaka Highway, Biharwe, Mbarara, Uganda
 
 **Exact steps:** send the final numbers and address. Claude then changes them in one file, `apps/igongo/lib/shared/contact/contact_details.dart`. For the WhatsApp number, the super admin sets it in the web settings (Hotel profile, "Whatsapp").
+
+## Security review (28 Nov 2026)
+
+Full results: [SECURITY-CHECKLIST.md](SECURITY-CHECKLIST.md).
+
+- **Replace the demo keys before go-live.** The keys pasted in the project chat are demo keys. Before the hotel goes live, create fresh keys at each provider (Google, Apple, Resend, and any others), then save them with the super admin console or `wrangler secret put <NAME>` from the API folder. Revoke the demo keys afterwards. Why: demo keys may have been seen outside the project.
+- **Confirm the Cloudflare rate-limit rule.** In the Cloudflare dashboard for the API zone, add a rate-limit rule on `/api/auth/*` (for example 30 requests a minute per IP) as a second layer over the app's own limits. Why: the app's limits are per database row and do not stop floods before they reach the Worker.
+- **Confirm the database role.** In Neon, make sure the API connects with a role that has only the permissions the app needs, and that no public connection string is shared with any client. Why: the database must never be reachable from a browser or the app.
