@@ -152,7 +152,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             Text("Don't have an account?", style: context.text.bodySmall),
             IgongoButton(label: 'Sign Up', variant: ButtonVariant.text, onPressed: () => screen.open('S00-18')),
             Text('•', style: context.text.bodySmall),
-            const ContactUsLink(),
+            ContactUsLink(onPressed: () => screen.open('S00-46')),
           ],
         ),
       ],

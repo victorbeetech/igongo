@@ -192,7 +192,7 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen> {
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Text('Need help?', style: context.text.bodySmall),
-            const ContactUsLink(),
+            ContactUsLink(onPressed: () => widget.screen.open('S00-46')),
           ],
         ),
       ],
