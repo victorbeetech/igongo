@@ -6,6 +6,7 @@ import { sendPush } from "../src/application/use-cases/send-push";
 import type { NotificationRule } from "../src/domain/notification-rule";
 import { MemoryAudienceDirectory } from "../src/infrastructure/memory/memory-audience-directory";
 import { MemoryDeviceTokenRepository } from "../src/infrastructure/memory/memory-device-token-repository";
+import { MemoryInboxRepository } from "../src/infrastructure/memory/memory-inbox-repository";
 import { MemoryRuleSource } from "../src/infrastructure/memory/memory-rule-source";
 import { MockPushSender } from "../src/infrastructure/memory/mock-push-sender";
 import { samplePayload } from "./helpers";
@@ -64,7 +65,9 @@ describe("dispatchEvent (notification rules hook)", () => {
   };
 
   it("sends each matching push rule once per person, with the wording filled in", async () => {
-    const deps = { ...(await setup()), newId: () => "n9" };
+    // The rule hook now also writes inbox items, so it needs the inbox and the clock.
+    const base = await setup();
+    const deps = { ...base, newId: () => "n9", inbox: new MemoryInboxRepository(), now: () => new Date("2026-11-28T08:00:00Z") };
     const rules = new MemoryRuleSource([rule, { ...rule, id: "r2", enabled: false }, { ...rule, id: "r3", channels: ["sms"] }]);
     await dispatchEvent({ ...deps, rules }, { name: "fault.reported", data: { place: "Room 12", summary: "No hot water" }, link: "/faults/1" });
 
@@ -79,7 +82,8 @@ describe("dispatchEvent (notification rules hook)", () => {
   });
 
   it("does nothing for events with no rule", async () => {
-    const deps = { ...(await setup()), newId: () => "n9", rules: new MemoryRuleSource([rule]) };
+    const base = await setup();
+    const deps = { ...base, newId: () => "n9", inbox: new MemoryInboxRepository(), now: () => new Date("2026-11-28T08:00:00Z"), rules: new MemoryRuleSource([rule]) };
     expect(await dispatchEvent(deps, { name: "order.placed", data: {} })).toEqual([]);
   });
 });
