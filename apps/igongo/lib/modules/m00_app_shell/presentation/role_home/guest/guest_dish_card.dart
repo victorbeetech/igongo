@@ -79,8 +79,10 @@ class GuestDishCard extends StatelessWidget {
               // Step 3: pushes the price row to the bottom edge of the card (no empty gap above it).
               const Spacer(),
               // Step 4: the price on the left, the add button on the right.
+              // No top padding here, so the price sits right under the text; the spacer above
+              // takes the extra height when the card is taller than its text.
               Padding(
-                padding: const EdgeInsets.all(IgongoSpace.md),
+                padding: const EdgeInsets.fromLTRB(IgongoSpace.md, 0, IgongoSpace.md, IgongoSpace.md),
                 child: Row(
                   children: [
                     Expanded(
