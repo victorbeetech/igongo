@@ -84,7 +84,13 @@ export const MIGRATIONS: Migration[] = [
  },
  {
   "module": "roles-permissions",
-  "name": "0011_super_admin_delete_accounts",
+  "name": "0011_super_admin_notify_permissions",
+  "checksum": "10d8fe72b7c40e69",
+  "sql": "-- The super admin posts updates and notifications from the web portal, which\n-- calls POST /api/notifications/push/broadcast (needs notifications.broadcast.send)\n-- and sends a test push (needs notifications.push.test). Migration 0010 granted\n-- the super admin every key the modules defined then, and these two were not in\n-- that list, so the super admin got \"permission_denied\". Grants them now.\n-- ON CONFLICT DO NOTHING keeps any change already made in the app.\nINSERT INTO \"roles\".\"role_permissions\" (\"role_id\",\"permission_key\",\"scope\") VALUES\n('role_super-admin','notifications.broadcast.send','all'),\n('role_super-admin','notifications.push.test','all')\nON CONFLICT DO NOTHING;\n"
+ },
+ {
+  "module": "roles-permissions",
+  "name": "0012_super_admin_delete_accounts",
   "checksum": "bfeb90e8b85614f3",
   "sql": "-- The super admin deletes guest accounts from the web (Account detail). Needs\n-- users-login.accounts.delete. Granted here through the roles tables, like every\n-- other role permission, so the super admin role can be changed in the app\n-- later. ON CONFLICT DO NOTHING keeps any change the super admin already made.\n--> statement-breakpoint\nINSERT INTO \"roles\".\"role_permissions\" (\"role_id\",\"permission_key\",\"scope\") SELECT r.\"id\", 'users-login.accounts.delete', 'all' FROM \"roles\".\"roles\" r WHERE r.\"id\" = 'role_super-admin' ON CONFLICT DO NOTHING;\n"
  },

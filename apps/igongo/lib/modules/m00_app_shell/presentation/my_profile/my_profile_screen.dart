@@ -30,7 +30,6 @@ import 'profile_footer.dart';
 import 'profile_row_tone.dart';
 import 'profile_section_title.dart';
 import 'profile_stats.dart';
-import 'profile_status_badge.dart';
 
 /// Height of the red banner below the status bar, as in the design.
 const _bannerBodyHeight = 190.0;
@@ -129,14 +128,13 @@ class MyProfileScreen extends ConsumerWidget {
           const ProfileSectionTitle('Resort Activity'),
           ProfileActionGroup(
             children: [
-              // PLACEHOLDER: the room and the active stay count are not read yet; dashes show for now.
+              // The bookings and orders list (the Bookings tab, S67-01).
               ProfileActionRow(
                 title: 'My Bookings & Orders',
-                subtitle: 'Room — • — active stays',
+                subtitle: 'Stays, tables, tours and food orders',
                 icon: Icons.event_available_outlined,
                 tone: ProfileRowTone.solid,
-                trailing: const ProfileStatusBadge(label: '— Active'),
-                onTap: () => screen.open('S54-05'),
+                onTap: () => screen.open('S67-01'),
               ),
               ProfileActionRow(
                 title: 'Folio & Digital Invoices',
@@ -151,12 +149,12 @@ class MyProfileScreen extends ConsumerWidget {
                 onTap: () =>
                     Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const PastVisitsScreen())),
               ),
-              // PLACEHOLDER: the saved dishes screen and count are not built yet; the row is inert.
+              // Saved dishes are the Food tab's wish list (S62-01).
               ProfileActionRow(
                 title: 'Saved Dishes',
-                subtitle: 'Eshabwe, Tilapia & Luwombo',
+                subtitle: 'Your favourite dishes',
                 icon: Icons.restaurant_outlined,
-                trailing: Text('— items', style: context.text.labelMedium?.copyWith(color: context.palette.textMuted)),
+                onTap: () => screen.open('S62-01'),
               ),
             ],
           ),
@@ -166,10 +164,10 @@ class MyProfileScreen extends ConsumerWidget {
           const ProfileSectionTitle('Account & Security'),
           ProfileActionGroup(
             children: [
-              // PLACEHOLDER: the device list is not read yet; a dash shows for now.
+              // The devices signed in to the account (S00-36).
               ProfileActionRow(
                 title: 'Signed-in Devices',
-                subtitle: '—',
+                subtitle: 'Phones and browsers signed in to your account',
                 icon: Icons.smartphone_outlined,
                 tone: ProfileRowTone.neutral,
                 onTap: () => screen.open('S00-36'),

@@ -58,8 +58,6 @@ class ProfileCard extends StatelessWidget {
                       child: Text(shown, style: context.text.titleMedium, maxLines: 1, overflow: TextOverflow.ellipsis),
                     ),
                     const SizedBox(width: IgongoSpace.xs),
-                    // PLACEHOLDER: shown for everyone until the verified state is in the session.
-                    Icon(Icons.verified, size: 16, color: p.success),
                   ],
                 ),
                 if (email.isNotEmpty)
