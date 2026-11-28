@@ -21,6 +21,9 @@ export const createAccountBody = z.object({
   password: z.string().min(8).max(128).optional(),
 });
 
+/** `PUT /users/me/photo`: the cropped photo as a base64 data URL (the type and size are checked in the domain). */
+export const photoBody = z.object({ image: z.string().min(1).max(500_000) });
+
 /** `PATCH /users/:id/status`. */
 export const statusBody = z.object({ status: z.enum(ACCOUNT_STATUSES) });
 
