@@ -94,4 +94,3 @@ export const EMPTY_GUEST_CONTENT: GuestContent = {
 
 /** The list keys of the document, so generic code can loop over them. */
 export const CONTENT_LISTS = ["banners", "stories", "featuredStays", "didYouKnow", "restaurantSlides"] as const;
-export type ContentListKey = (typeof CONTENT_LISTS)[number];
