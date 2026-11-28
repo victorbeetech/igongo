@@ -2,7 +2,7 @@
 // prep time), the overview card (section, name, price, description, tags and
 // allergens), the customisation sections the restaurant set up (radio or
 // checkbox), a note for the kitchen, and a bottom bar with the quantity and
-// Add to Order. Every word and price comes from the menu API; the total is
+// Order now, which opens checkout for this dish. Every word and price comes from the menu API; the total is
 // worked out from the picks and the quantity on this screen.
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,6 +16,7 @@ import '../domain/cart_line.dart';
 import '../domain/dish_pricing.dart';
 import '../domain/menu_item.dart';
 import '../domain/option_group.dart';
+import 'checkout_sheet.dart';
 import 'dish/dish_hero.dart';
 import 'dish/dish_note_field.dart';
 import 'dish/dish_option_section.dart';
@@ -95,28 +96,37 @@ class _ItemPageState extends ConsumerState<ItemPage> {
   /// Flips [choice] in a multi-choice (checkbox) group.
   void _toggle(OptionGroup group, String choice) => setState(() => _picks = dishTogglePick(_picks, group, choice));
 
-  /// Adds the dish to the cart once every required group has a pick, then goes back to the menu.
-  void _add() {
+  /// Orders the dish now, once every required group has a pick: the cart holds just this
+  /// dish with its picks and note, this page closes, and the checkout sheet opens (no cart step).
+  void _orderNow() {
     final item = widget.item;
     // Step 1: stop and say which required group still needs a pick.
     final missing = dishMissingRequired(item, _picks);
     if (missing.isNotEmpty) return showIgongoToast(context, 'Pick ${missing.first.name}.');
-    // Step 2: the cart gets the picks, the unit price with them, and the note (or none).
+    // Step 2: the venue was set when this page was opened from the food shop; without one there is nothing to order from.
+    final outlet = ref.read(cartProvider).outlet;
+    if (outlet == null) return showIgongoToast(context, 'Choose a venue first.');
+    // Step 3: the cart becomes this one dish with its picks, the unit price with them, and the note (or none).
     final note = _note.text.trim();
+    final navigator = Navigator.of(context);
     ref
         .read(cartProvider.notifier)
-        .add(
-          CartLine(
-            itemId: item.id,
-            name: item.name,
-            quantity: _quantity,
-            options: dishCartOptions(_picks),
-            unitPrice: dishUnitPrice(item, _picks),
-            notes: note.isEmpty ? null : note,
-          ),
+        .refill(
+          outlet,
+          [
+            CartLine(
+              itemId: item.id,
+              name: item.name,
+              quantity: _quantity,
+              options: dishCartOptions(_picks),
+              unitPrice: dishUnitPrice(item, _picks),
+              notes: note.isEmpty ? null : note,
+            ),
+          ],
         );
-    // Step 3: back to the menu.
-    Navigator.of(context).pop();
+    // Step 4: close this page, then open checkout over the food screen.
+    navigator.pop();
+    openCheckoutSheet(navigator.context);
   }
 
   @override
@@ -178,7 +188,7 @@ class _ItemPageState extends ConsumerState<ItemPage> {
               total: total,
               canAdd: item.available,
               onQuantity: _setQuantity,
-              onAdd: _add,
+              onOrder: _orderNow,
             ),
           ),
         ],

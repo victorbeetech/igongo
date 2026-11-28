@@ -52,10 +52,6 @@ abstract final class GuestPhotos {
   /// The executive room photo.
   static const String? roomExecutive = null;
 
-  /// The restaurant outlet's photo (shown on the demo outlet's shop row; real
-  /// outlets have no photo field yet).
-  static const String outletRestaurant = 'assets/photos/hotel-kaahwa-kanuzire.jpg';
-
   /// The hotel building and its entrance steps.
   static const String hotelEntrance = 'assets/photos/hotel-entrance.jpg';
 
@@ -88,9 +84,6 @@ abstract final class GuestPhotos {
 
   /// The city lights at night from the hotel (a home banner option).
   static const String hotelNightCity = 'assets/photos/hotel-night-city.jpg';
-
-  /// The view from the terrace over the hills and the pool (a home banner option).
-  static const String hotelTerraceView = 'assets/photos/hotel-terrace-view.jpg';
 
   /// The ring gate sign at the entrance.
   static const String hotelGateSign = 'assets/photos/hotel-gate-sign.jpg';

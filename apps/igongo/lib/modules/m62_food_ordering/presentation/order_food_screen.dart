@@ -1,4 +1,4 @@
-// S62-01..08 The Food tab, live: pick a venue, tap dishes to add them, then check out.
+// S62-01..08 The Food tab, live: pick a venue, tap a dish to check it out, use its cart button to add it, or View to open it.
 // Layout, top to bottom: the venue and cart row, the search row, the section pills,
 // the Resort Venues strip, the dish grid, out-of-stock dishes, a farm note. The
 // Your order bar sits at the bottom when the cart has dishes. The app shell
@@ -23,6 +23,8 @@ import '../../../shared/ui/toast/igongo_toast.dart';
 import '../application/cart_controller.dart';
 import '../application/orders_providers.dart';
 import '../domain/cart_total.dart';
+import '../domain/dish_pricing.dart';
+import '../domain/menu_item.dart';
 import '../domain/order_type.dart';
 import '../domain/ordering_rules.dart';
 import '../domain/outlet.dart';
@@ -47,10 +49,6 @@ class OrderFoodScreen extends ConsumerWidget {
   /// The screen's context.
   final ScreenContext screen;
 
-  /// Opens [sheet] from the bottom.
-  static Future<void> _open(BuildContext context, Widget sheet) =>
-      showModalBottomSheet<void>(context: context, isScrollControlled: true, builder: (_) => sheet);
-
   /// A venue's photo. Kaahwa Kanuzire is matched by name (the venue has no photo
   /// field from the API yet); any other venue shows the placeholder until it has one.
   static String? _venuePhoto(Outlet o) => o.name.toLowerCase().contains('kaahwa') ? GuestPhotos.hotelKaahwaKanuzire : null;
@@ -59,6 +57,39 @@ class OrderFoodScreen extends ConsumerWidget {
   static List<String> _badgesOf(Outlet o, OrderingRules? rules) => [
     for (final t in rules?.typesAt(o.key) ?? const <String>[]) orderTypeWords(t),
   ];
+
+  /// Opens [item]'s dish page for [outlet]; the cart is set to that venue first.
+  static void _openDish(BuildContext context, WidgetRef ref, String outlet, MenuItem item) {
+    ref.read(cartProvider.notifier).useOutlet(outlet);
+    openItemPage(context, item);
+  }
+
+  /// Adds [item] to the cart as a quick order and stays on the list. A dish with
+  /// required choices opens its dish page instead, because the choices must be picked first.
+  static void _addToCart(BuildContext context, WidgetRef ref, String outlet, MenuItem item) {
+    // Step 1: a dish that needs choices goes to its page.
+    if (dishNeedsPicks(item)) {
+      _openDish(context, ref, outlet, item);
+      return;
+    }
+    // Step 2: otherwise one dish, at its base price, goes into the cart and a toast confirms it.
+    final cart = ref.read(cartProvider.notifier)..useOutlet(outlet);
+    cart.add(quickCartLine(item));
+    showIgongoToast(context, '${item.name} added to your cart.');
+  }
+
+  /// Checks out [item] alone: the cart holds just this dish and the checkout sheet opens,
+  /// skipping the cart. A dish with required choices opens its dish page first.
+  static void _checkoutDish(BuildContext context, WidgetRef ref, String outlet, MenuItem item) {
+    // Step 1: a dish that needs choices goes to its page.
+    if (dishNeedsPicks(item)) {
+      _openDish(context, ref, outlet, item);
+      return;
+    }
+    // Step 2: the cart becomes this one dish, then the checkout sheet opens on it.
+    ref.read(cartProvider.notifier).refill(outlet, [quickCartLine(item)]);
+    openCheckoutSheet(context);
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => LiveView<List<Outlet>>(
@@ -180,10 +211,9 @@ class OrderFoodScreen extends ConsumerWidget {
                                   price: ugx(i.price),
                                   description: i.description ?? stars[i.id]?.words,
                                   photo: i.photoUrl,
-                                  onAdd: () {
-                                    ref.read(cartProvider.notifier).useOutlet(outlet);
-                                    openItemPage(context, i);
-                                  },
+                                  onCheckout: () => _checkoutDish(context, ref, outlet, i),
+                                  onOpen: () => _openDish(context, ref, outlet, i),
+                                  onAddToCart: () => _addToCart(context, ref, outlet, i),
                                 ),
                             ],
                           ),
@@ -230,7 +260,7 @@ class OrderFoodScreen extends ConsumerWidget {
           ),
           // Step 11: the Your order bar, only while the cart has dishes.
           if (count > 0)
-            OrderSummaryBar(count: count, total: total, onView: () => _open(context, const CheckoutSheet())),
+            OrderSummaryBar(count: count, total: total, onView: () => openCheckoutSheet(context)),
         ],
       );
     },

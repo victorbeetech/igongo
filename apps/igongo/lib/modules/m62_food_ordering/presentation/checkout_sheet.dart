@@ -22,8 +22,6 @@ import '../../../shared/ui/field/igongo_field.dart';
 import '../../../shared/ui/toast/igongo_toast.dart';
 import '../application/cart_controller.dart';
 import '../application/orders_providers.dart';
-import '../demo/demo_menu.dart';
-import '../demo/demo_orders.dart';
 import '../application/saved_pin_providers.dart';
 import '../domain/cart_quote.dart';
 import '../domain/delivery_pin.dart';
@@ -31,6 +29,13 @@ import '../../m57_loyalty/points/application/points_providers.dart';
 import '../../m57_loyalty/points/presentation/points_use_switch.dart';
 import 'map/delivery_pin_map.dart';
 import '../domain/order_type.dart';
+
+/// Opens the checkout sheet from the bottom, for the cart as it is.
+Future<void> openCheckoutSheet(BuildContext context) => showModalBottomSheet<void>(
+  context: context,
+  isScrollControlled: true,
+  builder: (_) => const CheckoutSheet(),
+);
 
 /// The checkout sheet for the cart.
 class CheckoutSheet extends ConsumerStatefulWidget {
@@ -146,7 +151,6 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
 
   /// Asks the server for the price with the code (and the delivery fee).
   Future<void> _applyCode(String outlet) async {
-    if (isDemoOutlet(outlet)) return showIgongoToast(context, 'Codes are not used in the demo menu.');
     final type = _type;
     if (type == null) return showIgongoToast(context, 'Choose how you want it first.');
     if (type == 'delivery' && _zone == null) return showIgongoToast(context, 'Choose the zone first.');
@@ -177,15 +181,6 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
       return showIgongoToast(context, type == 'dine_in' ? 'Type your table.' : 'Type your room.');
     }
     if (type == 'delivery' && !_isConfirmed) return showIgongoToast(context, 'Confirm the delivery location.');
-    // Demo menu: a local demo order only; nothing is sent or charged (demo/demo_orders.dart).
-    if (isDemoOutlet(outlet)) {
-      final order = ref.read(demoOrdersProvider.notifier).place(ref.read(cartProvider).lines, type);
-      if (type == 'delivery') ref.read(lastDeliveryProvider.notifier).set(_zone, _text(_place) ?? '');
-      ref.read(cartProvider.notifier).clear();
-      ref.invalidate(myOrdersProvider);
-      Navigator.of(context).pop();
-      return showIgongoToast(context, 'Demo order ${order.number} placed. Nothing was sent or charged.');
-    }
     // A visitor signs in first; their choices stay on screen.
     if (!signedInOrAsk(context, ref)) return;
     setState(() => _busy = true);
@@ -227,12 +222,11 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
     final cart = ref.watch(cartProvider);
     final outlet = cart.outlet ?? '';
     final rules = ref.watch(orderingRulesProvider).valueOrNull;
-    final demo = isDemoOutlet(outlet);
-    final zones = demo ? demoZones : (ref.watch(zonesProvider).valueOrNull ?? const []);
-    // The demo outlet has its own order types; real outlets follow the server's rules.
-    final types = demo ? demoOrderTypes : (rules?.typesAt(outlet) ?? const <String>[]);
+    final zones = ref.watch(zonesProvider).valueOrNull ?? const [];
+    // The order types this outlet takes come from the server's rules.
+    final types = rules?.typesAt(outlet) ?? const <String>[];
     // The takeaway container fee is the super admin's rule (0 = free); the server adds it to the total.
-    final containerCharge = _type == 'takeaway' ? (demo ? demoContainerFee : (rules?.containerFee ?? 0)) : 0;
+    final containerCharge = _type == 'takeaway' ? (rules?.containerFee ?? 0) : 0;
     final total = cart.lines.fold(0, (sum, l) => sum + l.unitPrice * l.quantity) + containerCharge;
     return Padding(
       padding: EdgeInsets.fromLTRB(
@@ -264,8 +258,8 @@ class _CheckoutSheetState extends ConsumerState<CheckoutSheet> {
               'About ${ugx(total)} before delivery${containerCharge > 0 ? ' (container included)' : ''}',
               style: context.text.bodySmall,
             ),
-            if (rules == null && !demo) const LinearProgressIndicator(),
-            if (!demo && rules != null && types.isEmpty) const Text('This outlet takes no app orders right now.'),
+            if (rules == null) const LinearProgressIndicator(),
+            if (rules != null && types.isEmpty) const Text('This outlet takes no app orders right now.'),
             Wrap(
               spacing: IgongoSpace.sm,
               children: [
