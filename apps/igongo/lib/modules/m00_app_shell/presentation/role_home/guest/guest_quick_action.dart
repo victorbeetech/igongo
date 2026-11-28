@@ -44,8 +44,10 @@ class GuestQuickAction extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.xxs, vertical: IgongoSpace.md),
           // Step 1: the disc, then the title and subtitle, all centred in the card.
+          // The content is centred vertically so every card in the grid looks the same.
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               DecoratedBox(
                 decoration: BoxDecoration(color: p.primaryContainer, shape: BoxShape.circle),

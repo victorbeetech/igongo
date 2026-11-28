@@ -123,6 +123,12 @@ abstract final class IgongoMotion {
   static const slow = 320.0;
 }
 
+/// quickAction values from the tokens.
+abstract final class IgongoQuickAction {
+  static const width = 112.0;
+  static const height = 136.0;
+}
+
 /// Font families from the brand package.
 abstract final class IgongoFonts {
   static const brand = 'Cinzel';

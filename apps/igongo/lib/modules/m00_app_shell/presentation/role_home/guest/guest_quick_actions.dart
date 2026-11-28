@@ -1,15 +1,17 @@
-// The five quick actions under the hero card: Book stay, Dine in, Museum, Spa and Pool,
-// all in one row of equal columns. [onOpen] opens the screen for the chosen area.
+// The five quick actions under the hero card: Book stay, Dine in, Museum, Spa and Pool.
+// They sit in two rows that scroll sideways by swiping. Every card is the same size, taken
+// from the design tokens. There is no automatic scrolling. [onOpen] opens the screen for an area.
 
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import 'guest_quick_action.dart';
+import 'guest_quick_action_column.dart';
 import 'guest_service_placeholder_page.dart';
 
-/// The row of five quick-action cards.
+/// The grid of five quick-action cards, two rows high, swiped sideways.
 class GuestQuickActions extends StatelessWidget {
-  /// Creates the row; [onOpen] receives the screen ID to open.
+  /// Creates the grid; [onOpen] receives the screen ID to open.
   const GuestQuickActions({super.key, required this.onOpen});
 
   /// Called with the screen ID of the tapped action.
@@ -30,55 +32,58 @@ class GuestQuickActions extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
-    // Step 1: five equal columns with a small gap between them.
-    child: IntrinsicHeight(
-      child: Row(
-        spacing: IgongoSpace.xs,
-        children: [
-          Expanded(
-            child: GuestQuickAction(
-              icon: Icons.hotel_outlined,
-              title: 'Book stay',
-              subtitle: 'Rooms and huts',
-              onTap: () => onOpen(_stay),
-            ),
-          ),
-          Expanded(
-            child: GuestQuickAction(
-              icon: Icons.restaurant_outlined,
-              title: 'Dine in',
-              subtitle: 'Reserve table',
-              onTap: () => onOpen(_dine),
-            ),
-          ),
-          Expanded(
-            child: GuestQuickAction(
-              icon: Icons.account_balance_outlined,
-              title: 'Museum',
-              subtitle: 'Cultural tour',
-              onTap: () => onOpen(_museum),
-            ),
-          ),
-          Expanded(
-            child: GuestQuickAction(
-              icon: Icons.spa_outlined,
-              title: 'Spa',
-              subtitle: 'Massage and steam',
-              onTap: () => _openPlaceholder(context, 'Spa'),
-            ),
-          ),
-          Expanded(
-            child: GuestQuickAction(
-              icon: Icons.pool_outlined,
-              title: 'Pool',
-              subtitle: 'Swim and relax',
-              onTap: () => _openPlaceholder(context, 'Pool'),
-            ),
-          ),
-        ],
+  Widget build(BuildContext context) {
+    // Step 1: the five actions in reading order. They are filled down each column first,
+    // so the first column holds Book stay over Dine in, the second Museum over Spa, and so on.
+    final actions = <Widget>[
+      GuestQuickAction(
+        icon: Icons.hotel_outlined,
+        title: 'Book stay',
+        subtitle: 'Rooms and huts',
+        onTap: () => onOpen(_stay),
       ),
-    ),
-  );
+      GuestQuickAction(
+        icon: Icons.restaurant_outlined,
+        title: 'Dine in',
+        subtitle: 'Reserve table',
+        onTap: () => onOpen(_dine),
+      ),
+      GuestQuickAction(
+        icon: Icons.account_balance_outlined,
+        title: 'Museum',
+        subtitle: 'Cultural tour',
+        onTap: () => onOpen(_museum),
+      ),
+      GuestQuickAction(
+        icon: Icons.spa_outlined,
+        title: 'Spa',
+        subtitle: 'Massage and steam',
+        onTap: () => _openPlaceholder(context, 'Spa'),
+      ),
+      GuestQuickAction(
+        icon: Icons.pool_outlined,
+        title: 'Pool',
+        subtitle: 'Swim and relax',
+        onTap: () => _openPlaceholder(context, 'Pool'),
+      ),
+    ];
+
+    // Step 2: pair the actions into columns of two, each card the same fixed size.
+    final columns = <Widget>[];
+    for (var i = 0; i < actions.length; i += 2) {
+      columns.add(GuestQuickActionColumn(children: actions.skip(i).take(2).toList()));
+    }
+
+    // Step 3: lay the columns out in one horizontal, swipeable strip. No auto-scroll is used.
+    return SizedBox(
+      height: IgongoQuickAction.height * 2 + IgongoSpace.xs,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: IgongoSpace.lg),
+        itemCount: columns.length,
+        separatorBuilder: (_, _) => const SizedBox(width: IgongoSpace.xs),
+        itemBuilder: (_, i) => columns[i],
+      ),
+    );
+  }
 }
