@@ -20,6 +20,7 @@ import type { ModuleSwitchReader, SecretReader } from "@igongo/contracts/super-a
 import { bookingPayable, type BookingsDeps } from "@igongo/bookings-kit";
 import { AppError, type ChangeContext, type Database } from "@igongo/core";
 import { craftsBookshopDeps } from "@igongo/crafts-bookshop";
+import { SettingsGuestContentStore, type GuestContentDeps } from "@igongo/guest-content";
 import { DrizzleProfileRepository, SettingsCrmStore, type CrmDeps } from "@igongo/crm-guests";
 import { deliveryDesk, DrizzleJobRepository, DrizzleRiderRepository, SettingsDeliveryRulesStore, type DeliveryDeps } from "@igongo/delivery-riders";
 import { eventsConferencesDeps } from "@igongo/events-conferences";
@@ -77,6 +78,11 @@ export class GuestServices {
 
   menu(): MenuDeps {
     return { items: new DrizzleItemRepository(this.db), settings: new SettingsMenuStore(this.db), change: this.change };
+  }
+
+  /** Guest content (banners, stories, stays, facts, restaurant slides): one settings store. */
+  content(): GuestContentDeps {
+    return { store: new SettingsGuestContentStore(this.db), change: this.change };
   }
 
   ordering(): OrderingDeps {

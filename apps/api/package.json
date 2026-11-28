@@ -61,6 +61,7 @@
     "@igongo/lost-found": "workspace:*",
     "@igongo/loyalty": "workspace:*",
     "@igongo/meetings": "workspace:*",
+    "@igongo/guest-content": "workspace:*",
     "@igongo/menu-catalogue": "workspace:*",
     "@igongo/museum": "workspace:*",
     "@igongo/notice-board": "workspace:*",
