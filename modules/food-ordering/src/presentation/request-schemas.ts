@@ -75,4 +75,6 @@ export const rulesBody = z.object({
   minutesPerQueuedOrder: z.number().int().min(0).max(60),
   scheduleAheadDays: z.number().int().min(0).max(60).default(7),
   containerFee: z.number().int().min(0).max(100000).default(0),
+  /** Points per 1,000 shillings of delivered food; 0 (the default) switches points off. */
+  pointsPer1000: z.number().int().min(0).max(1000).default(0),
 });

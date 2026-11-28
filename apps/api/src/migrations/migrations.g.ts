@@ -203,6 +203,12 @@ export const MIGRATIONS: Migration[] = [
   "sql": "CREATE TABLE \"orders\".\"delivery_pins\" (\n\t\"user_id\" text PRIMARY KEY NOT NULL,\n\t\"label\" text NOT NULL,\n\t\"zone\" text,\n\t\"lat\" double precision NOT NULL,\n\t\"lng\" double precision NOT NULL,\n\t\"updated_at\" timestamp with time zone NOT NULL\n);\n"
  },
  {
+  "module": "food-ordering",
+  "name": "0005_saved_dishes",
+  "checksum": "390ab13b75a3da0b",
+  "sql": "CREATE TABLE \"orders\".\"saved_dishes\" (\n\t\"user_id\" text NOT NULL,\n\t\"item_id\" text NOT NULL,\n\t\"outlet\" text NOT NULL,\n\t\"saved_at\" timestamp with time zone NOT NULL,\n\tCONSTRAINT \"saved_dishes_user_id_item_id_pk\" PRIMARY KEY(\"user_id\",\"item_id\")\n);\n--> statement-breakpoint\nCREATE INDEX \"saved_dishes_user_idx\" ON \"orders\".\"saved_dishes\" USING btree (\"user_id\",\"saved_at\");"
+ },
+ {
   "module": "delivery-riders",
   "name": "0000_init",
   "checksum": "c2b38ace91546101",

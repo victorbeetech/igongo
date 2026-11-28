@@ -31,6 +31,8 @@ export interface OrderingRules {
   scheduleAheadDays: number;
   /** The takeaway container fee in shillings: 0 gives containers free; above 0 it is added to every takeaway order. */
   containerFee: number;
+  /** Loyalty points per 1,000 shillings of delivered food (0 switches points off). */
+  pointsPer1000: number;
 }
 
 const PAYMENT_BY_TYPE: Record<OrderType, PaymentTiming> = { delivery: "before", room_service: "later", dine_in: "later", takeaway: "before", pre_order: "deposit" };
@@ -44,6 +46,7 @@ export const DEFAULT_ORDERING_RULES: OrderingRules = {
   minutesPerQueuedOrder: 3,
   scheduleAheadDays: 7,
   containerFee: 0,
+  pointsPer1000: 0,
 };
 
 /** Order types a guest may schedule for later (pre-orders always have a time; dine-in guests give their arrival time). */

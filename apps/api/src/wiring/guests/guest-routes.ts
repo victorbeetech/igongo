@@ -3,6 +3,7 @@
  * own module switch, so the super admin can turn one off (or put it in
  * maintenance) without touching the others.
  *
+ *   /api/me/stats     my profile numbers (bookings, orders, points, saved dishes)
  *   /api/crm/*        guest profiles, my account            module 54
  *   /api/menu/*       outlets and menus                      module 61
  *   /api/orders/*     food orders                            module 62
@@ -25,6 +26,7 @@ import { deliveryRouter } from "@igongo/delivery-riders";
 import { eventsConferencesRouter } from "@igongo/events-conferences";
 import { ordersRouter } from "@igongo/food-ordering";
 import { menuRouter } from "@igongo/menu-catalogue";
+import { meRouter } from "./me-stats";
 import { museumRouter } from "@igongo/museum";
 import { paymentsRouter } from "@igongo/payments";
 import { poolRouter } from "@igongo/pool";
@@ -44,6 +46,8 @@ const guests = (c: Context<ActorEnv>) => (c as unknown as Context<ApiEnv>).var.s
 const booking = (key: BookingModuleKey) => (c: Context<ActorEnv>) => guests(c).booking(key);
 
 export function mountGuestRoutes(app: Hono<ApiEnv>) {
+  // The signed-in guest's own profile numbers (no module switch: the profile always opens).
+  app.route("/api/me", meRouter((c) => guests(c)));
   mount(app, "crm", "crm-guests", crmRouter((c) => guests(c).crm()));
   mount(app, "menu", "menu-catalogue", menuRouter((c) => guests(c).menu()));
   mount(app, "orders", "food-ordering", ordersRouter((c) => guests(c).ordering()));

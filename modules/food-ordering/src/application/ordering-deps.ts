@@ -10,6 +10,7 @@ import type { LocationRepository } from "./ports/location-repository";
 import type { OrderRepository } from "./ports/order-repository";
 import type { RatingRepository } from "./ports/rating-repository";
 import type { RulesStore } from "./ports/rules-store";
+import type { SavedDishRepository } from "./ports/saved-dish-repository";
 
 export interface OrderingDeps {
   orders: OrderRepository;
@@ -17,6 +18,8 @@ export interface OrderingDeps {
   carts: CartRepository;
   /** Guests' saved delivery pins (one per guest, each only their own). */
   locations: LocationRepository;
+  /** Guests' saved dishes (the heart on a dish), each guest only their own. */
+  savedDishes: SavedDishRepository;
   ratings: RatingRepository;
   rules: RulesStore;
   /** Menus & Catalogue, through its contract. */
