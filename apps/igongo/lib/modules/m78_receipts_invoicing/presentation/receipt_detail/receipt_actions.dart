@@ -1,15 +1,18 @@
 // The buttons under the ticket: Download PDF as the main action, then Print and
-// WhatsApp / Mail. They are placeholders until the receipt file and sending are wired.
+// Email receipt. Email is wired to the API; Download PDF and Print are still
+// placeholders until the receipt file is built.
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:igongo_tokens/igongo_tokens.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../../shared/ui/button/igongo_button.dart';
 import '../../../../shared/ui/toast/igongo_toast.dart';
+import '../../application/my_receipts_provider.dart';
 import '../../domain/guest_receipt.dart';
 
 /// The three action buttons for [receipt].
-class ReceiptActions extends StatelessWidget {
+class ReceiptActions extends ConsumerWidget {
   /// Creates the actions for [receipt].
   const ReceiptActions({super.key, required this.receipt});
 
@@ -17,7 +20,7 @@ class ReceiptActions extends StatelessWidget {
   final GuestReceipt receipt;
 
   @override
-  Widget build(BuildContext context) => Column(
+  Widget build(BuildContext context, WidgetRef ref) => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     spacing: IgongoSpace.sm,
     children: [
@@ -43,11 +46,11 @@ class ReceiptActions extends StatelessWidget {
           ),
           Expanded(
             child: IgongoButton(
-              label: 'WhatsApp / Mail',
+              label: 'Email receipt',
               icon: Icons.send_outlined,
               variant: ButtonVariant.secondary,
               expand: true,
-              onPressed: () => _comingSoon(context),
+              onPressed: () => _emailReceipt(context, ref),
             ),
           ),
         ],
@@ -55,6 +58,18 @@ class ReceiptActions extends StatelessWidget {
     ],
   );
 
-  /// Shows the placeholder toast until the action is wired.
+  /// Shows the placeholder toast for the actions that are not built yet (PDF, print).
   void _comingSoon(BuildContext context) => showIgongoToast(context, 'Coming soon for ${receipt.ref}');
+
+  /// Asks the API to email this receipt to the payer and reports the result in a toast.
+  Future<void> _emailReceipt(BuildContext context, WidgetRef ref) async {
+    try {
+      final result = await ref.read(receiptsApiProvider).emailReceipt(receipt.id);
+      if (!context.mounted) return;
+      final sent = result['sent'] == true;
+      showIgongoToast(context, sent ? 'Receipt emailed' : (result['reason'] as String? ?? 'Receipt could not be emailed'));
+    } on Object {
+      if (context.mounted) showIgongoToast(context, 'Receipt could not be emailed');
+    }
+  }
 }

@@ -117,6 +117,16 @@ export function paymentsRouter(deps: (c: Context<ActorEnv>) => PaymentsDeps) {
       // While the payer waits on the prompt, each look asks the provider again.
       return c.json(await refreshPayment(d, payment));
     })
+    // The payer asks for their receipt to be emailed again. Only the payer (or
+    // staff who may read the payment) can ask; the mailer never throws.
+    .post("/:id/email", requireSignIn, async (c) => {
+      const d = deps(c);
+      const payment = await d.payments.byId(c.req.param("id"));
+      if (!payment) throw new AppError("not_found", "Payment not found.");
+      mayRead(c, payment);
+      if (!d.receipts) return c.json({ sent: false, reason: "Receipt email is not set up yet." });
+      return c.json(await d.receipts.sendReceipt(payment));
+    })
     .post("/:id/refund", requireStaffPermission(P.refund), zValidator("json", refundBody), async (c) => {
       const { amount, reason } = c.req.valid("json");
       return c.json(await refundPayment(deps(c), c.req.param("id"), amount, reason));

@@ -40,6 +40,11 @@ class ReceiptsApi {
     return _items(await _api.get('$base/bookings/mine'));
   }
 
+  /// Asks the API to email the receipt for payment [paymentId] to the payer.
+  /// Returns `{sent: bool, reason?: String}`; the server never throws for a mail problem.
+  Future<Map<String, dynamic>> emailReceipt(String paymentId) =>
+      _api.post('/api/payments/${Uri.encodeComponent(paymentId)}/email');
+
   /// Pulls the `items` list out of an API response, keeping only JSON objects.
   List<Map<String, dynamic>> _items(Map<String, dynamic> json) {
     final items = json['items'];
